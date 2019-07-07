@@ -8,4 +8,9 @@
     <PackageReference Include="ppy.osu.Framework" Version="2019.704.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Graphics\" />
+    <Folder Include="Overlays\" />
+  </ItemGroup>
+
 </Project>
