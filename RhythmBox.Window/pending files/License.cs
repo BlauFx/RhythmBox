@@ -100,7 +100,7 @@ namespace RhythmBox.Window.pending_files
                 {
                     try
                     {
-                        string file = wc.DownloadString(new Uri(string.Format("https://raw.githubusercontent.com/BlauFx/obsu/master/Licenses/{0}.txt", missing_licenses[download_number])));
+                        string file = wc.DownloadString(new Uri(string.Format("https://raw.githubusercontent.com/BlauFx/RhythmBox/master/Licenses/{0}.txt", missing_licenses[download_number])));
                         Logger.Log(string.Format(Path.Combine(download_path, "Filesharing\\Licenses\\{0}.txt"), missing_licenses[download_number]));
                         using (StreamWriter strm = new StreamWriter(string.Format(Path.Combine(download_path, "{0}.txt"), missing_licenses[download_number])))
                         {
