@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <StartupObject>RhythmBox.Tests.Program</StartupObject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ppy.osu.Framework" Version="2019.704.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RhythmBox.Window.Resources\RhythmBox.Window.Resources.csproj" />
+    <ProjectReference Include="..\RhythmBox.Window\RhythmBox.Window.csproj" />
+  </ItemGroup>
+
+</Project>
