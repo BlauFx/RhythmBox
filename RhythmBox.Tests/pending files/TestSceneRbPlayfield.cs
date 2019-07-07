@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RhythmBox.Tests.VisualTests.Gameplay
+namespace RhythmBox.Tests.pending_files
 {
-    class TestSceneRbPlayfield
+    public class TestSceneRbPlayfield
     {
     }
 }

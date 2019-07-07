@@ -17,8 +17,4 @@
     <ProjectReference Include="..\RhythmBox.Window\RhythmBox.Window.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Objects\" />
-  </ItemGroup>
-
 </Project>
