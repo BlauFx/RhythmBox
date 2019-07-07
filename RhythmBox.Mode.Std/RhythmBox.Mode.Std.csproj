@@ -10,6 +10,8 @@
 
   <ItemGroup>
     <Folder Include="Beatmap\" />
+    <Folder Include="Score\" />
+    <Folder Include="Objects\" />
   </ItemGroup>
 
 </Project>
