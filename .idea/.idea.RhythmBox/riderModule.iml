@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="RIDER_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$USER_HOME$/.nuget/packages/ppy.osu.framework.nativelibs/2019.307.0/contentFiles/any/netstandard2.0/arm64-v8a/libbass.so" />
+    <content url="file://$USER_HOME$/.nuget/packages/ppy.osu.framework.nativelibs/2019.307.0/contentFiles/any/netstandard2.0/arm64-v8a/libbass_fx.so" />
+    <content url="file://$USER_HOME$/.nuget/packages/ppy.osu.framework.nativelibs/2019.307.0/contentFiles/any/netstandard2.0/armeabi-v7a/libbass.so" />
+    <content url="file://$USER_HOME$/.nuget/packages/ppy.osu.framework.nativelibs/2019.307.0/contentFiles/any/netstandard2.0/armeabi-v7a/libbass_fx.so" />
+    <content url="file://$USER_HOME$/.nuget/packages/ppy.osu.framework.nativelibs/2019.307.0/contentFiles/any/netstandard2.0/libbass.a" />
+    <content url="file://$USER_HOME$/.nuget/packages/ppy.osu.framework.nativelibs/2019.307.0/contentFiles/any/netstandard2.0/libbass.dylib" />
+    <content url="file://$USER_HOME$/.nuget/packages/ppy.osu.framework.nativelibs/2019.307.0/contentFiles/any/netstandard2.0/libbass_fx.a" />
+    <content url="file://$USER_HOME$/.nuget/packages/ppy.osu.framework.nativelibs/2019.307.0/contentFiles/any/netstandard2.0/libbass_fx.dylib" />
+    <content url="file://$USER_HOME$/.nuget/packages/ppy.osu.framework.nativelibs/2019.307.0/contentFiles/any/netstandard2.0/x64/avcodec-58.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/ppy.osu.framework.nativelibs/2019.307.0/contentFiles/any/netstandard2.0/x64/avdevice-58.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/ppy.osu.framework.nativelibs/2019.307.0/contentFiles/any/netstandard2.0/x64/avfilter-7.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/ppy.osu.framework.nativelibs/2019.307.0/contentFiles/any/netstandard2.0/x64/avformat-58.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/ppy.osu.framework.nativelibs/2019.307.0/contentFiles/any/netstandard2.0/x64/avutil-56.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/ppy.osu.framework.nativelibs/2019.307.0/contentFiles/any/netstandard2.0/x64/bass.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/ppy.osu.framework.nativelibs/2019.307.0/contentFiles/any/netstandard2.0/x64/bass_fx.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/ppy.osu.framework.nativelibs/2019.307.0/contentFiles/any/netstandard2.0/x64/swresample-3.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/ppy.osu.framework.nativelibs/2019.307.0/contentFiles/any/netstandard2.0/x64/swscale-5.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/ppy.osu.framework.nativelibs/2019.307.0/contentFiles/any/netstandard2.0/x86/avcodec-58.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/ppy.osu.framework.nativelibs/2019.307.0/contentFiles/any/netstandard2.0/x86/avdevice-58.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/ppy.osu.framework.nativelibs/2019.307.0/contentFiles/any/netstandard2.0/x86/avfilter-7.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/ppy.osu.framework.nativelibs/2019.307.0/contentFiles/any/netstandard2.0/x86/avformat-58.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/ppy.osu.framework.nativelibs/2019.307.0/contentFiles/any/netstandard2.0/x86/avutil-56.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/ppy.osu.framework.nativelibs/2019.307.0/contentFiles/any/netstandard2.0/x86/bass.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/ppy.osu.framework.nativelibs/2019.307.0/contentFiles/any/netstandard2.0/x86/bass_fx.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/ppy.osu.framework.nativelibs/2019.307.0/contentFiles/any/netstandard2.0/x86/libbass.so" />
+    <content url="file://$USER_HOME$/.nuget/packages/ppy.osu.framework.nativelibs/2019.307.0/contentFiles/any/netstandard2.0/x86/libbass_fx.so" />
+    <content url="file://$USER_HOME$/.nuget/packages/ppy.osu.framework.nativelibs/2019.307.0/contentFiles/any/netstandard2.0/x86_64/libbass.so" />
+    <content url="file://$USER_HOME$/.nuget/packages/ppy.osu.framework.nativelibs/2019.307.0/contentFiles/any/netstandard2.0/x86_64/libbass_fx.so" />
+    <content url="file://$MODULE_DIR$/../.." />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

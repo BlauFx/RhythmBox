@@ -9,7 +9,7 @@ using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
 
-namespace RhythmBox.Tests.VisualTests.Gameplay.Objects
+namespace RhythmBox.Mode.Std.Tests.Objects
 {
     [TestFixture]
     public class TestSceneRBox : TestScene

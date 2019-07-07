@@ -38,7 +38,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                     Alpha = 1f,
-                    Texture = store.Get("Game/menu-background.png"),
+                    Texture = store.Get("Skin/menu-background.png"),
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1.1f),
                 }
