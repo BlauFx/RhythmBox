@@ -5,11 +5,13 @@ VisualStudioVersion = 16.0.29025.244
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RhythmBox.Desktop", "RhythmBox.Desktop\RhythmBox.Desktop.csproj", "{20808FBB-24B5-4B77-BAFA-5BD40C0876EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RhythmBox.Window", "RhythmBox.Window\RhythmBox.Window.csproj", "{015C5931-D6D8-4723-8BC4-09B2FC5EB141}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RhythmBox.Window", "RhythmBox.Window\RhythmBox.Window.csproj", "{015C5931-D6D8-4723-8BC4-09B2FC5EB141}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RhythmBox.Window.Resources", "RhythmBox.Window.Resources\RhythmBox.Window.Resources.csproj", "{A53C569D-6C76-41A2-9E3E-4567CAC20A04}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RhythmBox.Window.Resources", "RhythmBox.Window.Resources\RhythmBox.Window.Resources.csproj", "{A53C569D-6C76-41A2-9E3E-4567CAC20A04}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RhythmBox.Tests", "RhythmBox.Tests\RhythmBox.Tests.csproj", "{7F2AC130-C33C-4678-BB47-4FAEA13EFBC2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RhythmBox.Tests", "RhythmBox.Tests\RhythmBox.Tests.csproj", "{7F2AC130-C33C-4678-BB47-4FAEA13EFBC2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RhythmBox.Mode.Std", "RhythmBox.Mode.Std\RhythmBox.Mode.Std.csproj", "{002B124E-13ED-43B2-9552-20406F3F27E9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{7F2AC130-C33C-4678-BB47-4FAEA13EFBC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F2AC130-C33C-4678-BB47-4FAEA13EFBC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7F2AC130-C33C-4678-BB47-4FAEA13EFBC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{002B124E-13ED-43B2-9552-20406F3F27E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{002B124E-13ED-43B2-9552-20406F3F27E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{002B124E-13ED-43B2-9552-20406F3F27E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{002B124E-13ED-43B2-9552-20406F3F27E9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

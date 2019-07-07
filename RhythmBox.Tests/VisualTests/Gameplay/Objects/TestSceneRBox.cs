@@ -32,8 +32,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay.Objects
                 }
             };
 
-
-            AddStep("reset", () =>
+            AddStep("Start", () =>
             {
                 Add(bx = new Box
                 {
@@ -45,13 +44,8 @@ namespace RhythmBox.Tests.VisualTests.Gameplay.Objects
                 });
 
                 bx.FadeIn(100);
-                //bx.ScaleTo(new Vector2(1f,0.05f), 100, Easing.OutCirc);
                 bx.MoveToY(0f, 1500, Easing.InCirc);
-                //bx.ResizeTo(new Vector2(1f, 0.1f), 1500, Easing.InCirc);
-            });
 
-            AddStep("go", () =>
-            {
                 bx.MoveToY(-0.5f, 1500, Easing.InCirc);
                 bx.ResizeTo(new Vector2(1f, 0.05f), 1500, Easing.InCirc);
                 Scheduler.AddDelayed(() => Rip(0, 0), 1800);
@@ -80,17 +74,10 @@ namespace RhythmBox.Tests.VisualTests.Gameplay.Objects
                     Logger.Log(bx.Y.ToString());
                 }
 
-                //Logger.Log(bx.Y.ToString());
-
                 Rip(1500, 500);
 
             }
             return base.OnKeyDown(e);
-        }
-
-        protected override bool OnMouseMove(MouseMoveEvent e)
-        {
-            return base.OnMouseMove(e);
         }
     }
 }
