@@ -53,6 +53,8 @@ namespace RhythmBox.Mode.Std.Tests.Objects
 
         public Direction direction;
 
+        private bool runOnce = true;
+
         [BackgroundDependencyLoader]
         private void Load()
         {
@@ -107,6 +109,8 @@ namespace RhythmBox.Mode.Std.Tests.Objects
 
         protected override bool OnKeyDown(KeyDownEvent e)
         {
+            #region Up
+
             if (e.Key == Key.W)
             {
                 if (direction == Direction.Up)
@@ -175,16 +179,81 @@ namespace RhythmBox.Mode.Std.Tests.Objects
 
                 Rip(1500, 500);
             }
+            #endregion
+
+            #region Left
+            else if (e.Key == Key.A)
+            {
+                if (direction == Direction.Left)
+                {
+                    Logger.Log(bx.X.ToString());
+                    if (bx.X <= -0.5 + 0.05f && bx.X >= -0.50001f)
+                    {
+                        if (runOnce)
+                        {
+                            runOnce = false;
+                            Add(new TestSceneHitAnimation2(Hit.Hit300)
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativePositionAxes = Axes.Both,
+                                X = bx.X,
+                                Y = bx.Y,
+                            });
+                        }
+                    }
+                    else if (bx.X <= -0.35f && bx.Y >= -0.5f + 0.05f || bx.X == -0.5f + 0.05f)
+                    {
+                        if (runOnce)
+                        {
+                            runOnce = false;
+                            Add(new TestSceneHitAnimation2(Hit.Hit100)
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativePositionAxes = Axes.Both,
+                                X = bx.X,
+                                Y = bx.Y,
+                            });
+                        }
+                    }
+                    else if (bx.X <= -0.25f && bx.Y >= -0.35f || bx.X == -0.35f)
+                    {
+                        if (runOnce)
+                        {
+                            runOnce = false;
+                            Add(new TestSceneHitAnimation2(Hit.Hit50)
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativePositionAxes = Axes.Both,
+                                X = bx.X,
+                                Y = bx.Y,
+                            });
+                        }
+                    }
+                    else if (bx.X <= 0f && bx.Y >= -0.25f || bx.X == -0.25f)
+                    {
+                        if (runOnce)
+                        {
+                            runOnce = false;
+                            Add(new TestSceneHitAnimation2(Hit.Hitx)
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativePositionAxes = Axes.Both,
+                                X = bx.X,
+                                Y = bx.Y,
+                            });
+                        }
+                    }
+                }
+
+                Rip(1500, 500);
+            }
+            #endregion
+
             return base.OnKeyDown(e);
-        }
-
-        private bool runOnce = true;
-
-        protected override void Update()
-        {
-            
-           
-            base.Update();
         }
     }
 

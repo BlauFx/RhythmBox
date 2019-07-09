@@ -1,8 +1,9 @@
-﻿using System.Drawing.Text;
-using osu.Framework.Allocation;
+﻿using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
+using osu.Framework.Input.Events;
+using osu.Framework.Logging;
 using osuTK;
 using RhythmBox.Mode.Std.Tests.Maps;
 using RhythmBox.Mode.Std.Tests.Objects;
