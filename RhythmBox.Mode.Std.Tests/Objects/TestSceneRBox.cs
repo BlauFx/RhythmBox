@@ -1,55 +1,95 @@
-﻿using NUnit.Framework;
-using osu.Framework.Allocation;
+﻿using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
 using osu.Framework.Logging;
-using osu.Framework.Testing;
 using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
+using RhythmBox.Mode.Std.Tests.Animations;
+using Container = osu.Framework.Graphics.Containers.Container;
 
 namespace RhythmBox.Mode.Std.Tests.Objects
 {
-    [TestFixture]
-    public class TestSceneRBox : TestScene
+    public class TestSceneRBox : Container
     {
-        private Box bx;
+        public int time { get; set; } = 0;
+
+        public float speed { get; set; } = 1f;
+
+        public Direction direction;
 
         [BackgroundDependencyLoader]
         private void Load()
         {
-            Children = new Drawable[]
+            Scheduler.AddDelayed(() =>
             {
-                new Box
+                Children = new Drawable[]
                 {
-                    Anchor = Anchor.TopCentre,
-                    Origin = Anchor.TopCentre,
-                    RelativeSizeAxes = Axes.X,
-                    Size = new Vector2(1f,1f),
-                    Y = 0.05f,
-                    RelativePositionAxes = Axes.Both,
-                }
-            };
+                    new RBoxObj(direction, speed)
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Size = new Vector2(1f),
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                    },
+                };
+            },time);
+            
+        }
+    }
 
-            AddStep("Start", () =>
+    internal class RBoxObj : Container
+    {
+        public RBoxObj(Direction direction, float speed)
+        {
+            this.speed = speed;
+            this.direction = direction;
+        }
+
+        private Box bx;
+
+        public float speed { get; set; }
+
+        public Direction direction;
+
+        [BackgroundDependencyLoader]
+        private void Load()
+        {
+            Add(bx = new Box
             {
-                Add(bx = new Box
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.TopCentre,
-                    RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(0.1f, 0.01f),
-                    RelativePositionAxes = Axes.Both,
-                });
-
-                bx.FadeIn(100);
-                bx.MoveToY(0f, 1500, Easing.InCirc);
-
-                bx.MoveToY(-0.5f, 1500, Easing.InCirc);
-                bx.ResizeTo(new Vector2(1f, 0.05f), 1500, Easing.InCirc);
-                Scheduler.AddDelayed(() => Rip(0, 0), 1800);
+                Anchor = Anchor.Centre,
+                Origin = Anchor.TopCentre,
+                RelativeSizeAxes = Axes.Both,
+                Size = new Vector2(0.1f, 0.01f),
+                RelativePositionAxes = Axes.Both,
             });
+
+            bx.FadeIn(100*speed);
+            bx.MoveToY(0f, 0, Easing.InCirc);
+
+            if (direction == Direction.Up)
+            {
+                bx.MoveToY(-0.5f, 1500*speed, Easing.InCirc);
+            }
+            else if (direction == Direction.Down)
+            {
+                bx.Rotation = 180f;
+                bx.MoveToY(0.5f, 1500*speed, Easing.InCirc);
+            }
+            else if (direction == Direction.Left)
+            {
+                bx.Rotation = -90f;
+                bx.MoveToX(-0.5f, 1500*speed, Easing.InCirc);
+            }
+            else if (direction == Direction.Right)
+            {
+                bx.Rotation = 90f;
+                bx.MoveToX(0.5f, 1500*speed, Easing.InCirc);
+            }
+
+            bx.ResizeTo(new Vector2(1f, 0.05f), 1500*speed, Easing.InCirc);
+            Scheduler.AddDelayed(() => Rip(0, 0), 1800*speed);
         }
 
         private void Rip(int clear, int expire)
@@ -69,15 +109,75 @@ namespace RhythmBox.Mode.Std.Tests.Objects
         {
             if (e.Key == Key.W)
             {
-                if (bx.Y <= -0.5 + 0.05f)
+                if (direction == Direction.Up)
                 {
-                    Logger.Log(bx.Y.ToString());
+                    if (bx.Y <= -0.5 + 0.05f)
+                    {
+                        if (runOnce)
+                        {
+                            runOnce = false;
+                            Add(new TestSceneHitAnimation2(Hit.Hit300)
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativePositionAxes = Axes.Both,
+                                X = bx.X,
+                                Y = bx.Y,
+                            });
+                        }
+                    }
+                    else if (bx.Y >= -0.5f + 0.05f && bx.Y <= -0.3f)
+                    {
+                        if (runOnce)
+                        {
+                            runOnce = false;
+                            Add(new TestSceneHitAnimation2(Hit.Hit100)
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativePositionAxes = Axes.Both,
+                                X = bx.X,
+                                Y = bx.Y,
+                            });
+                        }
+                    }
+                    //else if (bx.Y >= -0.3f || bx.Y == -0.3f && bx.Y <= -0.25f)
+                    //{
+                    //    if (runOnce)
+                    //    {
+                    //        runOnce = false;
+                    //        Add(new TestSceneHitAnimation2(Hit.Hit50)
+                    //        {
+                    //            Anchor = Anchor.Centre,
+                    //            Origin = Anchor.Centre,
+                    //            RelativePositionAxes = Axes.Both,
+                    //            X = bx.X,
+                    //            Y = bx.Y,
+                    //        });
+                    //    }
+                    //}
                 }
 
                 Rip(1500, 500);
-
             }
             return base.OnKeyDown(e);
         }
+
+        private bool runOnce = true;
+
+        protected override void Update()
+        {
+            
+           
+            base.Update();
+        }
+    }
+
+    public enum Direction
+    {
+        Up,
+        Down,
+        Left,
+        Right
     }
 }

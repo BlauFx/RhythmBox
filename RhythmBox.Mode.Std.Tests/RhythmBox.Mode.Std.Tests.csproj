@@ -9,8 +9,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Beatmap\" />
     <Folder Include="Score\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RhythmBox.Window.Resources\RhythmBox.Window.Resources.csproj" />
   </ItemGroup>
 
 </Project>

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace RhythmBox.Mode.Std.Tests.Maps
 {
-    class BeatmapSet
+    class TestSceneBeatmapSet
     {
     }
 }
