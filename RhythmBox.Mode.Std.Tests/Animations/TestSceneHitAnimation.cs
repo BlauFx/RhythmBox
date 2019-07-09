@@ -33,7 +33,7 @@ namespace RhythmBox.Mode.Std.Tests.Animations
                 {
                     Depth = 1,
                     Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
+                    Origin = Anchor.TopCentre,
                     Alpha = 0f,
                     Texture = store.Get("Skin/hit300.png"),
                     RelativePositionAxes = Axes.Both,
@@ -42,7 +42,7 @@ namespace RhythmBox.Mode.Std.Tests.Animations
                 {
                     Depth = 1,
                     Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
+                    Origin = Anchor.TopCentre,
                     Alpha = 0f,
                     Texture = store.Get("Skin/hit100.png"),
                     RelativePositionAxes = Axes.Both,
@@ -51,7 +51,7 @@ namespace RhythmBox.Mode.Std.Tests.Animations
                 {
                     Depth = 1,
                     Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
+                    Origin = Anchor.TopCentre,
                     Alpha = 0f,
                     Texture = store.Get("Skin/hit50.png"),
                     RelativePositionAxes = Axes.Both,
@@ -60,7 +60,7 @@ namespace RhythmBox.Mode.Std.Tests.Animations
                 {
                     Depth = 1,
                     Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
+                    Origin = Anchor.TopCentre,
                     Alpha = 0f,
                     Texture = store.Get("Skin/hitx.png"),
                     RelativePositionAxes = Axes.Both,
@@ -108,16 +108,16 @@ namespace RhythmBox.Mode.Std.Tests.Animations
 
                 Scheduler.AddDelayed(() =>
                 {
-                    hitx.RotateTo(-15, 600, Easing.Out);
-                    hitx.MoveToOffset(new Vector2(0f, 0.01f), 600, Easing.In);
-                    
-                }, 300);
-
-                Scheduler.AddDelayed(() =>
-                {
                     hitx.FadeOutFromOne(400, Easing.OutQuart);
                     Scheduler.AddDelayed(() => this.Expire(), 450);
                 }, 600);
+
+                Scheduler.AddDelayed(() =>
+                {
+                    hitx.RotateTo(-10, 600, Easing.Out);
+                    hitx.MoveToOffset(new Vector2(0f, 0.01f), 600, Easing.In);
+                    
+                }, 300);
             }
         }
     }

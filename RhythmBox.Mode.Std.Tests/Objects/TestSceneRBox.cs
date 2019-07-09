@@ -22,7 +22,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
         [BackgroundDependencyLoader]
         private void Load()
         {
-            Scheduler.AddDelayed(() =>
+            Scheduler.AddDelayed(() => //TODO switch to clock
             {
                 Children = new Drawable[]
                 {
@@ -111,7 +111,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
             {
                 if (direction == Direction.Up)
                 {
-                    if (bx.Y <= -0.5 + 0.05f)
+                    if (bx.Y <= -0.5 + 0.05f && bx.Y >= -0.50001f)
                     {
                         if (runOnce)
                         {
@@ -126,7 +126,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                             });
                         }
                     }
-                    else if (bx.Y >= -0.5f + 0.05f && bx.Y <= -0.3f)
+                    else if (bx.Y <= -0.35f && bx.Y >= -0.5f + 0.05f || bx.Y == -0.5f + 0.05f)
                     {
                         if (runOnce)
                         {
@@ -141,21 +141,36 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                             });
                         }
                     }
-                    //else if (bx.Y >= -0.3f || bx.Y == -0.3f && bx.Y <= -0.25f)
-                    //{
-                    //    if (runOnce)
-                    //    {
-                    //        runOnce = false;
-                    //        Add(new TestSceneHitAnimation2(Hit.Hit50)
-                    //        {
-                    //            Anchor = Anchor.Centre,
-                    //            Origin = Anchor.Centre,
-                    //            RelativePositionAxes = Axes.Both,
-                    //            X = bx.X,
-                    //            Y = bx.Y,
-                    //        });
-                    //    }
-                    //}
+                    else if (bx.Y <= -0.25f && bx.Y >= -0.35f || bx.Y == -0.35f)
+                    {
+                        if (runOnce)
+                        {
+                            runOnce = false;
+                            Add(new TestSceneHitAnimation2(Hit.Hit50)
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativePositionAxes = Axes.Both,
+                                X = bx.X,
+                                Y = bx.Y,
+                            });
+                        }
+                    }
+                    else if (bx.Y <= 0f && bx.Y >= -0.25f || bx.Y == -0.25f)
+                    {
+                        if (runOnce)
+                        {
+                            runOnce = false;
+                            Add(new TestSceneHitAnimation2(Hit.Hitx)
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativePositionAxes = Axes.Both,
+                                X = bx.X,
+                                Y = bx.Y,
+                            });
+                        }
+                    }
                 }
 
                 Rip(1500, 500);
