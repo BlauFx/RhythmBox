@@ -70,10 +70,16 @@
         <e p="x86_64" t="Include" />
       </e>
       <e p="RhythmBox.Mode.Std.Tests" t="IncludeRecursive">
+        <e p="Animations" t="Include">
+          <e p="TestSceneHitAnimation.cs" t="Include" />
+        </e>
         <e p="arm64-v8a" t="Include" />
         <e p="armeabi-v7a" t="Include" />
-        <e p="Beatmap" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
+        <e p="Maps" t="Include">
+          <e p="TestSceneBeatmap.cs" t="Include" />
+          <e p="TestSceneBeatmapPack.cs" t="Include" />
+        </e>
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
             <e p="netstandard2.0" t="Include">
@@ -81,7 +87,9 @@
             </e>
           </e>
         </e>
-        <e p="Objects" t="Include" />
+        <e p="Objects" t="Include">
+          <e p="TestSceneRBox.cs" t="Include" />
+        </e>
         <e p="RhythmBox.Mode.Std.Tests.csproj" t="IncludeRecursive" />
         <e p="Score" t="Include" />
         <e p="x64" t="Include" />
@@ -100,14 +108,24 @@
             </e>
           </e>
         </e>
+        <e p="Objects" t="Include">
+          <e p="TestSceneSelectButton.cs" t="Include" />
+        </e>
+        <e p="pending files" t="Include">
+          <e p="TestSceneRbPlayfield.cs" t="Include" />
+        </e>
         <e p="Program.cs" t="Include" />
         <e p="RhythmBox.Tests.csproj" t="IncludeRecursive" />
         <e p="Tests.cs" t="Include" />
         <e p="VisualTests" t="Include">
+          <e p="Animations" t="Include">
+            <e p="TestSceneHitAnimation.cs" t="Include" />
+          </e>
+          <e p="Clock" t="Include">
+            <e p="TestSceneTestClock.cs" t="Include" />
+          </e>
           <e p="Gameplay" t="Include">
-            <e p="Objects" t="Include">
-              <e p="TestSceneRBox.cs" t="Include" />
-            </e>
+            <e p="TestSceneRbPlayWindow.cs" t="Include" />
           </e>
           <e p="Screens" t="Include">
             <e p="TestSceneMainMenu.cs" t="Include" />
@@ -170,6 +188,12 @@
           <e p="Game" t="Include">
             <e p="Logo.pdn" t="Include" />
             <e p="Logo.png" t="Include" />
+          </e>
+          <e p="Skin" t="Include">
+            <e p="hit100.png" t="Include" />
+            <e p="hit300.png" t="Include" />
+            <e p="hit50.png" t="Include" />
+            <e p="hitx.png" t="Include" />
             <e p="menu-background.png" t="Include" />
           </e>
         </e>
