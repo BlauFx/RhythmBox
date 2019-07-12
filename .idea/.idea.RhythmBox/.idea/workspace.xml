@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e4727fe2-9a2f-48ed-8b20-057843fe00eb" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/RhythmBox.sln" beforeDir="false" afterPath="$PROJECT_DIR$/RhythmBox.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RhythmBox.Desktop/RhythmBox.Desktop.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/RhythmBox.Desktop/RhythmBox.Desktop.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RhythmBox.Mode.Std.Tests/RhythmBox.Mode.Std.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/RhythmBox.Mode.Std.Tests/RhythmBox.Mode.Std.Tests.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RhythmBox.Mode.Std/RhythmBox.Mode.Std.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/RhythmBox.Mode.Std/RhythmBox.Mode.Std.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RhythmBox.Tests/RhythmBox.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/RhythmBox.Tests/RhythmBox.Tests.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RhythmBox.Window/RhythmBox.Window.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/RhythmBox.Window/RhythmBox.Window.csproj" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -11,12 +15,12 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/RhythmBox.Tests/RhythmBox.Tests.csproj">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="285">
-              <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
+              <caret line="19" selection-start-line="19" selection-end-line="19" />
             </state>
           </provider>
         </entry>
@@ -53,6 +57,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="AssemblyExplorer" />
       <pane id="SolutionExplorer">
         <subPane>
           <expand>
@@ -60,18 +65,12 @@
               <item name="" type="784c90a0:SolutionExplorerRootNode" />
               <item name="RhythmBox" type="24d0babc:SolutionExplorerModelNode" />
             </path>
-            <path>
-              <item name="" type="784c90a0:SolutionExplorerRootNode" />
-              <item name="RhythmBox" type="24d0babc:SolutionExplorerModelNode" />
-              <item name="RhythmBox.Mode.Std.Tests" type="24d0babc:SolutionExplorerModelNode" />
-            </path>
           </expand>
           <select />
         </subPane>
         <option name="show-all-files" value="false" />
       </pane>
       <pane id="FileSystemExplorer" />
-      <pane id="AssemblyExplorer" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -169,11 +168,12 @@
       <updated>1562520705127</updated>
       <workItem from="1562520707888" duration="180000" />
       <workItem from="1562520905140" duration="272000" />
+      <workItem from="1562852944206" duration="407000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="452000" />
+    <option name="totallyTimeSpent" value="859000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -187,7 +187,7 @@
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25253063" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25519446" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -197,9 +197,9 @@
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32977587" />
-      <window_info anchor="bottom" id="NuGet" order="7" weight="0.32977587" />
+      <window_info active="true" anchor="bottom" id="NuGet" order="7" visible="true" weight="0.32977587" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="9" visible="true" weight="0.32977587" />
+      <window_info anchor="bottom" id="Version Control" order="9" weight="0.32977587" />
       <window_info anchor="bottom" id="Database Changes" order="10" />
       <window_info anchor="bottom" id="Unit Tests" order="11" weight="0.32977587" />
       <window_info anchor="bottom" id="Terminal" order="12" weight="0.32977587" />
@@ -240,7 +240,7 @@
     <entry file="file://$PROJECT_DIR$/RhythmBox.Tests/RhythmBox.Tests.csproj">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
-          <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
+          <caret line="19" selection-start-line="19" selection-end-line="19" />
         </state>
       </provider>
     </entry>

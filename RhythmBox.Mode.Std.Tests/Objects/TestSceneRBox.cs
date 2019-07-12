@@ -19,6 +19,8 @@ namespace RhythmBox.Mode.Std.Tests.Objects
 
         public Direction direction;
 
+        private RBoxObj obj;
+
         [BackgroundDependencyLoader]
         private void Load()
         {
@@ -26,7 +28,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
             {
                 Children = new Drawable[]
                 {
-                    new RBoxObj(direction, speed)
+                    obj = new RBoxObj(direction, speed)
                     {
                         RelativeSizeAxes = Axes.Both,
                         Size = new Vector2(1f),
@@ -35,7 +37,11 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                     },
                 };
             },time);
-            
+        }
+
+        public void OnClickKeyDown(Key key)
+        {
+            obj.ClickKeyDown(key);
         }
     }
 
@@ -53,7 +59,9 @@ namespace RhythmBox.Mode.Std.Tests.Objects
 
         public Direction direction;
 
-        private bool runOnce = true;
+        private const int Expire = 300;
+
+        private const int Clear = 100;
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -91,14 +99,13 @@ namespace RhythmBox.Mode.Std.Tests.Objects
             }
 
             bx.ResizeTo(new Vector2(1f, 0.05f), 1500*speed, Easing.InCirc);
-            Scheduler.AddDelayed(() => Rip(0, 0), 1800*speed);
+            Scheduler.AddDelayed(() => Remove(Clear, Expire), 1800 * speed);
         }
 
-        private void Rip(int clear, int expire)
+        private void Remove(int clear, int expire)
         {
-            bx.ClearTransformsAfter(clear);
-            Scheduler.AddDelayed(() => bx.Expire(), expire);
-
+            this.ClearTransformsAfter(clear);
+            Scheduler.AddDelayed(() => this.Expire(), expire);
             bx.Colour = Color4.Red;
 
             Scheduler.AddDelayed(() => bx.Colour = Color4.White, 50);
@@ -107,153 +114,223 @@ namespace RhythmBox.Mode.Std.Tests.Objects
             bx.ScaleTo(1.1f, 100, Easing.OutCirc);
         }
 
-        protected override bool OnKeyDown(KeyDownEvent e)
+        public void ClickKeyDown(Key key)
         {
             #region Up
-
-            if (e.Key == Key.W)
+            if (key == Key.W)
             {
                 if (direction == Direction.Up)
                 {
                     if (bx.Y <= -0.5 + 0.05f && bx.Y >= -0.50001f)
                     {
-                        if (runOnce)
+                        Add(new TestSceneHitAnimation2(Hit.Hit300)
                         {
-                            runOnce = false;
-                            Add(new TestSceneHitAnimation2(Hit.Hit300)
-                            {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                RelativePositionAxes = Axes.Both,
-                                X = bx.X,
-                                Y = bx.Y,
-                            });
-                        }
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            RelativePositionAxes = Axes.Both,
+                            X = bx.X,
+                            Y = bx.Y,
+                        });
                     }
                     else if (bx.Y <= -0.35f && bx.Y >= -0.5f + 0.05f || bx.Y == -0.5f + 0.05f)
                     {
-                        if (runOnce)
+                        Add(new TestSceneHitAnimation2(Hit.Hit100)
                         {
-                            runOnce = false;
-                            Add(new TestSceneHitAnimation2(Hit.Hit100)
-                            {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                RelativePositionAxes = Axes.Both,
-                                X = bx.X,
-                                Y = bx.Y,
-                            });
-                        }
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            RelativePositionAxes = Axes.Both,
+                            X = bx.X,
+                            Y = bx.Y,
+                        });
                     }
                     else if (bx.Y <= -0.25f && bx.Y >= -0.35f || bx.Y == -0.35f)
                     {
-                        if (runOnce)
+                        Add(new TestSceneHitAnimation2(Hit.Hit50)
                         {
-                            runOnce = false;
-                            Add(new TestSceneHitAnimation2(Hit.Hit50)
-                            {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                RelativePositionAxes = Axes.Both,
-                                X = bx.X,
-                                Y = bx.Y,
-                            });
-                        }
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            RelativePositionAxes = Axes.Both,
+                            X = bx.X,
+                            Y = bx.Y,
+                        });
                     }
                     else if (bx.Y <= 0f && bx.Y >= -0.25f || bx.Y == -0.25f)
                     {
-                        if (runOnce)
+                        Add(new TestSceneHitAnimation2(Hit.Hitx)
                         {
-                            runOnce = false;
-                            Add(new TestSceneHitAnimation2(Hit.Hitx)
-                            {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                RelativePositionAxes = Axes.Both,
-                                X = bx.X,
-                                Y = bx.Y,
-                            });
-                        }
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            RelativePositionAxes = Axes.Both,
+                            X = bx.X,
+                            Y = bx.Y,
+                        });
                     }
                 }
+                Remove(Clear, Expire);
+            }
+            #endregion
 
-                Rip(1500, 500);
+            #region Down
+            else if (key == Key.S)
+            {
+                if (direction == Direction.Down)
+                {
+                    if (bx.Y >= 0.5 - 0.05f && bx.Y <= 0.50001f)
+                    {
+                        Add(new TestSceneHitAnimation2(Hit.Hit300)
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            RelativePositionAxes = Axes.Both,
+                            X = bx.X,
+                            Y = bx.Y - 0.05f,
+                        });
+                    }
+                    else if (bx.Y >= 0.35f && bx.Y <= 0.5f - 0.05f || bx.Y == 0.5f - 0.05f)
+                    {
+                        Add(new TestSceneHitAnimation2(Hit.Hit100)
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            RelativePositionAxes = Axes.Both,
+                            X = bx.X,
+                            Y = bx.Y - 0.05f,
+                        });
+                    }
+                    else if (bx.Y >= 0.25f && bx.Y <= 0.35f || bx.Y == 0.35f)
+                    {
+                        Add(new TestSceneHitAnimation2(Hit.Hit50)
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            RelativePositionAxes = Axes.Both,
+                            X = bx.X,
+                            Y = bx.Y - 0.05f,
+                        });
+                    }
+                    else if (bx.Y >= 0f && bx.Y <= 0.25f || bx.Y == 0.25f)
+                    {
+                        Add(new TestSceneHitAnimation2(Hit.Hitx)
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            RelativePositionAxes = Axes.Both,
+                            X = bx.X,
+                            Y = bx.Y - 0.05f,
+                        });
+                    }
+                }
+                Remove(Clear, Expire);
             }
             #endregion
 
             #region Left
-            else if (e.Key == Key.A)
+            else if (key == Key.A)
             {
                 if (direction == Direction.Left)
                 {
-                    Logger.Log(bx.X.ToString());
                     if (bx.X <= -0.5 + 0.05f && bx.X >= -0.50001f)
                     {
-                        if (runOnce)
+                        Add(new TestSceneHitAnimation2(Hit.Hit300)
                         {
-                            runOnce = false;
-                            Add(new TestSceneHitAnimation2(Hit.Hit300)
-                            {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                RelativePositionAxes = Axes.Both,
-                                X = bx.X,
-                                Y = bx.Y,
-                            });
-                        }
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            RelativePositionAxes = Axes.Both,
+                            X = bx.X,
+                            Y = bx.Y,
+                        });
                     }
                     else if (bx.X <= -0.35f && bx.Y >= -0.5f + 0.05f || bx.X == -0.5f + 0.05f)
                     {
-                        if (runOnce)
+                        Add(new TestSceneHitAnimation2(Hit.Hit100)
                         {
-                            runOnce = false;
-                            Add(new TestSceneHitAnimation2(Hit.Hit100)
-                            {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                RelativePositionAxes = Axes.Both,
-                                X = bx.X,
-                                Y = bx.Y,
-                            });
-                        }
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            RelativePositionAxes = Axes.Both,
+                            X = bx.X,
+                            Y = bx.Y,
+                        });
                     }
                     else if (bx.X <= -0.25f && bx.Y >= -0.35f || bx.X == -0.35f)
                     {
-                        if (runOnce)
+                        Add(new TestSceneHitAnimation2(Hit.Hit50)
                         {
-                            runOnce = false;
-                            Add(new TestSceneHitAnimation2(Hit.Hit50)
-                            {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                RelativePositionAxes = Axes.Both,
-                                X = bx.X,
-                                Y = bx.Y,
-                            });
-                        }
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            RelativePositionAxes = Axes.Both,
+                            X = bx.X,
+                            Y = bx.Y,
+                        });
                     }
                     else if (bx.X <= 0f && bx.Y >= -0.25f || bx.X == -0.25f)
                     {
-                        if (runOnce)
+                        Add(new TestSceneHitAnimation2(Hit.Hitx)
                         {
-                            runOnce = false;
-                            Add(new TestSceneHitAnimation2(Hit.Hitx)
-                            {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                RelativePositionAxes = Axes.Both,
-                                X = bx.X,
-                                Y = bx.Y,
-                            });
-                        }
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            RelativePositionAxes = Axes.Both,
+                            X = bx.X,
+                            Y = bx.Y,
+                        });
                     }
                 }
-
-                Rip(1500, 500);
+                Remove(Clear, Expire);
             }
             #endregion
 
-            return base.OnKeyDown(e);
+            #region Right
+            else if (key == Key.D)
+            {
+                if (direction == Direction.Right)
+                {
+                    if (bx.X >= 0.5 - 0.05f && bx.X <= 0.50001f)
+                    {
+                        Add(new TestSceneHitAnimation2(Hit.Hit300)
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            RelativePositionAxes = Axes.Both,
+                            X = bx.X - 0.05f,
+                            Y = bx.Y,
+                        });
+                    }
+                    else if (bx.X >= 0.35f && bx.Y <= 0.5f + 0.05f || bx.X == 0.5f - 0.05f)
+                    {
+                        Add(new TestSceneHitAnimation2(Hit.Hit100)
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            RelativePositionAxes = Axes.Both,
+                            X = bx.X - 0.05f,
+                            Y = bx.Y,
+                        });
+                    }
+                    else if (bx.X >= 0.25f && bx.Y <= 0.35f || bx.X == 0.35f)
+                    {
+                        Add(new TestSceneHitAnimation2(Hit.Hit50)
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            RelativePositionAxes = Axes.Both,
+                            X = bx.X - 0.05f,
+                            Y = bx.Y,
+                        });
+                    }
+                    else if (bx.X >= 0f && bx.Y <= 0.25f || bx.X == 0.25f)
+                    {
+                        Add(new TestSceneHitAnimation2(Hit.Hitx)
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            RelativePositionAxes = Axes.Both,
+                            X = bx.X - 0.05f,
+                            Y = bx.Y,
+                        });
+                    }
+                }
+                Remove(Clear, Expire);
+            }
+            #endregion
         }
     }
 

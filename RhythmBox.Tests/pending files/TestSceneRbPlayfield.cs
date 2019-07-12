@@ -5,8 +5,10 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
 using osu.Framework.Logging;
 using osuTK;
+using osuTK.Input;
 using RhythmBox.Mode.Std.Tests.Maps;
 using RhythmBox.Mode.Std.Tests.Objects;
+using System;
 using Direction = RhythmBox.Mode.Std.Tests.Objects.Direction;
 
 namespace RhythmBox.Tests.pending_files
@@ -14,6 +16,10 @@ namespace RhythmBox.Tests.pending_files
     public class TestSceneRbPlayfield : Container
     {
         public TestSceneBeatmap Beatmap;
+
+        private TestSceneRBox objBox;
+
+        private TestSceneRBox[] objBoxArray = new TestSceneRBox[4];
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -79,7 +85,7 @@ namespace RhythmBox.Tests.pending_files
                     X = 1f,
                     RelativePositionAxes = Axes.Both,
                 },
-                new TestSceneRBox
+                objBoxArray[0] = new TestSceneRBox
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
@@ -88,19 +94,83 @@ namespace RhythmBox.Tests.pending_files
                     Size = new Vector2(1f),
                     time = 430,
                 },
-                new TestSceneRBox
+                objBoxArray[1] = new TestSceneRBox
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                    direction = Direction.Up,
+                    direction = Direction.Left,
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f),
                     time = 700,
                     speed = 1f,
                 },
+                objBoxArray[2] = new TestSceneRBox
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    direction = Direction.Down,
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(1f),
+                    time = 1200,
+                    speed = 10f,
+                },
+                objBoxArray[3] = new TestSceneRBox
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    direction = Direction.Right,
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(1f),
+                    time = 3100,
+                    speed = 1f,
+                },
             };
 
             LoadBeatmap();
+        }
+
+        protected override bool OnKeyDown(KeyDownEvent e)
+        {
+            for (int i = 0; i < objBoxArray.Length; i++)
+            {
+                if (objBoxArray[i].IsAlive)
+                {
+                    try
+                    {
+                        if (e.Key == Key.W)
+                        {
+                            objBoxArray[i].OnClickKeyDown(Key.W);
+                            return base.OnKeyDown(e);
+                            i = objBoxArray.Length;
+                        }
+                        else if (e.Key == Key.A)
+                        {
+                            objBoxArray[i].OnClickKeyDown(Key.A);
+                            return base.OnKeyDown(e);
+                            i = objBoxArray.Length;
+                        }
+                        else if (e.Key == Key.S)
+                        {
+                            objBoxArray[i].OnClickKeyDown(Key.S);
+                            return base.OnKeyDown(e);
+                            i = objBoxArray.Length;
+                        }
+                        else if (e.Key == Key.D)
+                        {
+                            objBoxArray[i].OnClickKeyDown(Key.D);
+                            return base.OnKeyDown(e);
+                            i = objBoxArray.Length;
+                        }
+                    }
+                    catch (Exception exception)
+                    {
+                        var x = exception;
+                        Logger.Log(x.Message);
+                        //i = objBoxArray.Length;
+                    }
+                }
+            }
+            return base.OnKeyDown(e);
         }
 
         private void LoadBeatmap()
