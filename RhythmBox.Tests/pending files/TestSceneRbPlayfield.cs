@@ -9,6 +9,7 @@ using osuTK.Input;
 using RhythmBox.Mode.Std.Tests.Maps;
 using RhythmBox.Mode.Std.Tests.Objects;
 using System;
+using System.Threading.Tasks;
 using Direction = RhythmBox.Mode.Std.Tests.Objects.Direction;
 
 namespace RhythmBox.Tests.pending_files
@@ -89,7 +90,7 @@ namespace RhythmBox.Tests.pending_files
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                    direction = Direction.Left,
+                    direction = Direction.Up,
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f),
                     time = 430,
@@ -112,7 +113,7 @@ namespace RhythmBox.Tests.pending_files
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f),
                     time = 1200,
-                    speed = 10f,
+                    speed = 1f,
                 },
                 objBoxArray[3] = new TestSceneRBox
                 {
@@ -125,49 +126,34 @@ namespace RhythmBox.Tests.pending_files
                     speed = 1f,
                 },
             };
-
             LoadBeatmap();
         }
 
         protected override bool OnKeyDown(KeyDownEvent e)
         {
-            for (int i = 0; i < objBoxArray.Length; i++)
+            foreach (var x in objBoxArray)
             {
-                if (objBoxArray[i].IsAlive)
+                if (x.AlphaA > 0)
                 {
                     try
                     {
-                        if (e.Key == Key.W)
+                        switch (e.Key)
                         {
-                            objBoxArray[i].OnClickKeyDown(Key.W);
-                            return base.OnKeyDown(e);
-                            i = objBoxArray.Length;
-                        }
-                        else if (e.Key == Key.A)
-                        {
-                            objBoxArray[i].OnClickKeyDown(Key.A);
-                            return base.OnKeyDown(e);
-                            i = objBoxArray.Length;
-                        }
-                        else if (e.Key == Key.S)
-                        {
-                            objBoxArray[i].OnClickKeyDown(Key.S);
-                            return base.OnKeyDown(e);
-                            i = objBoxArray.Length;
-                        }
-                        else if (e.Key == Key.D)
-                        {
-                            objBoxArray[i].OnClickKeyDown(Key.D);
-                            return base.OnKeyDown(e);
-                            i = objBoxArray.Length;
+                            case Key.W:
+                                x.OnClickKeyDown(Key.W);
+                                return base.OnKeyDown(e);
+                            case Key.S:
+                                x.OnClickKeyDown(Key.S);
+                                return base.OnKeyDown(e);
+                            case Key.A:
+                                x.OnClickKeyDown(Key.A);
+                                return base.OnKeyDown(e);
+                            case Key.D:
+                                x.OnClickKeyDown(Key.D);
+                                return base.OnKeyDown(e);
                         }
                     }
-                    catch (Exception exception)
-                    {
-                        var x = exception;
-                        Logger.Log(x.Message);
-                        //i = objBoxArray.Length;
-                    }
+                    catch  {  }
                 }
             }
             return base.OnKeyDown(e);
