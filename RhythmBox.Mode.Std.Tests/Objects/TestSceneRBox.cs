@@ -155,7 +155,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                                 Origin = Anchor.Centre,
                                 RelativePositionAxes = Axes.Both,
                                 X = bx.X,
-                                Y = bx.Y + 0.05f,
+                                Y = bx.Y + 0.00f,
                             });
                         }
                         else if (bx.Y <= -0.35f && bx.Y >= -0.5f + 0.05f || bx.Y == -0.5f + 0.05f)
@@ -166,7 +166,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                                 Origin = Anchor.Centre,
                                 RelativePositionAxes = Axes.Both,
                                 X = bx.X,
-                                Y = bx.Y + 0.05f,
+                                Y = bx.Y,
                             });
                         }
                         else if (bx.Y <= -0.25f && bx.Y >= -0.35f || bx.Y == -0.35f)
@@ -177,7 +177,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                                 Origin = Anchor.Centre,
                                 RelativePositionAxes = Axes.Both,
                                 X = bx.X,
-                                Y = bx.Y + 0.05f,
+                                Y = bx.Y,
                             });
                         }
                         else if (bx.Y <= 0f && bx.Y >= -0.25f || bx.Y == -0.25f)
@@ -188,7 +188,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                                 Origin = Anchor.Centre,
                                 RelativePositionAxes = Axes.Both,
                                 X = bx.X,
-                                Y = bx.Y + 0.05f,
+                                Y = bx.Y,
                             });
                         }
                         Remove(Clear, Expire);
@@ -207,7 +207,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
                                 RelativePositionAxes = Axes.Both,
-                                X = bx.X + 0.05f,
+                                X = bx.X,
                                 Y = bx.Y,
                             });
                         }
@@ -218,7 +218,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
                                 RelativePositionAxes = Axes.Both,
-                                X = bx.X + 0.05f,
+                                X = bx.X,
                                 Y = bx.Y,
                             });
                         }
@@ -229,7 +229,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
                                 RelativePositionAxes = Axes.Both,
-                                X = bx.X + 0.05f,
+                                X = bx.X,
                                 Y = bx.Y,
                             });
                         }
@@ -240,7 +240,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
                                 RelativePositionAxes = Axes.Both,
-                                X = bx.X + 0.05f,
+                                X = bx.X,
                                 Y = bx.Y,
                             });
                         }
@@ -313,7 +313,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
                                 RelativePositionAxes = Axes.Both,
-                                X = bx.X - 0.05f,
+                                X = bx.X,
                                 Y = bx.Y,
                             });
                         }
@@ -324,7 +324,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
                                 RelativePositionAxes = Axes.Both,
-                                X = bx.X - 0.05f,
+                                X = bx.X,
                                 Y = bx.Y,
                             });
                         }
@@ -335,7 +335,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
                                 RelativePositionAxes = Axes.Both,
-                                X = bx.X - 0.05f,
+                                X = bx.X,
                                 Y = bx.Y,
                             });
                         }
@@ -346,7 +346,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
                                 RelativePositionAxes = Axes.Both,
-                                X = bx.X - 0.05f,
+                                X = bx.X,
                                 Y = bx.Y,
                             });
                         }
