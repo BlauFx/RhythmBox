@@ -13,6 +13,8 @@ namespace RhythmBox.Window.pending_files
         public Texture texture;
         protected const float scale = 0.05f;
 
+        private bool scaling = false;
+
         [BackgroundDependencyLoader]
         private void Load()
         {
@@ -35,13 +37,21 @@ namespace RhythmBox.Window.pending_files
 
         protected override bool OnHover(HoverEvent e)
         {
-            this.ScaleTo(this.Scale.X + scale, 500, Easing.Out);
+            if (!scaling)
+            {
+                this.ScaleTo(this.Scale.X + scale, 100, Easing.Out);
+                Scheduler.AddDelayed(() => scaling = true, 100);
+            }
             return base.OnHover(e);
         }
 
         protected override void OnHoverLost(HoverLostEvent e)
         {
-            this.ScaleTo(this.Scale.X - scale, 500, Easing.Out);
+            if (scaling)
+            {
+                this.ScaleTo(this.Scale.X - scale, 100, Easing.Out);
+                Scheduler.AddDelayed(() => scaling = false, 100);
+            }
             base.OnHoverLost(e);
         }
 

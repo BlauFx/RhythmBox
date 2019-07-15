@@ -20,12 +20,16 @@ namespace RhythmBox.Tests.VisualTests.Screens
     {
         public static Sprite background;
 
+        private Logo logo;
+
+        private bool logoMoved = false;
+
         [BackgroundDependencyLoader]
         private void Load(TextureStore store)
         {
             Children = new Drawable[]
             {
-                new Logo
+                logo = new Logo
                 {
                     Depth = 0,
                     Size = new Vector2(0.4f,0.55f),
@@ -86,7 +90,17 @@ namespace RhythmBox.Tests.VisualTests.Screens
                 }
             };
         }
-       
+
+        protected override bool OnMouseDown(MouseDownEvent e)
+        {
+            if (!logoMoved)
+            {
+                logoMoved = true;
+                logo.MoveToOffset(new Vector2(-0.15f, 0), 500, Easing.In);
+            }
+            return base.OnMouseDown(e);
+        }
+
         protected override bool OnMouseMove(MouseMoveEvent e)
         {
             if (e.LastMousePosition.Y >= e.MousePosition.Y)
