@@ -1,5 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
+using osu.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shapes;
@@ -11,6 +12,7 @@ using osu.Framework.Screens;
 using osu.Framework.Testing;
 using osuTK;
 using RhythmBox.Tests.Objects;
+using RhythmBox.Tests.pending_files;
 using RhythmBox.Window.pending_files;
 
 namespace RhythmBox.Tests.VisualTests.Screens
@@ -22,7 +24,9 @@ namespace RhythmBox.Tests.VisualTests.Screens
 
         private Logo logo;
 
-        [BackgroundDependencyLoader]
+        private TestSceneSettingsOverlay settings;
+
+        [BackgroundDependencyLoader] 
         private void Load(TextureStore store)
         {
             Children = new Drawable[]
@@ -76,6 +80,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     X = 0.2f,
                     ClickAction = () =>
                     {
+                        settings.Show();
                     },
                 },
                 new TestSceneSelectButton
@@ -91,7 +96,11 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     Y = 0.2f,
                     X = 0.2f,
                     ClickAction = () => Environment.Exit(0),
-                }
+                },
+                settings = new TestSceneSettingsOverlay
+                {
+                    Depth = int.MinValue,
+                },
             };
         }
 

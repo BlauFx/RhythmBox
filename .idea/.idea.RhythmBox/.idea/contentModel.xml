@@ -109,10 +109,13 @@
           </e>
         </e>
         <e p="Objects" t="Include">
+          <e p="TestSceneCheckbox.cs" t="Include" />
           <e p="TestSceneSelectButton.cs" t="Include" />
         </e>
         <e p="pending files" t="Include">
+          <e p="TestSceneMyScrollContainer.cs" t="Include" />
           <e p="TestSceneRbPlayfield.cs" t="Include" />
+          <e p="TestSceneSettingsOverlay.cs" t="Include" />
         </e>
         <e p="Program.cs" t="Include" />
         <e p="RhythmBox.Tests.csproj" t="IncludeRecursive" />
@@ -189,6 +192,7 @@
           <e p="Game" t="Include">
             <e p="Logo.pdn" t="Include" />
             <e p="Logo.png" t="Include" />
+            <e p="X.png" t="Include" />
           </e>
           <e p="Skin" t="Include">
             <e p="hit100.png" t="Include" />

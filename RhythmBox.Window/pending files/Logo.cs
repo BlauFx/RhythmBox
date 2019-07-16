@@ -66,13 +66,13 @@ namespace RhythmBox.Window.pending_files
                 logoMoved = true;
                 this.MoveToOffset(new Vector2(-0.13f, 0), 500, Easing.In);
             }
-            this.ScaleTo(this.Scale.X - (scale * 1.1f), 100, Easing.Out);
+            this.ScaleTo(0.92f, 100, Easing.Out);
             return base.OnMouseDown(e);
         }
 
         protected override bool OnMouseUp(MouseUpEvent e)
         {
-            this.ScaleTo(this.Scale.X + (scale * 1.1f), 100, Easing.Out);
+            this.ScaleTo(1f, 100, Easing.Out);
             return base.OnMouseUp(e);
         }
     }

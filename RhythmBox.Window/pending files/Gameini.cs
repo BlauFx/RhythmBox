@@ -9,6 +9,7 @@ namespace RhythmBox.Window.pending_files
 
         protected override void InitialiseDefaults()
         {
+
         }
 
         public Gameini(Storage storage)
@@ -18,6 +19,6 @@ namespace RhythmBox.Window.pending_files
     }
     public enum SettingsConfig
     {
-       
+
     }
 }
