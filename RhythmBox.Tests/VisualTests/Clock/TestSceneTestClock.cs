@@ -27,10 +27,45 @@ namespace RhythmBox.Tests.VisualTests.Clock
                 }
             };
             clock.Start();
+            
+            AddStep("Reset clock", () =>
+            {
+                clock.Reset();
+            });
 
             AddStep("Seek 10sec forward", () =>
             {
                 clock.Seek(clock.CurrentTime + 10000);
+            });
+            
+            AddStep("Seek 10sec backward", () =>
+            {
+                clock.Seek(clock.CurrentTime - 10000);
+            });
+
+            AddStep("Pause", () =>
+            {
+                clock.Stop();
+            });
+            
+            AddStep("Continue", () =>
+            {
+                clock.Start();
+            });
+            
+            AddStep("Add speed", () =>
+            {
+                clock.Rate += 10;
+            });
+            
+            AddStep("Remove speed", () =>
+            {
+                clock.Rate -= 10;
+            });
+            
+            AddStep("Reset Speed", () =>
+            {
+                clock.Rate = 1;
             });
         }
 

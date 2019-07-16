@@ -129,6 +129,7 @@
           </e>
           <e p="Screens" t="Include">
             <e p="TestSceneMainMenu.cs" t="Include" />
+            <e p="TestSceneSongSelection.cs" t="Include" />
           </e>
         </e>
         <e p="x64" t="Include" />

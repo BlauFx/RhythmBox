@@ -4,6 +4,8 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Events;
+using osuTK;
+using osuTK.Input;
 
 namespace RhythmBox.Window.pending_files
 {
@@ -15,6 +17,8 @@ namespace RhythmBox.Window.pending_files
 
         private bool scaling = false;
 
+        private bool logoMoved = false;
+        
         [BackgroundDependencyLoader]
         private void Load()
         {
@@ -57,6 +61,11 @@ namespace RhythmBox.Window.pending_files
 
         protected override bool OnMouseDown(MouseDownEvent e)
         {
+            if (!logoMoved)
+            {
+                logoMoved = true;
+                this.MoveToOffset(new Vector2(-0.13f, 0), 500, Easing.In);
+            }
             this.ScaleTo(this.Scale.X - (scale * 1.1f), 100, Easing.Out);
             return base.OnMouseDown(e);
         }

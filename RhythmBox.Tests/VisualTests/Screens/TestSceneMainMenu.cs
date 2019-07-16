@@ -22,8 +22,6 @@ namespace RhythmBox.Tests.VisualTests.Screens
 
         private Logo logo;
 
-        private bool logoMoved = false;
-
         [BackgroundDependencyLoader]
         private void Load(TextureStore store)
         {
@@ -60,6 +58,9 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     FontSize = 60f,
                     Y = -0.2f,
                     X = 0.2f,
+                    ClickAction = () =>
+                    {
+                    }
                 },
                 new TestSceneSelectButton
                 {
@@ -73,6 +74,9 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     FontSize = 60f,
                     Y = 0f,
                     X = 0.2f,
+                    ClickAction = () =>
+                    {
+                    },
                 },
                 new TestSceneSelectButton
                 {
@@ -89,16 +93,6 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     ClickAction = () => Environment.Exit(0),
                 }
             };
-        }
-
-        protected override bool OnMouseDown(MouseDownEvent e)
-        {
-            if (!logoMoved)
-            {
-                logoMoved = true;
-                logo.MoveToOffset(new Vector2(-0.15f, 0), 500, Easing.In);
-            }
-            return base.OnMouseDown(e);
         }
 
         protected override bool OnMouseMove(MouseMoveEvent e)
