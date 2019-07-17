@@ -2,19 +2,13 @@ using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shapes;
-using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
 using osu.Framework.Testing;
 using osuTK;
-using RhythmBox.Tests.Objects;
-using RhythmBox.Window.pending_files;
-using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Logging;
 using osuTK.Graphics;
 using osuTK.Input;
-using osuTK.Platform.Windows;
 using RhythmBox.Tests.pending_files;
 namespace RhythmBox.Tests.VisualTests.Screens
 {
@@ -125,7 +119,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
                         new Box
                         {
                             Anchor = Anchor.TopCentre,
-                            Origin = Anchor.Centre,
+                            Origin = Anchor.TopCentre,
                             RelativeSizeAxes = Axes.X,
                             Size = new Vector2(1f,25f),
                             Colour = Color4.Yellow.Opacity(0.2f),
@@ -144,7 +138,6 @@ namespace RhythmBox.Tests.VisualTests.Screens
             x = (x / 1.07f);
 
             FFContainerM.ScrollTo(FFContainer.Height / x);
-            Logger.Log(x.ToString());
             return base.OnMouseDown(e);
         }
 
