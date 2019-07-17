@@ -2,6 +2,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
+using osu.Framework.Logging;
 using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
@@ -79,6 +80,13 @@ namespace RhythmBox.Tests.pending_files
                 //note that we are changing the colour of the box here as to not interfere with the hover effect.
                 box.FadeColour(highlightColour, 100);
                 return true;
+            }
+
+            protected override bool OnDrag(DragEvent e)
+            {
+                Logger.Log(e.MousePosition.Y.ToString());
+
+                return base.OnDrag(e);
             }
 
             protected override bool OnMouseUp(MouseUpEvent e)
