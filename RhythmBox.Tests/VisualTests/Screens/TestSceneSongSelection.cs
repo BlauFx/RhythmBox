@@ -10,6 +10,7 @@ using osu.Framework.Graphics.Containers;
 using osuTK.Graphics;
 using osuTK.Input;
 using RhythmBox.Tests.pending_files;
+
 namespace RhythmBox.Tests.VisualTests.Screens
 {
     [TestFixture]
