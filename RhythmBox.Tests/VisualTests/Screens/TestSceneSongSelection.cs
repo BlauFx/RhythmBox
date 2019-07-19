@@ -111,18 +111,22 @@ namespace RhythmBox.Tests.VisualTests.Screens
                                     Anchor = Anchor.TopRight,
                                     Origin = Anchor.TopRight,
 
-                                    AutoSizeAxes = Axes.Both,
+                                    //AutoSizeAxes = Axes.Both,
 
-                                    //RelativeSizeAxes = Axes.X,
-                                    //Size = new Vector2(1f),
+                                    RelativeSizeAxes = Axes.X,
+                                    Size = new Vector2(1f),
 
-
-                                    Margin = new MarginPadding { Top = 10 },
                                     Children = new Drawable[]
                                     {
                                         head = new HeaderContainer
                                         {
-                                            AutoSizeAxes = Axes.Both,
+                                            Anchor = Anchor.TopRight,
+                                            Origin = Anchor.TopRight,
+
+                                            //AutoSizeAxes = Axes.Both,
+
+                                            RelativeSizeAxes = Axes.X,
+                                            Size = new Vector2(1f),
 
                                             Children = new Drawable[]
                                             {
@@ -138,7 +142,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
                                                 new Box
                                                 {
 
-                                                    Size = new Vector2(400f,0f),
+                                                    Size = new Vector2(500f,0f),
                                                     Alpha = 0.001f,
                                                 },
                                             },
@@ -244,8 +248,9 @@ namespace RhythmBox.Tests.VisualTests.Screens
             });
             AddInternal(flowContainer = new FillFlowContainer
             {
-              //  Margin = new MarginPadding { Left = 30 },
-                AutoSizeAxes = Axes.Both,
+                //AutoSizeAxes = Axes.Both,
+                RelativeSizeAxes = Axes.X,
+                Size = new Vector2(1f),
                 Direction = FillDirection.Vertical,
             });
         }
