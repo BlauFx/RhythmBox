@@ -1,11 +1,8 @@
-﻿using System.Net.Mime;
-using FFmpeg.AutoGen;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
-using osu.Framework.Graphics.Textures;
 using osu.Framework.Testing;
 using osuTK;
 using RhythmBox.Tests.pending_files;

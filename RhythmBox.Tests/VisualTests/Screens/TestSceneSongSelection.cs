@@ -1,14 +1,19 @@
+using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
+using osu.Framework.Graphics.Sprites;
+using osu.Framework.Graphics.Textures;
+using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
 using osu.Framework.Testing;
 using osuTK;
-using osu.Framework.Extensions.Color4Extensions;
-using osu.Framework.Graphics.Containers;
 using osuTK.Graphics;
 using osuTK.Input;
+using RhythmBox.Tests.Objects;
 using RhythmBox.Tests.pending_files;
 
 namespace RhythmBox.Tests.VisualTests.Screens
@@ -18,11 +23,26 @@ namespace RhythmBox.Tests.VisualTests.Screens
     {
         private TestSceneThisScrollContainer scrollContainer;
 
+        private SearchContainer search;
+        private BasicTextBox textBox;
+
         [BackgroundDependencyLoader]
-        private void Load()
+        private void Load(TextureStore store)
         {
             Children = new Drawable[]
             {
+                new TestSceneSpriteButton
+                {
+                    Anchor = Anchor.BottomLeft,
+                    Origin = Anchor.BottomLeft,
+                    Texture = store.Get("Skin/Back"),
+                },
+                textBox = new BasicTextBox
+                {
+                    Anchor = Anchor.TopLeft,
+                    Origin = Anchor.TopLeft,
+                    Size = new Vector2(430, 40),
+                },
                 scrollContainer = new TestSceneThisScrollContainer
                 {
                     RelativeSizeAxes = Axes.Both,
@@ -31,15 +51,21 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     Size = new Vector2(0.5f,1f),
                 },
             };
+
+            textBox.Current.ValueChanged += e => scrollContainer.search.SearchTerm = e.NewValue;
             scrollContainer.Show();
         }
     }
-    
+
     internal class TestSceneThisScrollContainer : FocusedOverlayContainer
     {
         private FillFlowContainer FFContainer;
 
         private TestSceneMyScrollContainer FFContainerM;
+
+        public SearchContainer search;
+
+        private HeaderContainer head;
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -75,56 +101,78 @@ namespace RhythmBox.Tests.VisualTests.Screens
                             Direction = FillDirection.Vertical,
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
-                            Margin = new MarginPadding{ Top = 0 },
+                            Margin = new MarginPadding { Top = 0 },
                             AutoSizeAxes = Axes.Y,
+
                             Children = new Drawable[]
                             {
-                                new Box
+                                search = new SearchContainer
                                 {
-                                    Anchor = Anchor.TopCentre,
-                                    Origin = Anchor.TopCentre,
-                                    RelativeSizeAxes = Axes.X,
-                                    Size = new Vector2(1f,25f),
-                                    Colour = Color4.White,
-                                    Alpha = 1f,
-                                },
-                                new Box
-                                {
-                                    Anchor = Anchor.TopCentre,
-                                    Origin = Anchor.Centre,
-                                    RelativeSizeAxes = Axes.X,
-                                    Size = new Vector2(1f,25f),
-                                    Colour = Color4.Yellow.Opacity(0.7f),
-                                    Alpha = 1f,
-                                },
+                                    Anchor = Anchor.TopRight,
+                                    Origin = Anchor.TopRight,
+
+                                    AutoSizeAxes = Axes.Both,
+
+                                    //RelativeSizeAxes = Axes.X,
+                                    //Size = new Vector2(1f),
+
+
+                                    Margin = new MarginPadding { Top = 10 },
+                                    Children = new Drawable[]
+                                    {
+                                        head = new HeaderContainer
+                                        {
+                                            AutoSizeAxes = Axes.Both,
+
+                                            Children = new Drawable[]
+                                            {
+                                                new BeatmapTest
+                                                {
+                                                    Maps = 3,
+                                                    RelativeSizeAxes = Axes.X,
+                                                    Anchor = Anchor.TopRight,
+                                                    Origin = Anchor.TopRight,
+                                                    Colour = Color4.LightYellow,
+                                                    Search = "3",
+                                                },
+                                                new Box
+                                                {
+
+                                                    Size = new Vector2(400f,0f),
+                                                    Alpha = 0.001f,
+                                                },
+                                            },
+                                        },
+                                    }
+                                }
                             }
                         },
                     }
                 }
             };
 
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < 100 /*Maps*/; i++)
             {
-                FFContainer.AddRange(
+                head.AddRange(
                     new Drawable[]
                     {
-                        new Box
+                        new BeatmapTest
                         {
-                            Anchor = Anchor.TopCentre,
-                            Origin = Anchor.TopCentre,
+                            Maps = 3,
                             RelativeSizeAxes = Axes.X,
-                            Size = new Vector2(1f,25f),
-                            Colour = Color4.AliceBlue.Opacity(0.4f),
-                            Alpha = 1f,
+                            Anchor = Anchor.TopRight,
+                            Origin = Anchor.TopRight,
+                            Colour = Color4.Blue,
+                            Search = "1",
                         },
-                        new Box
+                        new BeatmapTest
                         {
+                            Maps = 10,
+                            RelativeSizeAxes = Axes.X,
                             Anchor = Anchor.TopCentre,
                             Origin = Anchor.TopCentre,
-                            RelativeSizeAxes = Axes.X,
-                            Size = new Vector2(1f,25f),
-                            Colour = Color4.Yellow.Opacity(0.2f),
-                            Alpha = 1f,
+                            Colour = Color4.Pink,
+                            Search = "2",
                         }
                     });
             }
@@ -158,5 +206,68 @@ namespace RhythmBox.Tests.VisualTests.Screens
             }
             return base.OnMouseMove(e);
         }
+    }
+
+    internal class HeaderContainer : Container, IHasFilterableChildren
+    {
+        public IEnumerable<string> FilterTerms => header.FilterTerms;
+
+        public bool MatchingFilter
+        {
+            set
+            {
+                if (value)
+                {
+                    this.FadeIn();
+                }
+                else
+                {
+                    this.FadeOut();
+                }
+            }
+        }
+
+        public bool FilteringActive { get; set; }
+
+        public IEnumerable<IFilterable> FilterableChildren => Children.OfType<IFilterable>();
+
+        protected override Container<Drawable> Content => flowContainer;
+
+        private readonly HeaderText header;
+        private readonly FillFlowContainer flowContainer;
+
+        public HeaderContainer(string headerText = "")
+        {
+            AddInternal(header = new HeaderText
+            {
+                Text = headerText,
+            });
+            AddInternal(flowContainer = new FillFlowContainer
+            {
+              //  Margin = new MarginPadding { Left = 30 },
+                AutoSizeAxes = Axes.Both,
+                Direction = FillDirection.Vertical,
+            });
+        }
+    }
+
+    internal class HeaderText : SpriteText, IFilterable
+    {
+        public bool MatchingFilter
+        {
+            set
+            {
+                if (value)
+                {
+                    Show();
+                }
+                else
+                {
+                    Hide();
+                }
+            }
+        }
+
+        public bool FilteringActive { get; set; }
     }
 }

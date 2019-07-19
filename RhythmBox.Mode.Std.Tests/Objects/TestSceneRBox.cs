@@ -157,7 +157,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                                 Y = bx.Y + 0.00f,
                             });
                         }
-                        else if (bx.Y <= -0.35f && bx.Y >= -0.5f + 0.05f || bx.Y == -0.5f + 0.05f)
+                        else if (bx.Y <= -0.35f && bx.Y >= -0.5f + 0.05f)
                         {
                             Add(new TestSceneHitAnimation2(Hit.Hit100)
                             {
@@ -168,7 +168,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                                 Y = bx.Y,
                             });
                         }
-                        else if (bx.Y <= -0.25f && bx.Y >= -0.35f || bx.Y == -0.35f)
+                        else if (bx.Y <= -0.25f && bx.Y >= -0.35f)
                         {
                             Add(new TestSceneHitAnimation2(Hit.Hit50)
                             {
@@ -179,7 +179,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                                 Y = bx.Y,
                             });
                         }
-                        else if (bx.Y <= 0f && bx.Y >= -0.25f || bx.Y == -0.25f)
+                        else if (bx.Y <= 0f && bx.Y >= -0.25f)
                         {
                             Add(new TestSceneHitAnimation2(Hit.Hitx)
                             {
@@ -210,7 +210,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                                 Y = bx.Y,
                             });
                         }
-                        else if (bx.X <= -0.35f && bx.Y >= -0.5f + 0.05f || bx.X == -0.5f + 0.05f)
+                        else if (bx.X <= -0.35f && bx.Y >= -0.5f + 0.05f)
                         {
                             Add(new TestSceneHitAnimation2(Hit.Hit100)
                             {
@@ -221,7 +221,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                                 Y = bx.Y,
                             });
                         }
-                        else if (bx.X <= -0.25f && bx.Y >= -0.35f || bx.X == -0.35f)
+                        else if (bx.X <= -0.25f && bx.Y >= -0.35f)
                         {
                             Add(new TestSceneHitAnimation2(Hit.Hit50)
                             {
@@ -232,7 +232,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                                 Y = bx.Y,
                             });
                         }
-                        else if (bx.X <= 0f && bx.Y >= -0.25f || bx.X == -0.25f)
+                        else if (bx.X <= 0f && bx.Y >= -0.25f)
                         {
                             Add(new TestSceneHitAnimation2(Hit.Hitx)
                             {
@@ -263,7 +263,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                                 Y = bx.Y - 0.05f,
                             });
                         }
-                        else if (bx.Y >= 0.35f && bx.Y <= 0.5f - 0.05f || bx.Y == 0.5f - 0.05f)
+                        else if (bx.Y >= 0.35f && bx.Y <= 0.5f - 0.05f)
                         {
                             Add(new TestSceneHitAnimation2(Hit.Hit100)
                             {
@@ -274,7 +274,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                                 Y = bx.Y - 0.05f,
                             });
                         }
-                        else if (bx.Y >= 0.25f && bx.Y <= 0.35f || bx.Y == 0.35f)
+                        else if (bx.Y >= 0.25f && bx.Y <= 0.35f)
                         {
                             Add(new TestSceneHitAnimation2(Hit.Hit50)
                             {
@@ -285,7 +285,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                                 Y = bx.Y - 0.05f,
                             });
                         }
-                        else if (bx.Y >= 0f && bx.Y <= 0.25f || bx.Y == 0.25f)
+                        else if (bx.Y >= 0f && bx.Y <= 0.25f)
                         {
                             Add(new TestSceneHitAnimation2(Hit.Hitx)
                             {
@@ -316,7 +316,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                                 Y = bx.Y,
                             });
                         }
-                        else if (bx.X >= 0.35f && bx.Y <= 0.5f + 0.05f || bx.X == 0.5f - 0.05f)
+                        else if (bx.X >= 0.35f && bx.Y <= 0.5f + 0.05f)
                         {
                             Add(new TestSceneHitAnimation2(Hit.Hit100)
                             {
@@ -327,7 +327,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                                 Y = bx.Y,
                             });
                         }
-                        else if (bx.X >= 0.25f && bx.Y <= 0.35f || bx.X == 0.35f)
+                        else if (bx.X >= 0.25f && bx.Y <= 0.35f)
                         {
                             Add(new TestSceneHitAnimation2(Hit.Hit50)
                             {
@@ -338,7 +338,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                                 Y = bx.Y,
                             });
                         }
-                        else if (bx.X >= 0f && bx.Y <= 0.25f || bx.X == 0.25f)
+                        else if (bx.X >= 0f && bx.Y <= 0.25f)
                         {
                             Add(new TestSceneHitAnimation2(Hit.Hitx)
                             {
