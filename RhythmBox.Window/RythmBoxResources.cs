@@ -5,14 +5,17 @@ using osu.Framework.IO.Stores;
 using RhythmBox.Window.pending_files;
 using System.Collections.Generic;
 using System.Drawing;
+using osu.Framework.Graphics;
+using osu.Framework.Screens;
+using osuTK;
 
 namespace RhythmBox.Window
 {
-    public class RythmBoxResources : Game
+    public class RhythmBoxResources : Game
     {
         protected new DependencyContainer Dependencies;
 
-        public RythmBoxResources()
+        public RhythmBoxResources()
         {
             Name = "RhythmBox";
         }

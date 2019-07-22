@@ -10,7 +10,10 @@
 
   <ItemGroup>
     <Folder Include="Graphics\" />
-    <Folder Include="Overlays\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RhythmBox.Mode.Std\RhythmBox.Mode.Std.csproj" />
   </ItemGroup>
 
 </Project>

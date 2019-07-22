@@ -42,13 +42,13 @@ namespace RhythmBox.Tests.VisualTests.Screens
                 {
                     Anchor = Anchor.TopLeft,
                     Origin = Anchor.TopLeft,
-                    Size = new Vector2(430, 40),
+                    Size = new Vector2(200, 40),
                 },
                 scrollContainer = new TestSceneThisScrollContainer
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Anchor = Anchor.CentreRight,
-                    Origin = Anchor.CentreRight,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
                     Size = new Vector2(0.5f,1f),
                 },
             };

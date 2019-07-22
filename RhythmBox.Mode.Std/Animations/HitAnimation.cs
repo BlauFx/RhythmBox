@@ -5,9 +5,10 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osuTK;
 
-namespace RhythmBox.Mode.Std.Tests.Animations
+
+namespace RhythmBox.Mode.Std.Animations
 {
-    public class TestSceneHitAnimation : Container
+    public class HitAnimation : Container
     {
         private Sprite hitx;
 
@@ -19,7 +20,7 @@ namespace RhythmBox.Mode.Std.Tests.Animations
 
         private Hit hit;
 
-        public TestSceneHitAnimation(Hit hit = Hit.Hit300)
+        public HitAnimation(Hit hit = Hit.Hit300)
         {
             this.hit = hit;
         }
@@ -89,7 +90,7 @@ namespace RhythmBox.Mode.Std.Tests.Animations
 
                 }, 600);
             }
-            else if(hit == Hit.Hit50)
+            else if (hit == Hit.Hit50)
             {
                 hit50.FadeInFromZero(400, Easing.OutQuart);
 
@@ -116,7 +117,7 @@ namespace RhythmBox.Mode.Std.Tests.Animations
                 {
                     hitx.RotateTo(-10, 600, Easing.Out);
                     hitx.MoveToOffset(new Vector2(0f, 0.01f), 600, Easing.In);
-                    
+
                 }, 300);
             }
         }

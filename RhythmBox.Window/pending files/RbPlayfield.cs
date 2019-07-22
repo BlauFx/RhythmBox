@@ -5,19 +5,19 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
 using osuTK;
 using osuTK.Input;
-using RhythmBox.Mode.Std.Tests.Maps;
-using RhythmBox.Mode.Std.Tests.Objects;
-using Direction = RhythmBox.Mode.Std.Tests.Objects.Direction;
+using RhythmBox.Mode.Std.Maps;
+using RhythmBox.Mode.Std.Objects;
+using Direction = RhythmBox.Mode.Std.Objects.Direction;
 
-namespace RhythmBox.Tests.pending_files
+namespace RhythmBox.Window.pending_files
 {
-    public class TestSceneRbPlayfield : Container
+    class RbPlayfield : Container
     {
-        public TestSceneBeatmap Beatmap;
+        public Beatmap Beatmap;
 
-        private TestSceneRBox objBox;
+        private RBox objBox;
 
-        private TestSceneRBox[] objBoxArray = new TestSceneRBox[4];
+        private RBox[] objBoxArray = new RBox[4];
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -83,7 +83,7 @@ namespace RhythmBox.Tests.pending_files
                     X = 1f,
                     RelativePositionAxes = Axes.Both,
                 },
-                objBoxArray[0] = new TestSceneRBox
+                objBoxArray[0] = new RBox
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
@@ -92,7 +92,7 @@ namespace RhythmBox.Tests.pending_files
                     Size = new Vector2(1f),
                     time = 430,
                 },
-                objBoxArray[1] = new TestSceneRBox
+                objBoxArray[1] = new RBox
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
@@ -102,7 +102,7 @@ namespace RhythmBox.Tests.pending_files
                     time = 700,
                     speed = 1f,
                 },
-                objBoxArray[2] = new TestSceneRBox
+                objBoxArray[2] = new RBox
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
@@ -112,7 +112,7 @@ namespace RhythmBox.Tests.pending_files
                     time = 1200,
                     speed = 1f,
                 },
-                objBoxArray[3] = new TestSceneRBox
+                objBoxArray[3] = new RBox
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
@@ -150,7 +150,7 @@ namespace RhythmBox.Tests.pending_files
                                 return base.OnKeyDown(e);
                         }
                     }
-                    catch  {  }
+                    catch { }
                 }
             }
             return base.OnKeyDown(e);

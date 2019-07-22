@@ -7,9 +7,9 @@ using RhythmBox.Window.Screens;
 
 namespace RhythmBox.Window
 {
-    public class RhythmBoxWindow : RythmBoxResources
+    public class RhythmBoxWindow : RhythmBoxResources
     {
-        private ScreenStack Stack;
+        public static ScreenStack Stack;
 
         [BackgroundDependencyLoader]
         private void Load()

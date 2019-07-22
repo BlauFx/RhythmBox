@@ -1,8 +1,8 @@
-﻿using RhythmBox.Mode.Std.Tests.Objects;
+﻿using RhythmBox.Mode.Std.Objects;
 
-namespace RhythmBox.Mode.Std.Tests.Maps
+namespace RhythmBox.Mode.Std.Maps
 {
-    public class TestSceneBeatmap
+    public class Beatmap
     {
         private int length { get; set; } = 0;
 

@@ -9,7 +9,7 @@ using RhythmBox.Window.pending_files;
 
 namespace RhythmBox.Tests
 {
-    public class Tests : RythmBoxResources
+    public class Tests : RhythmBoxResources
     {
         [BackgroundDependencyLoader]
         private void load()

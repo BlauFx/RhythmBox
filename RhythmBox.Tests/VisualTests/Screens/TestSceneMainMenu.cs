@@ -26,6 +26,8 @@ namespace RhythmBox.Tests.VisualTests.Screens
 
         private TestSceneSettingsOverlay settings;
 
+        private TestSceneSelectButton[] startButtons = new TestSceneSelectButton[3];
+
         [BackgroundDependencyLoader] 
         private void Load(TextureStore store)
         {
@@ -38,7 +40,13 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                     Alpha = 1f,
-                    texture = store.Get("Game/Logo.png")
+                    texture = store.Get("Game/Logo.png"),
+                    ClickAction = () =>
+                    {
+                        startButtons[0].Alpha = 1f;
+                        startButtons[1].Alpha = 1f;
+                        startButtons[2].Alpha = 1f;
+                    }
                 },
                 background = new Sprite
                 {
@@ -50,7 +58,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1.1f),
                 },
-                new TestSceneSelectButton
+                startButtons[0] = new TestSceneSelectButton
                 {
                     Depth = 1,
                     Anchor = Anchor.Centre,
@@ -62,11 +70,12 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     FontSize = 60f,
                     Y = -0.2f,
                     X = 0.2f,
+                    Alpha = 0f,
                     ClickAction = () =>
                     {
                     }
                 },
-                new TestSceneSelectButton
+                startButtons[1] = new TestSceneSelectButton
                 {
                     Depth = 1,
                     Anchor = Anchor.Centre,
@@ -78,12 +87,13 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     FontSize = 60f,
                     Y = 0f,
                     X = 0.2f,
+                    Alpha = 0f,
                     ClickAction = () =>
                     {
                         settings.Show();
                     },
                 },
-                new TestSceneSelectButton
+                startButtons[2] = new TestSceneSelectButton
                 {
                     Depth = 1,
                     Anchor = Anchor.Centre,
@@ -95,7 +105,11 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     FontSize = 60f,
                     Y = 0.2f,
                     X = 0.2f,
-                    ClickAction = () => Environment.Exit(0),
+                    Alpha = 0f,
+                    ClickAction = () =>
+                    {
+                        Environment.Exit(0);
+                    },
                 },
                 settings = new TestSceneSettingsOverlay
                 {

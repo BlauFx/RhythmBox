@@ -1,4 +1,4 @@
-using osu.Framework.Graphics;
+﻿using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
@@ -7,11 +7,11 @@ using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
 
-namespace RhythmBox.Tests.pending_files
+namespace RhythmBox.Window.pending_files
 {
-    public class TestSceneMyScrollContainer : ScrollContainer<Drawable>
+    class MyScrollContainer : ScrollContainer<Drawable>
     {
-        public TestSceneMyScrollContainer(Direction scrollDirection = Direction.Vertical)
+        public MyScrollContainer(Direction scrollDirection = Direction.Vertical)
             : base(scrollDirection)
         {
         }
@@ -21,7 +21,7 @@ namespace RhythmBox.Tests.pending_files
         protected class MyScrollbar : ScrollbarContainer
         {
             private const float dim_size = 10;
-            
+
             private readonly Color4 hoverColour = Color4.White;
             private readonly Color4 defaultColour = Color4.Gray;
             private readonly Color4 highlightColour = Color4.Gray; //Color4.Black;
@@ -38,7 +38,7 @@ namespace RhythmBox.Tests.pending_files
                 CornerRadius = 5;
 
                 const float margin = 3;
-                
+
                 Margin = new MarginPadding
                 {
                     Left = scrollDir == Direction.Vertical ? margin : 0,
@@ -48,7 +48,7 @@ namespace RhythmBox.Tests.pending_files
                 };
 
                 Masking = true;
-                Child = box = new Box { RelativeSizeAxes = Axes.Both };
+                Child = box = new Box {RelativeSizeAxes = Axes.Both};
 
                 ResizeTo(1);
             }
@@ -57,7 +57,7 @@ namespace RhythmBox.Tests.pending_files
             {
                 Vector2 size = new Vector2(dim_size)
                 {
-                    [(int)ScrollDirection] = val
+                    [(int) ScrollDirection] = val
                 };
                 this.ResizeTo(size, duration, easing);
             }

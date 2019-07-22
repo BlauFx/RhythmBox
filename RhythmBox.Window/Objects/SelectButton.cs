@@ -8,9 +8,9 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
 using osuTK.Graphics;
 
-namespace RhythmBox.Tests.Objects
+namespace RhythmBox.Window.Objects
 {
-    public class TestSceneSelectButton : Container
+    class SelectButton : Container
     {
         public string text { get; set; } = string.Empty;
 

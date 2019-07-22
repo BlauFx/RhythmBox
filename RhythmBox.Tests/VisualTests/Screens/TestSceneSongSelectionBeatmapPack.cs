@@ -10,6 +10,8 @@ using osu.Framework.Testing;
 using osuTK;
 using osu.Framework.Graphics.Containers;
 using osuTK.Graphics;
+using RhythmBox.Window;
+using RhythmBox.Window.Screens;
 
 namespace RhythmBox.Tests.VisualTests.Screens
 {
@@ -135,6 +137,12 @@ namespace RhythmBox.Tests.VisualTests.Screens
             }
             this.MoveToX(0f, 500, Easing.In);
             base.OnHoverLost(e);
+        }
+
+        protected override bool OnMouseDown(MouseDownEvent e)
+        {
+            //RhythmBoxResources.stack.Push(new MainMenu());
+            return base.OnMouseDown(e);
         }
     }
 }

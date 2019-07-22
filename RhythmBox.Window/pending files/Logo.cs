@@ -1,4 +1,5 @@
-﻿using osu.Framework.Allocation;
+﻿using System;
+using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
@@ -18,7 +19,9 @@ namespace RhythmBox.Window.pending_files
         private bool scaling = false;
 
         private bool logoMoved = false;
-        
+
+        public Action ClickAction;
+
         [BackgroundDependencyLoader]
         private void Load()
         {
@@ -61,6 +64,8 @@ namespace RhythmBox.Window.pending_files
 
         protected override bool OnMouseDown(MouseDownEvent e)
         {
+            ClickAction?.Invoke();
+
             if (!logoMoved)
             {
                 logoMoved = true;
