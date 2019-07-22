@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using ManagedBass;
 using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
@@ -101,7 +102,6 @@ namespace RhythmBox.Tests.VisualTests.Screens
                             Direction = FillDirection.Vertical,
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
-                            Margin = new MarginPadding { Top = 0 },
                             AutoSizeAxes = Axes.Y,
 
                             Children = new Drawable[]
@@ -111,40 +111,31 @@ namespace RhythmBox.Tests.VisualTests.Screens
                                     Anchor = Anchor.TopRight,
                                     Origin = Anchor.TopRight,
 
-                                    //AutoSizeAxes = Axes.Both,
-
                                     RelativeSizeAxes = Axes.X,
                                     Size = new Vector2(1f),
+
+                                    AutoSizeAxes = Axes.Y,
 
                                     Children = new Drawable[]
                                     {
                                         head = new HeaderContainer
                                         {
-                                            Anchor = Anchor.TopRight,
-                                            Origin = Anchor.TopRight,
-
-                                            //AutoSizeAxes = Axes.Both,
-
                                             RelativeSizeAxes = Axes.X,
                                             Size = new Vector2(1f),
+
+                                            AutoSizeAxes = Axes.Y,
 
                                             Children = new Drawable[]
                                             {
                                                 new BeatmapTest
                                                 {
                                                     Maps = 3,
-                                                    RelativeSizeAxes = Axes.X,
+                                                    RelativeSizeAxes = Axes.Both,
                                                     Anchor = Anchor.TopRight,
                                                     Origin = Anchor.TopRight,
                                                     Colour = Color4.LightYellow,
                                                     Search = "3",
-                                                },
-                                                new Box
-                                                {
-
-                                                    Size = new Vector2(500f,0f),
-                                                    Alpha = 0.001f,
-                                                },
+                                                }
                                             },
                                         },
                                     }
@@ -248,9 +239,14 @@ namespace RhythmBox.Tests.VisualTests.Screens
             });
             AddInternal(flowContainer = new FillFlowContainer
             {
-                //AutoSizeAxes = Axes.Both,
+                Anchor = Anchor.TopRight,
+                Origin = Anchor.TopRight,
+
                 RelativeSizeAxes = Axes.X,
                 Size = new Vector2(1f),
+
+                AutoSizeAxes = Axes.Y,
+
                 Direction = FillDirection.Vertical,
             });
         }

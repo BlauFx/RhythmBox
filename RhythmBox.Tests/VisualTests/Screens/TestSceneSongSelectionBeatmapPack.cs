@@ -62,6 +62,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
         private void Load()
         {
             RelativeSizeAxes = Axes.X;
+            //Size = new Vector2(1.5f, 40 * (Maps + 1));
             Size = new Vector2(1f,40*(Maps+1));
 
             Children = new Drawable[]
