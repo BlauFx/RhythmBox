@@ -9,7 +9,7 @@ namespace RhythmBox.Window
 {
     public class RhythmBoxWindow : RhythmBoxResources
     {
-        public static ScreenStack Stack;
+        private ScreenStack Stack;
 
         [BackgroundDependencyLoader]
         private void Load()

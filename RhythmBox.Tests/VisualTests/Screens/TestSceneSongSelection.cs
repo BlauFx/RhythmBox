@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using ManagedBass;
 using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
@@ -30,6 +29,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
         [BackgroundDependencyLoader]
         private void Load(TextureStore store)
         {
+           // new INIReader();
             Children = new Drawable[]
             {
                 new TestSceneSpriteButton

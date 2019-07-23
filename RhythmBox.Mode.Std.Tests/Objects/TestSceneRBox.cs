@@ -148,7 +148,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                     {
                         if (bx.Y <= -0.5 + 0.05f && bx.Y >= -0.50001f)
                         {
-                            Add(new TestSceneHitAnimation2(Hit.Hit300)
+                            Add(new TestSceneHitAnimation(Hit.Hit300)
                             {
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
@@ -159,7 +159,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                         }
                         else if (bx.Y <= -0.35f && bx.Y >= -0.5f + 0.05f)
                         {
-                            Add(new TestSceneHitAnimation2(Hit.Hit100)
+                            Add(new TestSceneHitAnimation(Hit.Hit100)
                             {
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
@@ -170,7 +170,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                         }
                         else if (bx.Y <= -0.25f && bx.Y >= -0.35f)
                         {
-                            Add(new TestSceneHitAnimation2(Hit.Hit50)
+                            Add(new TestSceneHitAnimation(Hit.Hit50)
                             {
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
@@ -181,7 +181,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                         }
                         else if (bx.Y <= 0f && bx.Y >= -0.25f)
                         {
-                            Add(new TestSceneHitAnimation2(Hit.Hitx)
+                            Add(new TestSceneHitAnimation(Hit.Hitx)
                             {
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
@@ -201,7 +201,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                     {
                         if (bx.X <= -0.5 + 0.05f && bx.X >= -0.50001f)
                         {
-                            Add(new TestSceneHitAnimation2(Hit.Hit300)
+                            Add(new TestSceneHitAnimation(Hit.Hit300)
                             {
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
@@ -212,7 +212,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                         }
                         else if (bx.X <= -0.35f && bx.Y >= -0.5f + 0.05f)
                         {
-                            Add(new TestSceneHitAnimation2(Hit.Hit100)
+                            Add(new TestSceneHitAnimation(Hit.Hit100)
                             {
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
@@ -223,7 +223,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                         }
                         else if (bx.X <= -0.25f && bx.Y >= -0.35f)
                         {
-                            Add(new TestSceneHitAnimation2(Hit.Hit50)
+                            Add(new TestSceneHitAnimation(Hit.Hit50)
                             {
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
@@ -234,7 +234,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                         }
                         else if (bx.X <= 0f && bx.Y >= -0.25f)
                         {
-                            Add(new TestSceneHitAnimation2(Hit.Hitx)
+                            Add(new TestSceneHitAnimation(Hit.Hitx)
                             {
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
@@ -254,7 +254,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                     {
                         if (bx.Y >= 0.5 - 0.05f && bx.Y <= 0.50001f)
                         {
-                            Add(new TestSceneHitAnimation2(Hit.Hit300)
+                            Add(new TestSceneHitAnimation(Hit.Hit300)
                             {
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
@@ -265,7 +265,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                         }
                         else if (bx.Y >= 0.35f && bx.Y <= 0.5f - 0.05f)
                         {
-                            Add(new TestSceneHitAnimation2(Hit.Hit100)
+                            Add(new TestSceneHitAnimation(Hit.Hit100)
                             {
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
@@ -276,7 +276,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                         }
                         else if (bx.Y >= 0.25f && bx.Y <= 0.35f)
                         {
-                            Add(new TestSceneHitAnimation2(Hit.Hit50)
+                            Add(new TestSceneHitAnimation(Hit.Hit50)
                             {
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
@@ -287,7 +287,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                         }
                         else if (bx.Y >= 0f && bx.Y <= 0.25f)
                         {
-                            Add(new TestSceneHitAnimation2(Hit.Hitx)
+                            Add(new TestSceneHitAnimation(Hit.Hitx)
                             {
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
@@ -307,7 +307,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                     {
                         if (bx.X >= 0.5 - 0.05f && bx.X <= 0.50001f)
                         {
-                            Add(new TestSceneHitAnimation2(Hit.Hit300)
+                            Add(new TestSceneHitAnimation(Hit.Hit300)
                             {
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
@@ -318,7 +318,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                         }
                         else if (bx.X >= 0.35f && bx.Y <= 0.5f + 0.05f)
                         {
-                            Add(new TestSceneHitAnimation2(Hit.Hit100)
+                            Add(new TestSceneHitAnimation(Hit.Hit100)
                             {
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
@@ -329,7 +329,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                         }
                         else if (bx.X >= 0.25f && bx.Y <= 0.35f)
                         {
-                            Add(new TestSceneHitAnimation2(Hit.Hit50)
+                            Add(new TestSceneHitAnimation(Hit.Hit50)
                             {
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,
@@ -340,7 +340,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                         }
                         else if (bx.X >= 0f && bx.Y <= 0.25f)
                         {
-                            Add(new TestSceneHitAnimation2(Hit.Hitx)
+                            Add(new TestSceneHitAnimation(Hit.Hitx)
                             {
                                 Anchor = Anchor.Centre,
                                 Origin = Anchor.Centre,

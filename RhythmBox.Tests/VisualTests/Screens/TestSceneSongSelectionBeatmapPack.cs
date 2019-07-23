@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
@@ -10,8 +9,6 @@ using osu.Framework.Testing;
 using osuTK;
 using osu.Framework.Graphics.Containers;
 using osuTK.Graphics;
-using RhythmBox.Window;
-using RhythmBox.Window.Screens;
 
 namespace RhythmBox.Tests.VisualTests.Screens
 {
@@ -29,6 +26,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     RelativeSizeAxes = Axes.Both,
                     Anchor = Anchor.CentreRight,
                     Origin = Anchor.CentreRight,
+                    Colour = Color4.LightYellow,
                     Size = new Vector2(0.5f,0.1f),
                 }
             };

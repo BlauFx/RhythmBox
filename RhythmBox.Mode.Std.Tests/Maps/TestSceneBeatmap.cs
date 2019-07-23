@@ -1,17 +1,31 @@
-﻿using RhythmBox.Mode.Std.Tests.Objects;
+﻿using osuTK.Audio;
+using RhythmBox.Mode.Std.Tests.Interfaces;
+using RhythmBox.Mode.Std.Tests.Objects;
 
 namespace RhythmBox.Mode.Std.Tests.Maps
 {
-    public class TestSceneBeatmap
+    public class TestSceneBeatmap : IBeatmap
     {
-        private int length { get; set; } = 0;
+        public int Length { get; set; }
+        public int maxCombo { get; set; }
+        public int maxObjects { get; set; }
+        public float[] Timings { get; set; }
+        public int ID { get; set; }
+        public Direction Direction { get; set; }
 
-        private int maxCombo { get; set; } = 0;
+        public TestSceneBeatmap(int length, int maxCombo, int maxObjects, float[] timings, int ID, Direction direction)
+        {
+            this.Length = length;
+            this.maxCombo = maxCombo;
+            this.maxObjects = maxObjects;
+            this.Timings = timings;
+            this.ID = ID;
+            this.Direction = direction;
+        }
 
-        private int maxObjects { get; set; } = 0;
-
-        private float[] timings = new float[0];
-
-        private Direction direction { get; set; }
+        private void Load()
+        {
+            
+        }
     }
 }
