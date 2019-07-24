@@ -1,0 +1,6 @@
+version: '{build}'
+image: Visual Studio 2019
+configuration: Debug
+build:
+  project: RhythmBox.sln
+  verbosity: minimal
