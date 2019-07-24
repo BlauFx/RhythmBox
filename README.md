@@ -1,3 +1,3 @@
-[![Build Status](https://dev.azure.com/BlauFxVis/test/_apis/build/status/BlauFx.RhythmBox?branchName=master)](https://dev.azure.com/BlauFxVis/test/_build/latest?definitionId=2&branchName=master) [![CodeFactor](https://www.codefactor.io/repository/github/blaufx/rhythmbox/badge)](https://www.codefactor.io/repository/github/blaufx/rhythmbox)
+[![Build status](https://ci.appveyor.com/api/projects/status/kxu6u3minc126t15?svg=true)](https://ci.appveyor.com/project/BlauFx/rhythmbox) [![CodeFactor](https://www.codefactor.io/repository/github/blaufx/rhythmbox/badge)](https://www.codefactor.io/repository/github/blaufx/rhythmbox)
 
 # RhythmBox
