@@ -4,3 +4,5 @@ configuration: Debug
 build:
   project: RhythmBox.sln
   verbosity: minimal
+before_build:
+ - nuget restore
