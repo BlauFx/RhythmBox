@@ -29,7 +29,6 @@ namespace RhythmBox.Tests.VisualTests.Screens
         [BackgroundDependencyLoader]
         private void Load(TextureStore store)
         {
-           // new INIReader();
             Children = new Drawable[]
             {
                 new TestSceneSpriteButton
