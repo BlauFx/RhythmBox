@@ -13,35 +13,33 @@ namespace RhythmBox.Tests.pending_files
             var parser = new FileIniDataParser();
             IniData data = parser.ReadFile(@"C:\Users\Oxygen\Desktop\CXD.ini");
 
-            //foreach (SectionData section in data.Sections)
-            //{
-            //    Logger.Log("[" + section.SectionName + "]");
-            //    //Console.WriteLine("[" + section.Name + "]");
-
-            //    //Iterate through all the keys in the current section
-            //    //printing the values
-            //    foreach (KeyData key in section.Keys)
-            //        //Console.WriteLine(key.Name + " = " + key.Value);
-            //    Logger.Log(key.KeyName + " = " + key.Value);
-            //}
-
             string directValue = data["General"]["AFileName"];
             Logger.Log(directValue);
         }
     }
 }
 
-//INI TEMPLATE
+//v1
 
-//;v1
+//AFileName: null.mp3
+//BGFile: bg.png
 
-//[General]
-//AFileName: null
-//Name: null
-//BPM= 0
-//Objects= 0
+//MapId: 4
+//MapSetId: 4
 
-//[HitObjects]
-//;Direction, Time, Speed
-//Direction.Up, 50, 1
+//BPM: 0
+//Objects: 709
 
+//AutoMap: yes
+
+//Mode: STD
+//Title: TEST Title
+//Artist: test
+//Creator: BlauFx
+//DifficultyName: BlauFx's diff
+
+//HitObjects:
+//Up, 50, 1f
+//Down, 500, 1.4f
+//Direction.Left, 5200000000, 1.9f
+//Direction.Right, 150, 1.7f

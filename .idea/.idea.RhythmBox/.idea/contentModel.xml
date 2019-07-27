@@ -84,6 +84,9 @@
         <e p="arm64-v8a" t="Include" />
         <e p="armeabi-v7a" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
+        <e p="Interfaces" t="Include">
+          <e p="IBeatmap.cs" t="Include" />
+        </e>
         <e p="Maps" t="Include">
           <e p="TestSceneBeatmap.cs" t="Include" />
           <e p="TestSceneBeatmapPack.cs" t="Include" />
@@ -122,6 +125,7 @@
           <e p="TestSceneSpriteButton.cs" t="Include" />
         </e>
         <e p="pending files" t="Include">
+          <e p="INIReader.cs" t="Include" />
           <e p="TestSceneMyScrollContainer.cs" t="Include" />
           <e p="TestSceneRbPlayfield.cs" t="Include" />
           <e p="TestSceneSettingsOverlay.cs" t="Include" />
