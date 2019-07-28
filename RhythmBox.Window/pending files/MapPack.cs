@@ -1,40 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
-using osu.Framework.Testing;
 using osuTK;
-using osu.Framework.Graphics.Containers;
 using osuTK.Graphics;
 
-namespace RhythmBox.Tests.VisualTests.Screens
+namespace RhythmBox.Window.pending_files
 {
-    [TestFixture]
-    public class TestSceneSongSelectionBeatmapPack : TestScene
+   
+    public class MapPack : Container, IHasFilterableChildren
     {
-        [BackgroundDependencyLoader]
-        private void Load()
-        {
-            Children = new Drawable[]
-            {
-                new MapPackTest
-                {
-                    Maps = 5,
-                    RelativeSizeAxes = Axes.Both,
-                    Anchor = Anchor.CentreRight,
-                    Origin = Anchor.CentreRight,
-                    Colour = Color4.LightYellow,
-                    Size = new Vector2(0.5f,0.1f),
-                }
-            };
-        }
-    }
-
-    public class MapPackTest : Container, IHasFilterableChildren
-    {
+        public Action InvokeBox;
+        
         public string Search = "null";
 
         public IEnumerable<string> FilterTerms => Children.OfType<IHasFilterTerms>().SelectMany(d => d.FilterTerms);
@@ -62,8 +43,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
         private void Load()
         {
             RelativeSizeAxes = Axes.X;
-            //Size = new Vector2(1.5f, 40 * (Maps + 1));
-            Size = new Vector2(1f,40*(Maps+1));
+            Size = new Vector2(1f, 40 * (Maps + 1));
 
             Children = new Drawable[]
             {
@@ -79,7 +59,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
                 },
             };
 
-            for (float i = 1; i < Maps+1; i++)
+            for (float i = 1; i < Maps + 1; i++)
             {
                 Add(new BoxTest
                 {
@@ -88,8 +68,9 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     Origin = Anchor.TopRight,
                     Size = new Vector2((0.9f - (i / (i + Maps))), 40f),
                     Colour = Color4.DarkGreen,
-                    Y = (parentBoxTest.Height*i),
+                    Y = (parentBoxTest.Height * i),
                     Search2 = Search,
+                    Invoke = InvokeBox,
                 }); ;
             }
         }
@@ -97,8 +78,10 @@ namespace RhythmBox.Tests.VisualTests.Screens
         public IEnumerable<IFilterable> FilterableChildren => Children.OfType<IFilterable>();
     }
 
-    internal class BoxTest : Box, IHasFilterTerms
+    internal class BoxTest/*<= rename this*/ : Box, IHasFilterTerms
     {
+        public Action Invoke;
+        
         public string Search2 = "null";
 
         public bool Parent { get; set; } = false;
@@ -139,8 +122,9 @@ namespace RhythmBox.Tests.VisualTests.Screens
 
         protected override bool OnMouseDown(MouseDownEvent e)
         {
-            //RhythmBoxResources.stack.Push(new MainMenu());
-            return base.OnMouseDown(e);
+           Invoke?.Invoke();
+
+           return base.OnMouseDown(e);
         }
     }
 }

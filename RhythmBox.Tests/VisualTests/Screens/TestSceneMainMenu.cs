@@ -29,7 +29,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
 
         private TestSceneSettingsOverlay settings;
 
-        private TestSceneMainMenuBox[] startButtons = new TestSceneMainMenuBox[3];
+        //private TestSceneMainMenuBox[] startButtons = new TestSceneMainMenuBox[3];
 
         [BackgroundDependencyLoader] 
         private void Load(TextureStore store)

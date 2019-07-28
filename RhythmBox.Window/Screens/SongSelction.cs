@@ -1,6 +1,6 @@
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -9,19 +9,18 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
-using osu.Framework.Testing;
+using osu.Framework.Screens;
 using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
-using RhythmBox.Tests.Objects;
-using RhythmBox.Tests.pending_files;
+using RhythmBox.Window.Objects;
+using RhythmBox.Window.pending_files;
 
-namespace RhythmBox.Tests.VisualTests.Screens
+namespace RhythmBox.Window.Screens
 {
-    [TestFixture]
-    public class TestSceneSongSelection : TestScene
+    public class SongSelction : Screen
     {
-        private TestSceneThisScrollContainer scrollContainer;
+        private ThisScrollContainer scrollContainer;
 
         private SearchContainer search;
         private BasicTextBox textBox;
@@ -29,13 +28,17 @@ namespace RhythmBox.Tests.VisualTests.Screens
         [BackgroundDependencyLoader]
         private void Load(TextureStore store)
         {
-            Children = new Drawable[]
+            InternalChildren = new Drawable[]
             {
-                new TestSceneSpriteButton
+                new SpriteButton
                 {
                     Anchor = Anchor.BottomLeft,
                     Origin = Anchor.BottomLeft,
                     Texture = store.Get("Skin/Back"),
+                    ClickAction = () =>
+                    {
+                        LoadComponentAsync(new MainMenu(), this.Push);
+                    },
                 },
                 textBox = new BasicTextBox
                 {
@@ -43,12 +46,17 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     Origin = Anchor.TopLeft,
                     Size = new Vector2(200, 40),
                 },
-                scrollContainer = new TestSceneThisScrollContainer
+                scrollContainer = new ThisScrollContainer
                 {
                     RelativeSizeAxes = Axes.Both,
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                     Size = new Vector2(0.5f,1f),
+                    ClickOnMap = () =>
+                    {
+                        //Environment.Exit(0);
+                       this.LoadComponentAsync(new GameplayScreen(), this.Push);
+                    },
                 },
             };
 
@@ -57,11 +65,13 @@ namespace RhythmBox.Tests.VisualTests.Screens
         }
     }
 
-    internal class TestSceneThisScrollContainer : FocusedOverlayContainer
+    internal class ThisScrollContainer : FocusedOverlayContainer
     {
+        public Action ClickOnMap;
+        
         private FillFlowContainer FFContainer;
 
-        private TestSceneMyScrollContainer FFContainerM;
+        private ScrollContainer FFContainerM;
 
         public SearchContainer search;
 
@@ -83,7 +93,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     Colour = Color4.DimGray,
                     Alpha = 0.9f,
                 },
-                FFContainerM = new TestSceneMyScrollContainer
+                FFContainerM = new ScrollContainer
                 {
                     ScrollbarVisible = true,
                     Depth = -1,
@@ -126,7 +136,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
 
                                             Children = new Drawable[]
                                             {
-                                                new MapPackTest
+                                                new MapPack
                                                 {
                                                     Maps = 3,
                                                     RelativeSizeAxes = Axes.Both,
@@ -134,6 +144,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
                                                     Origin = Anchor.TopRight,
                                                     Colour = Color4.LightYellow,
                                                     Search = "3",
+                                                    InvokeBox = ClickOnMap,
                                                 }
                                             },
                                         },
@@ -150,7 +161,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
                 head.AddRange(
                     new Drawable[]
                     {
-                        new MapPackTest
+                        new MapPack
                         {
                             Maps = 3,
                             RelativeSizeAxes = Axes.X,
@@ -158,8 +169,9 @@ namespace RhythmBox.Tests.VisualTests.Screens
                             Origin = Anchor.TopRight,
                             Colour = Color4.Blue,
                             Search = "1",
+                            InvokeBox = ClickOnMap,
                         },
-                        new MapPackTest
+                        new MapPack
                         {
                             Maps = 10,
                             RelativeSizeAxes = Axes.X,
@@ -167,6 +179,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
                             Origin = Anchor.TopCentre,
                             Colour = Color4.Pink,
                             Search = "2",
+                            InvokeBox = ClickOnMap,
                         }
                     });
             }

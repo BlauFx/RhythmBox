@@ -121,11 +121,10 @@
         </e>
         <e p="Objects" t="Include">
           <e p="TestSceneCheckbox.cs" t="Include" />
-          <e p="TestSceneSelectButton.cs" t="Include" />
           <e p="TestSceneSpriteButton.cs" t="Include" />
         </e>
         <e p="pending files" t="Include">
-          <e p="INIReader.cs" t="Include" />
+          <e p="TestSceneMapReader.cs" t="Include" />
           <e p="TestSceneMyScrollContainer.cs" t="Include" />
           <e p="TestSceneRbPlayfield.cs" t="Include" />
           <e p="TestSceneSettingsOverlay.cs" t="Include" />
@@ -168,7 +167,7 @@
         </e>
         <e p="Objects" t="Include">
           <e p="Checkbox.cs" t="Include" />
-          <e p="SelectButton.cs" t="Include" />
+          <e p="SpriteButton.cs" t="Include" />
         </e>
         <e p="Overlays" t="Include">
           <e p="SettingsOverlay.cs" t="Include" />
@@ -177,8 +176,10 @@
           <e p="Gameini.cs" t="Include" />
           <e p="License.cs" t="Include" />
           <e p="Logo.cs" t="Include" />
+          <e p="MapPack.cs" t="Include" />
           <e p="MyScrollContainer.cs" t="Include" />
           <e p="RbPlayfield.cs" t="Include" />
+          <e p="ScrollContainer.cs" t="Include" />
         </e>
         <e p="RhythmBox.Window.csproj" t="IncludeRecursive" />
         <e p="RhythmBoxWindow.cs" t="Include" />
@@ -186,6 +187,7 @@
         <e p="Screens" t="Include">
           <e p="GameplayScreen.cs" t="Include" />
           <e p="MainMenu.cs" t="Include" />
+          <e p="SongSelction.cs" t="Include" />
         </e>
         <e p="x64" t="Include" />
         <e p="x86" t="Include" />

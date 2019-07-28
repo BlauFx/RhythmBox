@@ -49,7 +49,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
                                 AutoSizeAxes = Axes.Both,
                                 Children = new Drawable[]
                                 {
-                                    new BeatmapTest
+                                    new MapPackTest
                                     {
                                         Maps = 5,
                                         RelativeSizeAxes = Axes.X,
@@ -58,7 +58,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
                                         Colour = Color4.Red,
                                         Search = "1",
                                     },
-                                    new BeatmapTest
+                                    new MapPackTest
                                     {
                                         Maps = 5,
                                         RelativeSizeAxes = Axes.X,
@@ -67,7 +67,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
                                         Colour = Color4.Orange,
                                         Search = "2",
                                     },
-                                    new BeatmapTest
+                                    new MapPackTest
                                     {
                                         Maps = 5,
                                         RelativeSizeAxes = Axes.X,
