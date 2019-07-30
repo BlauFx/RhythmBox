@@ -1,31 +1,50 @@
-﻿using osuTK.Audio;
+﻿using System.Collections;
 using RhythmBox.Mode.Std.Tests.Interfaces;
-using RhythmBox.Mode.Std.Tests.Objects;
 
 namespace RhythmBox.Mode.Std.Tests.Maps
 {
-    public class TestSceneMap : IMap
+    public class TestSceneMap : IMap, IEnumerable
     {
-        public int Length { get; set; }
-        public int maxCombo { get; set; }
-        public int maxObjects { get; set; }
-        public float[] Timings { get; set; }
-        public int ID { get; set; }
-        public Direction Direction { get; set; }
+        public string AFileName { get; set; } = string.Empty;
 
-        public TestSceneMap(int length, int maxCombo, int maxObjects, float[] timings, int ID, Direction direction)
+        public string BGFile  { get; set; } = string.Empty;
+
+        public int MapId  { get; set; } = 0; //TODO side note: MapId[]
+
+        public int MapSetId  { get; set; } = 0; 
+
+        public int BPM  { get; set; } = 0;
+
+        public int Objects  { get; set; } = 0; //TODO might be unnecessary cuz we could do this => HitObjects.Length
+
+        public bool AutoMap  { get; set; } = false;
+
+        public GameMode Mode  { get; set; } = GameMode.STD;
+
+        public string Title  { get; set; } = string.Empty;
+
+        public string Artist  { get; set; } = string.Empty;
+
+        public string Creator  { get; set; } = string.Empty;
+
+        public string DifficultyName  { get; set; } = string.Empty;
+
+        public HitObjects[] HitObjects { get; set; }
+
+        public TestSceneMap()
         {
-            this.Length = length;
-            this.maxCombo = maxCombo;
-            this.maxObjects = maxObjects;
-            this.Timings = timings;
-            this.ID = ID;
-            this.Direction = direction;
+//            Load();
         }
-
+        
         private void Load()
         {
             
+        }
+
+
+        public IEnumerator GetEnumerator()
+        {
+            return HitObjects.GetEnumerator();
         }
     }
 }

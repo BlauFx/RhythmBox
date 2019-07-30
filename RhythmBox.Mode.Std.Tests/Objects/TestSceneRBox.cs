@@ -6,17 +6,18 @@ using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
 using RhythmBox.Mode.Std.Tests.Animations;
+using RhythmBox.Mode.Std.Tests.Interfaces;
 using Container = osu.Framework.Graphics.Containers.Container;
 
 namespace RhythmBox.Mode.Std.Tests.Objects
 {
     public class TestSceneRBox : Container
     {
-        public int time { get; set; } = 0;
+        public double time { get; set; } = 0;
 
         public float speed { get; set; } = 1f;
 
-        public Direction direction;
+        public HitObjects.Direction direction;
 
         private RBoxObj obj { get; set; }
 
@@ -48,7 +49,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
 
         protected async void UpdateAlphaA()
         {
-            await Task.Delay(100);
+            await Task.Delay(1);
             try
             {
                 AlphaA = xd = obj.bx.Alpha;
@@ -70,7 +71,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
 
     internal class RBoxObj : Container
     {
-        public RBoxObj(Direction direction, float speed)
+        public RBoxObj(HitObjects.Direction direction, float speed)
         {
             this.speed = speed;
             this.direction = direction;
@@ -80,7 +81,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
 
         public float speed { get; set; }
 
-        private Direction direction;
+        private HitObjects.Direction direction;
 
         private const int Expire = 300;
 
@@ -100,25 +101,25 @@ namespace RhythmBox.Mode.Std.Tests.Objects
             bx.FadeIn(100*speed);
             bx.MoveToY(0f, 0, Easing.InCirc);
 
-            if (direction == Direction.Up)
+            if (direction == HitObjects.Direction.Up)
             {
                 bx.MoveToY(-0.5f, 1500*speed, Easing.InCirc);
                 bx.ResizeTo(new Vector2(1f, 0.05f), 1500*speed, Easing.InCirc);
             }
-            else if (direction == Direction.Down)
+            else if (direction == HitObjects.Direction.Down)
             {
                 bx.Rotation = 180f;
                 bx.MoveToY(0.5f, 1500*speed, Easing.InCirc);
                 bx.ResizeTo(new Vector2(1f, 0.05f), 1500*speed, Easing.InCirc);
             }
-            else if (direction == Direction.Left)
+            else if (direction == HitObjects.Direction.Left)
             {
                 bx.Origin = Anchor.CentreLeft;
                 bx.Size = new Vector2(0.01f,0.1f);
                 bx.ResizeTo(new Vector2(0.056f, 1f), 1500*speed, Easing.InCirc);
                 bx.MoveToX(-0.5f, 1500*speed, Easing.InCirc);
             }
-            else if (direction == Direction.Right)
+            else if (direction == HitObjects.Direction.Right)
             {
                 bx.Origin = Anchor.CentreRight;
                 bx.Size = new Vector2(0.01f,0.1f);
@@ -147,7 +148,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
             {
                 case Key.W:
                 {
-                    if (direction == Direction.Up)
+                    if (direction == HitObjects.Direction.Up)
                     {
                         if (bx.Y <= -0.5 + 0.05f && bx.Y >= -0.50001f)
                         {
@@ -200,7 +201,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
 
                 case Key.A:
                 {
-                    if (direction == Direction.Left)
+                    if (direction == HitObjects.Direction.Left)
                     {
                         if (bx.X <= -0.5 + 0.05f && bx.X >= -0.50001f)
                         {
@@ -253,7 +254,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
 
                 case Key.S:
                 {
-                    if (direction == Direction.Down)
+                    if (direction == HitObjects.Direction.Down)
                     {
                         if (bx.Y >= 0.5 - 0.05f && bx.Y <= 0.50001f)
                         {
@@ -306,7 +307,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
 
                 case Key.D:
                 {
-                    if (direction == Direction.Right)
+                    if (direction == HitObjects.Direction.Right)
                     {
                         if (bx.X >= 0.5 - 0.05f && bx.X <= 0.50001f)
                         {
@@ -360,11 +361,11 @@ namespace RhythmBox.Mode.Std.Tests.Objects
         }
     }
 
-    public enum Direction
-    {
-        Up,
-        Down,
-        Left,
-        Right
-    }
+//    public enum Direction
+//    {
+//        Up,
+//        Down,
+//        Left,
+//        Right
+//    }
 }

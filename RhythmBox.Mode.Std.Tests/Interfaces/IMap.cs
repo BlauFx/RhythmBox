@@ -2,18 +2,61 @@
 
 namespace RhythmBox.Mode.Std.Tests.Interfaces
 {
-    interface IMap
+    public interface IMap
     {
-        int Length { get; set; }
+        string AFileName { get; set; }
 
-        int maxCombo { get; set; }
+        string BGFile { get; set; }
+        
+        int MapId { get; set; } 
+        
+        int MapSetId { get; set; }
 
-        int maxObjects { get; set; }
+        int BPM { get; set; }
+        
+        int Objects { get; set; }
 
-        float[] Timings { get; set; }
+        bool AutoMap { get; set; }
 
-        int ID { get; set; }
+        GameMode Mode { get; set; }
+        
+        string Title { get; set; }
+        
+        string Artist { get; set; }
+        
+        string Creator { get; set; }
+        
+        string DifficultyName { get; set; }
+        
+        HitObjects[] HitObjects { get; set; }
+    }
+    
+    public enum GameMode
+    {
+        STD,
+    }
+    
+    public class HitObjects
+    {
+        public Direction _direction { get; set; }
 
-        Direction Direction { get; set; }
+        public double Time { get; set; }
+
+        public float Speed { get; set; }
+
+        public HitObjects()
+        {
+            this._direction = Direction.Down;
+            this.Time = 1;
+            this.Speed = 1f;
+        }
+
+        public enum Direction
+        {
+            Up,
+            Down,
+            Left,
+            Right
+        }
     }
 }

@@ -125,6 +125,7 @@
         </e>
         <e p="pending files" t="Include">
           <e p="TestSceneMapReader.cs" t="Include" />
+          <e p="TestSceneMapWriter.cs" t="Include" />
           <e p="TestSceneMyScrollContainer.cs" t="Include" />
           <e p="TestSceneRbDrawPlayfield.cs" t="Include" />
           <e p="TestSceneRbPlayfield.cs" t="Include" />
