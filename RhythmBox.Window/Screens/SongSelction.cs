@@ -54,7 +54,6 @@ namespace RhythmBox.Window.Screens
                     Size = new Vector2(0.5f,1f),
                     ClickOnMap = () =>
                     {
-                        //Environment.Exit(0);
                        this.LoadComponentAsync(new GameplayScreen(), this.Push);
                     },
                 },

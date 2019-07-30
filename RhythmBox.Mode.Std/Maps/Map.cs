@@ -1,9 +1,9 @@
 ﻿using System.Collections;
-using RhythmBox.Mode.Std.Tests.Interfaces;
+using RhythmBox.Mode.Std.Interfaces;
 
-namespace RhythmBox.Mode.Std.Tests.Maps
+namespace RhythmBox.Mode.Std.Maps
 {
-    public class TestSceneMap : ITestSceneMap, IEnumerable
+    public class Map : IMap, IEnumerable
     {
         public string AFileName { get; set; } = string.Empty;
 

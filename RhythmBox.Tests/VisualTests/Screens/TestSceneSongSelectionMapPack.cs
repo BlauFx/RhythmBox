@@ -13,7 +13,7 @@ using osuTK.Graphics;
 namespace RhythmBox.Tests.VisualTests.Screens
 {
     [TestFixture]
-    public class TestSceneSongSelectionBeatmapPack : TestScene
+    public class TestSceneSongSelectionMapPack : TestScene
     {
         [BackgroundDependencyLoader]
         private void Load()

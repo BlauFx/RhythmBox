@@ -56,10 +56,12 @@
         </e>
         <e p="arm64-v8a" t="Include" />
         <e p="armeabi-v7a" t="Include" />
-        <e p="Beatmap" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
+        <e p="Interfaces" t="Include">
+          <e p="IMap.cs" t="Include" />
+        </e>
         <e p="Maps" t="Include">
-          <e p="Beatmap.cs" t="Include" />
+          <e p="Map.cs" t="Include" />
         </e>
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
@@ -85,7 +87,7 @@
         <e p="armeabi-v7a" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
         <e p="Interfaces" t="Include">
-          <e p="IMap.cs" t="Include" />
+          <e p="ITestSceneMap.cs" t="Include" />
         </e>
         <e p="Maps" t="Include">
           <e p="TestSceneMap.cs" t="Include" />
@@ -148,7 +150,7 @@
             <e p="TestSceneMainMenu.cs" t="Include" />
             <e p="TestSceneSearchContainer.cs" t="Include" />
             <e p="TestSceneSongSelection.cs" t="Include" />
-            <e p="TestSceneSongSelectionBeatmapPack.cs" t="Include" />
+            <e p="TestSceneSongSelectionMapPack.cs" t="Include" />
           </e>
         </e>
         <e p="x64" t="Include" />
@@ -180,6 +182,7 @@
           <e p="Logo.cs" t="Include" />
           <e p="MapPack.cs" t="Include" />
           <e p="MyScrollContainer.cs" t="Include" />
+          <e p="RbDrawPlayfield.cs" t="Include" />
           <e p="RbPlayfield.cs" t="Include" />
           <e p="ScrollContainer.cs" t="Include" />
         </e>

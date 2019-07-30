@@ -1,8 +1,6 @@
-﻿using RhythmBox.Mode.Std.Tests.Objects;
-
-namespace RhythmBox.Mode.Std.Tests.Interfaces
+﻿namespace RhythmBox.Mode.Std.Tests.Interfaces
 {
-    public interface IMap
+    public interface ITestSceneMap
     {
         string AFileName { get; set; }
 

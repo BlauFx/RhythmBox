@@ -2,24 +2,22 @@
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shapes;
-using osu.Framework.Input.Events;
-using osu.Framework.Logging;
 using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
 using RhythmBox.Mode.Std.Animations;
+using RhythmBox.Mode.Std.Interfaces;
 using Container = osu.Framework.Graphics.Containers.Container;
-
 
 namespace RhythmBox.Mode.Std.Objects
 {
     public class RBox : Container
     {
-        public int time { get; set; } = 0;
+        public double time { get; set; } = 0;
 
         public float speed { get; set; } = 1f;
 
-        public Direction direction;
+        public HitObjects.Direction direction;
 
         private RBoxObj obj { get; set; }
 
@@ -51,7 +49,7 @@ namespace RhythmBox.Mode.Std.Objects
 
         protected async void UpdateAlphaA()
         {
-            await Task.Delay(100);
+            await Task.Delay(1);
             try
             {
                 AlphaA = xd = obj.bx.Alpha;
@@ -73,7 +71,7 @@ namespace RhythmBox.Mode.Std.Objects
 
     internal class RBoxObj : Container
     {
-        public RBoxObj(Direction direction, float speed)
+        public RBoxObj(HitObjects.Direction direction, float speed)
         {
             this.speed = speed;
             this.direction = direction;
@@ -83,7 +81,7 @@ namespace RhythmBox.Mode.Std.Objects
 
         public float speed { get; set; }
 
-        private Direction direction;
+        private HitObjects.Direction direction;
 
         private const int Expire = 300;
 
@@ -100,30 +98,35 @@ namespace RhythmBox.Mode.Std.Objects
                 Size = new Vector2(0.1f, 0.01f),
                 RelativePositionAxes = Axes.Both,
             });
-            bx.FadeIn(100 * speed);
+            bx.FadeIn(100*speed);
             bx.MoveToY(0f, 0, Easing.InCirc);
 
-            if (direction == Direction.Up)
+            if (direction == HitObjects.Direction.Up)
             {
-                bx.MoveToY(-0.5f, 1500 * speed, Easing.InCirc);
+                bx.MoveToY(-0.5f, 1500*speed, Easing.InCirc);
+                bx.ResizeTo(new Vector2(1f, 0.05f), 1500*speed, Easing.InCirc);
             }
-            else if (direction == Direction.Down)
+            else if (direction == HitObjects.Direction.Down)
             {
                 bx.Rotation = 180f;
-                bx.MoveToY(0.5f, 1500 * speed, Easing.InCirc);
+                bx.MoveToY(0.5f, 1500*speed, Easing.InCirc);
+                bx.ResizeTo(new Vector2(1f, 0.05f), 1500*speed, Easing.InCirc);
             }
-            else if (direction == Direction.Left)
+            else if (direction == HitObjects.Direction.Left)
             {
-                bx.Rotation = -90f;
-                bx.MoveToX(-0.5f, 1500 * speed, Easing.InCirc);
+                bx.Origin = Anchor.CentreLeft;
+                bx.Size = new Vector2(0.01f,0.1f);
+                bx.ResizeTo(new Vector2(0.056f, 1f), 1500*speed, Easing.InCirc);
+                bx.MoveToX(-0.5f, 1500*speed, Easing.InCirc);
             }
-            else if (direction == Direction.Right)
+            else if (direction == HitObjects.Direction.Right)
             {
-                bx.Rotation = 90f;
-                bx.MoveToX(0.5f, 1500 * speed, Easing.InCirc);
+                bx.Origin = Anchor.CentreRight;
+                bx.Size = new Vector2(0.01f,0.1f);
+                bx.ResizeTo(new Vector2(0.056f, 1f), 1500*speed, Easing.InCirc);
+                bx.MoveToX(0.5f, 1500*speed, Easing.InCirc);
             }
 
-            bx.ResizeTo(new Vector2(1f, 0.05f), 1500 * speed, Easing.InCirc);
             Scheduler.AddDelayed(() => Remove(Clear, Expire), 1800 * speed);
         }
 
@@ -144,216 +147,216 @@ namespace RhythmBox.Mode.Std.Objects
             switch (key)
             {
                 case Key.W:
+                {
+                    if (direction == HitObjects.Direction.Up)
                     {
-                        if (direction == Direction.Up)
+                        if (bx.Y <= -0.5 + 0.05f && bx.Y >= -0.50001f)
                         {
-                            if (bx.Y <= -0.5 + 0.05f && bx.Y >= -0.50001f)
+                            Add(new HitAnimation(Hit.Hit300)
                             {
-                                Add(new HitAnimation(Hit.Hit300)
-                                {
-                                    Anchor = Anchor.Centre,
-                                    Origin = Anchor.Centre,
-                                    RelativePositionAxes = Axes.Both,
-                                    X = bx.X,
-                                    Y = bx.Y + 0.00f,
-                                });
-                            }
-                            else if (bx.Y <= -0.35f && bx.Y >= -0.5f + 0.05f)
-                            {
-                                Add(new HitAnimation(Hit.Hit100)
-                                {
-                                    Anchor = Anchor.Centre,
-                                    Origin = Anchor.Centre,
-                                    RelativePositionAxes = Axes.Both,
-                                    X = bx.X,
-                                    Y = bx.Y,
-                                });
-                            }
-                            else if (bx.Y <= -0.25f && bx.Y >= -0.35f)
-                            {
-                                Add(new HitAnimation(Hit.Hit50)
-                                {
-                                    Anchor = Anchor.Centre,
-                                    Origin = Anchor.Centre,
-                                    RelativePositionAxes = Axes.Both,
-                                    X = bx.X,
-                                    Y = bx.Y,
-                                });
-                            }
-                            else if (bx.Y <= 0f && bx.Y >= -0.25f)
-                            {
-                                Add(new HitAnimation(Hit.Hitx)
-                                {
-                                    Anchor = Anchor.Centre,
-                                    Origin = Anchor.Centre,
-                                    RelativePositionAxes = Axes.Both,
-                                    X = bx.X,
-                                    Y = bx.Y,
-                                });
-                            }
-                            Remove(Clear, Expire);
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativePositionAxes = Axes.Both,
+                                X = bx.X,
+                                Y = bx.Y + 0.00f,
+                            });
                         }
-                        break;
+                        else if (bx.Y <= -0.35f && bx.Y >= -0.5f + 0.05f)
+                        {
+                            Add(new HitAnimation(Hit.Hit100)
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativePositionAxes = Axes.Both,
+                                X = bx.X,
+                                Y = bx.Y,
+                            });
+                        }
+                        else if (bx.Y <= -0.25f && bx.Y >= -0.35f)
+                        {
+                            Add(new HitAnimation(Hit.Hit50)
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativePositionAxes = Axes.Both,
+                                X = bx.X,
+                                Y = bx.Y,
+                            });
+                        }
+                        else if (bx.Y <= 0f && bx.Y >= -0.25f)
+                        {
+                            Add(new HitAnimation(Hit.Hitx)
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativePositionAxes = Axes.Both,
+                                X = bx.X,
+                                Y = bx.Y,
+                            });
+                        }
+                        Remove(Clear, Expire);
                     }
+                        break;
+                }
 
                 case Key.A:
+                {
+                    if (direction == HitObjects.Direction.Left)
                     {
-                        if (direction == Direction.Left)
+                        if (bx.X <= -0.5 + 0.05f && bx.X >= -0.50001f)
                         {
-                            if (bx.X <= -0.5 + 0.05f && bx.X >= -0.50001f)
+                            Add(new HitAnimation(Hit.Hit300)
                             {
-                                Add(new HitAnimation(Hit.Hit300)
-                                {
-                                    Anchor = Anchor.Centre,
-                                    Origin = Anchor.Centre,
-                                    RelativePositionAxes = Axes.Both,
-                                    X = bx.X,
-                                    Y = bx.Y,
-                                });
-                            }
-                            else if (bx.X <= -0.35f && bx.Y >= -0.5f + 0.05f)
-                            {
-                                Add(new HitAnimation(Hit.Hit100)
-                                {
-                                    Anchor = Anchor.Centre,
-                                    Origin = Anchor.Centre,
-                                    RelativePositionAxes = Axes.Both,
-                                    X = bx.X,
-                                    Y = bx.Y,
-                                });
-                            }
-                            else if (bx.X <= -0.25f && bx.Y >= -0.35f)
-                            {
-                                Add(new HitAnimation(Hit.Hit50)
-                                {
-                                    Anchor = Anchor.Centre,
-                                    Origin = Anchor.Centre,
-                                    RelativePositionAxes = Axes.Both,
-                                    X = bx.X,
-                                    Y = bx.Y,
-                                });
-                            }
-                            else if (bx.X <= 0f && bx.Y >= -0.25f)
-                            {
-                                Add(new HitAnimation(Hit.Hitx)
-                                {
-                                    Anchor = Anchor.Centre,
-                                    Origin = Anchor.Centre,
-                                    RelativePositionAxes = Axes.Both,
-                                    X = bx.X,
-                                    Y = bx.Y,
-                                });
-                            }
-                            Remove(Clear, Expire);
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativePositionAxes = Axes.Both,
+                                X = bx.X,
+                                Y = bx.Y,
+                            });
                         }
-                        break;
+                        else if (bx.X <= -0.35f && bx.Y >= -0.5f + 0.05f)
+                        {
+                            Add(new HitAnimation(Hit.Hit100)
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativePositionAxes = Axes.Both,
+                                X = bx.X,
+                                Y = bx.Y,
+                            });
+                        }
+                        else if (bx.X <= -0.25f && bx.Y >= -0.35f)
+                        {
+                            Add(new HitAnimation(Hit.Hit50)
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativePositionAxes = Axes.Both,
+                                X = bx.X,
+                                Y = bx.Y,
+                            });
+                        }
+                        else if (bx.X <= 0f && bx.Y >= -0.25f)
+                        {
+                            Add(new HitAnimation(Hit.Hitx)
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativePositionAxes = Axes.Both,
+                                X = bx.X,
+                                Y = bx.Y,
+                            });
+                        }
+                        Remove(Clear, Expire);
                     }
+                    break;
+                }
 
                 case Key.S:
+                {
+                    if (direction == HitObjects.Direction.Down)
                     {
-                        if (direction == Direction.Down)
+                        if (bx.Y >= 0.5 - 0.05f && bx.Y <= 0.50001f)
                         {
-                            if (bx.Y >= 0.5 - 0.05f && bx.Y <= 0.50001f)
+                            Add(new HitAnimation(Hit.Hit300)
                             {
-                                Add(new HitAnimation(Hit.Hit300)
-                                {
-                                    Anchor = Anchor.Centre,
-                                    Origin = Anchor.Centre,
-                                    RelativePositionAxes = Axes.Both,
-                                    X = bx.X,
-                                    Y = bx.Y - 0.05f,
-                                });
-                            }
-                            else if (bx.Y >= 0.35f && bx.Y <= 0.5f - 0.05f)
-                            {
-                                Add(new HitAnimation(Hit.Hit100)
-                                {
-                                    Anchor = Anchor.Centre,
-                                    Origin = Anchor.Centre,
-                                    RelativePositionAxes = Axes.Both,
-                                    X = bx.X,
-                                    Y = bx.Y - 0.05f,
-                                });
-                            }
-                            else if (bx.Y >= 0.25f && bx.Y <= 0.35f)
-                            {
-                                Add(new HitAnimation(Hit.Hit50)
-                                {
-                                    Anchor = Anchor.Centre,
-                                    Origin = Anchor.Centre,
-                                    RelativePositionAxes = Axes.Both,
-                                    X = bx.X,
-                                    Y = bx.Y - 0.05f,
-                                });
-                            }
-                            else if (bx.Y >= 0f && bx.Y <= 0.25f)
-                            {
-                                Add(new HitAnimation(Hit.Hitx)
-                                {
-                                    Anchor = Anchor.Centre,
-                                    Origin = Anchor.Centre,
-                                    RelativePositionAxes = Axes.Both,
-                                    X = bx.X,
-                                    Y = bx.Y - 0.05f,
-                                });
-                            }
-                            Remove(Clear, Expire);
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativePositionAxes = Axes.Both,
+                                X = bx.X,
+                                Y = bx.Y - 0.05f,
+                            });
                         }
-                        break;
+                        else if (bx.Y >= 0.35f && bx.Y <= 0.5f - 0.05f)
+                        {
+                            Add(new HitAnimation(Hit.Hit100)
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativePositionAxes = Axes.Both,
+                                X = bx.X,
+                                Y = bx.Y - 0.05f,
+                            });
+                        }
+                        else if (bx.Y >= 0.25f && bx.Y <= 0.35f)
+                        {
+                            Add(new HitAnimation(Hit.Hit50)
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativePositionAxes = Axes.Both,
+                                X = bx.X,
+                                Y = bx.Y - 0.05f,
+                            });
+                        }
+                        else if (bx.Y >= 0f && bx.Y <= 0.25f)
+                        {
+                            Add(new HitAnimation(Hit.Hitx)
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativePositionAxes = Axes.Both,
+                                X = bx.X,
+                                Y = bx.Y - 0.05f,
+                            });
+                        }
+                        Remove(Clear, Expire);
                     }
+                    break;
+                }
 
                 case Key.D:
+                {
+                    if (direction == HitObjects.Direction.Right)
                     {
-                        if (direction == Direction.Right)
+                        if (bx.X >= 0.5 - 0.05f && bx.X <= 0.50001f)
                         {
-                            if (bx.X >= 0.5 - 0.05f && bx.X <= 0.50001f)
+                            Add(new HitAnimation(Hit.Hit300)
                             {
-                                Add(new HitAnimation(Hit.Hit300)
-                                {
-                                    Anchor = Anchor.Centre,
-                                    Origin = Anchor.Centre,
-                                    RelativePositionAxes = Axes.Both,
-                                    X = bx.X,
-                                    Y = bx.Y,
-                                });
-                            }
-                            else if (bx.X >= 0.35f && bx.Y <= 0.5f + 0.05f)
-                            {
-                                Add(new HitAnimation(Hit.Hit100)
-                                {
-                                    Anchor = Anchor.Centre,
-                                    Origin = Anchor.Centre,
-                                    RelativePositionAxes = Axes.Both,
-                                    X = bx.X,
-                                    Y = bx.Y,
-                                });
-                            }
-                            else if (bx.X >= 0.25f && bx.Y <= 0.35f)
-                            {
-                                Add(new HitAnimation(Hit.Hit50)
-                                {
-                                    Anchor = Anchor.Centre,
-                                    Origin = Anchor.Centre,
-                                    RelativePositionAxes = Axes.Both,
-                                    X = bx.X,
-                                    Y = bx.Y,
-                                });
-                            }
-                            else if (bx.X >= 0f && bx.Y <= 0.25f)
-                            {
-                                Add(new HitAnimation(Hit.Hitx)
-                                {
-                                    Anchor = Anchor.Centre,
-                                    Origin = Anchor.Centre,
-                                    RelativePositionAxes = Axes.Both,
-                                    X = bx.X,
-                                    Y = bx.Y,
-                                });
-                            }
-                            Remove(Clear, Expire);
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativePositionAxes = Axes.Both,
+                                X = bx.X,
+                                Y = bx.Y,
+                            });
                         }
-                        break;
+                        else if (bx.X >= 0.35f && bx.Y <= 0.5f + 0.05f)
+                        {
+                            Add(new HitAnimation(Hit.Hit100)
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativePositionAxes = Axes.Both,
+                                X = bx.X,
+                                Y = bx.Y,
+                            });
+                        }
+                        else if (bx.X >= 0.25f && bx.Y <= 0.35f)
+                        {
+                            Add(new HitAnimation(Hit.Hit50)
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativePositionAxes = Axes.Both,
+                                X = bx.X,
+                                Y = bx.Y,
+                            });
+                        }
+                        else if (bx.X >= 0f && bx.Y <= 0.25f)
+                        {
+                            Add(new HitAnimation(Hit.Hitx)
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativePositionAxes = Axes.Both,
+                                X = bx.X,
+                                Y = bx.Y,
+                            });
+                        }
+                        Remove(Clear, Expire);
                     }
+                    break;
+                }
             }
         }
     }
