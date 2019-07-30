@@ -2,7 +2,7 @@
 
 namespace RhythmBox.Mode.Std.Tests.Interfaces
 {
-    interface IBeatmap
+    interface IMap
     {
         int Length { get; set; }
 

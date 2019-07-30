@@ -85,11 +85,11 @@
         <e p="armeabi-v7a" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
         <e p="Interfaces" t="Include">
-          <e p="IBeatmap.cs" t="Include" />
+          <e p="IMap.cs" t="Include" />
         </e>
         <e p="Maps" t="Include">
-          <e p="TestSceneBeatmap.cs" t="Include" />
-          <e p="TestSceneBeatmapPack.cs" t="Include" />
+          <e p="TestSceneMap.cs" t="Include" />
+          <e p="TestSceneMapPack.cs" t="Include" />
         </e>
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
@@ -126,6 +126,7 @@
         <e p="pending files" t="Include">
           <e p="TestSceneMapReader.cs" t="Include" />
           <e p="TestSceneMyScrollContainer.cs" t="Include" />
+          <e p="TestSceneRbDrawPlayfield.cs" t="Include" />
           <e p="TestSceneRbPlayfield.cs" t="Include" />
           <e p="TestSceneSettingsOverlay.cs" t="Include" />
         </e>

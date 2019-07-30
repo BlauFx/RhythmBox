@@ -42,7 +42,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                     RelativeSizeAxes = Axes.Both,
                     RelativePositionAxes = Axes.Both,
                     Size = new Vector2(0.6f,1f),
-                    //Beatmap = 
+                    //Map = 
                 },
                 DispayCombo = new TextFlowContainer
                 {

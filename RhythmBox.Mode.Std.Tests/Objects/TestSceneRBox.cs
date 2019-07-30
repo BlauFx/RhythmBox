@@ -2,8 +2,6 @@
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shapes;
-using osu.Framework.Input.Events;
-using osu.Framework.Logging;
 using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
@@ -105,24 +103,29 @@ namespace RhythmBox.Mode.Std.Tests.Objects
             if (direction == Direction.Up)
             {
                 bx.MoveToY(-0.5f, 1500*speed, Easing.InCirc);
+                bx.ResizeTo(new Vector2(1f, 0.05f), 1500*speed, Easing.InCirc);
             }
             else if (direction == Direction.Down)
             {
                 bx.Rotation = 180f;
                 bx.MoveToY(0.5f, 1500*speed, Easing.InCirc);
+                bx.ResizeTo(new Vector2(1f, 0.05f), 1500*speed, Easing.InCirc);
             }
             else if (direction == Direction.Left)
             {
-                bx.Rotation = -90f;
+                bx.Origin = Anchor.CentreLeft;
+                bx.Size = new Vector2(0.01f,0.1f);
+                bx.ResizeTo(new Vector2(0.056f, 1f), 1500*speed, Easing.InCirc);
                 bx.MoveToX(-0.5f, 1500*speed, Easing.InCirc);
             }
             else if (direction == Direction.Right)
             {
-                bx.Rotation = 90f;
+                bx.Origin = Anchor.CentreRight;
+                bx.Size = new Vector2(0.01f,0.1f);
+                bx.ResizeTo(new Vector2(0.056f, 1f), 1500*speed, Easing.InCirc);
                 bx.MoveToX(0.5f, 1500*speed, Easing.InCirc);
             }
 
-            bx.ResizeTo(new Vector2(1f, 0.05f), 1500*speed, Easing.InCirc);
             Scheduler.AddDelayed(() => Remove(Clear, Expire), 1800 * speed);
         }
 

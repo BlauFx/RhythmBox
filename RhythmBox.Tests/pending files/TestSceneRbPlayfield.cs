@@ -1,7 +1,6 @@
 ﻿using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
 using osuTK;
 using osuTK.Input;
@@ -13,7 +12,7 @@ namespace RhythmBox.Tests.pending_files
 {
     public class TestSceneRbPlayfield : Container
     {
-        public TestSceneBeatmap Beatmap;
+        public TestSceneMap Map;
 
         private TestSceneRBox objBox;
 
@@ -24,65 +23,13 @@ namespace RhythmBox.Tests.pending_files
         {
             Children = new Drawable[]
             {
-                new Box //Up
+                new TestSceneRbDrawPlayfield
                 {
-                    Anchor = Anchor.TopCentre,
+                    Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.X,
-                    Size = new Vector2(0.9f,1f),
-                    Y = 0.05f,
-                    RelativePositionAxes = Axes.Both,
-                },
-                new Box //Down
-                {
-                    Anchor = Anchor.TopCentre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.X,
-                    Size = new Vector2(0.9f,1f),
-                    Y = 0.95f,
-                    RelativePositionAxes = Axes.Both,
-                },
-                new Box //Left
-                {
-                    Anchor = Anchor.TopLeft,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.X,
-                    Size = new Vector2(1.009f,1f),
-                    Y = 0.5f,
-                    X = 0.05f,
-                    Rotation = 90f,
-                    RelativePositionAxes = Axes.Both,
-                },
-                new Box //Right
-                {
-                    Anchor = Anchor.TopLeft,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.X,
-                    Size = new Vector2(1.009f,1f),
-                    Y = 0.5f,
-                    X = 0.95f,
-                    Rotation = 90f,
-                    RelativePositionAxes = Axes.Both,
-                },
-                new Box //Left Outside
-                {
-                    Anchor = Anchor.TopLeft,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Y,
-                    Size = new Vector2(1f,1f),
-                    Y = 0.5f,
-                    RelativePositionAxes = Axes.Both,
-                },
-                new Box //Right Outside
-                {
-                    Anchor = Anchor.TopLeft,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Y,
-                    Size = new Vector2(1f,1f),
-                    Y = 0.5f,
-                    X = 1f,
-                    RelativePositionAxes = Axes.Both,
-                },
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(1f),
+                }, 
                 objBoxArray[0] = new TestSceneRBox
                 {
                     Anchor = Anchor.Centre,
@@ -90,7 +37,8 @@ namespace RhythmBox.Tests.pending_files
                     direction = Direction.Up,
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f),
-                    time = 430,
+                    time = 699,
+                    speed = 1f,
                 },
                 objBoxArray[1] = new TestSceneRBox
                 {
@@ -123,7 +71,7 @@ namespace RhythmBox.Tests.pending_files
                     speed = 1f,
                 },
             };
-            LoadBeatmap();
+            LoadMap();
         }
 
         protected override bool OnKeyDown(KeyDownEvent e)
@@ -156,13 +104,13 @@ namespace RhythmBox.Tests.pending_files
             return base.OnKeyDown(e);
         }
 
-        private void LoadBeatmap()
+        private void LoadMap()
         {
             //TODO
-            //foreach (var objBox in Beatmap)
-            //{
-            //    Add(objBox);
-            //}
+//            foreach (var objBox in Map)
+//            {
+//                Add(objBox);
+//            }
         }
     }
 }

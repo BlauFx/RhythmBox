@@ -4,7 +4,7 @@ using RhythmBox.Mode.Std.Tests.Objects;
 
 namespace RhythmBox.Mode.Std.Tests.Maps
 {
-    public class TestSceneBeatmap : IBeatmap
+    public class TestSceneMap : IMap
     {
         public int Length { get; set; }
         public int maxCombo { get; set; }
@@ -13,7 +13,7 @@ namespace RhythmBox.Mode.Std.Tests.Maps
         public int ID { get; set; }
         public Direction Direction { get; set; }
 
-        public TestSceneBeatmap(int length, int maxCombo, int maxObjects, float[] timings, int ID, Direction direction)
+        public TestSceneMap(int length, int maxCombo, int maxObjects, float[] timings, int ID, Direction direction)
         {
             this.Length = length;
             this.maxCombo = maxCombo;
