@@ -31,17 +31,6 @@ namespace RhythmBox.Mode.Std.Tests.Maps
 
         public HitObjects[] HitObjects { get; set; }
 
-        public TestSceneMap()
-        {
-//            Load();
-        }
-        
-        private void Load()
-        {
-            
-        }
-
-
         public IEnumerator GetEnumerator()
         {
             return HitObjects.GetEnumerator();

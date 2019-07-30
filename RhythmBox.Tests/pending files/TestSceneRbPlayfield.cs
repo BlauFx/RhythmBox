@@ -16,7 +16,11 @@ namespace RhythmBox.Tests.pending_files
 
         private TestSceneRBox objBox;
 
-        private TestSceneRBox[] objBoxArray;  // = new TestSceneRBox[4];
+        private TestSceneRBox[] objBoxArray;
+
+        public TextFlowContainer xd  { get; set; } //TODO
+
+        public string xdWrapper { get; set; } = "s";
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -25,6 +29,17 @@ namespace RhythmBox.Tests.pending_files
             
             Children = new Drawable[]
             {
+                xd = new TextFlowContainer
+                {
+                    Anchor = Anchor.TopRight,
+                    Origin = Anchor.TopRight,
+                    RelativeSizeAxes = Axes.Both,
+                    RelativePositionAxes = Axes.Both,
+                    Size = new Vector2(0.1f),
+                    TextAnchor = Anchor.TopRight,
+                    X = -0.01f,
+                    Alpha = 0f,
+                },
                 new TestSceneRbDrawPlayfield
                 {
                     Anchor = Anchor.Centre,
@@ -32,46 +47,6 @@ namespace RhythmBox.Tests.pending_files
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f),
                 }, 
-//                objBoxArray[0] = new TestSceneRBox
-//                {
-//                    Anchor = Anchor.Centre,
-//                    Origin = Anchor.Centre,
-//                    direction = Direction.Up,
-//                    RelativeSizeAxes = Axes.Both,
-//                    Size = new Vector2(1f),
-//                    time = 699,
-//                    speed = 1f,
-//                },
-//                objBoxArray[1] = new TestSceneRBox
-//                {
-//                    Anchor = Anchor.Centre,
-//                    Origin = Anchor.Centre,
-//                    direction = Direction.Left,
-//                    RelativeSizeAxes = Axes.Both,
-//                    Size = new Vector2(1f),
-//                    time = 700,
-//                    speed = 1f,
-//                },
-//                objBoxArray[2] = new TestSceneRBox
-//                {
-//                    Anchor = Anchor.Centre,
-//                    Origin = Anchor.Centre,
-//                    direction = Direction.Down,
-//                    RelativeSizeAxes = Axes.Both,
-//                    Size = new Vector2(1f),
-//                    time = 1200,
-//                    speed = 1f,
-//                },
-//                objBoxArray[3] = new TestSceneRBox
-//                {
-//                    Anchor = Anchor.Centre,
-//                    Origin = Anchor.Centre,
-//                    direction = Direction.Right,
-//                    RelativeSizeAxes = Axes.Both,
-//                    Size = new Vector2(1f),
-//                    time = 3100,
-//                    speed = 1f,
-//                },
             };
         }
 
@@ -83,7 +58,6 @@ namespace RhythmBox.Tests.pending_files
 
         protected override bool OnKeyDown(KeyDownEvent e)
         {
-//            return base.OnKeyDown(e);
             foreach (var x in objBoxArray)
             {
                 if (x.AlphaA > 0)
@@ -109,8 +83,11 @@ namespace RhythmBox.Tests.pending_files
                     catch  {  }
                 }
             }
+            xd.Text = "WWSEDSE";
+            xdWrapper = "WWSEDSE";
             return base.OnKeyDown(e);
         }
+        
 
         private void LoadMap()
         {
@@ -120,7 +97,6 @@ namespace RhythmBox.Tests.pending_files
             foreach (var objBox in Map)
             {
                 var x = (Mode.Std.Tests.Interfaces.HitObjects) objBox;
-                Logger.Log(x._direction.ToString());
                 Add(objBoxArray[i] = new TestSceneRBox
                 {
                     Anchor = Anchor.Centre,

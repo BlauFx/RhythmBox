@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
@@ -33,6 +34,8 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
         private TextFlowContainer DispayScore;
 
         private TestSceneMap _map;
+
+        private TestSceneRbPlayfield _testSceneRbPlayfield;
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -79,15 +82,6 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
             
             Children = new Drawable[]
             {
-                new TestSceneRbPlayfield
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Both,
-                    RelativePositionAxes = Axes.Both,
-                    Size = new Vector2(0.6f, 1f),
-                    Map = _map,
-                },
                 DispayCombo = new TextFlowContainer
                 {
                     Anchor = Anchor.BottomLeft,
@@ -106,9 +100,17 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                     Size = new Vector2(0.1f),
                     TextAnchor = Anchor.TopRight,
                     X = -0.01f
-                }
+                },
+                _testSceneRbPlayfield = new TestSceneRbPlayfield
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    RelativePositionAxes = Axes.Both,
+                    Size = new Vector2(0.6f, 1f),
+                    Map = _map,
+                },
             };
-            
             DispayCombo.AddText("0x", x => x.Font = new FontUsage("Roboto", 40));
             DispayScore.AddText("000000", x => x.Font = new FontUsage("Roboto", 40));
         }
