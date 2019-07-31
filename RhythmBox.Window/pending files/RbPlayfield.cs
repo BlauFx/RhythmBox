@@ -13,117 +13,46 @@ namespace RhythmBox.Window.pending_files
 {
     class RbPlayfield : Container
     {
-        public Beatmap Beatmap;
+        public Map Map;
 
         private RBox objBox;
 
-        private RBox[] objBoxArray = new RBox[4];
+        private RBox[] objBoxArray;
+
+        public TextFlowContainer xd  { get; set; } //TODO
 
         [BackgroundDependencyLoader]
         private void Load()
         {
+            objBoxArray = new RBox[Map.HitObjects.Length];
+            
             Children = new Drawable[]
             {
-                new Box //Up
+                xd = new TextFlowContainer
                 {
-                    Anchor = Anchor.TopCentre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.X,
-                    Size = new Vector2(0.9f,1f),
-                    Y = 0.05f,
+                    Anchor = Anchor.TopRight,
+                    Origin = Anchor.TopRight,
+                    RelativeSizeAxes = Axes.Both,
                     RelativePositionAxes = Axes.Both,
+                    Size = new Vector2(0.1f),
+                    TextAnchor = Anchor.TopRight,
+                    X = -0.01f,
+                    Alpha = 0f,
                 },
-                new Box //Down
-                {
-                    Anchor = Anchor.TopCentre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.X,
-                    Size = new Vector2(0.9f,1f),
-                    Y = 0.95f,
-                    RelativePositionAxes = Axes.Both,
-                },
-                new Box //Left
-                {
-                    Anchor = Anchor.TopLeft,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.X,
-                    Size = new Vector2(1.009f,1f),
-                    Y = 0.5f,
-                    X = 0.05f,
-                    Rotation = 90f,
-                    RelativePositionAxes = Axes.Both,
-                },
-                new Box //Right
-                {
-                    Anchor = Anchor.TopLeft,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.X,
-                    Size = new Vector2(1.009f,1f),
-                    Y = 0.5f,
-                    X = 0.95f,
-                    Rotation = 90f,
-                    RelativePositionAxes = Axes.Both,
-                },
-                new Box //Left Outside
-                {
-                    Anchor = Anchor.TopLeft,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Y,
-                    Size = new Vector2(1f,1f),
-                    Y = 0.5f,
-                    RelativePositionAxes = Axes.Both,
-                },
-                new Box //Right Outside
-                {
-                    Anchor = Anchor.TopLeft,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Y,
-                    Size = new Vector2(1f,1f),
-                    Y = 0.5f,
-                    X = 1f,
-                    RelativePositionAxes = Axes.Both,
-                },
-                objBoxArray[0] = new RBox
+                new RbDrawPlayfield
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                    direction = Direction.Up,
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f),
-                    time = 430,
-                },
-                objBoxArray[1] = new RBox
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    direction = Direction.Left,
-                    RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(1f),
-                    time = 700,
-                    speed = 1f,
-                },
-                objBoxArray[2] = new RBox
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    direction = Direction.Down,
-                    RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(1f),
-                    time = 1200,
-                    speed = 1f,
-                },
-                objBoxArray[3] = new RBox
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    direction = Direction.Right,
-                    RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(1f),
-                    time = 3100,
-                    speed = 1f,
-                },
+                }, 
             };
-            LoadBeatmap();
+        }
+        
+        protected override void LoadComplete()
+        {
+            LoadMap();
+            base.LoadComplete();
         }
 
         protected override bool OnKeyDown(KeyDownEvent e)
@@ -150,19 +79,32 @@ namespace RhythmBox.Window.pending_files
                                 return base.OnKeyDown(e);
                         }
                     }
-                    catch { }
+                    catch  {  }
                 }
             }
             return base.OnKeyDown(e);
         }
 
-        private void LoadBeatmap()
+        private void LoadMap()
         {
+            int i = 0;
+            
             //TODO
-            //foreach (var objBox in Beatmap)
-            //{
-            //    Add(objBox);
-            //}
+            foreach (var objBox in Map)
+            {
+                var x = (Mode.Std.Interfaces.HitObjects) objBox;
+                Add(objBoxArray[i] = new RBox
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    direction = x._direction,
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(1f),
+                    time = x.Time,
+                    speed = x.Speed,
+                });
+                i++;
+            }
         }
     }
 }
