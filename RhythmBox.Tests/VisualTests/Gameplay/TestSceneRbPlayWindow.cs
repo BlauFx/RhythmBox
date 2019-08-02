@@ -1,10 +1,8 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
-using osu.Framework.Logging;
 using osu.Framework.Testing;
 using osuTK;
 using RhythmBox.Mode.Std.Tests.Maps;
@@ -21,14 +19,6 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
         private int Combo { get; set; } = 0;
 
         private double Accuracy { get; set; } = 100;
-
-        private int hit300 { get; set; } = 0;
-
-        private int hit100 { get; set; } = 0;
-
-        private int hit50 { get; set; } = 0;
-
-        private int hitx { get; set; } = 0;
 
         private TextFlowContainer DispayCombo;
 
