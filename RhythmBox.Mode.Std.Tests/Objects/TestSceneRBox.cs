@@ -21,9 +21,11 @@ namespace RhythmBox.Mode.Std.Tests.Objects
 
         private RBoxObj obj { get; set; }
 
-        public float AlphaA = xd;
+        public float AlphaA = alpha;
 
-        protected static float xd;
+        protected static float alpha;
+
+        public bool AddCombo { get; protected set; }
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -52,7 +54,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
             await Task.Delay(1);
             try
             {
-                AlphaA = xd = obj.bx.Alpha;
+                AlphaA = alpha = obj.bx.Alpha;
             }
             catch
             {
@@ -62,10 +64,34 @@ namespace RhythmBox.Mode.Std.Tests.Objects
             UpdateAlphaA();
         }
 
-        public void OnClickKeyDown(Key key)
+        public async void OnClickKeyDown(Key key)
         {
             obj.ClickKeyDown(key);
+            this.AddCombo = obj.AddCombo;
             Scheduler.AddDelayed(() => this.Expire(), 1800 * speed);
+        }
+
+        public bool AddComboToCounter()
+        {
+            if (obj.Wait == 2 && obj.AddCombo)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool Miss()
+        {
+            if (obj.Wait == 2 && !obj.AddCombo)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public Hit GetHit()
+        {
+            return obj.currentHit;
         }
     }
 
@@ -86,6 +112,12 @@ namespace RhythmBox.Mode.Std.Tests.Objects
         private const int Expire = 300;
 
         private const int Clear = 100;
+
+        public bool AddCombo = false;
+
+        public int Wait = 0;
+
+        public Hit currentHit { get; protected set; }
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -144,6 +176,8 @@ namespace RhythmBox.Mode.Std.Tests.Objects
 
         public void ClickKeyDown(Key key)
         {
+            Wait++;
+
             switch (key)
             {
                 case Key.W:
@@ -152,6 +186,10 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                     {
                         if (bx.Y <= -0.5 + 0.05f && bx.Y >= -0.50001f)
                         {
+                            AddCombo = true;
+                            Wait++;
+                            currentHit = Hit.Hit300;
+
                             Add(new TestSceneHitAnimation(Hit.Hit300)
                             {
                                 Anchor = Anchor.Centre,
@@ -163,6 +201,10 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                         }
                         else if (bx.Y <= -0.35f && bx.Y >= -0.5f + 0.05f)
                         {
+                            AddCombo = true;
+                            Wait++;
+                            currentHit = Hit.Hit100;
+
                             Add(new TestSceneHitAnimation(Hit.Hit100)
                             {
                                 Anchor = Anchor.Centre,
@@ -174,6 +216,10 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                         }
                         else if (bx.Y <= -0.25f && bx.Y >= -0.35f)
                         {
+                            AddCombo = true;
+                            Wait++;
+                            currentHit = Hit.Hit50;
+
                             Add(new TestSceneHitAnimation(Hit.Hit50)
                             {
                                 Anchor = Anchor.Centre,
@@ -185,6 +231,11 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                         }
                         else if (bx.Y <= 0f && bx.Y >= -0.25f)
                         {
+                            //TODO: AddFail = true;
+                            AddCombo = false;
+                            Wait++;
+                            currentHit = Hit.Hitx;
+
                             Add(new TestSceneHitAnimation(Hit.Hitx)
                             {
                                 Anchor = Anchor.Centre,
@@ -194,9 +245,11 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                                 Y = bx.Y,
                             });
                         }
+
                         Remove(Clear, Expire);
                     }
-                        break;
+
+                    break;
                 }
 
                 case Key.A:
@@ -205,6 +258,10 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                     {
                         if (bx.X <= -0.5 + 0.05f && bx.X >= -0.50001f)
                         {
+                            AddCombo = true;
+                            Wait++;
+                            currentHit = Hit.Hit300;
+
                             Add(new TestSceneHitAnimation(Hit.Hit300)
                             {
                                 Anchor = Anchor.Centre,
@@ -216,6 +273,10 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                         }
                         else if (bx.X <= -0.35f && bx.Y >= -0.5f + 0.05f)
                         {
+                            AddCombo = true;
+                            Wait++;
+                            currentHit = Hit.Hit100;
+
                             Add(new TestSceneHitAnimation(Hit.Hit100)
                             {
                                 Anchor = Anchor.Centre,
@@ -227,6 +288,10 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                         }
                         else if (bx.X <= -0.25f && bx.Y >= -0.35f)
                         {
+                            AddCombo = true;
+                            Wait++;
+                            currentHit = Hit.Hit50;
+
                             Add(new TestSceneHitAnimation(Hit.Hit50)
                             {
                                 Anchor = Anchor.Centre,
@@ -238,6 +303,10 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                         }
                         else if (bx.X <= 0f && bx.Y >= -0.25f)
                         {
+                            AddCombo = false;
+                            Wait++;
+                            currentHit = Hit.Hitx;
+
                             Add(new TestSceneHitAnimation(Hit.Hitx)
                             {
                                 Anchor = Anchor.Centre,
@@ -247,8 +316,10 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                                 Y = bx.Y,
                             });
                         }
+
                         Remove(Clear, Expire);
                     }
+
                     break;
                 }
 
@@ -258,6 +329,10 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                     {
                         if (bx.Y >= 0.5 - 0.05f && bx.Y <= 0.50001f)
                         {
+                            AddCombo = true;
+                            Wait++;
+                            currentHit = Hit.Hit300;
+
                             Add(new TestSceneHitAnimation(Hit.Hit300)
                             {
                                 Anchor = Anchor.Centre,
@@ -269,6 +344,10 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                         }
                         else if (bx.Y >= 0.35f && bx.Y <= 0.5f - 0.05f)
                         {
+                            AddCombo = true;
+                            Wait++;
+                            currentHit = Hit.Hit100;
+
                             Add(new TestSceneHitAnimation(Hit.Hit100)
                             {
                                 Anchor = Anchor.Centre,
@@ -280,6 +359,10 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                         }
                         else if (bx.Y >= 0.25f && bx.Y <= 0.35f)
                         {
+                            AddCombo = true;
+                            Wait++;
+                            currentHit = Hit.Hit50;
+
                             Add(new TestSceneHitAnimation(Hit.Hit50)
                             {
                                 Anchor = Anchor.Centre,
@@ -291,6 +374,10 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                         }
                         else if (bx.Y >= 0f && bx.Y <= 0.25f)
                         {
+                            AddCombo = false;
+                            Wait++;
+                            currentHit = Hit.Hitx;
+
                             Add(new TestSceneHitAnimation(Hit.Hitx)
                             {
                                 Anchor = Anchor.Centre,
@@ -300,8 +387,10 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                                 Y = bx.Y - 0.05f,
                             });
                         }
+
                         Remove(Clear, Expire);
                     }
+
                     break;
                 }
 
@@ -311,6 +400,10 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                     {
                         if (bx.X >= 0.5 - 0.05f && bx.X <= 0.50001f)
                         {
+                            AddCombo = true;
+                            Wait++;
+                            currentHit = Hit.Hit300;
+
                             Add(new TestSceneHitAnimation(Hit.Hit300)
                             {
                                 Anchor = Anchor.Centre,
@@ -322,6 +415,10 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                         }
                         else if (bx.X >= 0.35f && bx.Y <= 0.5f + 0.05f)
                         {
+                            AddCombo = true;
+                            Wait++;
+                            currentHit = Hit.Hit100;
+
                             Add(new TestSceneHitAnimation(Hit.Hit100)
                             {
                                 Anchor = Anchor.Centre,
@@ -333,6 +430,10 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                         }
                         else if (bx.X >= 0.25f && bx.Y <= 0.35f)
                         {
+                            AddCombo = true;
+                            Wait++;
+                            currentHit = Hit.Hit50;
+
                             Add(new TestSceneHitAnimation(Hit.Hit50)
                             {
                                 Anchor = Anchor.Centre,
@@ -344,6 +445,10 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                         }
                         else if (bx.X >= 0f && bx.Y <= 0.25f)
                         {
+                            AddCombo = false;
+                            Wait++;
+                            currentHit = Hit.Hitx;
+
                             Add(new TestSceneHitAnimation(Hit.Hitx)
                             {
                                 Anchor = Anchor.Centre,
@@ -353,19 +458,13 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                                 Y = bx.Y,
                             });
                         }
+
                         Remove(Clear, Expire);
                     }
+
                     break;
                 }
             }
         }
     }
-
-//    public enum Direction
-//    {
-//        Up,
-//        Down,
-//        Left,
-//        Right
-//    }
 }

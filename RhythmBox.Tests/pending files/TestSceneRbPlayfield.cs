@@ -2,9 +2,9 @@
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Events;
-using osu.Framework.Logging;
 using osuTK;
 using osuTK.Input;
+using RhythmBox.Mode.Std.Tests.Animations;
 using RhythmBox.Mode.Std.Tests.Maps;
 using RhythmBox.Mode.Std.Tests.Objects;
 
@@ -14,13 +14,19 @@ namespace RhythmBox.Tests.pending_files
     {
         public TestSceneMap Map;
 
-        private TestSceneRBox objBox;
-
         private TestSceneRBox[] objBoxArray;
 
-        public TextFlowContainer xd  { get; set; } //TODO
+        public int ComboCounter = 0;
 
-        public string xdWrapper { get; set; } = "s";
+        private int _previousCombo = 0;
+
+        public int ScoreCounter = 0;
+
+        private bool UpdateCombo = false;
+
+        private bool AddMiss = false;
+
+        private Hit currentHit { get; set; }
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -29,17 +35,6 @@ namespace RhythmBox.Tests.pending_files
             
             Children = new Drawable[]
             {
-                xd = new TextFlowContainer
-                {
-                    Anchor = Anchor.TopRight,
-                    Origin = Anchor.TopRight,
-                    RelativeSizeAxes = Axes.Both,
-                    RelativePositionAxes = Axes.Both,
-                    Size = new Vector2(0.1f),
-                    TextAnchor = Anchor.TopRight,
-                    X = -0.01f,
-                    Alpha = 0f,
-                },
                 new TestSceneRbDrawPlayfield
                 {
                     Anchor = Anchor.Centre,
@@ -68,26 +63,76 @@ namespace RhythmBox.Tests.pending_files
                         {
                             case Key.W:
                                 x.OnClickKeyDown(Key.W);
+                                this.UpdateCombo = x.AddComboToCounter();
+                                this.AddMiss = x.Miss();
+                                this.currentHit = x.GetHit();
                                 return base.OnKeyDown(e);
                             case Key.S:
                                 x.OnClickKeyDown(Key.S);
+                                this.UpdateCombo = x.AddComboToCounter();
+                                this.AddMiss = x.Miss();
+                                this.currentHit = x.GetHit();
                                 return base.OnKeyDown(e);
                             case Key.A:
                                 x.OnClickKeyDown(Key.A);
+                                this.UpdateCombo = x.AddComboToCounter();
+                                this.AddMiss = x.Miss();
+                                this.currentHit = x.GetHit();
                                 return base.OnKeyDown(e);
                             case Key.D:
                                 x.OnClickKeyDown(Key.D);
+                                this.UpdateCombo = x.AddComboToCounter();
+                                this.AddMiss = x.Miss();
+                                this.currentHit = x.GetHit();
                                 return base.OnKeyDown(e);
                         }
                     }
-                    catch  {  }
+                    catch { }
                 }
             }
-            xd.Text = "WWSEDSE";
-            xdWrapper = "WWSEDSE";
             return base.OnKeyDown(e);
         }
-        
+
+        protected override void Update()
+        {
+            if (UpdateCombo)
+            {
+                UpdateCombo = false;
+                _previousCombo = ComboCounter;
+                ComboCounter++;
+            }
+            else if (AddMiss)
+            {
+                _previousCombo = ComboCounter;
+                ComboCounter = 0;
+            }
+
+            if (ComboCounter != _previousCombo)
+            {
+                _previousCombo = ComboCounter;
+                int addAmout = 0;
+                switch (currentHit)
+                {
+                    case Hit.Hit300:
+                        addAmout = 300;
+                        break;
+                    case Hit.Hit100:
+                        addAmout = 100;
+                        break;
+                    case Hit.Hit50:
+                        addAmout = 50;
+                        break;
+                    case Hit.Hitx:
+                        addAmout = 0;
+                        break;
+                }
+                var CalcScore = (ComboCounter * addAmout);
+                ScoreCounter += CalcScore;
+            }
+
+            base.Update();
+        }
+
 
         private void LoadMap()
         {

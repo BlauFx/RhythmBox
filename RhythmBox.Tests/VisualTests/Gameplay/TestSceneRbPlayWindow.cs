@@ -1,8 +1,10 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Logging;
 using osu.Framework.Testing;
 using osuTK;
 using RhythmBox.Mode.Std.Tests.Maps;
@@ -112,6 +114,18 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
             };
             DispayCombo.AddText("0x", x => x.Font = new FontUsage("Roboto", 40));
             DispayScore.AddText("000000", x => x.Font = new FontUsage("Roboto", 40));
+        }
+
+        protected override void Update()
+        {
+            Combo = _testSceneRbPlayfield.ComboCounter;
+            DispayCombo.Text = string.Empty;
+            DispayCombo.AddText($"{Combo}x", x => x.Font = new FontUsage("Roboto", 40));
+
+            Score = _testSceneRbPlayfield.ScoreCounter;
+            DispayScore.Text = string.Empty;
+            DispayScore.AddText($"{Score}", x => x.Font = new FontUsage("Roboto", 40));
+            base.Update();
         }
     }
 }
