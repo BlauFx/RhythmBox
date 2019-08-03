@@ -26,7 +26,7 @@ namespace RhythmBox.Tests.pending_files
 
         private bool AddMiss = false;
 
-        private Hit currentHit { get; set; }
+        public Hit currentHit { get; set; }
 
         [BackgroundDependencyLoader]
         private void Load()

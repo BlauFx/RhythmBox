@@ -10,10 +10,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Graphics\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\RhythmBox.Mode.Std\RhythmBox.Mode.Std.csproj" />
   </ItemGroup>
 

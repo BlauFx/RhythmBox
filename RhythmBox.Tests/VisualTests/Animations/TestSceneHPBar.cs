@@ -1,6 +1,5 @@
 using NUnit.Framework;
 using osu.Framework.Allocation;
-using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Textures;
@@ -15,7 +14,7 @@ namespace RhythmBox.Tests.VisualTests.Animations
     {
         private Box _box;
 
-        private const float BoxMaxValue = 0.4f;
+        private float BoxMaxValue = 0.4f;
         
         [BackgroundDependencyLoader]
         private void Load(TextureStore store)
@@ -29,7 +28,7 @@ namespace RhythmBox.Tests.VisualTests.Animations
                     Origin = Anchor.TopLeft,
                     RelativePositionAxes = Axes.Both,
                     Alpha = 1f,
-                    Colour = Color4.AliceBlue.Opacity(1f),
+                    Colour = Color4.AliceBlue,
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(BoxMaxValue,0.04f),
                     X = 0f,

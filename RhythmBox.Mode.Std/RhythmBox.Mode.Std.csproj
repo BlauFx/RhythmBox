@@ -9,8 +9,4 @@
     <PackageReference Include="ppy.osu.Framework" Version="2019.730.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Score\" />
-  </ItemGroup>
-
 </Project>

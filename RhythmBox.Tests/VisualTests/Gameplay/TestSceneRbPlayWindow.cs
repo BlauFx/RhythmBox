@@ -3,8 +3,11 @@ using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Input.Events;
 using osu.Framework.Testing;
 using osuTK;
+using osuTK.Graphics;
+using RhythmBox.Mode.Std.Tests.Animations;
 using RhythmBox.Mode.Std.Tests.Maps;
 using RhythmBox.Tests.pending_files;
 using HitObjects = RhythmBox.Mode.Std.Tests.Interfaces.HitObjects;
@@ -27,6 +30,8 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
         private TestSceneMap _map;
 
         private TestSceneRbPlayfield _testSceneRbPlayfield;
+
+        private Mode.Std.Tests.Animations.TestSceneHpBar _hpBar;
         
         [BackgroundDependencyLoader]
         private void Load()
@@ -73,6 +78,15 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
             
             Children = new Drawable[]
             {
+                _hpBar = new Mode.Std.Tests.Animations.TestSceneHpBar
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(1f),
+                    BoxMaxValue = 0.1f,
+                    colour = Color4.AliceBlue,
+                },
                 DispayCombo = new TextFlowContainer
                 {
                     Anchor = Anchor.BottomLeft,
@@ -108,6 +122,8 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
 
         protected override void Update()
         {
+            _hpBar.ResizeBox(CalcHpBarValue(_hpBar._box.Width,_hpBar.BoxMaxValue,0f, Hit.Hit100, true),10000, Easing.OutCirc);
+            
             Combo = _testSceneRbPlayfield.ComboCounter;
             DispayCombo.Text = string.Empty;
             DispayCombo.AddText($"{Combo}x", x => x.Font = new FontUsage("Roboto", 40));
@@ -116,6 +132,50 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
             DispayScore.Text = string.Empty;
             DispayScore.AddText($"{Score}", x => x.Font = new FontUsage("Roboto", 40));
             base.Update();
+        }
+
+        protected override bool OnKeyDown(KeyDownEvent e)
+        {
+            _hpBar.ResizeBox(CalcHpBarValue(_hpBar._box.Width,_hpBar.BoxMaxValue,0f,_testSceneRbPlayfield.currentHit),1000, Easing.OutCirc);
+            return base.OnKeyDown(e);
+        }
+
+        private float CalcHpBarValue(float currentvalue, float maxvalue, float minvalue, Hit hit, bool auto = false)
+        {
+            if (!auto)
+            {
+                float result = 0;
+                switch (hit)
+                {
+                    case Hit.Hit300:
+                        result = currentvalue * 1.5f;
+                        break;
+                    case Hit.Hit100:
+                        result = currentvalue * 0.8f;
+                        break;
+                    case Hit.Hit50:
+                        result = currentvalue * 0.7f;
+                        break;
+                    case Hit.Hitx:
+                        result = currentvalue * 0.3f;
+                        break;
+                }
+
+                if (result < maxvalue && result > minvalue)
+                {
+                    return result;
+                }
+                else if (result > maxvalue)
+                {
+                    return maxvalue;
+                }
+                else if (result < minvalue)
+                {
+                    return minvalue;
+                }
+            }
+            
+            return currentvalue * 0.995f;
         }
     }
 }
