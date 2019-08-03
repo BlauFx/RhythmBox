@@ -138,7 +138,6 @@ namespace RhythmBox.Tests.pending_files
         {
             int i = 0;
             
-            //TODO
             foreach (var objBox in Map)
             {
                 var x = (Mode.Std.Tests.Interfaces.HitObjects) objBox;

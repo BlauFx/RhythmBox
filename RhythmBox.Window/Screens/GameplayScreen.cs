@@ -2,8 +2,11 @@
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Input.Events;
 using osu.Framework.Screens;
 using osuTK;
+using osuTK.Graphics;
+using RhythmBox.Mode.Std.Animations;
 using RhythmBox.Mode.Std.Interfaces;
 using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Window.pending_files;
@@ -18,21 +21,15 @@ namespace RhythmBox.Window.Screens
 
         private double Accuracy { get; set; } = 100;
 
-        private int hit300 { get; set; } = 0;
-
-        private int hit100 { get; set; } = 0;
-
-        private int hit50 { get; set; } = 0;
-
-        private int hitx { get; set; } = 0;
-
         private TextFlowContainer DispayCombo;
 
         private TextFlowContainer DispayScore;
-        
+
         private Map _map;
 
-        private RbPlayfield _testSceneRbPlayfield;
+        private RbPlayfield _RbPlayfield;
+
+        private Mode.Std.Animations.HpBar _hpBar;
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -79,6 +76,15 @@ namespace RhythmBox.Window.Screens
             
             InternalChildren = new Drawable[]
             {
+                _hpBar = new Mode.Std.Animations.HpBar
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(1f),
+                    BoxMaxValue = 0.1f,
+                    colour = Color4.AliceBlue,
+                },
                 DispayCombo = new TextFlowContainer
                 {
                     Anchor = Anchor.BottomLeft,
@@ -98,7 +104,7 @@ namespace RhythmBox.Window.Screens
                     TextAnchor = Anchor.TopRight,
                     X = -0.01f
                 },
-                _testSceneRbPlayfield = new RbPlayfield
+                _RbPlayfield = new RbPlayfield
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
@@ -110,6 +116,64 @@ namespace RhythmBox.Window.Screens
             };
             DispayCombo.AddText("0x", x => x.Font = new FontUsage("Roboto", 40));
             DispayScore.AddText("000000", x => x.Font = new FontUsage("Roboto", 40));
+        }
+        
+        protected override void Update()
+        {
+            _hpBar.ResizeBox(CalcHpBarValue(_hpBar._box.Width,_hpBar.BoxMaxValue,0f, Hit.Hit100, true),10000, Easing.OutCirc);
+            
+            Combo = _RbPlayfield.ComboCounter;
+            DispayCombo.Text = string.Empty;
+            DispayCombo.AddText($"{Combo}x", x => x.Font = new FontUsage("Roboto", 40));
+
+            Score = _RbPlayfield.ScoreCounter;
+            DispayScore.Text = string.Empty;
+            DispayScore.AddText($"{Score}", x => x.Font = new FontUsage("Roboto", 40));
+            base.Update();
+        }
+
+        protected override bool OnKeyDown(KeyDownEvent e)
+        {
+            _hpBar.ResizeBox(CalcHpBarValue(_hpBar._box.Width,_hpBar.BoxMaxValue,0f,_RbPlayfield.currentHit),1000, Easing.OutCirc);
+            return base.OnKeyDown(e);
+        }
+
+        private float CalcHpBarValue(float currentvalue, float maxvalue, float minvalue, Hit hit, bool auto = false)
+        {
+            if (!auto)
+            {
+                float result = 0;
+                switch (hit)
+                {
+                    case Hit.Hit300:
+                        result = currentvalue * 1.5f;
+                        break;
+                    case Hit.Hit100:
+                        result = currentvalue * 0.8f;
+                        break;
+                    case Hit.Hit50:
+                        result = currentvalue * 0.7f;
+                        break;
+                    case Hit.Hitx:
+                        result = currentvalue * 0.3f;
+                        break;
+                }
+
+                if (result < maxvalue && result > minvalue)
+                {
+                    return result;
+                }
+                else if (result > maxvalue)
+                {
+                    return maxvalue;
+                }
+                else if (result < minvalue)
+                {
+                    return minvalue;
+                }
+            }
+            
+            return currentvalue * 0.995f;
         }
     }
 }

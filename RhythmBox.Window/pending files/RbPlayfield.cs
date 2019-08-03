@@ -1,13 +1,12 @@
 ﻿using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
 using osuTK;
 using osuTK.Input;
+using RhythmBox.Mode.Std.Animations;
 using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Mode.Std.Objects;
-using Direction = RhythmBox.Mode.Std.Objects.Direction;
 
 namespace RhythmBox.Window.pending_files
 {
@@ -15,11 +14,19 @@ namespace RhythmBox.Window.pending_files
     {
         public Map Map;
 
-        private RBox objBox;
-
         private RBox[] objBoxArray;
 
-        public TextFlowContainer xd  { get; set; } //TODO
+        public int ComboCounter = 0;
+
+        private int _previousCombo = 0;
+
+        public int ScoreCounter = 0;
+
+        private bool UpdateCombo = false;
+
+        private bool AddMiss = false;
+
+        public Hit currentHit { get; set; }
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -28,17 +35,6 @@ namespace RhythmBox.Window.pending_files
             
             Children = new Drawable[]
             {
-                xd = new TextFlowContainer
-                {
-                    Anchor = Anchor.TopRight,
-                    Origin = Anchor.TopRight,
-                    RelativeSizeAxes = Axes.Both,
-                    RelativePositionAxes = Axes.Both,
-                    Size = new Vector2(0.1f),
-                    TextAnchor = Anchor.TopRight,
-                    X = -0.01f,
-                    Alpha = 0f,
-                },
                 new RbDrawPlayfield
                 {
                     Anchor = Anchor.Centre,
@@ -49,7 +45,7 @@ namespace RhythmBox.Window.pending_files
             };
         }
         
-        protected override void LoadComplete()
+         protected override void LoadComplete()
         {
             LoadMap();
             base.LoadComplete();
@@ -67,29 +63,81 @@ namespace RhythmBox.Window.pending_files
                         {
                             case Key.W:
                                 x.OnClickKeyDown(Key.W);
+                                this.UpdateCombo = x.AddComboToCounter();
+                                this.AddMiss = x.Miss();
+                                this.currentHit = x.GetHit();
                                 return base.OnKeyDown(e);
                             case Key.S:
                                 x.OnClickKeyDown(Key.S);
+                                this.UpdateCombo = x.AddComboToCounter();
+                                this.AddMiss = x.Miss();
+                                this.currentHit = x.GetHit();
                                 return base.OnKeyDown(e);
                             case Key.A:
                                 x.OnClickKeyDown(Key.A);
+                                this.UpdateCombo = x.AddComboToCounter();
+                                this.AddMiss = x.Miss();
+                                this.currentHit = x.GetHit();
                                 return base.OnKeyDown(e);
                             case Key.D:
                                 x.OnClickKeyDown(Key.D);
+                                this.UpdateCombo = x.AddComboToCounter();
+                                this.AddMiss = x.Miss();
+                                this.currentHit = x.GetHit();
                                 return base.OnKeyDown(e);
                         }
                     }
-                    catch  {  }
+                    catch { }
                 }
             }
             return base.OnKeyDown(e);
         }
 
+        protected override void Update()
+        {
+            if (UpdateCombo)
+            {
+                UpdateCombo = false;
+                _previousCombo = ComboCounter;
+                ComboCounter++;
+            }
+            else if (AddMiss)
+            {
+                _previousCombo = ComboCounter;
+                ComboCounter = 0;
+            }
+
+            if (ComboCounter != _previousCombo)
+            {
+                _previousCombo = ComboCounter;
+                int addAmout = 0;
+                switch (currentHit)
+                {
+                    case Hit.Hit300:
+                        addAmout = 300;
+                        break;
+                    case Hit.Hit100:
+                        addAmout = 100;
+                        break;
+                    case Hit.Hit50:
+                        addAmout = 50;
+                        break;
+                    case Hit.Hitx:
+                        addAmout = 0;
+                        break;
+                }
+                var CalcScore = (ComboCounter * addAmout);
+                ScoreCounter += CalcScore;
+            }
+
+            base.Update();
+        }
+
+
         private void LoadMap()
         {
             int i = 0;
             
-            //TODO
             foreach (var objBox in Map)
             {
                 var x = (Mode.Std.Interfaces.HitObjects) objBox;

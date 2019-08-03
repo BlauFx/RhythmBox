@@ -43,7 +43,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                         Alpha = 1f,
                     },
                 };
-            },time);
+            }, time);
 
             UpdateAlphaA();
         }

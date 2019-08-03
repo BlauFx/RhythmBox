@@ -21,9 +21,11 @@ namespace RhythmBox.Mode.Std.Objects
 
         private RBoxObj obj { get; set; }
 
-        public float AlphaA = xd;
+        public float AlphaA = alpha;
 
-        protected static float xd;
+        protected static float alpha;
+
+        public bool AddCombo { get; protected set; }
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -52,20 +54,45 @@ namespace RhythmBox.Mode.Std.Objects
             await Task.Delay(1);
             try
             {
-                AlphaA = xd = obj.bx.Alpha;
+                AlphaA = alpha = obj.bx.Alpha;
             }
             catch
             {
-
             }
 
             UpdateAlphaA();
         }
 
-        public void OnClickKeyDown(Key key)
+        public async void OnClickKeyDown(Key key)
         {
             obj.ClickKeyDown(key);
+            this.AddCombo = obj.AddCombo;
             Scheduler.AddDelayed(() => this.Expire(), 1800 * speed);
+        }
+
+        public bool AddComboToCounter()
+        {
+            if (obj.Wait == 2 && obj.AddCombo)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool Miss()
+        {
+            if (obj.Wait == 2 && !obj.AddCombo)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public Hit GetHit()
+        {
+            return obj.currentHit;
         }
     }
 
@@ -87,6 +114,12 @@ namespace RhythmBox.Mode.Std.Objects
 
         private const int Clear = 100;
 
+        public bool AddCombo = false;
+
+        public int Wait = 0;
+
+        public Hit currentHit { get; protected set; }
+
         [BackgroundDependencyLoader]
         private void Load()
         {
@@ -98,33 +131,33 @@ namespace RhythmBox.Mode.Std.Objects
                 Size = new Vector2(0.1f, 0.01f),
                 RelativePositionAxes = Axes.Both,
             });
-            bx.FadeIn(100*speed);
+            bx.FadeIn(100 * speed);
             bx.MoveToY(0f, 0, Easing.InCirc);
 
             if (direction == HitObjects.Direction.Up)
             {
-                bx.MoveToY(-0.5f, 1500*speed, Easing.InCirc);
-                bx.ResizeTo(new Vector2(1f, 0.05f), 1500*speed, Easing.InCirc);
+                bx.MoveToY(-0.5f, 1500 * speed, Easing.InCirc);
+                bx.ResizeTo(new Vector2(1f, 0.05f), 1500 * speed, Easing.InCirc);
             }
             else if (direction == HitObjects.Direction.Down)
             {
                 bx.Rotation = 180f;
-                bx.MoveToY(0.5f, 1500*speed, Easing.InCirc);
-                bx.ResizeTo(new Vector2(1f, 0.05f), 1500*speed, Easing.InCirc);
+                bx.MoveToY(0.5f, 1500 * speed, Easing.InCirc);
+                bx.ResizeTo(new Vector2(1f, 0.05f), 1500 * speed, Easing.InCirc);
             }
             else if (direction == HitObjects.Direction.Left)
             {
                 bx.Origin = Anchor.CentreLeft;
-                bx.Size = new Vector2(0.01f,0.1f);
-                bx.ResizeTo(new Vector2(0.056f, 1f), 1500*speed, Easing.InCirc);
-                bx.MoveToX(-0.5f, 1500*speed, Easing.InCirc);
+                bx.Size = new Vector2(0.01f, 0.1f);
+                bx.ResizeTo(new Vector2(0.056f, 1f), 1500 * speed, Easing.InCirc);
+                bx.MoveToX(-0.5f, 1500 * speed, Easing.InCirc);
             }
             else if (direction == HitObjects.Direction.Right)
             {
                 bx.Origin = Anchor.CentreRight;
-                bx.Size = new Vector2(0.01f,0.1f);
-                bx.ResizeTo(new Vector2(0.056f, 1f), 1500*speed, Easing.InCirc);
-                bx.MoveToX(0.5f, 1500*speed, Easing.InCirc);
+                bx.Size = new Vector2(0.01f, 0.1f);
+                bx.ResizeTo(new Vector2(0.056f, 1f), 1500 * speed, Easing.InCirc);
+                bx.MoveToX(0.5f, 1500 * speed, Easing.InCirc);
             }
 
             Scheduler.AddDelayed(() => Remove(Clear, Expire), 1800 * speed);
@@ -144,6 +177,8 @@ namespace RhythmBox.Mode.Std.Objects
 
         public void ClickKeyDown(Key key)
         {
+            Wait++;
+
             switch (key)
             {
                 case Key.W:
@@ -152,6 +187,10 @@ namespace RhythmBox.Mode.Std.Objects
                     {
                         if (bx.Y <= -0.5 + 0.05f && bx.Y >= -0.50001f)
                         {
+                            AddCombo = true;
+                            Wait++;
+                            currentHit = Hit.Hit300;
+
                             Add(new HitAnimation(Hit.Hit300)
                             {
                                 Anchor = Anchor.Centre,
@@ -163,6 +202,10 @@ namespace RhythmBox.Mode.Std.Objects
                         }
                         else if (bx.Y <= -0.35f && bx.Y >= -0.5f + 0.05f)
                         {
+                            AddCombo = true;
+                            Wait++;
+                            currentHit = Hit.Hit100;
+
                             Add(new HitAnimation(Hit.Hit100)
                             {
                                 Anchor = Anchor.Centre,
@@ -174,6 +217,10 @@ namespace RhythmBox.Mode.Std.Objects
                         }
                         else if (bx.Y <= -0.25f && bx.Y >= -0.35f)
                         {
+                            AddCombo = true;
+                            Wait++;
+                            currentHit = Hit.Hit50;
+
                             Add(new HitAnimation(Hit.Hit50)
                             {
                                 Anchor = Anchor.Centre,
@@ -185,6 +232,11 @@ namespace RhythmBox.Mode.Std.Objects
                         }
                         else if (bx.Y <= 0f && bx.Y >= -0.25f)
                         {
+                            //TODO: AddFail = true;
+                            AddCombo = false;
+                            Wait++;
+                            currentHit = Hit.Hitx;
+
                             Add(new HitAnimation(Hit.Hitx)
                             {
                                 Anchor = Anchor.Centre,
@@ -194,9 +246,11 @@ namespace RhythmBox.Mode.Std.Objects
                                 Y = bx.Y,
                             });
                         }
+
                         Remove(Clear, Expire);
                     }
-                        break;
+
+                    break;
                 }
 
                 case Key.A:
@@ -205,6 +259,10 @@ namespace RhythmBox.Mode.Std.Objects
                     {
                         if (bx.X <= -0.5 + 0.05f && bx.X >= -0.50001f)
                         {
+                            AddCombo = true;
+                            Wait++;
+                            currentHit = Hit.Hit300;
+
                             Add(new HitAnimation(Hit.Hit300)
                             {
                                 Anchor = Anchor.Centre,
@@ -216,6 +274,10 @@ namespace RhythmBox.Mode.Std.Objects
                         }
                         else if (bx.X <= -0.35f && bx.Y >= -0.5f + 0.05f)
                         {
+                            AddCombo = true;
+                            Wait++;
+                            currentHit = Hit.Hit100;
+
                             Add(new HitAnimation(Hit.Hit100)
                             {
                                 Anchor = Anchor.Centre,
@@ -227,6 +289,10 @@ namespace RhythmBox.Mode.Std.Objects
                         }
                         else if (bx.X <= -0.25f && bx.Y >= -0.35f)
                         {
+                            AddCombo = true;
+                            Wait++;
+                            currentHit = Hit.Hit50;
+
                             Add(new HitAnimation(Hit.Hit50)
                             {
                                 Anchor = Anchor.Centre,
@@ -238,6 +304,10 @@ namespace RhythmBox.Mode.Std.Objects
                         }
                         else if (bx.X <= 0f && bx.Y >= -0.25f)
                         {
+                            AddCombo = false;
+                            Wait++;
+                            currentHit = Hit.Hitx;
+
                             Add(new HitAnimation(Hit.Hitx)
                             {
                                 Anchor = Anchor.Centre,
@@ -247,8 +317,10 @@ namespace RhythmBox.Mode.Std.Objects
                                 Y = bx.Y,
                             });
                         }
+
                         Remove(Clear, Expire);
                     }
+
                     break;
                 }
 
@@ -258,6 +330,10 @@ namespace RhythmBox.Mode.Std.Objects
                     {
                         if (bx.Y >= 0.5 - 0.05f && bx.Y <= 0.50001f)
                         {
+                            AddCombo = true;
+                            Wait++;
+                            currentHit = Hit.Hit300;
+
                             Add(new HitAnimation(Hit.Hit300)
                             {
                                 Anchor = Anchor.Centre,
@@ -269,6 +345,10 @@ namespace RhythmBox.Mode.Std.Objects
                         }
                         else if (bx.Y >= 0.35f && bx.Y <= 0.5f - 0.05f)
                         {
+                            AddCombo = true;
+                            Wait++;
+                            currentHit = Hit.Hit100;
+
                             Add(new HitAnimation(Hit.Hit100)
                             {
                                 Anchor = Anchor.Centre,
@@ -280,6 +360,10 @@ namespace RhythmBox.Mode.Std.Objects
                         }
                         else if (bx.Y >= 0.25f && bx.Y <= 0.35f)
                         {
+                            AddCombo = true;
+                            Wait++;
+                            currentHit = Hit.Hit50;
+
                             Add(new HitAnimation(Hit.Hit50)
                             {
                                 Anchor = Anchor.Centre,
@@ -291,6 +375,10 @@ namespace RhythmBox.Mode.Std.Objects
                         }
                         else if (bx.Y >= 0f && bx.Y <= 0.25f)
                         {
+                            AddCombo = false;
+                            Wait++;
+                            currentHit = Hit.Hitx;
+
                             Add(new HitAnimation(Hit.Hitx)
                             {
                                 Anchor = Anchor.Centre,
@@ -300,8 +388,10 @@ namespace RhythmBox.Mode.Std.Objects
                                 Y = bx.Y - 0.05f,
                             });
                         }
+
                         Remove(Clear, Expire);
                     }
+
                     break;
                 }
 
@@ -311,6 +401,10 @@ namespace RhythmBox.Mode.Std.Objects
                     {
                         if (bx.X >= 0.5 - 0.05f && bx.X <= 0.50001f)
                         {
+                            AddCombo = true;
+                            Wait++;
+                            currentHit = Hit.Hit300;
+
                             Add(new HitAnimation(Hit.Hit300)
                             {
                                 Anchor = Anchor.Centre,
@@ -322,6 +416,10 @@ namespace RhythmBox.Mode.Std.Objects
                         }
                         else if (bx.X >= 0.35f && bx.Y <= 0.5f + 0.05f)
                         {
+                            AddCombo = true;
+                            Wait++;
+                            currentHit = Hit.Hit100;
+
                             Add(new HitAnimation(Hit.Hit100)
                             {
                                 Anchor = Anchor.Centre,
@@ -333,6 +431,10 @@ namespace RhythmBox.Mode.Std.Objects
                         }
                         else if (bx.X >= 0.25f && bx.Y <= 0.35f)
                         {
+                            AddCombo = true;
+                            Wait++;
+                            currentHit = Hit.Hit50;
+
                             Add(new HitAnimation(Hit.Hit50)
                             {
                                 Anchor = Anchor.Centre,
@@ -344,6 +446,10 @@ namespace RhythmBox.Mode.Std.Objects
                         }
                         else if (bx.X >= 0f && bx.Y <= 0.25f)
                         {
+                            AddCombo = false;
+                            Wait++;
+                            currentHit = Hit.Hitx;
+
                             Add(new HitAnimation(Hit.Hitx)
                             {
                                 Anchor = Anchor.Centre,
@@ -353,8 +459,10 @@ namespace RhythmBox.Mode.Std.Objects
                                 Y = bx.Y,
                             });
                         }
+
                         Remove(Clear, Expire);
                     }
+
                     break;
                 }
             }
