@@ -27,7 +27,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
         private TestSceneMap _map;
 
         private TestSceneRbPlayfield _testSceneRbPlayfield;
-
+        
         [BackgroundDependencyLoader]
         private void Load()
         {
