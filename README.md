@@ -6,7 +6,7 @@
 - Install the [.NET Core 2.2 SDK](https://dotnet.microsoft.com/download/dotnet-core/2.2)
 - Clone the repository
 ```
-git clone https://github.com/ppy/osu
+git clone https://github.com/BlauFx/RhythmBox
 ```
 
 build and run:
