@@ -18,4 +18,8 @@
     <ProjectReference Include="..\RhythmBox.Window\RhythmBox.Window.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="VisualTests\Editor" />
+  </ItemGroup>
+
 </Project>

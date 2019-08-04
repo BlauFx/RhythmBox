@@ -2,6 +2,7 @@
 using System.Linq;
 using NUnit.Framework;
 using osu.Framework.Allocation;
+using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
@@ -69,6 +70,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
             {
                 parentBoxTest = new BoxTest
                 {
+                    RelativePositionAxes = Axes.Both,
                     RelativeSizeAxes = Axes.X,
                     Anchor = Anchor.TopRight,
                     Origin = Anchor.TopRight,
@@ -76,7 +78,22 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     Colour = Colour,
                     Parent = true,
                     Search2 = Search,
+                    Depth = 0,
                 },
+                new TextFlowContainer
+                {
+                    Anchor = Anchor.TopLeft,
+                    Origin = Anchor.TopLeft,
+                    RelativePositionAxes = Axes.Both,
+                    Size = new Vector2(0f,parentBoxTest.Height),
+                    AutoSizeAxes = Axes.X,
+                    Text = "Title",
+                    Colour = Color4.Black.Opacity(0.8f),
+                    TextAnchor = Anchor.TopCentre,
+                    X = parentBoxTest.X,
+                    Y = parentBoxTest.Y,
+                    Depth = -1f,
+                }, 
             };
 
             for (float i = 1; i < Maps+1; i++)
