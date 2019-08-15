@@ -52,7 +52,8 @@ namespace RhythmBox.Tests.Objects
                             Depth  = 1,
                             RelativeSizeAxes = Axes.Both,
                             Colour = Color4.White,
-                            Alpha = 1F
+                            Alpha = 1F,
+                            EdgeSmoothness = new Vector2(1f),
                         },
                     }
                 },

@@ -4,6 +4,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
+using osu.Framework.Logging;
 using osu.Framework.Testing;
 using osuTK;
 using osuTK.Graphics;
@@ -122,6 +123,15 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
 
         protected override void Update()
         {
+            if (_testSceneRbPlayfield.HasFinished)
+            {
+                if (_testSceneRbPlayfield.HasStarted)
+                {
+                    //this.Push(new SongSelction());
+                    Logger.Log(_testSceneRbPlayfield.HasFinished.ToString());
+                }
+            }
+            
             _hpBar.ResizeBox(CalcHpBarValue(_hpBar._box.Width,_hpBar.BoxMaxValue,0f, Hit.Hit100, true),10000, Easing.OutCirc);
             
             Combo = _testSceneRbPlayfield.ComboCounter;

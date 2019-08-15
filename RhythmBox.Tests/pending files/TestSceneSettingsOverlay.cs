@@ -128,6 +128,7 @@ namespace RhythmBox.Tests.pending_files
                                             Alpha = 1F,
                                             Margin = new MarginPadding { Left = 210, Top = -41, Bottom = 10, Right = 0 },
                                             ClickAction = () => ChangeValue(bindable1),
+                                            
                                         },
                                         new Box
                                         {

@@ -3,6 +3,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
+using osu.Framework.Logging;
 using osu.Framework.Screens;
 using osuTK;
 using osuTK.Graphics;
@@ -120,6 +121,14 @@ namespace RhythmBox.Window.Screens
         
         protected override void Update()
         {
+            if (_RbPlayfield.HasFinished)
+            {
+                if (_RbPlayfield.HasStarted)
+                {
+                    this.Push(new SongSelction());
+                }
+            }
+            
             _hpBar.ResizeBox(CalcHpBarValue(_hpBar._box.Width,_hpBar.BoxMaxValue,0f, Hit.Hit100, true),10000, Easing.OutCirc);
             
             Combo = _RbPlayfield.ComboCounter;

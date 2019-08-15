@@ -1,4 +1,5 @@
-﻿using osu.Framework.Allocation;
+﻿using System.Linq;
+using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Events;
@@ -27,6 +28,10 @@ namespace RhythmBox.Tests.pending_files
         private bool AddMiss = false;
 
         public Hit currentHit { get; set; }
+
+        public bool HasFinished { get; set; } = false;
+        
+        public bool HasStarted { get; set; } = false;
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -130,9 +135,10 @@ namespace RhythmBox.Tests.pending_files
                 ScoreCounter += CalcScore;
             }
 
+            HasAliveChildren();
+
             base.Update();
         }
-
 
         private void LoadMap()
         {
@@ -153,6 +159,39 @@ namespace RhythmBox.Tests.pending_files
                 });
                 i++;
             }
+            
+            Scheduler.AddDelayed(() => { HasStarted = true; },objBoxArray[0].time);
+        }
+
+        private bool HasAliveChildren()
+        {
+            bool[] alive = new bool[objBoxArray.Length];
+            for (int i = 0; i < objBoxArray.Length; i++)
+            {
+                if (objBoxArray[i].IsAlive)
+                {
+                    alive[i] = true;
+                }
+                else
+                {
+                    alive[i] = false;
+                }
+            }
+
+            int j = 0;
+            foreach (var x in alive)
+            {
+                if (x == false)
+                {
+                    j++;
+                }
+            }
+
+            if (j == alive.Length)
+            {
+                return true; 
+            }
+            return false;
         }
     }
 }
