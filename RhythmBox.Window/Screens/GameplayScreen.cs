@@ -155,9 +155,9 @@ namespace RhythmBox.Window.Screens
         {
             if (_RbPlayfield.HasFinished)
             {
+                LoadComponentAsync(new SongSelction(), this.Push);
                 rhythmBoxClockContainer.Stop();
-                _RbPlayfield.Expire();
-                LoadComponentAsync(new SongSelction(),this.Push);
+                Scheduler.AddDelayed(() => this.Expire(), 1000);
             }
             else
             {

@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
@@ -11,12 +12,13 @@ using osuTK.Graphics;
 using RhythmBox.Mode.Std.Tests.Animations;
 using RhythmBox.Mode.Std.Tests.Maps;
 using RhythmBox.Tests.pending_files;
+using RhythmBox.Tests.VisualTests.Clock;
 using HitObjects = RhythmBox.Mode.Std.Tests.Interfaces.HitObjects;
 
 namespace RhythmBox.Tests.VisualTests.Gameplay
 {
     [TestFixture]
-    public class TestSceneRbPlayWindow : TestScene
+    public class TestSceneGameplayScreen : TestScene
     {
         private int Score { get; set; } = 0;
 
@@ -33,6 +35,14 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
         private TestSceneRbPlayfield _testSceneRbPlayfield;
 
         private Mode.Std.Tests.Animations.TestSceneHpBar _hpBar;
+
+        private TestSceneRhythmBoxClockContainer rhythmBoxClockContainer;
+
+        private Bindable<double> UserPlaybackRate = new BindableDouble(1);
+
+        public readonly BindableBool IsPaused = new BindableBool();
+
+        private bool Resuming { get; set; } = true;
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -80,6 +90,15 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
 
             Children = new Drawable[]
             {
+                rhythmBoxClockContainer = new TestSceneRhythmBoxClockContainer(0)
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(1f)
+                },
+            };
+
+            rhythmBoxClockContainer.Children = new Drawable[]
+            {
                 _hpBar = new Mode.Std.Tests.Animations.TestSceneHpBar
                 {
                     Anchor = Anchor.Centre,
@@ -118,31 +137,63 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                     Map = _map,
                 },
             };
+
+
+            rhythmBoxClockContainer.IsPaused.BindTo(IsPaused);
+            rhythmBoxClockContainer.UserPlaybackRate.BindTo(UserPlaybackRate);
+
+            _testSceneRbPlayfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
+            DispayScore.Clock = rhythmBoxClockContainer.RhythmBoxClock;
+            DispayCombo.Clock = rhythmBoxClockContainer.RhythmBoxClock;
+            _hpBar.Clock = rhythmBoxClockContainer.RhythmBoxClock;
+
             DispayCombo.AddText("0x", x => x.Font = new FontUsage("Roboto", 40));
             DispayScore.AddText("000000", x => x.Font = new FontUsage("Roboto", 40));
+
+            rhythmBoxClockContainer.Seek(_map.StartTime);
+            rhythmBoxClockContainer.Start();
         }
 
         protected override void Update()
         {
             if (_testSceneRbPlayfield.HasFinished)
             {
-
+                //LoadComponentAsync(new SongSelction(), this.Push);
+                rhythmBoxClockContainer.Stop();
+                Scheduler.AddDelayed(() => this.Expire(), 1000);
             }
+            else
+            {
+                _hpBar.ResizeBox(CalcHpBarValue(_hpBar._box.Width, _hpBar.BoxMaxValue, 0f, Hit.Hit100, true), 10000, Easing.OutCirc);
 
-            _hpBar.ResizeBox(CalcHpBarValue(_hpBar._box.Width, _hpBar.BoxMaxValue, 0f, Hit.Hit100, true), 10000, Easing.OutCirc);
+                Combo = _testSceneRbPlayfield.ComboCounter;
+                DispayCombo.Text = string.Empty;
+                DispayCombo.AddText($"{Combo}x", x => x.Font = new FontUsage("Roboto", 40));
 
-            Combo = _testSceneRbPlayfield.ComboCounter;
-            DispayCombo.Text = string.Empty;
-            DispayCombo.AddText($"{Combo}x", x => x.Font = new FontUsage("Roboto", 40));
-
-            Score = _testSceneRbPlayfield.ScoreCounter;
-            DispayScore.Text = string.Empty;
-            DispayScore.AddText($"{Score}", x => x.Font = new FontUsage("Roboto", 40));
+                Score = _testSceneRbPlayfield.ScoreCounter;
+                DispayScore.Text = string.Empty;
+                DispayScore.AddText($"{Score}", x => x.Font = new FontUsage("Roboto", 40));
+            }
+           
             base.Update();
         }
 
         protected override bool OnKeyDown(KeyDownEvent e)
         {
+            if (e.Key == osuTK.Input.Key.Space) //It's set to Space because if you press escape then the window will close
+            {
+                if (Resuming)
+                {
+                    Resuming = false;
+                    rhythmBoxClockContainer.Stop();
+                }
+                else
+                {
+                    Resuming = true;
+                    rhythmBoxClockContainer.Start();
+                }
+                _testSceneRbPlayfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
+            }
             _hpBar.ResizeBox(CalcHpBarValue(_hpBar._box.Width, _hpBar.BoxMaxValue, 0f, _testSceneRbPlayfield.currentHit), 1000, Easing.OutCirc);
             return base.OnKeyDown(e);
         }
