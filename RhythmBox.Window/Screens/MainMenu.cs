@@ -11,7 +11,6 @@ using osu.Framework.Screens;
 using osuTK;
 using osuTK.Graphics;
 using RhythmBox.Window.Overlays;
-using RhythmBox.Window.pending_files;
 
 namespace RhythmBox.Window.Screens
 {
@@ -52,7 +51,6 @@ namespace RhythmBox.Window.Screens
                     ClickAction = () =>
                     {
                         this.Push(new SongSelction());
-//                        this.Push(new GameplayScreen());
                     }
                 },
                 new MainMenuBox
@@ -121,6 +119,24 @@ namespace RhythmBox.Window.Screens
             }
 
             return base.OnMouseMove(e);
+        }
+
+        public override void OnEntering(IScreen last)
+        {
+            this.FadeInFromZero<MainMenu>(250, Easing.In);
+            base.OnEntering(last);
+        }
+
+        public override void OnResuming(IScreen last)
+        {
+            this.FadeInFromZero<MainMenu>(175, Easing.In);
+            base.OnResuming(last);
+        }
+
+        public override void OnSuspending(IScreen next)
+        {
+            this.FadeOutFromOne<MainMenu>(0, Easing.In);
+            base.OnSuspending(next);
         }
     }
 

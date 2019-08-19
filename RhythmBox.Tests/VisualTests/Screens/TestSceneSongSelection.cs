@@ -23,7 +23,6 @@ namespace RhythmBox.Tests.VisualTests.Screens
     {
         private TestSceneThisScrollContainer scrollContainer;
 
-        private SearchContainer search;
         private BasicTextBox textBox;
 
         [BackgroundDependencyLoader]

@@ -42,6 +42,8 @@ namespace RhythmBox.Window.Screens
 
         private bool Resuming { get; set; } = true;
 
+        private bool HasFinished { get; set; } = true;
+
         [BackgroundDependencyLoader]
         private void Load()
         {
@@ -155,9 +157,15 @@ namespace RhythmBox.Window.Screens
         {
             if (_RbPlayfield.HasFinished)
             {
-                LoadComponentAsync(new SongSelction(), this.Push);
-                rhythmBoxClockContainer.Stop();
-                Scheduler.AddDelayed(() => this.Expire(), 1000);
+                if (HasFinished)
+                {
+                    HasFinished = false;
+                    rhythmBoxClockContainer.Stop();
+                    SongSelction songSelction;
+                    LoadComponent(songSelction = new SongSelction());
+                    this.Push(songSelction);
+                    Scheduler.AddDelayed(() => this.Exit(), 0);
+                }
             }
             else
             {
@@ -234,6 +242,12 @@ namespace RhythmBox.Window.Screens
             }
 
             return currentvalue * 0.995f;
+        }
+
+        public override void OnEntering(IScreen last)
+        {
+            this.FadeInFromZero<GameplayScreen>(500, Easing.In);
+            base.OnEntering(last);
         }
     }
 }

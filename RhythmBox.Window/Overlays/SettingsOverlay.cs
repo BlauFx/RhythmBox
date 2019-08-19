@@ -127,7 +127,7 @@ namespace RhythmBox.Window.Overlays
                                             Texture = "X",
                                             Size = new Vector2(25F),
                                             Alpha = 1F,
-                                            Margin = new MarginPadding { Left = 210, Top = -41, Bottom = 10, Right = 0 },
+                                            Margin = new MarginPadding { Left = 210, Top = -41, Bottom = 10, Right = 50 },
                                             ClickAction = () => ChangeValue(bindable1),
                                         },
                                         new Box

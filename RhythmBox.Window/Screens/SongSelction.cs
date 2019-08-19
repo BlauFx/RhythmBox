@@ -9,6 +9,7 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
+using osu.Framework.Logging;
 using osu.Framework.Screens;
 using osuTK;
 using osuTK.Graphics;
@@ -22,7 +23,6 @@ namespace RhythmBox.Window.Screens
     {
         private ThisScrollContainer scrollContainer;
 
-        private SearchContainer search;
         private BasicTextBox textBox;
 
         [BackgroundDependencyLoader]
@@ -37,7 +37,7 @@ namespace RhythmBox.Window.Screens
                     Texture = store.Get("Skin/Back"),
                     ClickAction = () =>
                     {
-                        LoadComponentAsync(new MainMenu(), this.Push);
+                        this.Exit();
                     },
                 },
                 textBox = new BasicTextBox
@@ -54,13 +54,38 @@ namespace RhythmBox.Window.Screens
                     Size = new Vector2(0.5f,1f),
                     ClickOnMap = () =>
                     {
-                       this.LoadComponentAsync(new GameplayScreen(), this.Push);
+                        GameplayScreen gameplayScreen;
+                        LoadComponent(gameplayScreen = new GameplayScreen());
+                        this.Push(gameplayScreen);
+                        //this.LoadComponentAsync(new GameplayScreen(), this.Push);
                     },
                 },
             };
 
             textBox.Current.ValueChanged += e => scrollContainer.search.SearchTerm = e.NewValue;
             scrollContainer.Show();
+        }
+
+        protected override bool OnKeyDown(KeyDownEvent e)
+        {
+            if (e.Key == Key.Escape)
+            {
+                this.Exit();
+            }
+            return base.OnKeyDown(e);
+        }
+
+        public override void OnEntering(IScreen last)
+        {
+            this.FadeInFromZero<SongSelction>(200, Easing.In);
+            base.OnEntering(last);
+        }
+
+        public override void OnSuspending(IScreen next)
+        {
+            this.FadeOutFromOne<SongSelction>(50, Easing.In);
+            Scheduler.AddDelayed(() => this.Exit(), 50);
+            base.OnSuspending(next);
         }
     }
 

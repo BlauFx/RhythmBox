@@ -44,6 +44,8 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
 
         private bool Resuming { get; set; } = true;
 
+        private bool HasFinished { get; set; } = true;
+
         [BackgroundDependencyLoader]
         private void Load()
         {
@@ -158,9 +160,13 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
         {
             if (_testSceneRbPlayfield.HasFinished)
             {
-                //LoadComponentAsync(new SongSelction(), this.Push);
-                rhythmBoxClockContainer.Stop();
-                Scheduler.AddDelayed(() => this.Expire(), 1000);
+                if (HasFinished)
+                {
+                    HasFinished = false;
+                    //LoadComponentAsync(new SongSelction(), this.Push);
+                    rhythmBoxClockContainer.Stop();
+                    Scheduler.AddDelayed(() => this.Expire(), 1000);
+                }
             }
             else
             {
