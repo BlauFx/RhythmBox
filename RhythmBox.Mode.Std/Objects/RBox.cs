@@ -30,7 +30,7 @@ namespace RhythmBox.Mode.Std.Objects
         [BackgroundDependencyLoader]
         private void Load()
         {
-            Scheduler.AddDelayed(() => //TODO switch to clock
+            Scheduler.AddDelayed(() =>
             {
                 Children = new Drawable[]
                 {

@@ -1,8 +1,8 @@
-﻿using System.Linq;
-using osu.Framework.Allocation;
+﻿using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Events;
+using osu.Framework.Logging;
 using osuTK;
 using osuTK.Input;
 using RhythmBox.Mode.Std.Animations;
@@ -11,7 +11,7 @@ using RhythmBox.Mode.Std.Objects;
 
 namespace RhythmBox.Window.pending_files
 {
-    class RbPlayfield : Container
+    internal class RbPlayfield : Container
     {
         public Map Map;
 
@@ -28,16 +28,16 @@ namespace RhythmBox.Window.pending_files
         private bool AddMiss = false;
 
         public Hit currentHit { get; set; }
-        
+
         public bool HasFinished { get; set; } = false;
-        
+
         public bool HasStarted { get; set; } = false;
 
         [BackgroundDependencyLoader]
         private void Load()
         {
             objBoxArray = new RBox[Map.HitObjects.Length];
-            
+
             Children = new Drawable[]
             {
                 new RbDrawPlayfield
@@ -46,11 +46,11 @@ namespace RhythmBox.Window.pending_files
                     Origin = Anchor.Centre,
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f),
-                }, 
+                },
             };
         }
-        
-         protected override void LoadComplete()
+
+        protected override void LoadComplete()
         {
             LoadMap();
             base.LoadComplete();
@@ -72,18 +72,21 @@ namespace RhythmBox.Window.pending_files
                                 this.AddMiss = x.Miss();
                                 this.currentHit = x.GetHit();
                                 return base.OnKeyDown(e);
+
                             case Key.S:
                                 x.OnClickKeyDown(Key.S);
                                 this.UpdateCombo = x.AddComboToCounter();
                                 this.AddMiss = x.Miss();
                                 this.currentHit = x.GetHit();
                                 return base.OnKeyDown(e);
+
                             case Key.A:
                                 x.OnClickKeyDown(Key.A);
                                 this.UpdateCombo = x.AddComboToCounter();
                                 this.AddMiss = x.Miss();
                                 this.currentHit = x.GetHit();
                                 return base.OnKeyDown(e);
+
                             case Key.D:
                                 x.OnClickKeyDown(Key.D);
                                 this.UpdateCombo = x.AddComboToCounter();
@@ -121,12 +124,15 @@ namespace RhythmBox.Window.pending_files
                     case Hit.Hit300:
                         addAmout = 300;
                         break;
+
                     case Hit.Hit100:
                         addAmout = 100;
                         break;
+
                     case Hit.Hit50:
                         addAmout = 50;
                         break;
+
                     case Hit.Hitx:
                         addAmout = 0;
                         break;
@@ -135,19 +141,21 @@ namespace RhythmBox.Window.pending_files
                 ScoreCounter += CalcScore;
             }
 
-            HasFinished = HasAliveChildren();
-            
+            if (this.Clock.CurrentTime >= Map.EndTime)
+            {
+                HasFinished = true;
+            }
+
             base.Update();
         }
-
 
         private void LoadMap()
         {
             int i = 0;
-            
+
             foreach (var objBox in Map)
             {
-                var x = (Mode.Std.Interfaces.HitObjects) objBox;
+                var x = (Mode.Std.Interfaces.HitObjects)objBox;
                 Add(objBoxArray[i] = new RBox
                 {
                     Anchor = Anchor.Centre,
@@ -161,38 +169,7 @@ namespace RhythmBox.Window.pending_files
                 i++;
             }
 
-            Scheduler.AddDelayed(() => { HasStarted = true; },objBoxArray[0].time);
-        }
-        
-        private bool HasAliveChildren()
-        {
-            bool[] alive = new bool[objBoxArray.Length];
-            for (int i = 0; i < objBoxArray.Length; i++)
-            {
-                if (objBoxArray[i].IsAlive)
-                {
-                    alive[i] = true;
-                }
-                else
-                {
-                    alive[i] = false;
-                }
-            }
-
-            int j = 0;
-            foreach (var x in alive)
-            {
-                if (x == false)
-                {
-                    j++;
-                }
-            }
-
-            if (j == alive.Length)
-            {
-               return true; 
-            }
-            return false;
+            Scheduler.AddDelayed(() => { HasStarted = true; }, objBoxArray[0].time);
         }
     }
 }

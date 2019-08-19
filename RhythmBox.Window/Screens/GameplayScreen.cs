@@ -1,4 +1,5 @@
 ﻿using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
@@ -10,6 +11,7 @@ using osuTK.Graphics;
 using RhythmBox.Mode.Std.Animations;
 using RhythmBox.Mode.Std.Interfaces;
 using RhythmBox.Mode.Std.Maps;
+using RhythmBox.Window.Clocks;
 using RhythmBox.Window.pending_files;
 
 namespace RhythmBox.Window.Screens
@@ -32,6 +34,14 @@ namespace RhythmBox.Window.Screens
 
         private Mode.Std.Animations.HpBar _hpBar;
 
+        private RhythmBoxClockContainer rhythmBoxClockContainer;
+
+        private Bindable<double> UserPlaybackRate = new BindableDouble(1);
+
+        public readonly BindableBool IsPaused = new BindableBool();
+
+        private bool Resuming { get; set; } = true;
+
         [BackgroundDependencyLoader]
         private void Load()
         {
@@ -49,32 +59,33 @@ namespace RhythmBox.Window.Screens
                 Artist = "Test Artist",
                 Creator = "Test Creator",
                 DifficultyName = "Test DifficultyName",
-                
+                StartTime = 7000,
+                EndTime = 19000,
             };
 
             //TODO:  note: this is temporary
             _map.HitObjects = new Mode.Std.Interfaces.HitObjects[4];
-            
+
             _map.HitObjects[0] = new HitObjects();
             _map.HitObjects[1] = new HitObjects();
             _map.HitObjects[2] = new HitObjects();
             _map.HitObjects[3] = new HitObjects();
-            
+
             _map.HitObjects[0]._direction = RhythmBox.Mode.Std.Interfaces.HitObjects.Direction.Up;
             _map.HitObjects[1]._direction = RhythmBox.Mode.Std.Interfaces.HitObjects.Direction.Right;
             _map.HitObjects[2]._direction = RhythmBox.Mode.Std.Interfaces.HitObjects.Direction.Left;
             _map.HitObjects[3]._direction = RhythmBox.Mode.Std.Interfaces.HitObjects.Direction.Down;
-            
+
             _map.HitObjects[0].Speed = 1f;
             _map.HitObjects[1].Speed = 1f;
             _map.HitObjects[2].Speed = 1f;
             _map.HitObjects[3].Speed = 1f;
 
-            _map.HitObjects[0].Time = 200;
-            _map.HitObjects[1].Time = 400;
-            _map.HitObjects[2].Time = 700;
-            _map.HitObjects[3].Time = 780;
-            
+            _map.HitObjects[0].Time = 9100;
+            _map.HitObjects[1].Time = 15000;
+            _map.HitObjects[2].Time = 15500;
+            _map.HitObjects[3].Time = 16150;
+
             InternalChildren = new Drawable[]
             {
                 _hpBar = new Mode.Std.Animations.HpBar
@@ -105,6 +116,15 @@ namespace RhythmBox.Window.Screens
                     TextAnchor = Anchor.TopRight,
                     X = -0.01f
                 },
+                rhythmBoxClockContainer = new RhythmBoxClockContainer(8000)
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(1f)
+                }
+            };
+
+            rhythmBoxClockContainer.Children = new Drawable[]
+            {
                 _RbPlayfield = new RbPlayfield
                 {
                     Anchor = Anchor.Centre,
@@ -115,35 +135,65 @@ namespace RhythmBox.Window.Screens
                     Map = _map,
                 },
             };
+
+            rhythmBoxClockContainer.IsPaused.BindTo(IsPaused);
+            rhythmBoxClockContainer.UserPlaybackRate.BindTo(UserPlaybackRate);
+
+            _RbPlayfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
+            
+
             DispayCombo.AddText("0x", x => x.Font = new FontUsage("Roboto", 40));
             DispayScore.AddText("000000", x => x.Font = new FontUsage("Roboto", 40));
         }
-        
+
+        protected override void LoadComplete()
+        {
+            rhythmBoxClockContainer.Start();
+            rhythmBoxClockContainer.Seek(8000);
+            base.LoadComplete();
+        }
+
         protected override void Update()
         {
             if (_RbPlayfield.HasFinished)
             {
-                if (_RbPlayfield.HasStarted)
-                {
-                    this.Push(new SongSelction());
-                }
+                rhythmBoxClockContainer.Stop();
+                _RbPlayfield.Expire();
+                LoadComponentAsync(new SongSelction(),this.Push);
             }
-            
-            _hpBar.ResizeBox(CalcHpBarValue(_hpBar._box.Width,_hpBar.BoxMaxValue,0f, Hit.Hit100, true),10000, Easing.OutCirc);
-            
-            Combo = _RbPlayfield.ComboCounter;
-            DispayCombo.Text = string.Empty;
-            DispayCombo.AddText($"{Combo}x", x => x.Font = new FontUsage("Roboto", 40));
+            else
+            {
+                _hpBar.ResizeBox(CalcHpBarValue(_hpBar._box.Width, _hpBar.BoxMaxValue, 0f, Hit.Hit100, true), 10000, Easing.OutCirc);
 
-            Score = _RbPlayfield.ScoreCounter;
-            DispayScore.Text = string.Empty;
-            DispayScore.AddText($"{Score}", x => x.Font = new FontUsage("Roboto", 40));
+                Combo = _RbPlayfield.ComboCounter;
+                DispayCombo.Text = string.Empty;
+                DispayCombo.AddText($"{Combo}x", x => x.Font = new FontUsage("Roboto", 40));
+
+                Score = _RbPlayfield.ScoreCounter;
+                DispayScore.Text = string.Empty;
+                DispayScore.AddText($"{Score}", x => x.Font = new FontUsage("Roboto", 40));
+            }
+
             base.Update();
         }
 
         protected override bool OnKeyDown(KeyDownEvent e)
         {
-            _hpBar.ResizeBox(CalcHpBarValue(_hpBar._box.Width,_hpBar.BoxMaxValue,0f,_RbPlayfield.currentHit),1000, Easing.OutCirc);
+            if (e.Key == osuTK.Input.Key.Escape)
+            {
+                if (Resuming)
+                {
+                    Resuming = false;
+                    rhythmBoxClockContainer.Stop();
+                }
+                else
+                {
+                    Resuming = true;
+                    rhythmBoxClockContainer.Start();
+                }
+                _RbPlayfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
+            }
+            _hpBar.ResizeBox(CalcHpBarValue(_hpBar._box.Width, _hpBar.BoxMaxValue, 0f, _RbPlayfield.currentHit), 1000, Easing.OutCirc);
             return base.OnKeyDown(e);
         }
 
@@ -157,12 +207,15 @@ namespace RhythmBox.Window.Screens
                     case Hit.Hit300:
                         result = currentvalue * 1.5f;
                         break;
+
                     case Hit.Hit100:
                         result = currentvalue * 0.8f;
                         break;
+
                     case Hit.Hit50:
                         result = currentvalue * 0.7f;
                         break;
+
                     case Hit.Hitx:
                         result = currentvalue * 0.3f;
                         break;
@@ -181,7 +234,7 @@ namespace RhythmBox.Window.Screens
                     return minvalue;
                 }
             }
-            
+
             return currentvalue * 0.995f;
         }
     }

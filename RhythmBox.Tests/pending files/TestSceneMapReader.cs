@@ -32,6 +32,10 @@ namespace RhythmBox.Tests.pending_files
 
         public HitObjects[] HitObjects;
 
+        public double StartTime { get; set; }
+
+        public double EndTime { get; set; }
+
         private int startHitObjects = 0;
 
         private string[] storageTemp;
@@ -70,6 +74,8 @@ namespace RhythmBox.Tests.pending_files
                 Artist = SearchThis(storageTemp, "Artist");
                 Creator = SearchThis(storageTemp, "Creator");
                 DifficultyName = SearchThis(storageTemp, "DifficultyName");
+                StartTime = TimeCutter(true);
+                EndTime = TimeCutter(false);
                 HitObjects = HitObjectsParser(HitObjects, path);
             }
         }
@@ -79,7 +85,6 @@ namespace RhythmBox.Tests.pending_files
             int sr = 0;
 
             int xd = 0;
-
 
             foreach (var x in storage)
             {
@@ -113,6 +118,22 @@ namespace RhythmBox.Tests.pending_files
                 return dir;
             }
             throw new NullReferenceException("GameMode can not be null");
+        }
+
+        private double TimeCutter(bool Start = false)
+        {
+            string x = SearchThis(storageTemp, "Timings");
+
+            if (Start)
+            {
+                int num = x.IndexOf(",") + 1;
+                return double.Parse(x.Substring(0, x.Length - num));
+            }
+            else
+            {
+                int num = x.IndexOf(",") + 1;
+                return double.Parse(x.Substring(num, x.Length - num));
+            }
         }
 
         private HitObjects[] HitObjectsParser(HitObjects[] obj, string path)
@@ -223,6 +244,8 @@ namespace RhythmBox.Tests.pending_files
 //Artist: test
 //Creator: BlauFx
 //DifficultyName: BlauFx's diff
+
+//Timings: 500,51000
 
 //HitObjects:
 //Up, 50, 1f

@@ -27,6 +27,10 @@ namespace RhythmBox.Mode.Std.Interfaces
         string DifficultyName { get; set; }
         
         HitObjects[] HitObjects { get; set; }
+
+        double StartTime { get; set; }
+
+        double EndTime { get; set; }
     }
     
     public enum GameMode

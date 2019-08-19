@@ -33,7 +33,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
         private TestSceneRbPlayfield _testSceneRbPlayfield;
 
         private Mode.Std.Tests.Animations.TestSceneHpBar _hpBar;
-        
+
         [BackgroundDependencyLoader]
         private void Load()
         {
@@ -51,22 +51,23 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                 Artist = "Test Artist",
                 Creator = "Test Creator",
                 DifficultyName = "Test DifficultyName",
-                
+                StartTime = 100,
+                EndTime = 5000,
             };
 
             //TODO:  note: this is temporary
             _map.HitObjects = new Mode.Std.Tests.Interfaces.HitObjects[4];
-            
+
             _map.HitObjects[0] = new HitObjects();
             _map.HitObjects[1] = new HitObjects();
             _map.HitObjects[2] = new HitObjects();
             _map.HitObjects[3] = new HitObjects();
-            
+
             _map.HitObjects[0]._direction = RhythmBox.Mode.Std.Tests.Interfaces.HitObjects.Direction.Up;
             _map.HitObjects[1]._direction = RhythmBox.Mode.Std.Tests.Interfaces.HitObjects.Direction.Right;
             _map.HitObjects[2]._direction = RhythmBox.Mode.Std.Tests.Interfaces.HitObjects.Direction.Left;
             _map.HitObjects[3]._direction = RhythmBox.Mode.Std.Tests.Interfaces.HitObjects.Direction.Down;
-            
+
             _map.HitObjects[0].Speed = 1f;
             _map.HitObjects[1].Speed = 1f;
             _map.HitObjects[2].Speed = 1f;
@@ -76,7 +77,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
             _map.HitObjects[1].Time = 400;
             _map.HitObjects[2].Time = 700;
             _map.HitObjects[3].Time = 780;
-            
+
             Children = new Drawable[]
             {
                 _hpBar = new Mode.Std.Tests.Animations.TestSceneHpBar
@@ -125,15 +126,11 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
         {
             if (_testSceneRbPlayfield.HasFinished)
             {
-                if (_testSceneRbPlayfield.HasStarted)
-                {
-                    //this.Push(new SongSelction());
-                    Logger.Log(_testSceneRbPlayfield.HasFinished.ToString());
-                }
+
             }
-            
-            _hpBar.ResizeBox(CalcHpBarValue(_hpBar._box.Width,_hpBar.BoxMaxValue,0f, Hit.Hit100, true),10000, Easing.OutCirc);
-            
+
+            _hpBar.ResizeBox(CalcHpBarValue(_hpBar._box.Width, _hpBar.BoxMaxValue, 0f, Hit.Hit100, true), 10000, Easing.OutCirc);
+
             Combo = _testSceneRbPlayfield.ComboCounter;
             DispayCombo.Text = string.Empty;
             DispayCombo.AddText($"{Combo}x", x => x.Font = new FontUsage("Roboto", 40));
@@ -146,7 +143,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
 
         protected override bool OnKeyDown(KeyDownEvent e)
         {
-            _hpBar.ResizeBox(CalcHpBarValue(_hpBar._box.Width,_hpBar.BoxMaxValue,0f,_testSceneRbPlayfield.currentHit),1000, Easing.OutCirc);
+            _hpBar.ResizeBox(CalcHpBarValue(_hpBar._box.Width, _hpBar.BoxMaxValue, 0f, _testSceneRbPlayfield.currentHit), 1000, Easing.OutCirc);
             return base.OnKeyDown(e);
         }
 
@@ -160,12 +157,15 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                     case Hit.Hit300:
                         result = currentvalue * 1.5f;
                         break;
+
                     case Hit.Hit100:
                         result = currentvalue * 0.8f;
                         break;
+
                     case Hit.Hit50:
                         result = currentvalue * 0.7f;
                         break;
+
                     case Hit.Hitx:
                         result = currentvalue * 0.3f;
                         break;
@@ -184,7 +184,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                     return minvalue;
                 }
             }
-            
+
             return currentvalue * 0.995f;
         }
     }
