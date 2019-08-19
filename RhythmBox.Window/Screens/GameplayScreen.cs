@@ -88,7 +88,25 @@ namespace RhythmBox.Window.Screens
 
             InternalChildren = new Drawable[]
             {
-                _hpBar = new Mode.Std.Animations.HpBar
+                rhythmBoxClockContainer = new RhythmBoxClockContainer(0)
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(1f)
+                }
+            };
+
+            rhythmBoxClockContainer.Children = new Drawable[]
+            {
+                _RbPlayfield = new RbPlayfield
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    RelativePositionAxes = Axes.Both,
+                    Size = new Vector2(0.6f, 1f),
+                    Map = _map,
+                },
+                 _hpBar = new Mode.Std.Animations.HpBar
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
@@ -116,30 +134,15 @@ namespace RhythmBox.Window.Screens
                     TextAnchor = Anchor.TopRight,
                     X = -0.01f
                 },
-                rhythmBoxClockContainer = new RhythmBoxClockContainer(0)
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(1f)
-                }
-            };
-
-            rhythmBoxClockContainer.Children = new Drawable[]
-            {
-                _RbPlayfield = new RbPlayfield
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Both,
-                    RelativePositionAxes = Axes.Both,
-                    Size = new Vector2(0.6f, 1f),
-                    Map = _map,
-                },
             };
 
             rhythmBoxClockContainer.IsPaused.BindTo(IsPaused);
             rhythmBoxClockContainer.UserPlaybackRate.BindTo(UserPlaybackRate);
 
             _RbPlayfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
+            DispayScore.Clock = rhythmBoxClockContainer.RhythmBoxClock;
+            DispayCombo.Clock = rhythmBoxClockContainer.RhythmBoxClock;
+            _hpBar.Clock = rhythmBoxClockContainer.RhythmBoxClock;
 
             DispayCombo.AddText("0x", x => x.Font = new FontUsage("Roboto", 40));
             DispayScore.AddText("000000", x => x.Font = new FontUsage("Roboto", 40));
