@@ -19,32 +19,13 @@ namespace RhythmBox.Window.Screens
     {
         public static Sprite background;
 
-        private Logo logo;
-
         private SettingsOverlay settings;
-
-        //private SelectButton[] startButtons = new SelectButton[3];
 
         [BackgroundDependencyLoader]
         private void Load(TextureStore store)
         {
             InternalChildren = new Drawable[]
             {
-                //logo = new Logo
-                //{
-                //    Depth = 0,
-                //    Size = new Vector2(0.4f,0.55f),
-                //    Anchor = Anchor.Centre,
-                //    Origin = Anchor.Centre,
-                //    Alpha = 1f,
-                //    texture = store.Get("Game/Logo.png"),
-                //    ClickAction = () =>
-                //    {
-                //        startButtons[0].Alpha = 1f;
-                //        startButtons[1].Alpha = 1f;
-                //        startButtons[2].Alpha = 1f;
-                //    }
-                //},
                 background = new Sprite
                 {
                     Depth = 2,
