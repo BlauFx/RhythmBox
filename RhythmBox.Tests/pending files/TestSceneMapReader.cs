@@ -74,8 +74,9 @@ namespace RhythmBox.Tests.pending_files
                 Artist = SearchThis(storageTemp, "Artist");
                 Creator = SearchThis(storageTemp, "Creator");
                 DifficultyName = SearchThis(storageTemp, "DifficultyName");
-                StartTime = TimeCutter(true);
-                EndTime = TimeCutter(false);
+                //TODO: Test StartTime & EndTime cuz not yet tested
+                //StartTime = TimeCutter(true);
+                //EndTime = TimeCutter(false);
                 HitObjects = HitObjectsParser(HitObjects, path);
             }
         }

@@ -161,7 +161,8 @@ namespace RhythmBox.Tests.pending_files
                     direction = x._direction,
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f),
-                    time = x.Time,
+                    //time = x.Time,
+                    time = x.Time - Map.StartTime,
                     speed = x.Speed,
                 });
                 i++;

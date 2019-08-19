@@ -137,6 +137,8 @@ namespace RhythmBox.Window.pending_files
                         addAmout = 0;
                         break;
                 }
+
+                //TODO: Maybe change the way how we calculate the score?
                 var CalcScore = (ComboCounter * addAmout);
                 ScoreCounter += CalcScore;
             }
@@ -163,7 +165,8 @@ namespace RhythmBox.Window.pending_files
                     direction = x._direction,
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f),
-                    time = x.Time,
+                    //time = x.Time,
+                    time = x.Time - Map.StartTime,
                     speed = x.Speed,
                 });
                 i++;

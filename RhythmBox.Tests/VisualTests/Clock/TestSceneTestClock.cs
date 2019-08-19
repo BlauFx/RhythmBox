@@ -28,17 +28,6 @@ namespace RhythmBox.Tests.VisualTests.Clock
 
         private bool Resuming { get; set; } = true;
 
-        public TestSceneTestClock()
-        {
-            rhythmBoxClockContainer = new TestSceneRhythmBoxClockContainer(0)
-            {
-                RelativeSizeAxes = Axes.Both,
-                Size = new Vector2(1f)
-            };
-            rhythmBoxClockContainer.IsPaused.BindTo(IsPaused);
-            rhythmBoxClockContainer.UserPlaybackRate.BindTo(UserPlaybackRate);
-        }
-
         [BackgroundDependencyLoader]
         private void Load()
         {
@@ -56,6 +45,8 @@ namespace RhythmBox.Tests.VisualTests.Clock
                 Artist = "Test Artist",
                 Creator = "Test Creator",
                 DifficultyName = "Test DifficultyName",
+                StartTime = 100,
+                EndTime = 1000
             };
 
             map.HitObjects = new Mode.Std.Tests.Interfaces.HitObjects[1];
@@ -72,7 +63,11 @@ namespace RhythmBox.Tests.VisualTests.Clock
                     Origin = Anchor.Centre,
                     Text = "0",
                 },
-                rhythmBoxClockContainer,
+                rhythmBoxClockContainer = new TestSceneRhythmBoxClockContainer(0)
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(1f)
+                }
             };
 
             rhythmBoxClockContainer.Children = new Drawable[]
@@ -87,6 +82,10 @@ namespace RhythmBox.Tests.VisualTests.Clock
                     Map = map,
                 },
             };
+
+            rhythmBoxClockContainer.IsPaused.BindTo(IsPaused);
+            rhythmBoxClockContainer.UserPlaybackRate.BindTo(UserPlaybackRate);
+
             playfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
             rhythmBoxClockContainer.Start();
         }
@@ -109,6 +108,7 @@ namespace RhythmBox.Tests.VisualTests.Clock
                 Resuming = true;
                 rhythmBoxClockContainer.Start();
             }
+
             playfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
             return base.OnKeyDown(e);
         }

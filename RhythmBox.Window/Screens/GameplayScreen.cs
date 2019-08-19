@@ -59,8 +59,8 @@ namespace RhythmBox.Window.Screens
                 Artist = "Test Artist",
                 Creator = "Test Creator",
                 DifficultyName = "Test DifficultyName",
-                StartTime = 7000,
-                EndTime = 19000,
+                StartTime = 9000,
+                EndTime = 14000,
             };
 
             //TODO:  note: this is temporary
@@ -81,10 +81,10 @@ namespace RhythmBox.Window.Screens
             _map.HitObjects[2].Speed = 1f;
             _map.HitObjects[3].Speed = 1f;
 
-            _map.HitObjects[0].Time = 9100;
-            _map.HitObjects[1].Time = 15000;
-            _map.HitObjects[2].Time = 15500;
-            _map.HitObjects[3].Time = 16150;
+            _map.HitObjects[0].Time = 9000;
+            _map.HitObjects[1].Time = 10000;
+            _map.HitObjects[2].Time = 11500;
+            _map.HitObjects[3].Time = 12000;
 
             InternalChildren = new Drawable[]
             {
@@ -116,7 +116,7 @@ namespace RhythmBox.Window.Screens
                     TextAnchor = Anchor.TopRight,
                     X = -0.01f
                 },
-                rhythmBoxClockContainer = new RhythmBoxClockContainer(8000)
+                rhythmBoxClockContainer = new RhythmBoxClockContainer(0)
                 {
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f)
@@ -140,17 +140,12 @@ namespace RhythmBox.Window.Screens
             rhythmBoxClockContainer.UserPlaybackRate.BindTo(UserPlaybackRate);
 
             _RbPlayfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
-            
 
             DispayCombo.AddText("0x", x => x.Font = new FontUsage("Roboto", 40));
             DispayScore.AddText("000000", x => x.Font = new FontUsage("Roboto", 40));
-        }
 
-        protected override void LoadComplete()
-        {
+            rhythmBoxClockContainer.Seek(_map.StartTime);
             rhythmBoxClockContainer.Start();
-            rhythmBoxClockContainer.Seek(8000);
-            base.LoadComplete();
         }
 
         protected override void Update()
