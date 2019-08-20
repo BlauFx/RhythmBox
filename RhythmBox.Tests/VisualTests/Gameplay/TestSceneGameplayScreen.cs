@@ -24,7 +24,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
 
         private int Combo { get; set; } = 0;
 
-        private double Accuracy { get; set; } = 100;
+        private double Accuracy { get; set; } = 100; //TODO:
 
         private TextFlowContainer DispayCombo;
 

@@ -13,17 +13,26 @@ namespace RhythmBox.Mode.Std.Tests.Objects
 {
     public class TestSceneRBox : Container
     {
+        /// <summary>
+        /// set the time when the drawable should be applied
+        /// </summary>
         public double time { get; set; } = 0;
 
+        /// <summary>
+        /// if speed is higher then the animation / animation of the drawble get's slower
+        /// </summary>
         public float speed { get; set; } = 1f;
-
+        
         public HitObjects.Direction direction;
 
         private RBoxObj obj { get; set; }
 
-        public float AlphaA = alpha;
+        /// <summary>
+        /// AlphaA is the alpha of the drawable
+        /// </summary>
+        public float AlphaA { get => alpha; set => alpha = value; }
 
-        protected static float alpha;
+        protected float alpha;
 
         public bool AddCombo { get; protected set; }
 
@@ -56,19 +65,16 @@ namespace RhythmBox.Mode.Std.Tests.Objects
             {
                 AlphaA = alpha = obj.bx.Alpha;
             }
-            catch
-            {
-
-            }
+            catch { }
 
             UpdateAlphaA();
         }
 
-        public async void OnClickKeyDown(Key key)
+        public void OnClickKeyDown(Key key)
         {
             obj.ClickKeyDown(key);
             this.AddCombo = obj.AddCombo;
-            Scheduler.AddDelayed(() => this.Expire(), 1800 * speed);
+            Scheduler.AddDelayed(() => this.Expire(), 1800 * speed); //TODO:
         }
 
         public bool AddComboToCounter()
