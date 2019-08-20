@@ -13,6 +13,8 @@ using RhythmBox.Mode.Std.Tests.Animations;
 using RhythmBox.Mode.Std.Tests.Maps;
 using RhythmBox.Tests.pending_files;
 using RhythmBox.Tests.VisualTests.Clock;
+using RhythmBox.Tests.VisualTests.Overlays;
+using System.Threading.Tasks;
 using HitObjects = RhythmBox.Mode.Std.Tests.Interfaces.HitObjects;
 
 namespace RhythmBox.Tests.VisualTests.Gameplay
@@ -42,12 +44,14 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
 
         public readonly BindableBool IsPaused = new BindableBool();
 
-        private bool Resuming { get; set; } = true;
+        private BindableBool Resuming = new BindableBool(true);
 
         private bool HasFinished { get; set; } = true;
 
+        private TestSceneBreakOverlay testSceneBreakOverlay;
+
         [BackgroundDependencyLoader]
-        private void Load()
+        private async void Load()
         {
             _map = new TestSceneMap
             {
@@ -97,6 +101,29 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f)
                 },
+                testSceneBreakOverlay = new TestSceneBreakOverlay
+                {
+                    RelativePositionAxes = Axes.Both,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(1f),
+                    Alpha = 0f,
+                }
+            };
+
+            testSceneBreakOverlay.State.Value = Visibility.Hidden;
+
+            testSceneBreakOverlay.State.ValueChanged += async (e) =>
+            {
+                if (e.NewValue == Visibility.Hidden)
+                {
+                    testSceneBreakOverlay.AnimationOut();
+                    await Task.Delay(1500);
+                    Resuming.Value = true;
+                    rhythmBoxClockContainer.Start();
+                    _testSceneRbPlayfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
+                }
             };
 
             rhythmBoxClockContainer.Children = new Drawable[]
@@ -140,7 +167,6 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                 },
             };
 
-
             rhythmBoxClockContainer.IsPaused.BindTo(IsPaused);
             rhythmBoxClockContainer.UserPlaybackRate.BindTo(UserPlaybackRate);
 
@@ -148,6 +174,8 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
             DispayScore.Clock = rhythmBoxClockContainer.RhythmBoxClock;
             DispayCombo.Clock = rhythmBoxClockContainer.RhythmBoxClock;
             _hpBar.Clock = rhythmBoxClockContainer.RhythmBoxClock;
+
+            _testSceneRbPlayfield.Resuming.BindTo(Resuming);
 
             DispayCombo.AddText("0x", x => x.Font = new FontUsage("Roboto", 40));
             DispayScore.AddText("000000", x => x.Font = new FontUsage("Roboto", 40));
@@ -188,15 +216,11 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
         {
             if (e.Key == osuTK.Input.Key.Space) //It's set to Space because if you press escape then the window will close
             {
-                if (Resuming)
+                if (Resuming.Value)
                 {
-                    Resuming = false;
+                    Resuming.Value = false;
                     rhythmBoxClockContainer.Stop();
-                }
-                else
-                {
-                    Resuming = true;
-                    rhythmBoxClockContainer.Start();
+                    testSceneBreakOverlay.ToggleVisibility();
                 }
                 _testSceneRbPlayfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
             }

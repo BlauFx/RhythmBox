@@ -1,4 +1,5 @@
 ﻿using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Events;
@@ -32,6 +33,8 @@ namespace RhythmBox.Window.pending_files
         public bool HasFinished { get; set; } = false;
 
         public bool HasStarted { get; set; } = false;
+
+        public BindableBool Resuming = new BindableBool();
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -168,6 +171,7 @@ namespace RhythmBox.Window.pending_files
                     //time = x.Time,
                     time = x.Time - Map.StartTime,
                     speed = x.Speed,
+                    Resuming = Resuming,
                 });
                 i++;
             }

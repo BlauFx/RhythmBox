@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shapes;
 using osuTK;
@@ -36,6 +37,8 @@ namespace RhythmBox.Mode.Std.Tests.Objects
 
         public bool AddCombo { get; protected set; }
 
+        public BindableBool Resuming = new BindableBool();
+
         [BackgroundDependencyLoader]
         private void Load()
         {
@@ -50,6 +53,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
                         Alpha = 1f,
+                        Resuming = Resuming,
                     },
                 };
             }, time);
@@ -125,6 +129,8 @@ namespace RhythmBox.Mode.Std.Tests.Objects
 
         public Hit currentHit { get; protected set; }
 
+        public BindableBool Resuming = new BindableBool();
+
         [BackgroundDependencyLoader]
         private void Load()
         {
@@ -182,6 +188,10 @@ namespace RhythmBox.Mode.Std.Tests.Objects
 
         public void ClickKeyDown(Key key)
         {
+            if (!Resuming.Value)
+            {
+                return;
+            }
             Wait++;
 
             switch (key)

@@ -1,66 +1,17 @@
-using NUnit.Framework;
-using osu.Framework.Allocation;
+﻿using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
-using osu.Framework.Testing;
 using osuTK;
 using osuTK.Graphics;
 
-namespace RhythmBox.Tests.VisualTests.Overlays
+
+namespace RhythmBox.Window.Overlays
 {
-    [TestFixture]
-    public class TestSceneTestBreakOverlay : TestScene
-    {
-        private TestSceneBreakOverlay testSceneBreakOverlay;
-
-        [BackgroundDependencyLoader]
-        private void Load()
-        {
-            Children = new Drawable[]
-            {
-                testSceneBreakOverlay = new TestSceneBreakOverlay
-                {
-                    Depth = -1,
-                    RelativePositionAxes = Axes.Both,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(1f),
-                },
-                new Box
-                {
-                    Depth = 0,
-                    RelativePositionAxes = Axes.Both,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(1f),
-                }
-            };
-
-            testSceneBreakOverlay.State.Value = Visibility.Hidden;
-
-            AddWaitStep("Load", 1);
-
-            AddStep("Animation 1 FadeIn", () =>
-            {
-                testSceneBreakOverlay.AnimationIn();
-            });
-
-            AddWaitStep("wait for complete", 10);
-
-            AddStep("Animation 1 FadeOut", () =>
-            {
-                testSceneBreakOverlay.AnimationOut();
-            });
-        }
-    }
-
-    public class TestSceneBreakOverlay : FocusedOverlayContainer
+    public class BreakOverlay : FocusedOverlayContainer
     {
         public TextFlowContainer _text;
 

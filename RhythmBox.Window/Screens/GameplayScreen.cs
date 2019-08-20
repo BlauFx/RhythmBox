@@ -12,7 +12,9 @@ using RhythmBox.Mode.Std.Animations;
 using RhythmBox.Mode.Std.Interfaces;
 using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Window.Clocks;
+using RhythmBox.Window.Overlays;
 using RhythmBox.Window.pending_files;
+using System.Threading.Tasks;
 
 namespace RhythmBox.Window.Screens
 {
@@ -40,9 +42,12 @@ namespace RhythmBox.Window.Screens
 
         public readonly BindableBool IsPaused = new BindableBool();
 
-        private bool Resuming { get; set; } = true;
+
+        private BindableBool Resuming = new BindableBool(true);
 
         private bool HasFinished { get; set; } = true;
+
+        private BreakOverlay BreakOverlay;
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -94,8 +99,33 @@ namespace RhythmBox.Window.Screens
                 {
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f)
+                },
+                BreakOverlay = new BreakOverlay
+                {
+                    RelativePositionAxes = Axes.Both,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(1f),
+                    Alpha = 0f,
                 }
             };
+
+            BreakOverlay.State.Value = Visibility.Hidden;
+
+            BreakOverlay.State.ValueChanged += async (e) =>
+            {
+                if (e.NewValue == Visibility.Hidden)
+                {
+                    BreakOverlay.AnimationOut();
+                    await Task.Delay(1500);
+                    Resuming.Value = true;
+                    rhythmBoxClockContainer.Start();
+                    _RbPlayfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
+                }
+            };
+
+
 
             rhythmBoxClockContainer.Children = new Drawable[]
             {
@@ -146,6 +176,8 @@ namespace RhythmBox.Window.Screens
             DispayCombo.Clock = rhythmBoxClockContainer.RhythmBoxClock;
             _hpBar.Clock = rhythmBoxClockContainer.RhythmBoxClock;
 
+            _RbPlayfield.Resuming.BindTo(Resuming);
+
             DispayCombo.AddText("0x", x => x.Font = new FontUsage("Roboto", 40));
             DispayScore.AddText("000000", x => x.Font = new FontUsage("Roboto", 40));
 
@@ -187,15 +219,11 @@ namespace RhythmBox.Window.Screens
         {
             if (e.Key == osuTK.Input.Key.Escape)
             {
-                if (Resuming)
+                if (Resuming.Value)
                 {
-                    Resuming = false;
+                    Resuming.Value = false;
                     rhythmBoxClockContainer.Stop();
-                }
-                else
-                {
-                    Resuming = true;
-                    rhythmBoxClockContainer.Start();
+                    BreakOverlay.ToggleVisibility();
                 }
                 _RbPlayfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
             }
