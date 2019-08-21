@@ -125,8 +125,6 @@ namespace RhythmBox.Window.Screens
                 }
             };
 
-
-
             rhythmBoxClockContainer.Children = new Drawable[]
             {
                 _RbPlayfield = new RbPlayfield

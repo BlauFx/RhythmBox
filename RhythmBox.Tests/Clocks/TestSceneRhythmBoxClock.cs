@@ -1,7 +1,7 @@
 ﻿using osu.Framework.Bindables;
 using osu.Framework.Timing;
 
-namespace RhythmBox.Tests.VisualTests.Clock
+namespace RhythmBox.Tests.Clock
 {
     public class TestSceneRhythmBoxClock : IFrameBasedClock
     {

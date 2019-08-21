@@ -5,7 +5,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Timing;
 
-namespace RhythmBox.Tests.VisualTests.Clock
+namespace RhythmBox.Tests.Clock
 {
     public class TestSceneRhythmBoxClockContainer : Container
     {
