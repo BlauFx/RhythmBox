@@ -194,7 +194,6 @@ namespace RhythmBox.Window.Screens
                     SongSelction songSelction;
                     LoadComponent(songSelction = new SongSelction());
                     this.Push(songSelction);
-                    Scheduler.AddDelayed(() => this.Exit(), 0);
                 }
             }
             else
@@ -274,6 +273,15 @@ namespace RhythmBox.Window.Screens
         {
             this.FadeInFromZero<GameplayScreen>(500, Easing.In);
             base.OnEntering(last);
+        }
+
+        public override void OnSuspending(IScreen next)
+        {
+            //If this screen is faded to 0 then the screen isn't exiting.
+            this.FadeTo<GameplayScreen>(0.01f, 0, Easing.In);
+            Scheduler.AddDelayed(() => this.Exit(), 0);
+
+            base.OnSuspending(next);
         }
     }
 }

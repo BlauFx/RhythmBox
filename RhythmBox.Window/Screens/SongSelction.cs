@@ -9,7 +9,6 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
-using osu.Framework.Logging;
 using osu.Framework.Screens;
 using osuTK;
 using osuTK.Graphics;
@@ -24,6 +23,8 @@ namespace RhythmBox.Window.Screens
         private ThisScrollContainer scrollContainer;
 
         private BasicTextBox textBox;
+
+        private bool WaitUntilLoaded = true;
 
         [BackgroundDependencyLoader]
         private void Load(TextureStore store)
@@ -54,10 +55,13 @@ namespace RhythmBox.Window.Screens
                     Size = new Vector2(0.5f,1f),
                     ClickOnMap = () =>
                     {
-                        GameplayScreen gameplayScreen;
-                        LoadComponent(gameplayScreen = new GameplayScreen());
-                        this.Push(gameplayScreen);
-                        //this.LoadComponentAsync(new GameplayScreen(), this.Push);
+                        if (!WaitUntilLoaded)
+                        {
+                             GameplayScreen gameplayScreen;
+                            LoadComponent(gameplayScreen = new GameplayScreen());
+                            this.Push(gameplayScreen);
+                            //this.LoadComponentAsync(new GameplayScreen(), this.Push);
+                        }
                     },
                 },
             };
@@ -75,16 +79,20 @@ namespace RhythmBox.Window.Screens
             return base.OnKeyDown(e);
         }
 
+
         public override void OnEntering(IScreen last)
         {
-            this.FadeInFromZero<SongSelction>(200, Easing.In);
+            this.FadeInFromZero<SongSelction>(250, Easing.In);
+            Scheduler.AddDelayed(() => WaitUntilLoaded = false, 250);
             base.OnEntering(last);
         }
 
         public override void OnSuspending(IScreen next)
         {
-            this.FadeOutFromOne<SongSelction>(50, Easing.In);
+            //If this screen is faded to 0 then the screen isn't exiting.
+            this.FadeTo<SongSelction>(0.01f, 50, Easing.In);
             Scheduler.AddDelayed(() => this.Exit(), 50);
+
             base.OnSuspending(next);
         }
     }
