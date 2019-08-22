@@ -5,9 +5,6 @@ using osu.Framework.IO.Stores;
 using RhythmBox.Window.pending_files;
 using System.Collections.Generic;
 using System.Drawing;
-using osu.Framework.Graphics;
-using osu.Framework.Screens;
-using osuTK;
 
 namespace RhythmBox.Window
 {
@@ -29,21 +26,12 @@ namespace RhythmBox.Window
             return base.CreateChildDependencies(parent);
         }
 
-        //protected override IDictionary<FrameworkSetting, object> GetFrameworkConfigDefaults() =>
-        //    new Dictionary<FrameworkSetting, object>()
-        //    {
-        //        {
-        //            FrameworkSetting.WindowedSize, new Size(700,500)
-        //        }
-        //    };
-
         protected override IDictionary<FrameworkSetting, object> GetFrameworkConfigDefaults()
         {
             new Dictionary<FrameworkSetting, object>()
             {
                 {
                     FrameworkSetting.WindowedSize, new Size(700,500)
-
                 }
             };
             return base.GetFrameworkConfigDefaults();

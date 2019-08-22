@@ -14,8 +14,9 @@ using RhythmBox.Mode.Std.Tests.Maps;
 using RhythmBox.Tests.Clock;
 using RhythmBox.Tests.pending_files;
 using RhythmBox.Tests.VisualTests.Overlays;
+using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
-using HitObjects = RhythmBox.Mode.Std.Tests.Interfaces.HitObjects;
 
 namespace RhythmBox.Tests.VisualTests.Gameplay
 {
@@ -53,47 +54,26 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
         [BackgroundDependencyLoader]
         private async void Load()
         {
+            var testSceneMapReader = new TestSceneMapReader(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Songs\\TestMap.ini");
             _map = new TestSceneMap
             {
-                AFileName = "null",
-                BGFile = "none",
-                MapId = 0,
-                MapSetId = 0,
-                BPM = 150,
-                Objects = 10,
-                AutoMap = false,
-                Mode = RhythmBox.Mode.Std.Tests.Interfaces.GameMode.STD,
-                Title = "Test Title",
-                Artist = "Test Artist",
-                Creator = "Test Creator",
-                DifficultyName = "Test DifficultyName",
-                StartTime = 100,
-                EndTime = 5000,
+                AFileName = testSceneMapReader.AFileName,
+                BGFile = testSceneMapReader.BGFile,
+                MapId = testSceneMapReader.MapId,
+                MapSetId = testSceneMapReader.MapSetId,
+                BPM = testSceneMapReader.BPM,
+                Objects = testSceneMapReader.Objects,
+                AutoMap = testSceneMapReader.AutoMap,
+                Mode = testSceneMapReader.Mode,
+                Title = testSceneMapReader.Title,
+                Artist = testSceneMapReader.Artist,
+                Creator = testSceneMapReader.Creator,
+                DifficultyName = testSceneMapReader.DifficultyName,
+                StartTime = testSceneMapReader.StartTime,
+                EndTime = testSceneMapReader.EndTime,
+                HitObjects = testSceneMapReader.HitObjects,
             };
-
-            //TODO:  note: this is temporary
-            _map.HitObjects = new Mode.Std.Tests.Interfaces.HitObjects[4];
-
-            _map.HitObjects[0] = new HitObjects();
-            _map.HitObjects[1] = new HitObjects();
-            _map.HitObjects[2] = new HitObjects();
-            _map.HitObjects[3] = new HitObjects();
-
-            _map.HitObjects[0]._direction = RhythmBox.Mode.Std.Tests.Interfaces.HitObjects.Direction.Up;
-            _map.HitObjects[1]._direction = RhythmBox.Mode.Std.Tests.Interfaces.HitObjects.Direction.Right;
-            _map.HitObjects[2]._direction = RhythmBox.Mode.Std.Tests.Interfaces.HitObjects.Direction.Left;
-            _map.HitObjects[3]._direction = RhythmBox.Mode.Std.Tests.Interfaces.HitObjects.Direction.Down;
-
-            _map.HitObjects[0].Speed = 1f;
-            _map.HitObjects[1].Speed = 1f;
-            _map.HitObjects[2].Speed = 1f;
-            _map.HitObjects[3].Speed = 1f;
-
-            _map.HitObjects[0].Time = 200;
-            _map.HitObjects[1].Time = 400;
-            _map.HitObjects[2].Time = 700;
-            _map.HitObjects[3].Time = 780;
-
+          
             Children = new Drawable[]
             {
                 rhythmBoxClockContainer = new TestSceneRhythmBoxClockContainer(0)

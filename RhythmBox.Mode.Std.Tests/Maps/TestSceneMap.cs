@@ -5,6 +5,9 @@ namespace RhythmBox.Mode.Std.Tests.Maps
 {
     public class TestSceneMap : ITestSceneMap, IEnumerable
     {
+        /// <summary>
+        /// This is the filename of the audio file.
+        /// </summary>
         public string AFileName { get; set; } = string.Empty;
 
         public string BGFile  { get; set; } = string.Empty;
@@ -31,9 +34,11 @@ namespace RhythmBox.Mode.Std.Tests.Maps
 
         public HitObjects[] HitObjects { get; set; }
 
-        public double StartTime { get; set; }
+        public int StartTime { get; set; }
 
-        public double EndTime { get; set; }
+        public int EndTime { get; set; }
+
+        
 
         public IEnumerator GetEnumerator()
         {

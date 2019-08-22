@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Reflection;
 using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
@@ -8,6 +10,7 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Events;
+using osu.Framework.Logging;
 using osu.Framework.Testing;
 using osuTK;
 using osuTK.Graphics;
@@ -95,6 +98,8 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     Depth = int.MinValue,
                 },
             };
+
+            new TestSceneDefaultFolder();
         }
 
         protected override bool OnMouseMove(MouseMoveEvent e)

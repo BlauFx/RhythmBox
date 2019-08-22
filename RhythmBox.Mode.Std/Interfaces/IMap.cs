@@ -28,9 +28,9 @@ namespace RhythmBox.Mode.Std.Interfaces
         
         HitObjects[] HitObjects { get; set; }
 
-        double StartTime { get; set; }
+        int StartTime { get; set; }
 
-        double EndTime { get; set; }
+        int EndTime { get; set; }
     }
     
     public enum GameMode

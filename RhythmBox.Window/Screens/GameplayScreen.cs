@@ -9,11 +9,12 @@ using osu.Framework.Screens;
 using osuTK;
 using osuTK.Graphics;
 using RhythmBox.Mode.Std.Animations;
-using RhythmBox.Mode.Std.Interfaces;
 using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Window.Clocks;
 using RhythmBox.Window.Overlays;
 using RhythmBox.Window.pending_files;
+using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace RhythmBox.Window.Screens
@@ -52,46 +53,25 @@ namespace RhythmBox.Window.Screens
         [BackgroundDependencyLoader]
         private void Load()
         {
+            var MapReader = new MapReader(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Songs\\TestMap.ini");
             _map = new Map
             {
-                AFileName = "null",
-                BGFile = "none",
-                MapId = 0,
-                MapSetId = 0,
-                BPM = 150,
-                Objects = 10,
-                AutoMap = false,
-                Mode = RhythmBox.Mode.Std.Interfaces.GameMode.STD,
-                Title = "Test Title",
-                Artist = "Test Artist",
-                Creator = "Test Creator",
-                DifficultyName = "Test DifficultyName",
-                StartTime = 9000,
-                EndTime = 14000,
+                AFileName = MapReader.AFileName,
+                BGFile = MapReader.BGFile,
+                MapId = MapReader.MapId,
+                MapSetId = MapReader.MapSetId,
+                BPM = MapReader.BPM,
+                Objects = MapReader.Objects,
+                AutoMap = MapReader.AutoMap,
+                Mode = MapReader.Mode,
+                Title = MapReader.Title,
+                Artist = MapReader.Artist,
+                Creator = MapReader.Creator,
+                DifficultyName = MapReader.DifficultyName,
+                StartTime = MapReader.StartTime,
+                EndTime = MapReader.EndTime,
+                HitObjects = MapReader.HitObjects,
             };
-
-            //TODO:  note: this is temporary
-            _map.HitObjects = new Mode.Std.Interfaces.HitObjects[4];
-
-            _map.HitObjects[0] = new HitObjects();
-            _map.HitObjects[1] = new HitObjects();
-            _map.HitObjects[2] = new HitObjects();
-            _map.HitObjects[3] = new HitObjects();
-
-            _map.HitObjects[0]._direction = RhythmBox.Mode.Std.Interfaces.HitObjects.Direction.Up;
-            _map.HitObjects[1]._direction = RhythmBox.Mode.Std.Interfaces.HitObjects.Direction.Right;
-            _map.HitObjects[2]._direction = RhythmBox.Mode.Std.Interfaces.HitObjects.Direction.Left;
-            _map.HitObjects[3]._direction = RhythmBox.Mode.Std.Interfaces.HitObjects.Direction.Down;
-
-            _map.HitObjects[0].Speed = 1f;
-            _map.HitObjects[1].Speed = 1f;
-            _map.HitObjects[2].Speed = 1f;
-            _map.HitObjects[3].Speed = 1f;
-
-            _map.HitObjects[0].Time = 9000;
-            _map.HitObjects[1].Time = 10000;
-            _map.HitObjects[2].Time = 11500;
-            _map.HitObjects[3].Time = 12000;
 
             InternalChildren = new Drawable[]
             {

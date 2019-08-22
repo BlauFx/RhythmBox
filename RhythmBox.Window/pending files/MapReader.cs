@@ -1,11 +1,11 @@
-﻿using RhythmBox.Mode.Std.Tests.Interfaces;
+﻿using RhythmBox.Mode.Std.Interfaces;
 using System;
 using System.IO;
 using System.Linq;
 
-namespace RhythmBox.Tests.pending_files
+namespace RhythmBox.Window.pending_files
 {
-    public class TestSceneMapReader : ITestSceneMap
+    class MapReader : IMap
     {
         public string AFileName { get; set; } = string.Empty;
 
@@ -41,7 +41,7 @@ namespace RhythmBox.Tests.pending_files
 
         private string[] storageTemp;
 
-        public TestSceneMapReader(string path)
+        public MapReader(string path)
         {
             int lineCount = File.ReadLines(path).Count();
 
@@ -132,7 +132,7 @@ namespace RhythmBox.Tests.pending_files
             }
             else
             {
-                int num = x.IndexOf(",")+1;
+                int num = x.IndexOf(",") + 1;
                 return int.Parse(x.Substring(num, x.Length - num));
             }
         }

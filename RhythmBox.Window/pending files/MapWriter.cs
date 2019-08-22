@@ -1,10 +1,10 @@
-using RhythmBox.Mode.Std.Tests.Interfaces;
+﻿using RhythmBox.Mode.Std.Interfaces;
 using System.IO;
 using System.Reflection;
 
-namespace RhythmBox.Tests.pending_files
+namespace RhythmBox.Window.pending_files
 {
-    public class TestSceneMapWriter : ITestSceneMap
+    public class MapWriter : IMap
     {
         public string AFileName { get; set; } = string.Empty;
 
@@ -68,7 +68,7 @@ namespace RhythmBox.Tests.pending_files
                 Directory.CreateDirectory(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"\SongsOLD");
             }
 
-            int num = path.LastIndexOf("\\") + 1;
+            int num = path.LastIndexOf("\\")+1;
             string filename = path.Substring(num, path.Length - num);
 
             File.Move(path, Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + $"\\SongsOLD\\{filename}.OLD");
@@ -92,7 +92,7 @@ namespace RhythmBox.Tests.pending_files
 
         private void WriteToFile(string path, string leftside, string value, bool extraEmptyLine = false)
         {
-            using (StreamWriter strm = new StreamWriter(path,true))
+            using (StreamWriter strm = new StreamWriter(path, true))
             {
                 strm.WriteLine($"{leftside}: {value}");
                 if (extraEmptyLine)
@@ -104,7 +104,7 @@ namespace RhythmBox.Tests.pending_files
 
         private void WriteToFile(string path, string value, bool extraEmptyLine = false)
         {
-            using (StreamWriter strm = new StreamWriter(path,true))
+            using (StreamWriter strm = new StreamWriter(path, true))
             {
                 strm.WriteLine(value);
                 if (extraEmptyLine)

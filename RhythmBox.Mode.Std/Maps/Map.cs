@@ -31,9 +31,9 @@ namespace RhythmBox.Mode.Std.Maps
 
         public HitObjects[] HitObjects { get; set; }
 
-        public double StartTime { get; set; }
+        public int StartTime { get; set; }
 
-        public double EndTime { get; set; }
+        public int EndTime { get; set; }
 
         public IEnumerator GetEnumerator()
         {

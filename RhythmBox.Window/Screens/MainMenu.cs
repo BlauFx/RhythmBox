@@ -12,6 +12,7 @@ using osu.Framework.Screens;
 using osuTK;
 using osuTK.Graphics;
 using RhythmBox.Window.Overlays;
+using RhythmBox.Window.pending_files;
 
 namespace RhythmBox.Window.Screens
 {
@@ -95,6 +96,8 @@ namespace RhythmBox.Window.Screens
                     Depth = int.MinValue,
                 },
             };
+
+            new DefaultFolder();
         }
 
         protected override bool OnMouseMove(MouseMoveEvent e)
