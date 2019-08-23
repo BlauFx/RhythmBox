@@ -54,7 +54,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
         [BackgroundDependencyLoader]
         private async void Load()
         {
-            var testSceneMapReader = new TestSceneMapReader(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Songs\\TestMap.ini");
+            var testSceneMapReader = new TestSceneMapReader(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Songs\\TestMap\\Difficulty1.ini");
             _map = new TestSceneMap
             {
                 AFileName = testSceneMapReader.AFileName,
@@ -73,7 +73,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                 EndTime = testSceneMapReader.EndTime,
                 HitObjects = testSceneMapReader.HitObjects,
             };
-          
+
             Children = new Drawable[]
             {
                 rhythmBoxClockContainer = new TestSceneRhythmBoxClockContainer(0)
@@ -188,7 +188,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                 DispayScore.Text = string.Empty;
                 DispayScore.AddText($"{Score}", x => x.Font = new FontUsage("Roboto", 40));
             }
-           
+
             base.Update();
         }
 

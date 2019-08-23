@@ -53,7 +53,7 @@ namespace RhythmBox.Window.Screens
         [BackgroundDependencyLoader]
         private void Load()
         {
-            var MapReader = new MapReader(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Songs\\TestMap.ini");
+            var MapReader = new MapReader(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Songs\\TestMap\\Difficulty1.ini");
             _map = new Map
             {
                 AFileName = MapReader.AFileName,
