@@ -43,6 +43,10 @@ namespace RhythmBox.Tests.pending_files
 
         public TestSceneMapReader(string path)
         {
+            if (!File.Exists(path))
+            {
+                new TestSceneDefaultFolder();
+            }
             int lineCount = File.ReadLines(path).Count();
 
             storageTemp = new string[lineCount];

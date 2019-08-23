@@ -93,13 +93,30 @@ namespace RhythmBox.Window.pending_files
                 Directory.CreateDirectory(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + $@"\SongsOLD\{str}");
             }
 
-            //TODO:
-            File.Move(path, Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + $"\\SongsOLD\\{str}\\{filename}.OLD");
+            File.Move(path, CheckIfFilenameIsAvailable(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + $"\\SongsOLD\\{str}\\{filename}.OLD"));
 
             WriteToNewMap(path);
-
             File.Delete(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + $"\\SongsOLD\\{str}\\{filename}.OLD");
             Directory.Delete(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + $"\\SongsOLD\\{str}", true);
+        }
+
+        private string CheckIfFilenameIsAvailable(string orignalPath)
+        {
+            if (File.Exists(orignalPath))
+            {
+                int num = 1;
+                string tmp = string.Empty;
+                for (int i = 0; i < num; i++)
+                {
+                    tmp = orignalPath + num;
+                    if (File.Exists(tmp))
+                    {
+                        num++;
+                    }
+                }
+                return tmp;
+            }
+            return orignalPath;
         }
 
         private void WriteToFile(string path, HitObjects[] hitObjects)
