@@ -57,6 +57,10 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
             if (path == "null")
             {
                 path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Songs\\TestMap\\Difficulty1.ini";
+                if (!File.Exists(path))
+                {
+                    new TestSceneDefaultFolder();
+                }
             }
 
             var testSceneMapReader = new TestSceneMapReader(path);
