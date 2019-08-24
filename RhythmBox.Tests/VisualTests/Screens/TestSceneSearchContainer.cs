@@ -1,156 +1,128 @@
 ﻿using NUnit.Framework;
+using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Shapes;
-using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Testing;
 using osuTK;
 using osuTK.Graphics;
-using System.Collections.Generic;
-using System.Linq;
+using RhythmBox.Mode.Std.Tests.Maps;
+using RhythmBox.Tests.pending_files;
+using System.IO;
+using System.Reflection;
 
 namespace RhythmBox.Tests.VisualTests.Screens
 {
     [TestFixture]
     public class TestSceneSearchContainer : TestScene
     {
-        //https://github.com/ppy/osu-framework/blob/master/osu.Framework.Tests/Visual/UserInterface/TestSceneSearchContainer.cs
+        public SearchContainer search;
 
-        private SearchContainer search;
+        private HeaderContainer head;
+
         private BasicTextBox textBox;
 
-        [SetUp]
-        public void SetUp()
+        [BackgroundDependencyLoader]
+        private void Load()
         {
-            Anchor = Anchor.TopRight;
-            Origin = Anchor.TopRight;
+            RelativeSizeAxes = Axes.Both;
+            RelativePositionAxes = Axes.Both;
 
-            Schedule(() =>
+            Children = new Drawable[]
             {
-                Children = new Drawable[]
+                textBox = new BasicTextBox
                 {
-                    textBox = new BasicTextBox
+                    Anchor = Anchor.BottomLeft,
+                    Origin = Anchor.BottomLeft,
+                    Size = new Vector2(200, 40),
+                },
+                search = new SearchContainer
+                {
+                    Anchor = Anchor.TopRight,
+                    Origin = Anchor.TopRight,
+
+                    RelativeSizeAxes = Axes.X,
+                    Size = new Vector2(1f),
+
+                    AutoSizeAxes = Axes.Y,
+
+                    Children = new Drawable[]
                     {
-                        Anchor = Anchor.TopRight,
-                        Origin = Anchor.TopRight,
-                        Size = new Vector2(430, 40),
-                    },
-                    search = new SearchContainer
-                    {
-                        Anchor = Anchor.TopRight,
-                        Origin = Anchor.TopRight,
-                        AutoSizeAxes = Axes.Both,
-                        Margin = new MarginPadding { Top = 40 },
-                        Children = new Drawable[]
+                        head = new HeaderContainer
                         {
-                            new HeaderContainer
-                            {
-                                AutoSizeAxes = Axes.Both,
-                                Children = new Drawable[]
-                                {
-                                    new MapPackTest
-                                    {
-                                        Maps = 5,
-                                        RelativeSizeAxes = Axes.X,
-                                        Anchor = Anchor.TopRight,
-                                        Origin = Anchor.TopRight,
-                                        Colour = Color4.Red,
-                                        Search = "1",
-                                    },
-                                    new MapPackTest
-                                    {
-                                        Maps = 5,
-                                        RelativeSizeAxes = Axes.X,
-                                        Anchor = Anchor.TopRight,
-                                        Origin = Anchor.TopRight,
-                                        Colour = Color4.Orange,
-                                        Search = "2",
-                                    },
-                                    new MapPackTest
-                                    {
-                                        Maps = 5,
-                                        RelativeSizeAxes = Axes.X,
-                                        Anchor = Anchor.TopRight,
-                                        Origin = Anchor.TopRight,
-                                        Colour = Color4.Violet,
-                                        Search = "3",
-                                    },
-                                    new Box
-                                    {
-                                        Size = new Vector2(400f),
-                                        Alpha = 0.001f,
-                                    },
-                                },
-                            },
-                        }
+                            RelativeSizeAxes = Axes.X,
+                            Size = new Vector2(1f),
+
+                            AutoSizeAxes = Axes.Y,
+                        },
                     }
+                }
+            };
+
+            int MapsCount = 2;
+
+            var testSceneMapReader = new TestSceneMapReader(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Songs\\TestMap\\Difficulty1.ini");
+
+            TestSceneMap[,] testSceneMap = new TestSceneMap[MapsCount, short.MaxValue];
+
+            testSceneMap[0, 0] = new TestSceneMap
+            {
+                AFileName = testSceneMapReader.AFileName,
+                BGFile = testSceneMapReader.BGFile,
+                MapId = testSceneMapReader.MapId,
+                MapSetId = testSceneMapReader.MapSetId,
+                BPM = testSceneMapReader.BPM,
+                Objects = testSceneMapReader.Objects,
+                AutoMap = testSceneMapReader.AutoMap,
+                Mode = testSceneMapReader.Mode,
+                Title = "random text",//testSceneMapReader.Title,
+                Artist = testSceneMapReader.Artist,
+                Creator = testSceneMapReader.Creator,
+                DifficultyName = testSceneMapReader.DifficultyName,
+                StartTime = testSceneMapReader.StartTime,
+                EndTime = testSceneMapReader.EndTime,
+                HitObjects = testSceneMapReader.HitObjects,
+            };
+
+            testSceneMap[1, 0] = new TestSceneMap
+            {
+                AFileName = testSceneMapReader.AFileName,
+                BGFile = testSceneMapReader.BGFile,
+                MapId = testSceneMapReader.MapId,
+                MapSetId = testSceneMapReader.MapSetId,
+                BPM = testSceneMapReader.BPM,
+                Objects = testSceneMapReader.Objects,
+                AutoMap = testSceneMapReader.AutoMap,
+                Mode = testSceneMapReader.Mode,
+                Title = "title of this test map",//testSceneMapReader.Title,
+                Artist = testSceneMapReader.Artist,
+                Creator = testSceneMapReader.Creator,
+                DifficultyName = testSceneMapReader.DifficultyName,
+                StartTime = testSceneMapReader.StartTime,
+                EndTime = testSceneMapReader.EndTime,
+                HitObjects = testSceneMapReader.HitObjects,
+            };
+
+            MapPackTest[] mapPackTests = new MapPackTest[MapsCount];
+
+            for (int i = 0; i < mapPackTests.Length; i++)
+            {
+                mapPackTests[i] = new MapPackTest
+                {
+                    Maps = 1,
+                    RelativeSizeAxes = Axes.Both,
+                    Anchor = Anchor.CentreRight,
+                    Origin = Anchor.CentreRight,
+                    Colour = Color4.LightYellow,
+                    testSceneMap = testSceneMap,
+                    testSceneMapPos = i,
+                    Search = testSceneMap[i, 0].Title,
                 };
-                textBox.Current.ValueChanged += e => search.SearchTerm = e.NewValue;
-            });
-        }
-
-        private class HeaderContainer : Container, IHasFilterableChildren
-        {
-            public IEnumerable<string> FilterTerms => header.FilterTerms;
-
-            public bool MatchingFilter
-            {
-                set
-                {
-                    if (value)
-                    {
-                        this.FadeIn();
-                    }
-                    else
-                    {
-                        this.FadeOut();
-                    }
-                }
             }
 
-            public bool FilteringActive { get; set; }
+            head.AddRange(mapPackTests);
 
-            public IEnumerable<IFilterable> FilterableChildren => Children.OfType<IFilterable>();
-
-            protected override Container<Drawable> Content => flowContainer;
-
-            private readonly HeaderText header;
-            private readonly FillFlowContainer flowContainer;
-
-            public HeaderContainer(string headerText = "")
-            {
-                AddInternal(header = new HeaderText
-                {
-                    Text = headerText,
-                });
-                AddInternal(flowContainer = new FillFlowContainer
-                {
-                    Margin = new MarginPadding { Left = 30 },
-                    AutoSizeAxes = Axes.Both,
-                    Direction = FillDirection.Vertical,
-                });
-            }
-        }
-
-        private class HeaderText : SpriteText, IFilterable
-        {
-            public bool MatchingFilter
-            {
-                set
-                {
-                    if (value)
-                    {
-                        Show();
-                    }
-                    else
-                    {
-                        Hide();
-                    }
-                }
-            }
-
-            public bool FilteringActive { get; set; }
+            textBox.Current.ValueChanged += e => search.SearchTerm = e.NewValue;
         }
     }
 }

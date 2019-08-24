@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
@@ -9,12 +7,18 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
+using osu.Framework.Logging;
 using osu.Framework.Testing;
 using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
+using RhythmBox.Mode.Std.Tests.Maps;
 using RhythmBox.Tests.Objects;
 using RhythmBox.Tests.pending_files;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 
 namespace RhythmBox.Tests.VisualTests.Screens
 {
@@ -56,7 +60,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
         }
     }
 
-    internal class TestSceneThisScrollContainer : FocusedOverlayContainer
+    public class TestSceneThisScrollContainer : FocusedOverlayContainer
     {
         private FillFlowContainer FFContainer;
 
@@ -122,19 +126,6 @@ namespace RhythmBox.Tests.VisualTests.Screens
                                             Size = new Vector2(1f),
 
                                             AutoSizeAxes = Axes.Y,
-
-                                            Children = new Drawable[]
-                                            {
-                                                new MapPackTest
-                                                {
-                                                    Maps = 3,
-                                                    RelativeSizeAxes = Axes.Both,
-                                                    Anchor = Anchor.TopRight,
-                                                    Origin = Anchor.TopRight,
-                                                    Colour = Color4.LightYellow,
-                                                    Search = "3",
-                                                }
-                                            },
                                         },
                                     }
                                 }
@@ -144,31 +135,85 @@ namespace RhythmBox.Tests.VisualTests.Screens
                 }
             };
 
-            for (int i = 0; i < 100 /*Maps*/; i++)
+            List<string> list = new List<string>();
+
+            foreach (var dirs in Directory.GetDirectories(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Songs"))
             {
-                head.AddRange(
-                    new Drawable[]
-                    {
-                        new MapPackTest
-                        {
-                            Maps = 3,
-                            RelativeSizeAxes = Axes.X,
-                            Anchor = Anchor.TopRight,
-                            Origin = Anchor.TopRight,
-                            Colour = Color4.Blue,
-                            Search = "1",
-                        },
-                        new MapPackTest
-                        {
-                            Maps = 10,
-                            RelativeSizeAxes = Axes.X,
-                            Anchor = Anchor.TopCentre,
-                            Origin = Anchor.TopCentre,
-                            Colour = Color4.Pink,
-                            Search = "2",
-                        }
-                    });
+                int count = GetFiles(dirs, "*.ini", SearchOption.TopDirectoryOnly).Length;
+                if (count > 0)
+                {
+                    list.Add(dirs);
+                }
             }
+
+            int[] MapsCount2 = new int[list.Count];
+            TestSceneMap[,] testSceneMaps = new TestSceneMap[MapsCount2.Length, short.MaxValue];
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                MapsCount2[i] = GetFiles(list[i], "*.ini", SearchOption.TopDirectoryOnly).Length;
+
+                if (MapsCount2[i] > 0)
+                {
+                    DirectoryInfo d = new DirectoryInfo(list[i]);
+                    FileInfo[] Files = d.GetFiles("*.ini");
+
+                    for (int j = 0; j < Files.Length; j++)
+                    {
+                        var testSceneMapReader = new TestSceneMapReader(Files[j].FullName);
+
+                        testSceneMaps[i, j] = new TestSceneMap
+                        {
+                            AFileName = testSceneMapReader.AFileName,
+                            BGFile = testSceneMapReader.BGFile,
+                            MapId = testSceneMapReader.MapId,
+                            MapSetId = testSceneMapReader.MapSetId,
+                            BPM = testSceneMapReader.BPM,
+                            Objects = testSceneMapReader.Objects,
+                            AutoMap = testSceneMapReader.AutoMap,
+                            Mode = testSceneMapReader.Mode,
+                            Title = testSceneMapReader.Title,
+                            Artist = testSceneMapReader.Artist,
+                            Creator = testSceneMapReader.Creator,
+                            DifficultyName = testSceneMapReader.DifficultyName,
+                            StartTime = testSceneMapReader.StartTime,
+                            EndTime = testSceneMapReader.EndTime,
+                            HitObjects = testSceneMapReader.HitObjects,
+                        };
+                    }
+                }
+            }
+
+            MapPackTest[] mapPackTests = new MapPackTest[MapsCount2.Length];
+
+            for (int i = 0; i < mapPackTests.Length; i++)
+            {
+                mapPackTests[i] = new MapPackTest
+                {
+                    Maps = MapsCount2[i],
+                    RelativeSizeAxes = Axes.X,
+                    Anchor = Anchor.TopRight,
+                    Origin = Anchor.TopRight,
+                    Colour = Color4.Blue,
+                    Search = testSceneMaps[i, 0].Title,
+                    testSceneMap = testSceneMaps,
+                    testSceneMapPos = i,
+                };
+            }
+
+            head.AddRange(mapPackTests);
+        }
+
+        private string[] GetFiles(string path, string searchPattern, SearchOption searchOption)
+        {
+            string[] searchPatterns = searchPattern.Split('|');
+            List<string> files = new List<string>();
+            foreach (string sp in searchPatterns)
+            {
+                files.AddRange(Directory.GetFiles(path, sp, searchOption));
+            }
+            files.Sort();
+            return files.ToArray();
         }
 
         protected override bool OnMouseDown(MouseDownEvent e)
@@ -201,7 +246,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
         }
     }
 
-    internal class HeaderContainer : Container, IHasFilterableChildren
+    public class HeaderContainer : Container, IHasFilterableChildren
     {
         public IEnumerable<string> FilterTerms => header.FilterTerms;
 
@@ -250,7 +295,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
         }
     }
 
-    internal class HeaderText : SpriteText, IFilterable
+    public class HeaderText : SpriteText, IFilterable
     {
         public bool MatchingFilter
         {

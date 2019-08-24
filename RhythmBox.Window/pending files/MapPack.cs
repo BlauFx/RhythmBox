@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using osu.Framework.Allocation;
+using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
+using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
 using osuTK;
 using osuTK.Graphics;
@@ -25,9 +27,13 @@ namespace RhythmBox.Window.pending_files
             set
             {
                 if (value)
+                {
                     Show();
+                }
                 else
+                {
                     Hide();
+                }
             }
         }
 
@@ -71,14 +77,14 @@ namespace RhythmBox.Window.pending_files
                     Y = (parentBoxTest.Height * i),
                     Search2 = Search,
                     Invoke = InvokeBox,
-                }); ;
+                });
             }
         }
 
         public IEnumerable<IFilterable> FilterableChildren => Children.OfType<IFilterable>();
     }
 
-    internal class BoxTest/*<= rename this*/ : Box, IHasFilterTerms
+    internal class BoxTest : Box, IHasFilterTerms
     {
         public Action Invoke;
         

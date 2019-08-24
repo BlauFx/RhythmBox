@@ -1,39 +1,18 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using NUnit.Framework;
-using osu.Framework.Allocation;
+﻿using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Shapes;
-using osu.Framework.Input.Events;
-using osu.Framework.Testing;
-using osuTK;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Shapes;
+using osu.Framework.Graphics.Sprites;
+using osu.Framework.Input.Events;
+using osuTK;
 using osuTK.Graphics;
+using RhythmBox.Mode.Std.Tests.Maps;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace RhythmBox.Tests.VisualTests.Screens
 {
-    [TestFixture]
-    public class TestSceneSongSelectionMapPack : TestScene
-    {
-        [BackgroundDependencyLoader]
-        private void Load()
-        {
-            Children = new Drawable[]
-            {
-                new MapPackTest
-                {
-                    Maps = 5,
-                    RelativeSizeAxes = Axes.Both,
-                    Anchor = Anchor.CentreRight,
-                    Origin = Anchor.CentreRight,
-                    Colour = Color4.LightYellow,
-                    Size = new Vector2(0.5f,0.1f),
-                }
-            };
-        }
-    }
-
     public class MapPackTest : Container, IHasFilterableChildren
     {
         public string Search = "null";
@@ -45,9 +24,13 @@ namespace RhythmBox.Tests.VisualTests.Screens
             set
             {
                 if (value)
+                {
                     Show();
+                }
                 else
+                {
                     Hide();
+                }
             }
         }
 
@@ -55,15 +38,22 @@ namespace RhythmBox.Tests.VisualTests.Screens
 
         private BoxTest parentBoxTest;
 
+        private TextFlowContainer textFlowContainer;
+
         public int Maps { get; set; } = 1;
+
+        public TestSceneMap[,] testSceneMap { get; set; }
+
+        public int testSceneMapPos { get; set; }
 
         public Color4 Colour;
 
         [BackgroundDependencyLoader]
         private void Load()
         {
+            var testScneneThisMap = testSceneMap[testSceneMapPos, 0];
+
             RelativeSizeAxes = Axes.X;
-            //Size = new Vector2(1.5f, 40 * (Maps + 1));
             Size = new Vector2(1f,40*(Maps+1));
 
             Children = new Drawable[]
@@ -79,42 +69,50 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     Parent = true,
                     Search2 = Search,
                     Depth = 0,
+                    testScneneThisMap = testScneneThisMap,
                 },
-                new TextFlowContainer
+                textFlowContainer = new TextFlowContainer
                 {
                     Anchor = Anchor.TopLeft,
                     Origin = Anchor.TopLeft,
                     RelativePositionAxes = Axes.Both,
                     Size = new Vector2(0f,parentBoxTest.Height),
                     AutoSizeAxes = Axes.X,
-                    Text = "Title",
+                    Text = $"Title: {testScneneThisMap.Title}",
                     Colour = Color4.Black.Opacity(0.8f),
-                    TextAnchor = Anchor.TopCentre,
+                    TextAnchor = Anchor.Centre,
                     X = parentBoxTest.X,
                     Y = parentBoxTest.Y,
                     Depth = -1f,
-                }, 
+                },
             };
 
-            for (float i = 1; i < Maps+1; i++)
+            textFlowContainer.Text = string.Empty;
+            textFlowContainer.AddText($"Title: {testScneneThisMap.Title}", x => x.Font = new FontUsage("Roboto", 40));
+
+            //TODO: float - int
+            for (float i = 1; i < Maps + 1; i++)
             {
+                var x = testSceneMap[testSceneMapPos, (int)i -1];
+
                 Add(new BoxTest
                 {
                     RelativeSizeAxes = Axes.X,
                     Anchor = Anchor.TopRight,
                     Origin = Anchor.TopRight,
-                    Size = new Vector2((0.9f - (i / (i + Maps))), 40f),
+                    Size = new Vector2(0.9f - (i / (i + Maps)), 40f),
                     Colour = Color4.DarkGreen,
-                    Y = (parentBoxTest.Height*i),
+                    Y = (parentBoxTest.Height * i),
                     Search2 = Search,
-                }); ;
+                    testScneneThisMap = x,
+                });
             }
         }
 
         public IEnumerable<IFilterable> FilterableChildren => Children.OfType<IFilterable>();
     }
 
-    internal class BoxTest : Box, IHasFilterTerms
+    internal class BoxTest : Container, IHasFilterTerms
     {
         public string Search2 = "null";
 
@@ -128,10 +126,45 @@ namespace RhythmBox.Tests.VisualTests.Screens
             }
         }
 
+        private TextFlowContainer textFlowContainer;
+
+        public TestSceneMap testScneneThisMap { get; set; }
+
         [BackgroundDependencyLoader]
         private void Load()
         {
             RelativePositionAxes = Axes.X;
+
+            Children = new Drawable[]
+            {
+                new Box
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(1f),
+                },
+                textFlowContainer = new TextFlowContainer
+                {
+                    Anchor = Anchor.TopLeft,
+                    Origin = Anchor.TopLeft,
+                    RelativePositionAxes = Axes.Both,
+                    Text = $"Difficulty: {testScneneThisMap.DifficultyName}",
+                    Colour = Color4.Black.Opacity(0.8f),
+                    TextAnchor = Anchor.Centre,
+                    X = 0.01f,
+                    Depth = -1f,
+                }
+            };
+
+            textFlowContainer.Size = new Vector2(0f, this.DrawHeight);
+            textFlowContainer.AutoSizeAxes = Axes.X;
+
+            textFlowContainer.Text = string.Empty;
+            textFlowContainer.AddText($"Title: {testScneneThisMap.DifficultyName}", x => x.Font = new FontUsage("Roboto-Medium", 20));
+
+            if (Parent)
+            {
+                textFlowContainer.Expire();
+            }
         }
 
         protected override bool OnHover(HoverEvent e)
