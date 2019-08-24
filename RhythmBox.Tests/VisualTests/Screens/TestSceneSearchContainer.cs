@@ -82,6 +82,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
                 StartTime = testSceneMapReader.StartTime,
                 EndTime = testSceneMapReader.EndTime,
                 HitObjects = testSceneMapReader.HitObjects,
+                Path = testSceneMapReader.Path,
             };
 
             testSceneMap[1, 0] = new TestSceneMap
@@ -101,6 +102,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
                 StartTime = testSceneMapReader.StartTime,
                 EndTime = testSceneMapReader.EndTime,
                 HitObjects = testSceneMapReader.HitObjects,
+                Path = testSceneMapReader.Path,
             };
 
             MapPackTest[] mapPackTests = new MapPackTest[MapsCount];

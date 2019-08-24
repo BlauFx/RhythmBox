@@ -38,7 +38,7 @@ namespace RhythmBox.Mode.Std.Tests.Maps
 
         public int EndTime { get; set; }
 
-        
+        public string Path { get; set; }
 
         public IEnumerator GetEnumerator()
         {

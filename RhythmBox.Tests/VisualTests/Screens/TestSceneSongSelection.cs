@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
@@ -26,6 +27,8 @@ namespace RhythmBox.Tests.VisualTests.Screens
     [TestFixture]
     public class TestSceneSongSelection : TestScene
     {
+        public Bindable<string> bindablePath = new Bindable<string>();
+
         private TestSceneThisScrollContainer scrollContainer;
 
         private BasicTextBox textBox;
@@ -65,6 +68,9 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     },
                 },
             };
+
+            bindablePath.BindTo(scrollContainer.bindablePath);
+
             //Note: This line is OnEntering in SongSelection
             Scheduler.AddDelayed(() => WaitUntilLoaded = false, 250);
 
@@ -75,6 +81,8 @@ namespace RhythmBox.Tests.VisualTests.Screens
 
     public class TestSceneThisScrollContainer : FocusedOverlayContainer
     {
+        public Bindable<string> bindablePath = new Bindable<string>();
+
         public Action ClickOnMap;
 
         private FillFlowContainer FFContainer;
@@ -194,6 +202,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
                             StartTime = testSceneMapReader.StartTime,
                             EndTime = testSceneMapReader.EndTime,
                             HitObjects = testSceneMapReader.HitObjects,
+                            Path = testSceneMapReader.Path,
                         };
                     }
                 }
@@ -214,6 +223,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     testSceneMap = testSceneMaps,
                     testSceneMapPos = i,
                     InvokeBox = ClickOnMap,
+                    bindablePath = bindablePath,
                 };
             }
 

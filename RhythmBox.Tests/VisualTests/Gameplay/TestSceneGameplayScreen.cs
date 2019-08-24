@@ -51,10 +51,14 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
 
         private TestSceneBreakOverlay testSceneBreakOverlay;
 
-        [BackgroundDependencyLoader]
-        private async void Load()
+        public TestSceneGameplayScreen(string path = "null")
         {
-            var testSceneMapReader = new TestSceneMapReader(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Songs\\TestMap\\Difficulty1.ini");
+            if (path == "null")
+            {
+                path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Songs\\TestMap\\Difficulty1.ini";
+            }
+
+            var testSceneMapReader = new TestSceneMapReader(path);
             _map = new TestSceneMap
             {
                 AFileName = testSceneMapReader.AFileName,
@@ -72,8 +76,13 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                 StartTime = testSceneMapReader.StartTime,
                 EndTime = testSceneMapReader.EndTime,
                 HitObjects = testSceneMapReader.HitObjects,
+                Path = testSceneMapReader.Path,
             };
+        }
 
+        [BackgroundDependencyLoader]
+        private async void Load()
+        {
             Children = new Drawable[]
             {
                 rhythmBoxClockContainer = new TestSceneRhythmBoxClockContainer(0)

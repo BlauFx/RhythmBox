@@ -1,4 +1,5 @@
 ﻿using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -16,6 +17,8 @@ namespace RhythmBox.Tests.VisualTests.Screens
 {
     public class MapPackTest : Container, IHasFilterableChildren
     {
+        public Bindable<string> bindablePath = new Bindable<string>();
+
         public Action InvokeBox;
 
         public string Search = "null";
@@ -109,6 +112,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     Search2 = Search,
                     testScneneThisMap = x,
                     Invoke = InvokeBox,
+                    bindablePath = bindablePath,
                 });
             }
         }
@@ -118,6 +122,8 @@ namespace RhythmBox.Tests.VisualTests.Screens
 
     internal class BoxTest : Container, IHasFilterTerms
     {
+        public Bindable<string> bindablePath = new Bindable<string>();
+
         public Action Invoke;
 
         public string Search2 = "null";
@@ -195,6 +201,8 @@ namespace RhythmBox.Tests.VisualTests.Screens
 
         protected override bool OnMouseDown(MouseDownEvent e)
         {
+            bindablePath.Value = this.testScneneThisMap.Path;
+
             //Invoke?.Invoke();
 
             return base.OnMouseDown(e);

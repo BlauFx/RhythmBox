@@ -36,16 +36,20 @@ namespace RhythmBox.Window.pending_files
 
         public int EndTime { get; set; }
 
+        public string Path { get; set; }
+
         public void WriteToNewMap(string path)
         {
+            this.Path = path;
+
             int num = path.LastIndexOf("\\");
             string temp = path.Substring(0, num);
             int num2 = temp.LastIndexOf("\\") + 1;
             string str = temp.Substring(num2, temp.Length - num2);
 
-            if (!Directory.Exists(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + $"\\Songs\\{str}"))
+            if (!Directory.Exists(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + $"\\Songs\\{str}"))
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + $"\\Songs\\{str}");
+                Directory.CreateDirectory(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + $"\\Songs\\{str}");
             }
 
             WriteToFile(path, "v1", true);
@@ -73,9 +77,9 @@ namespace RhythmBox.Window.pending_files
             {
                 throw new FileNotFoundException("File does not exist!", path);
             }
-            if (!Directory.Exists(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"\SongsOLD"))
+            if (!Directory.Exists(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"\SongsOLD"))
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"\SongsOLD");
+                Directory.CreateDirectory(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"\SongsOLD");
             }
 
             int num = path.LastIndexOf("\\") + 1;
@@ -88,16 +92,16 @@ namespace RhythmBox.Window.pending_files
             int num3 = temp.LastIndexOf("\\") + 1;
             string str = temp.Substring(num3, temp.Length - num3);
 
-            if (!Directory.Exists(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + $@"\SongsOLD\{str}"))
+            if (!Directory.Exists(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + $@"\SongsOLD\{str}"))
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + $@"\SongsOLD\{str}");
+                Directory.CreateDirectory(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + $@"\SongsOLD\{str}");
             }
 
-            File.Move(path, CheckIfFilenameIsAvailable(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + $"\\SongsOLD\\{str}\\{filename}.OLD"));
+            File.Move(path, CheckIfFilenameIsAvailable(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + $"\\SongsOLD\\{str}\\{filename}.OLD"));
 
             WriteToNewMap(path);
-            File.Delete(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + $"\\SongsOLD\\{str}\\{filename}.OLD");
-            Directory.Delete(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + $"\\SongsOLD\\{str}", true);
+            File.Delete(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + $"\\SongsOLD\\{str}\\{filename}.OLD");
+            Directory.Delete(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + $"\\SongsOLD\\{str}", true);
         }
 
         private string CheckIfFilenameIsAvailable(string orignalPath)

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
@@ -23,6 +24,8 @@ namespace RhythmBox.Window.Screens
 {
     public class SongSelction : Screen
     {
+        Bindable<string> bindablePath = new Bindable<string>();
+
         private ThisScrollContainer scrollContainer;
 
         private BasicTextBox textBox;
@@ -60,14 +63,16 @@ namespace RhythmBox.Window.Screens
                     {
                         if (!WaitUntilLoaded)
                         {
-                             GameplayScreen gameplayScreen;
-                            LoadComponent(gameplayScreen = new GameplayScreen());
+                            GameplayScreen gameplayScreen;
+                            LoadComponent(gameplayScreen = new GameplayScreen(bindablePath.Value));
                             this.Push(gameplayScreen);
                             //this.LoadComponentAsync(new GameplayScreen(), this.Push);
                         }
                     },
-                },
+                }
             };
+
+            bindablePath.BindTo(scrollContainer.bindablePath);
 
             textBox.Current.ValueChanged += e => scrollContainer.search.SearchTerm = e.NewValue;
             scrollContainer.Show();
@@ -81,7 +86,6 @@ namespace RhythmBox.Window.Screens
             }
             return base.OnKeyDown(e);
         }
-
 
         public override void OnEntering(IScreen last)
         {
@@ -102,8 +106,10 @@ namespace RhythmBox.Window.Screens
 
     internal class ThisScrollContainer : FocusedOverlayContainer
     {
+        public Bindable<string> bindablePath = new Bindable<string>();
+
         public Action ClickOnMap;
-        
+
         private FillFlowContainer FFContainer;
 
         private ScrollContainer FFContainerM;
@@ -221,6 +227,7 @@ namespace RhythmBox.Window.Screens
                             StartTime = testSceneMapReader.StartTime,
                             EndTime = testSceneMapReader.EndTime,
                             HitObjects = testSceneMapReader.HitObjects,
+                            Path = testSceneMapReader.Path,
                         };
                     }
                 }
@@ -241,6 +248,7 @@ namespace RhythmBox.Window.Screens
                     Map = Maps,
                     MapPos = i,
                     InvokeBox = ClickOnMap,
+                    bindablePath = bindablePath,
                 };
             }
 

@@ -50,10 +50,9 @@ namespace RhythmBox.Window.Screens
 
         private BreakOverlay BreakOverlay;
 
-        [BackgroundDependencyLoader]
-        private void Load()
+        public GameplayScreen(string path)
         {
-            var MapReader = new MapReader(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Songs\\TestMap\\Difficulty1.ini");
+            var MapReader = new MapReader(path);
             _map = new Map
             {
                 AFileName = MapReader.AFileName,
@@ -72,7 +71,11 @@ namespace RhythmBox.Window.Screens
                 EndTime = MapReader.EndTime,
                 HitObjects = MapReader.HitObjects,
             };
+        }
 
+        [BackgroundDependencyLoader]
+        private void Load()
+        {
             InternalChildren = new Drawable[]
             {
                 rhythmBoxClockContainer = new RhythmBoxClockContainer(0)

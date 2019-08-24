@@ -37,12 +37,16 @@ namespace RhythmBox.Tests.pending_files
 
         public int EndTime { get; set; }
 
+        public string Path { get; set; }
+
         private int startHitObjects = 0;
 
         private string[] storageTemp;
 
         public TestSceneMapReader(string path)
         {
+            this.Path = path;
+
             if (!File.Exists(path))
             {
                 new TestSceneDefaultFolder();

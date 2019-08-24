@@ -37,12 +37,16 @@ namespace RhythmBox.Window.pending_files
 
         public int EndTime { get; set; }
 
+        public string Path { get; set; }
+
         private int startHitObjects = 0;
 
         private string[] storageTemp;
 
         public MapReader(string path)
         {
+            this.Path = path;
+
             int lineCount = File.ReadLines(path).Count();
 
             storageTemp = new string[lineCount];

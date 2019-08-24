@@ -31,6 +31,8 @@
         int StartTime { get; set; }
 
         int EndTime { get; set; }
+
+        string Path { get; set; }
     }
     
     public enum GameMode

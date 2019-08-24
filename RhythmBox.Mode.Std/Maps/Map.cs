@@ -35,6 +35,8 @@ namespace RhythmBox.Mode.Std.Maps
 
         public int EndTime { get; set; }
 
+        public string Path { get; set; }
+
         public IEnumerator GetEnumerator()
         {
             return HitObjects.GetEnumerator();

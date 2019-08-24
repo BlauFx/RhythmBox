@@ -1,4 +1,5 @@
 ﻿using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -14,11 +15,12 @@ using System.Linq;
 
 namespace RhythmBox.Window.pending_files
 {
-   
     public class MapPack : Container, IHasFilterableChildren
     {
+        public Bindable<string> bindablePath = new Bindable<string>();
+
         public Action InvokeBox;
-        
+
         public string Search = "null";
 
         public IEnumerable<string> FilterTerms => Children.OfType<IHasFilterTerms>().SelectMany(d => d.FilterTerms);
@@ -110,6 +112,7 @@ namespace RhythmBox.Window.pending_files
                     Search2 = Search,
                     ThisMap = x,
                     Invoke = InvokeBox,
+                    bindablePath = bindablePath,
                 });
             }
         }
@@ -119,8 +122,10 @@ namespace RhythmBox.Window.pending_files
 
     internal class BoxTest : Container, IHasFilterTerms
     {
+        public Bindable<string> bindablePath = new Bindable<string>();
+
         public Action Invoke;
-        
+
         public string Search2 = "null";
 
         public bool Parent { get; set; } = false;
@@ -181,6 +186,7 @@ namespace RhythmBox.Window.pending_files
                 return base.OnHover(e);
             }
             this.MoveToX(-0.1f, 500, Easing.In);
+
             return base.OnHover(e);
         }
 
@@ -196,9 +202,11 @@ namespace RhythmBox.Window.pending_files
 
         protected override bool OnMouseDown(MouseDownEvent e)
         {
-           Invoke?.Invoke();
+            bindablePath.Value = this.ThisMap.Path;
 
-           return base.OnMouseDown(e);
+            Invoke?.Invoke();
+
+            return base.OnMouseDown(e);
         }
     }
 }
