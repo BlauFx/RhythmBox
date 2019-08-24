@@ -128,7 +128,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
 
         public string Search2 = "null";
 
-        public bool Parent { get; set; } = false;
+        public new bool Parent { get; set; } = false;
 
         public IEnumerable<string> FilterTerms
         {

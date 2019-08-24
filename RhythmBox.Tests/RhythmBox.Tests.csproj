@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Humanizer" Version="2.6.2" />
-    <PackageReference Include="ppy.osu.Framework" Version="2019.816.0" />
+    <PackageReference Include="ppy.osu.Framework" Version="2019.823.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="VisualTests\Editor" />
+    <Folder Include="VisualTests\Editor\" />
   </ItemGroup>
 
 </Project>
