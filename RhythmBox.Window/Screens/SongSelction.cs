@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -13,6 +15,7 @@ using osu.Framework.Screens;
 using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
+using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Window.Objects;
 using RhythmBox.Window.pending_files;
 
@@ -165,20 +168,6 @@ namespace RhythmBox.Window.Screens
                                             Size = new Vector2(1f),
 
                                             AutoSizeAxes = Axes.Y,
-
-                                            Children = new Drawable[]
-                                            {
-                                                new MapPack
-                                                {
-                                                    Maps = 3,
-                                                    RelativeSizeAxes = Axes.Both,
-                                                    Anchor = Anchor.TopRight,
-                                                    Origin = Anchor.TopRight,
-                                                    Colour = Color4.LightYellow,
-                                                    Search = "3",
-                                                    InvokeBox = ClickOnMap,
-                                                }
-                                            },
                                         },
                                     }
                                 }
@@ -188,33 +177,86 @@ namespace RhythmBox.Window.Screens
                 }
             };
 
-            for (int i = 0; i < 100 /*Maps*/; i++)
+            List<string> list = new List<string>();
+
+            foreach (var dirs in Directory.GetDirectories(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Songs"))
             {
-                head.AddRange(
-                    new Drawable[]
-                    {
-                        new MapPack
-                        {
-                            Maps = 3,
-                            RelativeSizeAxes = Axes.X,
-                            Anchor = Anchor.TopRight,
-                            Origin = Anchor.TopRight,
-                            Colour = Color4.Blue,
-                            Search = "1",
-                            InvokeBox = ClickOnMap,
-                        },
-                        new MapPack
-                        {
-                            Maps = 10,
-                            RelativeSizeAxes = Axes.X,
-                            Anchor = Anchor.TopCentre,
-                            Origin = Anchor.TopCentre,
-                            Colour = Color4.Pink,
-                            Search = "2",
-                            InvokeBox = ClickOnMap,
-                        }
-                    });
+                int count = GetFiles(dirs, "*.ini", SearchOption.TopDirectoryOnly).Length;
+                if (count > 0)
+                {
+                    list.Add(dirs);
+                }
             }
+
+            int[] MapsCount2 = new int[list.Count];
+            Map[,] Maps = new Map[MapsCount2.Length, short.MaxValue];
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                MapsCount2[i] = GetFiles(list[i], "*.ini", SearchOption.TopDirectoryOnly).Length;
+
+                if (MapsCount2[i] > 0)
+                {
+                    DirectoryInfo d = new DirectoryInfo(list[i]);
+                    FileInfo[] Files = d.GetFiles("*.ini");
+
+                    for (int j = 0; j < Files.Length; j++)
+                    {
+                        var testSceneMapReader = new MapReader(Files[j].FullName);
+
+                        Maps[i, j] = new Map
+                        {
+                            AFileName = testSceneMapReader.AFileName,
+                            BGFile = testSceneMapReader.BGFile,
+                            MapId = testSceneMapReader.MapId,
+                            MapSetId = testSceneMapReader.MapSetId,
+                            BPM = testSceneMapReader.BPM,
+                            Objects = testSceneMapReader.Objects,
+                            AutoMap = testSceneMapReader.AutoMap,
+                            Mode = testSceneMapReader.Mode,
+                            Title = testSceneMapReader.Title,
+                            Artist = testSceneMapReader.Artist,
+                            Creator = testSceneMapReader.Creator,
+                            DifficultyName = testSceneMapReader.DifficultyName,
+                            StartTime = testSceneMapReader.StartTime,
+                            EndTime = testSceneMapReader.EndTime,
+                            HitObjects = testSceneMapReader.HitObjects,
+                        };
+                    }
+                }
+            }
+
+            MapPack[] mapPack = new MapPack[MapsCount2.Length];
+
+            for (int i = 0; i < mapPack.Length; i++)
+            {
+                mapPack[i] = new MapPack
+                {
+                    Maps = MapsCount2[i],
+                    RelativeSizeAxes = Axes.X,
+                    Anchor = Anchor.TopRight,
+                    Origin = Anchor.TopRight,
+                    Colour = Color4.Blue,
+                    Search = Maps[i, 0].Title,
+                    Map = Maps,
+                    MapPos = i,
+                    InvokeBox = ClickOnMap,
+                };
+            }
+
+            head.AddRange(mapPack);
+        }
+
+        private string[] GetFiles(string path, string searchPattern, SearchOption searchOption)
+        {
+            string[] searchPatterns = searchPattern.Split('|');
+            List<string> files = new List<string>();
+            foreach (string sp in searchPatterns)
+            {
+                files.AddRange(Directory.GetFiles(path, sp, searchOption));
+            }
+            files.Sort();
+            return files.ToArray();
         }
 
         protected override bool OnMouseDown(MouseDownEvent e)

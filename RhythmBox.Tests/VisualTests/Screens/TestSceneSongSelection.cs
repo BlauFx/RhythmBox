@@ -15,6 +15,7 @@ using osuTK.Input;
 using RhythmBox.Mode.Std.Tests.Maps;
 using RhythmBox.Tests.Objects;
 using RhythmBox.Tests.pending_files;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -28,6 +29,8 @@ namespace RhythmBox.Tests.VisualTests.Screens
         private TestSceneThisScrollContainer scrollContainer;
 
         private BasicTextBox textBox;
+
+        private bool WaitUntilLoaded = true;
 
         [BackgroundDependencyLoader]
         private void Load(TextureStore store)
@@ -52,8 +55,18 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                     Size = new Vector2(0.5f,1f),
+
+                    ClickOnMap = () =>
+                    {
+                        if (!WaitUntilLoaded)
+                        {
+                            //Do logic...
+                        }
+                    },
                 },
             };
+            //Note: This line is OnEntering in SongSelection
+            Scheduler.AddDelayed(() => WaitUntilLoaded = false, 250);
 
             textBox.Current.ValueChanged += e => scrollContainer.search.SearchTerm = e.NewValue;
             scrollContainer.Show();
@@ -62,6 +75,8 @@ namespace RhythmBox.Tests.VisualTests.Screens
 
     public class TestSceneThisScrollContainer : FocusedOverlayContainer
     {
+        public Action ClickOnMap;
+
         private FillFlowContainer FFContainer;
 
         private TestSceneMyScrollContainer FFContainerM;
@@ -198,6 +213,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     Search = testSceneMaps[i, 0].Title,
                     testSceneMap = testSceneMaps,
                     testSceneMapPos = i,
+                    InvokeBox = ClickOnMap,
                 };
             }
 

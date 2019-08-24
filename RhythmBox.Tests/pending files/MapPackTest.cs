@@ -8,6 +8,7 @@ using osu.Framework.Input.Events;
 using osuTK;
 using osuTK.Graphics;
 using RhythmBox.Mode.Std.Tests.Maps;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,6 +16,8 @@ namespace RhythmBox.Tests.VisualTests.Screens
 {
     public class MapPackTest : Container, IHasFilterableChildren
     {
+        public Action InvokeBox;
+
         public string Search = "null";
 
         public IEnumerable<string> FilterTerms => Children.OfType<IHasFilterTerms>().SelectMany(d => d.FilterTerms);
@@ -105,6 +108,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     Y = (parentBoxTest.Height * i),
                     Search2 = Search,
                     testScneneThisMap = x,
+                    Invoke = InvokeBox,
                 });
             }
         }
@@ -114,6 +118,8 @@ namespace RhythmBox.Tests.VisualTests.Screens
 
     internal class BoxTest : Container, IHasFilterTerms
     {
+        public Action Invoke;
+
         public string Search2 = "null";
 
         public bool Parent { get; set; } = false;
@@ -189,7 +195,8 @@ namespace RhythmBox.Tests.VisualTests.Screens
 
         protected override bool OnMouseDown(MouseDownEvent e)
         {
-            //RhythmBoxResources.stack.Push(new MainMenu());
+            //Invoke?.Invoke();
+
             return base.OnMouseDown(e);
         }
     }
