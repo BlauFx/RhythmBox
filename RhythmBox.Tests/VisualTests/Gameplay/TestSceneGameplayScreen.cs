@@ -51,8 +51,9 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
 
         private TestSceneBreakOverlay testSceneBreakOverlay;
 
-        public TestSceneGameplayScreen(string path = "null")
+        public TestSceneGameplayScreen()
         {
+            string path = "null";
             if (path == "null")
             {
                 path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Songs\\TestMap\\Difficulty1.ini";
