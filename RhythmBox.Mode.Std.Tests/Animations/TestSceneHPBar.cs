@@ -13,6 +13,11 @@ namespace RhythmBox.Mode.Std.Tests.Animations
 
         public float BoxMaxValue = 0.4f;
 
+        public float CurrentValue
+        {
+            get => _box.Width;
+        }
+
         public Color4 colour;
         
         [BackgroundDependencyLoader]

@@ -5,9 +5,11 @@ using osu.Framework.Audio.Track;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
 using osu.Framework.IO.Stores;
+using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osu.Framework.Testing;
 using osuTK;
@@ -52,6 +54,8 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
 
         private bool HasFinished { get; set; } = true;
 
+        private bool HasFailed { get; set; } = false;
+
         private TestSceneBreakOverlay testSceneBreakOverlay;
 
         [Resolved]
@@ -61,7 +65,26 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
         private GameHost gameHost { get; set; }
 
         private ITrackStore trackStore;
+
         private IResourceStore<byte[]> store;
+
+        private Track track;
+
+        private bool Resizing { get; set; } = false;
+
+        private const float HP_Update = 100f;
+
+        private const float HP_300 = 0.2f;
+
+        private const float HP_100 = 0.1f;
+
+        private const float HP_50 = 0.05f;
+
+        private const float HP_X = 0.05f;
+
+        private const float HP_Drain = 0.001f;
+
+        BindableBool bindableBool = new BindableBool();
 
         public TestSceneGameplayScreen()
         {
@@ -107,7 +130,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
             string tmp = _map.Path.Substring(0, num);
 
             string AudioFile = $"{tmp}\\{_map.AFileName}";
-            Track track = trackStore.Get(AudioFile);
+            track = trackStore.Get(AudioFile);
 
             Children = new Drawable[]
             {
@@ -215,7 +238,61 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
             }
             else
             {
-                _hpBar.ResizeBox(CalcHpBarValue(_hpBar._box.Width, _hpBar.BoxMaxValue, 0f, Hit.Hit100, true), 10000, Easing.OutCirc);
+                if (_hpBar.CurrentValue <= 0)
+                {
+                    if (!HasFailed)
+                    {
+                        HasFailed = true;
+
+                        //rhythmBoxClockContainer.Stop();
+
+                        Box box;
+
+                        Add(box = new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Size = new Vector2(1f),
+                            Colour = Color4.Red,
+                            Alpha = 0f,
+                        });
+
+                        box.FadeTo(0.7f, 500, Easing.In);
+
+                        bindableBool.ValueChanged += (e) =>
+                        {
+                            Logger.Log("GameplayScreen: bindableBool.Value changed",LoggingTarget.Runtime, LogLevel.Debug);
+                            //LoadComponentAsync(new SongSelction(), this.Push);
+                            rhythmBoxClockContainer.Stop();
+                            //Scheduler.AddDelayed(() => this.Expire(), 1000);
+                        };
+
+                        foreach (var x in this._testSceneRbPlayfield)
+                        {
+                            if (x is TestSceneRbDrawPlayfield)
+                            {
+                                foreach (var y in (x as TestSceneRbDrawPlayfield))
+                                {
+                                    y.TransformTo(nameof(Shear), new Vector2(0.1f), 1000, Easing.In);
+                                }
+                            }
+                            else
+                            {
+                                x.TransformTo(nameof(Shear), new Vector2(0.1f), 1000, Easing.In);
+                            }
+                        }
+
+                        _ = AddJustTrack();
+                    }
+                }
+                else
+                {
+                    if (!Resizing)
+                    {
+                        Resizing = true;
+                        _hpBar.ResizeBox(CalcHpBarValue(_hpBar._box.Width, _hpBar.BoxMaxValue, 0f, Hit.Hit100, true), HP_Update, Easing.OutCirc);
+                        Scheduler.AddDelayed(() => Resizing = false, HP_Update);
+                    }
+                }
 
                 Combo = _testSceneRbPlayfield.ComboCounter;
                 DispayCombo.Text = string.Empty;
@@ -241,6 +318,9 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                 }
                 _testSceneRbPlayfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
             }
+
+            //TODO: hpbar may be resized on key event even if no obj is alive
+            //TODO: Check if e.Key == Game.Key
             _hpBar.ResizeBox(CalcHpBarValue(_hpBar._box.Width, _hpBar.BoxMaxValue, 0f, _testSceneRbPlayfield.currentHit), 1000, Easing.OutCirc);
             return base.OnKeyDown(e);
         }
@@ -253,19 +333,19 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                 switch (hit)
                 {
                     case Hit.Hit300:
-                        result = currentvalue * 1.5f;
+                        result = currentvalue + HP_300;
                         break;
 
                     case Hit.Hit100:
-                        result = currentvalue * 0.8f;
+                        result = currentvalue + HP_100;
                         break;
 
                     case Hit.Hit50:
-                        result = currentvalue * 0.7f;
+                        result = currentvalue + HP_50;
                         break;
 
                     case Hit.Hitx:
-                        result = currentvalue * 0.3f;
+                        result = currentvalue - HP_X;
                         break;
                 }
 
@@ -283,7 +363,35 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                 }
             }
 
-            return currentvalue * 0.995f;
+            return currentvalue - HP_Drain;
+        }
+
+        private async Task AddJustTrack()
+        {
+            await Task.Run(async () =>
+            {
+                for (double i = track.Frequency.Value; i > 0; i -= 0.01d)
+                {
+                    try
+                    {
+                        track.Frequency.Value = i;
+                    }
+                    catch { }
+                    await Task.Delay(1);
+                }
+            });
+
+            bindableBool.Value = true;
+        }
+
+        protected override void Dispose(bool isDisposing)
+        {
+            Task.Run(() =>
+            {
+                track?.Stop();
+            });
+
+            base.Dispose(isDisposing);
         }
     }
 }
