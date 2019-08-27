@@ -84,6 +84,7 @@ namespace RhythmBox.Window.Screens
             {
                 this.Exit();
             }
+
             return base.OnKeyDown(e);
         }
 
@@ -96,10 +97,7 @@ namespace RhythmBox.Window.Screens
 
         public override void OnSuspending(IScreen next)
         {
-            //If this screen is faded to 0 then the screen isn't exiting.
-            this.FadeTo<SongSelction>(0.01f, 50, Easing.In);
-            Scheduler.AddDelayed(() => this.Exit(), 50);
-
+            Scheduler.AddDelayed(() => this.Exit(), 0);
             base.OnSuspending(next);
         }
     }

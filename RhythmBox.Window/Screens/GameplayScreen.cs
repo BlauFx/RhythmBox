@@ -221,7 +221,7 @@ namespace RhythmBox.Window.Screens
                     rhythmBoxClockContainer.Stop();
                     SongSelction songSelction;
                     LoadComponent(songSelction = new SongSelction());
-                    this.Push(songSelction);
+                    Schedule(() => this.Push(songSelction));
                 }
             }
             else
@@ -231,8 +231,6 @@ namespace RhythmBox.Window.Screens
                     if (!HasFailed)
                     {
                         HasFailed = true;
-
-                        //rhythmBoxClockContainer.Stop();
 
                         Box box;
 
@@ -250,10 +248,9 @@ namespace RhythmBox.Window.Screens
                         {
                             Logger.Log("GameplayScreen: bindableBool.Value changed", LoggingTarget.Runtime, LogLevel.Debug);
                             rhythmBoxClockContainer.Stop();
-                            rhythmBoxClockContainer.Stop();
                             SongSelction songSelction;
                             LoadComponent(songSelction = new SongSelction());
-                            this.Push(songSelction);
+                            Schedule(() => this.Push(songSelction));
                         };
 
                         foreach (var x in this._RbPlayfield)
@@ -383,8 +380,6 @@ namespace RhythmBox.Window.Screens
         {
             track?.Stop();
 
-            //If this screen is faded to 0 then the screen isn't exiting.
-            this.FadeTo<GameplayScreen>(0.01f, 0, Easing.In);
             Scheduler.AddDelayed(() => this.Exit(), 0);
 
             base.OnSuspending(next);
