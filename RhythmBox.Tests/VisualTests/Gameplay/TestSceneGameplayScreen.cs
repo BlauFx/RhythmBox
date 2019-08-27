@@ -272,12 +272,15 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                             {
                                 foreach (var y in (x as TestSceneRbDrawPlayfield))
                                 {
-                                    y.TransformTo(nameof(Shear), new Vector2(0.1f), 1000, Easing.In);
+                                    y.TransformTo(nameof(Shear), new Vector2(osu.Framework.MathUtils.RNG.NextSingle(-0.15f, 0.15f)), 1000, Easing.In);
+                                    y.TransformTo(nameof(Scale), new Vector2(osu.Framework.MathUtils.RNG.NextSingle(1.1f, 2f)), 1000, Easing.In);
                                 }
                             }
                             else
                             {
-                                x.TransformTo(nameof(Shear), new Vector2(0.1f), 1000, Easing.In);
+                                x.TransformTo(nameof(Shear), new Vector2(osu.Framework.MathUtils.RNG.NextSingle(-0.15f, 0.15f)), 1000, Easing.In);
+                                x.TransformTo(nameof(Scale), new Vector2(osu.Framework.MathUtils.RNG.NextSingle(0.6f, 2f)), 1000, Easing.In);
+                                x.MoveToOffset(new Vector2(osu.Framework.MathUtils.RNG.NextSingle(0.1f, 0.4f)), 1000, Easing.In);
                             }
                         }
 
