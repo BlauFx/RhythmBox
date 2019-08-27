@@ -1,11 +1,14 @@
 ﻿using NUnit.Framework;
 using osu.Framework.Allocation;
+using osu.Framework.Audio;
+using osu.Framework.Audio.Track;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
-using osu.Framework.Logging;
+using osu.Framework.IO.Stores;
+using osu.Framework.Platform;
 using osu.Framework.Testing;
 using osuTK;
 using osuTK.Graphics;
@@ -51,6 +54,15 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
 
         private TestSceneBreakOverlay testSceneBreakOverlay;
 
+        [Resolved]
+        private AudioManager audio { get; set; }
+
+        [Resolved]
+        private GameHost gameHost { get; set; }
+
+        private ITrackStore trackStore;
+        private IResourceStore<byte[]> store;
+
         public TestSceneGameplayScreen()
         {
             string path = "null";
@@ -86,8 +98,17 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
         }
 
         [BackgroundDependencyLoader]
-        private async void Load()
+        private void Load()
         {
+            store = new StorageBackedResourceStore(gameHost.Storage);
+            trackStore = audio.GetTrackStore(store);
+
+            int num = _map.Path.LastIndexOf("\\");
+            string tmp = _map.Path.Substring(0, num);
+
+            string AudioFile = $"{tmp}\\{_map.AFileName}";
+            Track track = trackStore.Get(AudioFile);
+
             Children = new Drawable[]
             {
                 rhythmBoxClockContainer = new TestSceneRhythmBoxClockContainer(0)
@@ -174,8 +195,10 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
             DispayCombo.AddText("0x", x => x.Font = new FontUsage("Roboto", 40));
             DispayScore.AddText("000000", x => x.Font = new FontUsage("Roboto", 40));
 
+            //TODO: Maybe move to loadComplete
             rhythmBoxClockContainer.Seek(_map.StartTime);
             rhythmBoxClockContainer.Start();
+            track?.Start();
         }
 
         protected override void Update()
@@ -187,7 +210,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                     HasFinished = false;
                     //LoadComponentAsync(new SongSelction(), this.Push);
                     rhythmBoxClockContainer.Stop();
-                    Scheduler.AddDelayed(() => this.Expire(), 1000);
+                    //Scheduler.AddDelayed(() => this.Expire(), 1000);
                 }
             }
             else

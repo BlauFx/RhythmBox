@@ -1,10 +1,14 @@
 ﻿using osu.Framework.Allocation;
+using osu.Framework.Audio;
+using osu.Framework.Audio.Track;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
+using osu.Framework.IO.Stores;
 using osu.Framework.Logging;
+using osu.Framework.Platform;
 using osu.Framework.Screens;
 using osuTK;
 using osuTK.Graphics;
@@ -50,6 +54,15 @@ namespace RhythmBox.Window.Screens
 
         private BreakOverlay BreakOverlay;
 
+        [Resolved]
+        private AudioManager audio { get; set; }
+
+        [Resolved]
+        private GameHost gameHost { get; set; }
+
+        private ITrackStore trackStore;
+        private IResourceStore<byte[]> store;
+
         public GameplayScreen(string path)
         {
             var MapReader = new MapReader(path);
@@ -70,12 +83,22 @@ namespace RhythmBox.Window.Screens
                 StartTime = MapReader.StartTime,
                 EndTime = MapReader.EndTime,
                 HitObjects = MapReader.HitObjects,
+                Path = MapReader.Path,
             };
         }
 
         [BackgroundDependencyLoader]
         private void Load()
         {
+            store = new StorageBackedResourceStore(gameHost.Storage);
+            trackStore = audio.GetTrackStore(store);
+
+            int num = _map.Path.LastIndexOf("\\");
+            string tmp = _map.Path.Substring(0, num);
+
+            string AudioFile = $"{tmp}\\{_map.AFileName}";
+            Track track = trackStore.Get(AudioFile);
+
             InternalChildren = new Drawable[]
             {
                 rhythmBoxClockContainer = new RhythmBoxClockContainer(0)
@@ -162,8 +185,10 @@ namespace RhythmBox.Window.Screens
             DispayCombo.AddText("0x", x => x.Font = new FontUsage("Roboto", 40));
             DispayScore.AddText("000000", x => x.Font = new FontUsage("Roboto", 40));
 
+            //TODO: Maybe move to loadComplete
             rhythmBoxClockContainer.Seek(_map.StartTime);
             rhythmBoxClockContainer.Start();
+            track?.Start();
         }
 
         protected override void Update()

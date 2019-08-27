@@ -142,6 +142,7 @@ namespace RhythmBox.Mode.Std.Tests.Objects
                 Size = new Vector2(0.1f, 0.01f),
                 RelativePositionAxes = Axes.Both,
             });
+
             bx.FadeIn(100*speed);
             bx.MoveToY(0f, 0, Easing.InCirc);
 
