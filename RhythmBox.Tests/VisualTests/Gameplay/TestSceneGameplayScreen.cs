@@ -160,7 +160,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                     await Task.Delay(1500);
                     Resuming.Value = true;
                     rhythmBoxClockContainer.Start();
-                    track.Start();
+                    track?.Start();
                     _testSceneRbPlayfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
                 }
             };
@@ -241,7 +241,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                     //LoadComponentAsync(new SongSelction(), this.Push);
                     rhythmBoxClockContainer.Stop();
                     track?.Stop();
-                    Scheduler.AddDelayed(() => this.Expire(), 1000);
+                    //Scheduler.AddDelayed(() => this.Expire(), 1000);
                 }
             }
             else
@@ -251,8 +251,6 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                     if (!HasFailed)
                     {
                         HasFailed = true;
-
-                        //rhythmBoxClockContainer.Stop();
 
                         Box box;
 
@@ -272,7 +270,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                             //LoadComponentAsync(new SongSelction(), this.Push);
                             rhythmBoxClockContainer.Stop();
                             track?.Stop();
-                            Scheduler.AddDelayed(() => this.Expire(), 1000);
+                            //Scheduler.AddDelayed(() => this.Expire(), 1000);
                         };
 
                         foreach (var x in this._testSceneRbPlayfield)
@@ -326,7 +324,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                 {
                     Resuming.Value = false;
                     rhythmBoxClockContainer.Stop();
-                    track.Stop();
+                    track?.Stop();
                     testSceneBreakOverlay.ToggleVisibility();
                 }
                 _testSceneRbPlayfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
