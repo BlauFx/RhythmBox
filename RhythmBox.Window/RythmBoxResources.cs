@@ -2,6 +2,7 @@
 using osu.Framework.Allocation;
 using osu.Framework.Configuration;
 using osu.Framework.IO.Stores;
+using osu.Framework.Platform;
 using RhythmBox.Window.pending_files;
 using System.Collections.Generic;
 using System.Drawing;
@@ -28,13 +29,12 @@ namespace RhythmBox.Window
 
         protected override IDictionary<FrameworkSetting, object> GetFrameworkConfigDefaults()
         {
-            new Dictionary<FrameworkSetting, object>()
+            return new Dictionary<FrameworkSetting, object>()
             {
                 {
-                    FrameworkSetting.WindowedSize, new Size(700,500)
+                    FrameworkSetting.WindowedSize, new Size(1600,800)
                 }
             };
-            return base.GetFrameworkConfigDefaults();
         }
 
         [BackgroundDependencyLoader]

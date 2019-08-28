@@ -160,6 +160,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                     await Task.Delay(1500);
                     Resuming.Value = true;
                     rhythmBoxClockContainer.Start();
+                    track.Start();
                     _testSceneRbPlayfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
                 }
             };
@@ -217,7 +218,6 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
 
             DispayCombo.AddText("0x", x => x.Font = new FontUsage("Roboto", 40));
             DispayScore.AddText("000000", x => x.Font = new FontUsage("Roboto", 40));
-
         }
 
         protected override void LoadAsyncComplete()
@@ -322,6 +322,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                 {
                     Resuming.Value = false;
                     rhythmBoxClockContainer.Stop();
+                    track.Stop();
                     testSceneBreakOverlay.ToggleVisibility();
                 }
                 _testSceneRbPlayfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;

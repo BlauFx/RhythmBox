@@ -32,9 +32,12 @@ namespace RhythmBox.Window.pending_files
 
         public bool HasFinished { get; set; } = false;
 
+        //TODO:
         public bool HasStarted { get; set; } = false;
 
         public BindableBool Resuming = new BindableBool();
+
+        private BindableBool Start = new BindableBool();
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -51,11 +54,18 @@ namespace RhythmBox.Window.pending_files
                     Size = new Vector2(1f),
                 },
             };
+
+            Start.ValueChanged += (e) =>
+            {
+                Scheduler.AddDelayed(() => { HasStarted = true; }, objBoxArray[0].time);
+            };
+
+            LoadMap();
         }
 
         protected override void LoadComplete()
         {
-            LoadMap();
+            Start.Value = true;
             base.LoadComplete();
         }
 
@@ -176,7 +186,6 @@ namespace RhythmBox.Window.pending_files
                 i++;
             }
 
-            Scheduler.AddDelayed(() => { HasStarted = true; }, objBoxArray[0].time);
         }
     }
 }

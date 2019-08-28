@@ -46,7 +46,6 @@ namespace RhythmBox.Window.Screens
 
         public readonly BindableBool IsPaused = new BindableBool();
 
-
         private BindableBool Resuming = new BindableBool(true);
 
         private bool HasFinished { get; set; } = true;
@@ -147,6 +146,7 @@ namespace RhythmBox.Window.Screens
                     await Task.Delay(1500);
                     Resuming.Value = true;
                     rhythmBoxClockContainer.Start();
+                    track.Start();
                     _RbPlayfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
                 }
             };
@@ -204,7 +204,6 @@ namespace RhythmBox.Window.Screens
 
             DispayCombo.AddText("0x", x => x.Font = new FontUsage("Roboto", 40));
             DispayScore.AddText("000000", x => x.Font = new FontUsage("Roboto", 40));
-
         }
 
         protected override void LoadAsyncComplete()
@@ -309,6 +308,7 @@ namespace RhythmBox.Window.Screens
                 {
                     Resuming.Value = false;
                     rhythmBoxClockContainer.Stop();
+                    track.Stop();
                     BreakOverlay.ToggleVisibility();
                 }
                 _RbPlayfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
