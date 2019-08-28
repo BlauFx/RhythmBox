@@ -3,6 +3,7 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Events;
+using osu.Framework.Logging;
 using osuTK;
 using osuTK.Input;
 using RhythmBox.Mode.Std.Tests.Animations;
@@ -35,6 +36,8 @@ namespace RhythmBox.Tests.pending_files
 
         public BindableBool Resuming = new BindableBool();
 
+        public BindableBool CanStart = new BindableBool();
+
         [BackgroundDependencyLoader]
         private void Load()
         {
@@ -50,7 +53,6 @@ namespace RhythmBox.Tests.pending_files
                     Size = new Vector2(1f),
                 },
             };
-
         }
 
         protected override void LoadComplete()
@@ -157,7 +159,7 @@ namespace RhythmBox.Tests.pending_files
 
             foreach (var objBox in Map)
             {
-                var x = (Mode.Std.Tests.Interfaces.HitObjects)objBox;
+                var x = (Mode.Std.Tests.Interfaces.HitObjects) objBox;
                 Add(objBoxArray[i] = new TestSceneRBox
                 {
                     Anchor = Anchor.Centre,
@@ -165,13 +167,15 @@ namespace RhythmBox.Tests.pending_files
                     direction = x._direction,
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f),
-                    //time = x.Time,
                     time = x.Time - Map.StartTime,
                     speed = x.Speed,
                     Resuming = Resuming,
                 });
+
                 i++;
             }
+
+            CanStart.Value = true;
         }
     }
 }

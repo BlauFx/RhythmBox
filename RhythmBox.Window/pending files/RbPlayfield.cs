@@ -37,6 +37,8 @@ namespace RhythmBox.Window.pending_files
 
         public BindableBool Resuming = new BindableBool();
 
+        public BindableBool CanStart = new BindableBool();
+
         [BackgroundDependencyLoader]
         private void Load()
         {
@@ -161,7 +163,7 @@ namespace RhythmBox.Window.pending_files
 
             foreach (var objBox in Map)
             {
-                var x = (Mode.Std.Interfaces.HitObjects)objBox;
+                var x = (Mode.Std.Interfaces.HitObjects) objBox;
                 Add(objBoxArray[i] = new RBox
                 {
                     Anchor = Anchor.Centre,
@@ -169,14 +171,15 @@ namespace RhythmBox.Window.pending_files
                     direction = x._direction,
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f),
-                    //time = x.Time,
                     time = x.Time - Map.StartTime,
                     speed = x.Speed,
                     Resuming = Resuming,
                 });
+
                 i++;
             }
 
+            CanStart.Value = true;
         }
     }
 }

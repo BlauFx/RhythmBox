@@ -205,10 +205,16 @@ namespace RhythmBox.Window.Screens
             DispayCombo.AddText("0x", x => x.Font = new FontUsage("Roboto", 40));
             DispayScore.AddText("000000", x => x.Font = new FontUsage("Roboto", 40));
 
-            rhythmBoxClockContainer.Seek(_map.StartTime);
-            track?.Seek(_map.StartTime);
-            rhythmBoxClockContainer.Start();
-            track?.Start();
+            _RbPlayfield.CanStart.ValueChanged += (e) =>
+            {
+                if (e.NewValue == true)
+                {
+                    rhythmBoxClockContainer.Seek(_map.StartTime);
+                    track?.Seek(_map.StartTime);
+                    rhythmBoxClockContainer.Start();
+                    track?.Start();
+                }
+            };
         }
 
         protected override void Update()
