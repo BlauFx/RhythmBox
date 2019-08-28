@@ -37,8 +37,6 @@ namespace RhythmBox.Window.pending_files
 
         public BindableBool Resuming = new BindableBool();
 
-        private BindableBool Start = new BindableBool();
-
         [BackgroundDependencyLoader]
         private void Load()
         {
@@ -54,18 +52,11 @@ namespace RhythmBox.Window.pending_files
                     Size = new Vector2(1f),
                 },
             };
-
-            Start.ValueChanged += (e) =>
-            {
-                Scheduler.AddDelayed(() => { HasStarted = true; }, objBoxArray[0].time);
-            };
-
-            LoadMap();
         }
 
         protected override void LoadComplete()
         {
-            Start.Value = true;
+            LoadMap();
             base.LoadComplete();
         }
 

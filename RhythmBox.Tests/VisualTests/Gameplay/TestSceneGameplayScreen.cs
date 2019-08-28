@@ -218,15 +218,11 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
 
             DispayCombo.AddText("0x", x => x.Font = new FontUsage("Roboto", 40));
             DispayScore.AddText("000000", x => x.Font = new FontUsage("Roboto", 40));
-        }
 
-        protected override void LoadAsyncComplete()
-        {
             rhythmBoxClockContainer.Seek(_map.StartTime);
+            track?.Seek(_map.StartTime);
             rhythmBoxClockContainer.Start();
             track?.Start();
-
-            base.LoadAsyncComplete();
         }
 
         protected override void Update()
@@ -238,7 +234,8 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                     HasFinished = false;
                     //LoadComponentAsync(new SongSelction(), this.Push);
                     rhythmBoxClockContainer.Stop();
-                    //Scheduler.AddDelayed(() => this.Expire(), 1000);
+                    track?.Stop();
+                    Scheduler.AddDelayed(() => this.Expire(), 1000);
                 }
             }
             else
@@ -268,7 +265,8 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                             Logger.Log("GameplayScreen: bindableBool.Value changed",LoggingTarget.Runtime, LogLevel.Debug);
                             //LoadComponentAsync(new SongSelction(), this.Push);
                             rhythmBoxClockContainer.Stop();
-                            //Scheduler.AddDelayed(() => this.Expire(), 1000);
+                            track?.Stop();
+                            Scheduler.AddDelayed(() => this.Expire(), 1000);
                         };
 
                         foreach (var x in this._testSceneRbPlayfield)
