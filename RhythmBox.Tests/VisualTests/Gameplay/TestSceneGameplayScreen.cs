@@ -11,6 +11,7 @@ using osu.Framework.Input.Events;
 using osu.Framework.IO.Stores;
 using osu.Framework.Logging;
 using osu.Framework.Platform;
+using osu.Framework.Screens;
 using osu.Framework.Testing;
 using osuTK;
 using osuTK.Graphics;
@@ -18,6 +19,7 @@ using RhythmBox.Mode.Std.Tests.Animations;
 using RhythmBox.Mode.Std.Tests.Maps;
 using RhythmBox.Tests.Clock;
 using RhythmBox.Tests.pending_files;
+using RhythmBox.Tests.VisualTests.Animations;
 using RhythmBox.Tests.VisualTests.Overlays;
 using System.IO;
 using System.Reflection;
@@ -26,8 +28,49 @@ using System.Threading.Tasks;
 namespace RhythmBox.Tests.VisualTests.Gameplay
 {
     [TestFixture]
-    public class TestSceneGameplayScreen : TestScene
+    public class TestSceneGameplayScreenYEET : TestScene
     {
+        private ScreenStack stack = null;
+
+        private TestSceneGameplayScreen testSceneGameplayScreen;
+
+        private bool Can_new_TestSceneGameplayScreen = true;
+
+        [BackgroundDependencyLoader]
+        private void Load()
+        {
+            AddStep("Add TestSceneGameplayScreen", () =>
+            {
+                if (Can_new_TestSceneGameplayScreen)
+                {
+                    Can_new_TestSceneGameplayScreen = false;
+
+                    Add(stack = new ScreenStack
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                    });
+
+                    LoadComponent(testSceneGameplayScreen = new TestSceneGameplayScreen());
+                    stack.Push(testSceneGameplayScreen);
+                    //LoadComponentAsync(testSceneGameplayScreen = new TestSceneGameplayScreen(), stack.Push);
+                }
+            });
+
+            AddStep("Remove TestSceneGameplayScreen", () =>
+            {
+                this.stack?.Expire();
+                this.testSceneGameplayScreen?.Exit();
+                this.testSceneGameplayScreen?.Expire();
+                this.testSceneGameplayScreen = null;
+
+                Can_new_TestSceneGameplayScreen = true;
+            });
+        }
+    }
+
+    public class TestSceneGameplayScreen : Screen
+    {
+
         private int Score { get; set; } = 0;
 
         private int Combo { get; set; } = 0;
@@ -86,6 +129,10 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
 
         BindableBool bindableBool = new BindableBool();
 
+        public BindableBool Startable = new BindableBool();
+
+        private TestGameplayScreenLoader testGameplayScreenLoader;
+
         public TestSceneGameplayScreen()
         {
             string path = "null";
@@ -132,8 +179,15 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
             string AudioFile = $"{tmp}\\{_map.AFileName}";
             track = trackStore.Get(AudioFile);
 
-            Children = new Drawable[]
+            InternalChildren = new Drawable[]
             {
+                testGameplayScreenLoader = new TestGameplayScreenLoader
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(1f),
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                },
                 rhythmBoxClockContainer = new TestSceneRhythmBoxClockContainer(0)
                 {
                     RelativeSizeAxes = Axes.Both,
@@ -219,16 +273,49 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
             DispayCombo.AddText("0x", x => x.Font = new FontUsage("Roboto", 40));
             DispayScore.AddText("000000", x => x.Font = new FontUsage("Roboto", 40));
 
-            _testSceneRbPlayfield.CanStart.ValueChanged += (e) =>
+            Startable.ValueChanged += (e) =>
             {
-                if (e.NewValue == true)
+                if (_testSceneRbPlayfield.CanStart.Value == true)
                 {
-                    rhythmBoxClockContainer.Seek(_map.StartTime);
-                    track?.Seek(_map.StartTime);
-                    rhythmBoxClockContainer.Start();
-                    track?.Start();
+                    Load(1000);
+                }
+                else
+                {
+                    _testSceneRbPlayfield.CanStart.ValueChanged += (e2) =>
+                    {
+                        if (e2.NewValue == true)
+                        {
+                            Load(1000);
+                        }
+                    };
                 }
             };
+        }
+
+        protected override void LoadComplete()
+        {
+            Startable.Value = true;
+
+            base.LoadComplete();
+        }
+
+        private async void Load(int time)
+        {
+            await Task.Delay(time);
+
+            testGameplayScreenLoader.StopRotaing();
+
+            await Task.Delay(time / 2);
+
+            testGameplayScreenLoader.FadeOut(time, Easing.In);
+            testGameplayScreenLoader.Expire();
+
+            await Task.Delay(time);
+
+            rhythmBoxClockContainer.Seek(_map.StartTime);
+            track?.Seek(_map.StartTime);
+            rhythmBoxClockContainer.Start();
+            track?.Start();
         }
 
         protected override void Update()
@@ -254,7 +341,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
 
                         Box box;
 
-                        Add(box = new Box
+                        AddInternal(box = new Box
                         {
                             RelativeSizeAxes = Axes.Both,
                             Size = new Vector2(1f),
@@ -266,7 +353,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
 
                         bindableBool.ValueChanged += (e) =>
                         {
-                            Logger.Log("GameplayScreen: bindableBool.Value changed",LoggingTarget.Runtime, LogLevel.Debug);
+                            Logger.Log("GameplayScreen: bindableBool.Value changed", LoggingTarget.Runtime, LogLevel.Debug);
                             //LoadComponentAsync(new SongSelction(), this.Push);
                             rhythmBoxClockContainer.Stop();
                             track?.Stop();
@@ -379,18 +466,21 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
 
         private async Task AddJustTrack()
         {
-            await Task.Run(async () =>
+            if (track != null)
             {
-                for (double i = track.Frequency.Value; i > 0; i -= 0.01d)
+                await Task.Run(async () =>
                 {
-                    try
+                    for (double i = track.Frequency.Value; i > 0; i -= 0.01d)
                     {
-                        track.Frequency.Value = i;
+                        try
+                        {
+                            track.Frequency.Value = i;
+                        }
+                        catch { }
+                        await Task.Delay(1);
                     }
-                    catch { }
-                    await Task.Delay(1);
-                }
-            });
+                });
+            }
 
             bindableBool.Value = true;
         }

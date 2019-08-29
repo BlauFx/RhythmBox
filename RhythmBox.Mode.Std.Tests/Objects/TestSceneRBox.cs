@@ -15,11 +15,6 @@ namespace RhythmBox.Mode.Std.Tests.Objects
     public class TestSceneRBox : Container
     {
         /// <summary>
-        /// set the time when the drawable should be applied
-        /// </summary>
-        public double time { get; set; } = 0;
-
-        /// <summary>
         /// if speed is higher then the animation / animation of the drawble get's slower
         /// </summary>
         public float speed { get; set; } = 1f;
@@ -42,21 +37,18 @@ namespace RhythmBox.Mode.Std.Tests.Objects
         [BackgroundDependencyLoader]
         private void Load()
         {
-            Scheduler.AddDelayed(() =>
+            Children = new Drawable[]
             {
-                Children = new Drawable[]
+                obj = new RBoxObj(direction, speed)
                 {
-                    obj = new RBoxObj(direction, speed)
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Size = new Vector2(1f),
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Alpha = 1f,
-                        Resuming = Resuming,
-                    },
-                };
-            }, time);
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(1f),
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Alpha = 1f,
+                    Resuming = Resuming,
+                },
+            };
 
             UpdateAlphaA();
         }
@@ -119,9 +111,9 @@ namespace RhythmBox.Mode.Std.Tests.Objects
 
         private HitObjects.Direction direction;
 
-        private const int Expire = 300;
+        private new const int Expire = 300;
 
-        private const int Clear = 100;
+        private new const int Clear = 100;
 
         public bool AddCombo = false;
 

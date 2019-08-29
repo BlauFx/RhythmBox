@@ -80,7 +80,11 @@ namespace RhythmBox.Window.Screens
 
         private const float HP_Drain = 0.001f;
 
-        BindableBool bindableBool = new BindableBool();
+        private BindableBool bindableBool = new BindableBool();
+
+        private BindableBool Startable = new BindableBool();
+
+        private GameplayScreenLoader GameplayScreenLoader;
 
         public GameplayScreen(string path)
         {
@@ -120,6 +124,13 @@ namespace RhythmBox.Window.Screens
 
             InternalChildren = new Drawable[]
             {
+                GameplayScreenLoader = new GameplayScreenLoader
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(1f),
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                },
                 rhythmBoxClockContainer = new RhythmBoxClockContainer(0)
                 {
                     RelativeSizeAxes = Axes.Both,
@@ -205,16 +216,48 @@ namespace RhythmBox.Window.Screens
             DispayCombo.AddText("0x", x => x.Font = new FontUsage("Roboto", 40));
             DispayScore.AddText("000000", x => x.Font = new FontUsage("Roboto", 40));
 
-            _RbPlayfield.CanStart.ValueChanged += (e) =>
+            Startable.ValueChanged += (e) =>
             {
-                if (e.NewValue == true)
+                if (_RbPlayfield.CanStart.Value == true)
                 {
-                    rhythmBoxClockContainer.Seek(_map.StartTime);
-                    track?.Seek(_map.StartTime);
-                    rhythmBoxClockContainer.Start();
-                    track?.Start();
+                    Load(1000);
+                }
+                else
+                {
+                    _RbPlayfield.CanStart.ValueChanged += (e2) =>
+                    {
+                        if (e2.NewValue == true)
+                        {
+                            Load(1000);
+                        }
+                    };
                 }
             };
+        }
+
+        protected override void LoadComplete()
+        {
+            Startable.Value = true;
+
+            base.LoadComplete();
+        }
+        private async void Load(int time)
+        {
+            await Task.Delay(time);
+
+            GameplayScreenLoader.StopRotaing();
+
+            await Task.Delay(time / 2);
+
+            GameplayScreenLoader.FadeOut(time, Easing.In);
+            GameplayScreenLoader.Expire();
+
+            await Task.Delay(time);
+
+            rhythmBoxClockContainer.Seek(_map.StartTime);
+            track?.Seek(_map.StartTime);
+            rhythmBoxClockContainer.Start();
+            track?.Start();
         }
 
         protected override void Update()

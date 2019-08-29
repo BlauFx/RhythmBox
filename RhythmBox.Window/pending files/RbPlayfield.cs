@@ -59,6 +59,8 @@ namespace RhythmBox.Window.pending_files
         protected override void LoadComplete()
         {
             LoadMap();
+            CanStart.Value = true;
+
             base.LoadComplete();
         }
 
@@ -160,26 +162,31 @@ namespace RhythmBox.Window.pending_files
         private void LoadMap()
         {
             int i = 0;
+            int j = 0;
 
             foreach (var objBox in Map)
             {
-                var x = (Mode.Std.Interfaces.HitObjects) objBox;
-                Add(objBoxArray[i] = new RBox
+                var x = (Mode.Std.Interfaces.HitObjects)objBox;
+
+                objBoxArray[i] = new RBox
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                     direction = x._direction,
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f),
-                    time = x.Time - Map.StartTime,
                     speed = x.Speed,
                     Resuming = Resuming,
-                });
+                };
+
+                Scheduler.AddDelayed(() =>
+                {
+                    Add(objBoxArray[j]);
+                    j++;
+                }, x.Time - Map.StartTime);
 
                 i++;
             }
-
-            CanStart.Value = true;
         }
     }
 }
