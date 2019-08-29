@@ -28,11 +28,11 @@ using System.Threading.Tasks;
 namespace RhythmBox.Tests.VisualTests.Gameplay
 {
     [TestFixture]
-    public class TestSceneGameplayScreenYEET : TestScene
+    public class TestSceneGameplayScreen : TestScene
     {
         private ScreenStack stack = null;
 
-        private TestSceneGameplayScreen testSceneGameplayScreen;
+        private TestGameplayScreen testSceneGameplayScreen;
 
         private bool Can_new_TestSceneGameplayScreen = true;
 
@@ -50,7 +50,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                         RelativeSizeAxes = Axes.Both,
                     });
 
-                    LoadComponent(testSceneGameplayScreen = new TestSceneGameplayScreen());
+                    LoadComponent(testSceneGameplayScreen = new TestGameplayScreen());
                     stack.Push(testSceneGameplayScreen);
                     //LoadComponentAsync(testSceneGameplayScreen = new TestSceneGameplayScreen(), stack.Push);
                 }
@@ -68,7 +68,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
         }
     }
 
-    public class TestSceneGameplayScreen : Screen
+    public class TestGameplayScreen : Screen
     {
 
         private int Score { get; set; } = 0;
@@ -133,7 +133,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
 
         private TestGameplayScreenLoader testGameplayScreenLoader;
 
-        public TestSceneGameplayScreen()
+        public TestGameplayScreen()
         {
             string path = "null";
             if (path == "null")
