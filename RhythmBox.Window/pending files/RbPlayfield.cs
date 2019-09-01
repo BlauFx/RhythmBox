@@ -166,7 +166,7 @@ namespace RhythmBox.Window.pending_files
 
             foreach (var objBox in Map)
             {
-                var x = (Mode.Std.Interfaces.HitObjects)objBox;
+                var x = (Mode.Std.Interfaces.HitObjects) objBox;
 
                 objBoxArray[i] = new RBox
                 {

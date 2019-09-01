@@ -36,7 +36,7 @@ namespace RhythmBox.Tests.VisualTests.Animations
 
             AddStep("Stop loading", () =>
             {
-                gameplayScreenLoaderTest.StopRotaing();
+                gameplayScreenLoaderTest.StopRotaing(1000);
             });
         }
     }
@@ -89,14 +89,19 @@ namespace RhythmBox.Tests.VisualTests.Animations
                 newRotationValue += 360f;
 
                 boxLoading.TransformTo(nameof(Rotation), RotationValue, Duration);
+
                 await Task.Delay((int)Duration);
                 Rotate();
             }
         }
 
-        public void StopRotaing()
+        public void StopRotaing(double timeUntilStop)
         {
-            ShouldRotate = false;
+            Scheduler.AddDelayed(() =>
+            {
+                ShouldRotate = false;
+                boxLoading.ClearTransforms();
+            }, timeUntilStop);
         }
     }
 }

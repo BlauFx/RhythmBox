@@ -277,7 +277,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
             {
                 if (_testSceneRbPlayfield.CanStart.Value == true)
                 {
-                    Load(1000);
+                    Load(500);
                 }
                 else
                 {
@@ -285,7 +285,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                     {
                         if (e2.NewValue == true)
                         {
-                            Load(1000);
+                            Load(500);
                         }
                     };
                 }
@@ -301,14 +301,9 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
 
         private async void Load(int time)
         {
-            await Task.Delay(time);
+            testGameplayScreenLoader.StopRotaing(time);
 
-            testGameplayScreenLoader.StopRotaing();
-
-            await Task.Delay(time / 2);
-
-            testGameplayScreenLoader.FadeOut(time, Easing.In);
-            testGameplayScreenLoader.Expire();
+            testGameplayScreenLoader.FadeOut(time, Easing.In).Delay(time).Finally((Action) => testGameplayScreenLoader.Expire());
 
             await Task.Delay(time);
 

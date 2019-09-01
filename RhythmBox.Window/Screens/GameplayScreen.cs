@@ -220,7 +220,7 @@ namespace RhythmBox.Window.Screens
             {
                 if (_RbPlayfield.CanStart.Value == true)
                 {
-                    Load(1000);
+                    Load(500);
                 }
                 else
                 {
@@ -228,7 +228,7 @@ namespace RhythmBox.Window.Screens
                     {
                         if (e2.NewValue == true)
                         {
-                            Load(1000);
+                            Load(500);
                         }
                     };
                 }
@@ -243,14 +243,9 @@ namespace RhythmBox.Window.Screens
         }
         private async void Load(int time)
         {
-            await Task.Delay(time);
+            GameplayScreenLoader.StopRotaing(time);
 
-            GameplayScreenLoader.StopRotaing();
-
-            await Task.Delay(time / 2);
-
-            GameplayScreenLoader.FadeOut(time, Easing.In);
-            GameplayScreenLoader.Expire();
+            GameplayScreenLoader.FadeOut(time, Easing.In).Delay(time).Finally((Action) => GameplayScreenLoader.Expire());
 
             await Task.Delay(time);
 
