@@ -46,13 +46,27 @@ namespace RhythmBox.Window.pending_files
 
         private TextFlowContainer textFlowContainer;
 
+        private TextFlowContainer textFlowContainer2;
+
         public int Maps { get; set; } = 1;
 
         public Map[,] Map { get; set; }
 
         public int MapPos { get; set; }
 
-        public Color4 Colour;
+        public new Color4 Colour;
+
+        //TODO: Maybe store this value in config, so the user can change the value
+        /// <summary>
+        /// The size of the parent box
+        /// </summary>
+        public float YSize { get; protected set; } = 50f;
+
+        //TODO: ^
+        /// <summary>
+        /// the size of the difficulty / child
+        /// </summary>
+        public float YChildSize { get; protected set; } = 40f;
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -60,7 +74,8 @@ namespace RhythmBox.Window.pending_files
             var thisMap = Map[MapPos, 0];
 
             RelativeSizeAxes = Axes.X;
-            Size = new Vector2(1f, 40 * (Maps + 1));
+            Size = new Vector2(1f, 0f);
+            AutoSizeAxes = Axes.Y;
 
             Children = new Drawable[]
             {
@@ -70,7 +85,7 @@ namespace RhythmBox.Window.pending_files
                     RelativeSizeAxes = Axes.X,
                     Anchor = Anchor.TopRight,
                     Origin = Anchor.TopRight,
-                    Size = new Vector2(1f,40f),
+                    Size = new Vector2(1f, YSize),
                     Colour = Colour,
                     Parent = true,
                     Search2 = Search,
@@ -81,7 +96,7 @@ namespace RhythmBox.Window.pending_files
                 {
                     Anchor = Anchor.TopLeft,
                     Origin = Anchor.TopLeft,
-                    RelativePositionAxes = Axes.Both,
+                    RelativePositionAxes = Axes.X,
                     Size = new Vector2(0f,parentBoxTest.Height),
                     AutoSizeAxes = Axes.X,
                     Text = $"Title: {thisMap.Title}",
@@ -91,10 +106,31 @@ namespace RhythmBox.Window.pending_files
                     Y = parentBoxTest.Y,
                     Depth = -1f,
                 },
+                textFlowContainer2 = new TextFlowContainer
+                {
+                    Anchor = Anchor.TopLeft,
+                    Origin = Anchor.TopLeft,
+                    RelativePositionAxes = Axes.X,
+                    Size = new Vector2(0f, parentBoxTest.Height),
+                    AutoSizeAxes = Axes.X,
+                    Text = $"Artist: {thisMap.Artist}",
+                    Colour = Color4.Black.Opacity(0.5f),
+                    TextAnchor = Anchor.Centre,
+                    X = parentBoxTest.X,
+                    Y = parentBoxTest.Y,
+                    Depth = -1f,
+                },
             };
 
             textFlowContainer.Text = string.Empty;
-            textFlowContainer.AddText($"Title: {thisMap.Title}", x => x.Font = new FontUsage("Roboto", 40));
+            textFlowContainer2.Text = string.Empty;
+            textFlowContainer.AddText($"Title: {thisMap.Title}", x => x.Font = new FontUsage("Roboto", 30));
+            textFlowContainer2.AddText($"Artist: {thisMap.Artist}", x => x.Font = new FontUsage("Roboto", 25));
+
+            textFlowContainer.Height = parentBoxTest.Height;
+            textFlowContainer2.Height = textFlowContainer.Height;
+            textFlowContainer.MoveToOffset(new Vector2(0f, -(textFlowContainer.Height / 5)));
+            textFlowContainer2.MoveToOffset(new Vector2(0f, (textFlowContainer2.Height / 4)));
 
             //TODO: float - int
             for (float i = 1; i < Maps + 1; i++)
@@ -106,9 +142,10 @@ namespace RhythmBox.Window.pending_files
                     RelativeSizeAxes = Axes.X,
                     Anchor = Anchor.TopRight,
                     Origin = Anchor.TopRight,
-                    Size = new Vector2(0.9f - (i / (i + Maps)), 40f),
+                    Size = new Vector2(0.9f - (i / (i + Maps)), YChildSize),
                     Colour = Color4.DarkGreen,
-                    Y = (parentBoxTest.Height * i),
+                    i = i,
+                    parentHeight = parentBoxTest.Height,
                     Search2 = Search,
                     ThisMap = x,
                     Invoke = InvokeBox,
@@ -122,6 +159,10 @@ namespace RhythmBox.Window.pending_files
 
     internal class BoxTest : Container, IHasFilterTerms
     {
+        public float parentHeight = 0;
+
+        public float i = 0;
+
         public Bindable<string> bindablePath = new Bindable<string>();
 
         public Action Invoke;
@@ -146,6 +187,11 @@ namespace RhythmBox.Window.pending_files
         private void Load()
         {
             RelativePositionAxes = Axes.X;
+
+            if (!Parent)
+            {
+                this.Y = (parentHeight * i) - ((i * 10) - 10f);
+            }
 
             Children = new Drawable[]
             {

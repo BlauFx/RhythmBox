@@ -312,7 +312,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
                 Origin = Anchor.TopRight,
 
                 RelativeSizeAxes = Axes.X,
-                Size = new Vector2(1f),
+                Size = new Vector2(1f, 0f),
 
                 AutoSizeAxes = Axes.Y,
 
