@@ -8,6 +8,7 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Events;
+using osu.Framework.Screens;
 using osu.Framework.Testing;
 using osuTK;
 using osuTK.Graphics;
@@ -16,8 +17,52 @@ using RhythmBox.Tests.pending_files;
 namespace RhythmBox.Tests.VisualTests.Screens
 {
     [TestFixture]
-    public class TestSceneMainMenu : TestScene
+    public class testSceneMainMenu : TestScene
     {
+        private ScreenStack stack = null;
+
+        private TestMainMenu testMainMenu;
+
+        private bool Can_new_TestSceneMainMenu = true;
+
+        [BackgroundDependencyLoader]
+        private void Load()
+        {
+            AddStep("Add TestSceneGameplayScreen", () =>
+            {
+                if (Can_new_TestSceneMainMenu)
+                {
+                    Can_new_TestSceneMainMenu = false;
+
+                    Add(stack = new ScreenStack
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                    });
+
+                    LoadComponent(testMainMenu = new TestMainMenu()
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Scale = new Vector2(0f)
+                    });
+                    testMainMenu.TransformTo(nameof(Scale), new Vector2(1f), 1000, Easing.OutExpo);
+                    stack.Push(testMainMenu);
+                }
+            });
+
+            AddStep("Remove TestSceneGameplayScreen", () =>
+            {
+                this.stack?.Expire();
+                this.testMainMenu?.Exit();
+                this.testMainMenu?.Expire();
+                this.testMainMenu = null;
+
+                Can_new_TestSceneMainMenu = true;
+            });
+        }
+    }
+    public class TestMainMenu : Screen
+    { 
         public static Sprite background;
 
         private TestSceneSettingsOverlay settings;
@@ -25,7 +70,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
         [BackgroundDependencyLoader] 
         private void Load(TextureStore store)
         {
-            Children = new Drawable[]
+            InternalChildren = new Drawable[]
             {
                 background = new Sprite
                 {
@@ -122,6 +167,24 @@ namespace RhythmBox.Tests.VisualTests.Screens
             }
 
             return base.OnMouseMove(e);
+        }
+
+        public override void OnEntering(IScreen last)
+        {
+            this.FadeInFromZero<TestMainMenu>(250, Easing.In);
+            base.OnEntering(last);
+        }
+
+        public override void OnResuming(IScreen last)
+        {
+            this.FadeInFromZero<TestMainMenu>(175, Easing.In);
+            base.OnResuming(last);
+        }
+
+        public override void OnSuspending(IScreen next)
+        {
+            this.FadeOutFromOne<TestMainMenu>(0, Easing.In);
+            base.OnSuspending(next);
         }
     }
 

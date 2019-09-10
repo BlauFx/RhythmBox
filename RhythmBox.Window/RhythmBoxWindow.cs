@@ -2,6 +2,7 @@
 using osu.Framework.Graphics;
 using osu.Framework.Platform;
 using osu.Framework.Screens;
+using osuTK;
 using RhythmBox.Window.pending_files;
 using RhythmBox.Window.Screens;
 
@@ -21,7 +22,15 @@ namespace RhythmBox.Window
                 Stack
             };
 
-            LoadComponentAsync(new MainMenu(), Stack.Push);
+            MainMenu x;
+            LoadComponentAsync(x = new MainMenu()
+            {
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+                Scale = new Vector2(0f)
+            }, Stack.Push);
+
+            x.OnLoadComplete += (e) => x.TransformTo(nameof(Scale), new Vector2(1f), 1000, Easing.OutExpo);
 
             Check_Licenses.License();
         }

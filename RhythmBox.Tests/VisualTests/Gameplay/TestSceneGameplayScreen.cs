@@ -70,7 +70,6 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
 
     public class TestGameplayScreen : Screen
     {
-
         private int Score { get; set; } = 0;
 
         private int Combo { get; set; } = 0;
