@@ -23,7 +23,7 @@ namespace RhythmBox.Tests.VisualTests.Clock
 
         private TestSceneRhythmBoxClockContainer rhythmBoxClockContainer;
 
-        private Bindable<double> UserPlaybackRate = new BindableDouble(1);
+        private BindableDouble UserPlaybackRate = new BindableDouble(1);
 
         public readonly BindableBool IsPaused = new BindableBool();
 

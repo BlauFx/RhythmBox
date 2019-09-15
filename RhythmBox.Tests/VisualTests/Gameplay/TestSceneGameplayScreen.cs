@@ -90,7 +90,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
 
         private Bindable<double> UserPlaybackRate = new BindableDouble(1);
 
-        public readonly BindableBool IsPaused = new BindableBool();
+        private readonly BindableBool IsPaused = new BindableBool();
 
         private BindableBool Resuming = new BindableBool(true);
 

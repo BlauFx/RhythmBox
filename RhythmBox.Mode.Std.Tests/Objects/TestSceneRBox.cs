@@ -53,7 +53,6 @@ namespace RhythmBox.Mode.Std.Tests.Objects
             UpdateAlphaA();
         }
 
-
         protected async void UpdateAlphaA()
         {
             await Task.Delay(1);
