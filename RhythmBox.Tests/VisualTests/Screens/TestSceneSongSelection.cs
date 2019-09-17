@@ -87,7 +87,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
 
         private FillFlowContainer FFContainer;
 
-        private TestSceneMyScrollContainer FFContainerM;
+        private TestSceneScrollContainer FFContainerM;
 
         public SearchContainer search;
 
@@ -109,7 +109,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     Colour = Color4.DimGray,
                     Alpha = 0.9f,
                 },
-                FFContainerM = new TestSceneMyScrollContainer
+                FFContainerM = new TestSceneScrollContainer
                 {
                     ScrollbarVisible = true,
                     Depth = -1,

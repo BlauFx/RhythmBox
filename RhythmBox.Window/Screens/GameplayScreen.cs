@@ -348,7 +348,7 @@ namespace RhythmBox.Window.Screens
                 {
                     Resuming.Value = false;
                     rhythmBoxClockContainer.Stop();
-                    track.Stop();
+                    track?.Stop();
                     BreakOverlay.ToggleVisibility();
                 }
                 _RbPlayfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;

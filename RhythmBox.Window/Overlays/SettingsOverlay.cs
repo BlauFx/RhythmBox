@@ -40,13 +40,12 @@ namespace RhythmBox.Window.Overlays
                     Colour = Color4.DimGray,
                     Alpha = 0.9f,
                 },
-                new MyScrollContainer
+                new ScrollContainer
                 {
                     ScrollbarVisible = true,
                     Depth = -1,
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f),
-                    DistanceDecayScroll = 0.005,
 
                     Children = new Drawable[]
                     {

@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
@@ -39,7 +40,7 @@ namespace RhythmBox.Tests.pending_files
                     Colour = Color4.DimGray,
                     Alpha = 0.9f,
                 },
-                new TestSceneMyScrollContainer
+                new TestSceneScrollContainer
                 {
                     ScrollbarVisible = true,
                     Depth = -1,
