@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using osu.Framework.Allocation;
+﻿using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shapes;
@@ -31,7 +30,7 @@ namespace RhythmBox.Mode.Std.Objects
         /// <summary>
         /// AlphaA is the alpha of the drawable
         /// </summary>
-        public float AlphaA { get => alpha; set => alpha = value; }
+        public float AlphaA { get => alpha; protected set => alpha = value; }
 
         protected float alpha;
 
@@ -62,15 +61,15 @@ namespace RhythmBox.Mode.Std.Objects
         }
 
 
-        protected async void UpdateAlphaA()
+        protected void UpdateAlphaA()
         {
-            await Task.Delay(1);
             try
             {
                 AlphaA = alpha = obj.bx.Alpha;
-            } catch { }
+            }
+            catch { }
 
-            UpdateAlphaA();
+            _ = Schedule(() => UpdateAlphaA());
         }
 
         public void OnClickKeyDown(Key key)

@@ -7,7 +7,6 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Events;
-using osu.Framework.Logging;
 using osu.Framework.Screens;
 using osuTK;
 using osuTK.Graphics;
@@ -44,11 +43,11 @@ namespace RhythmBox.Window.Screens
                     Origin = Anchor.Centre,
                     RelativePositionAxes = Axes.Both,
                     RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(0.25f),
+                    Size = new Vector2(0.2f),
                     text = "Play",
                     FontSize = 60f,
                     Y = 0f,
-                    X = -0.3f,
+                    X = -0.375f,
                     Alpha = 1f,
                     ClickAction = () =>
                     {
@@ -62,11 +61,11 @@ namespace RhythmBox.Window.Screens
                     Origin = Anchor.Centre,
                     RelativePositionAxes = Axes.Both,
                     RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(0.25f),
+                    Size = new Vector2(0.2f),
                     text = "Settings",
                     FontSize = 60f,
                     Y = 0f,
-                    X = 0f,
+                    X = -0.125f,
                     Alpha = 1f,
                     ClickAction = () =>
                     {
@@ -80,11 +79,29 @@ namespace RhythmBox.Window.Screens
                     Origin = Anchor.Centre,
                     RelativePositionAxes = Axes.Both,
                     RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(0.25f),
+                    Size = new Vector2(0.2f),
+                    text = "Editor",
+                    FontSize = 60f,
+                    Y = 0f,
+                    X = 0.125f,
+                    Alpha = 1f,
+                    ClickAction = () =>
+                    {
+                        this.Push(new EditorDefault());
+                    }
+                },
+                new MainMenuBox
+                {
+                    Depth = 1,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativePositionAxes = Axes.Both,
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(0.2f),
                     text = "Exit",
                     FontSize = 60f,
                     Y = 0f,
-                    X = 0.3f,
+                    X = 0.375f,
                     Alpha = 1f,
                     ClickAction = () =>
                     {

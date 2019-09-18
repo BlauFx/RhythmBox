@@ -20,8 +20,8 @@ namespace RhythmBox.Window.Overlays
 
         private Bindable<bool> bindable1 = new Bindable<bool>();
 
-        [Resolved]
-        private static Gameini cfg { get; set; }
+        [Resolved(CanBeNull = true)]
+        private Gameini cfg { get; set; }
 
         [BackgroundDependencyLoader]
         private void Load()

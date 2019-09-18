@@ -1,4 +1,3 @@
-using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
@@ -20,8 +19,8 @@ namespace RhythmBox.Tests.pending_files
 
         private Bindable<bool> bindable1 = new Bindable<bool>();
 
-        [Resolved]
-        private static Gameini cfg { get; set; }
+        [Resolved(CanBeNull = true)]
+        private Gameini cfg { get; set; }
 
         [BackgroundDependencyLoader]
         private void Load()

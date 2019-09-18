@@ -1,84 +1,36 @@
-﻿using NUnit.Framework;
-using osu.Framework.Allocation;
+﻿using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Events;
 using osu.Framework.Screens;
-using osu.Framework.Testing;
 using osuTK;
-using RhythmBox.Mode.Std.Tests.Maps;
-using RhythmBox.Tests.Clock;
-using RhythmBox.Tests.pending_files;
+using RhythmBox.Mode.Std.Maps;
+using RhythmBox.Window.Clocks;
+using RhythmBox.Window.pending_files;
 using System.IO;
 using System.Reflection;
 
-namespace RhythmBox.Tests.VisualTests.Screens
+namespace RhythmBox.Window.Screens
 {
-    [TestFixture]
-    public class TestSceneEditor : TestScene
-    {
-        private ScreenStack stack = null;
-
-        private TestEditorDefault testEditorDefault;
-
-        private bool Can_new_TestSceneEditorDefault = true;
-
-        [BackgroundDependencyLoader]
-        private void Load()
-        {
-            AddStep("Add TestEditorDefault", () =>
-            {
-                if (Can_new_TestSceneEditorDefault)
-                {
-                    Can_new_TestSceneEditorDefault = false;
-
-                    Add(stack = new ScreenStack
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                    });
-
-                    LoadComponent(testEditorDefault = new TestEditorDefault()
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Scale = new Vector2(2f),
-                        Alpha = 0f,
-                    });
-
-                    stack.Push(testEditorDefault);
-                }
-            });
-
-            AddStep("Remove TestEditorDefault", () =>
-            {
-                this.stack?.Expire();
-                this.testEditorDefault?.Exit();
-                this.testEditorDefault?.Expire();
-                this.testEditorDefault = null;
-
-                Can_new_TestSceneEditorDefault = true;
-            });
-        }
-    }
-    public class TestEditorDefault : Screen
+    class EditorDefault : Screen
     {
         private Sprite background;
 
-        private TestSceneRbPlayfield _testSceneRbPlayfield;
+        private RbPlayfield _testSceneRbPlayfield;
 
-        private TestSceneRhythmBoxClockContainer rhythmBoxClockContainer;
+        private RhythmBoxClockContainer rhythmBoxClockContainer;
 
         private BindableBool IsPaused = new BindableBool();
 
         private BindableDouble UserPlaybackRate = new BindableDouble(1);
 
-        private TestSceneMap map;
+        private Map map;
 
         private BindableBool Resuming = new BindableBool(false);
 
-        public TestEditorDefault()
+        public EditorDefault()
         {
             string path = "null";
             if (path == "null")
@@ -86,12 +38,12 @@ namespace RhythmBox.Tests.VisualTests.Screens
                 path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Songs\\TestMap\\Difficulty1.ini";
                 if (!File.Exists(path))
                 {
-                    new TestSceneDefaultFolder();
+                    new DefaultFolder();
                 }
             }
 
-            var testSceneMapReader = new TestSceneMapReader(path);
-            map = new TestSceneMap
+            var testSceneMapReader = new MapReader(path);
+            map = new Map
             {
                 AFileName = testSceneMapReader.AFileName,
                 BGFile = testSceneMapReader.BGFile,
@@ -126,7 +78,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     Alpha = 0.7f,
                     Texture = store.Get("Skin/menu-background"),
                 },
-                rhythmBoxClockContainer = new TestSceneRhythmBoxClockContainer(0)
+                rhythmBoxClockContainer = new RhythmBoxClockContainer(0)
                 {
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f)
@@ -135,7 +87,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
 
             rhythmBoxClockContainer.Children = new Drawable[]
             {
-                _testSceneRbPlayfield = new TestSceneRbPlayfield
+                _testSceneRbPlayfield = new RbPlayfield
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,

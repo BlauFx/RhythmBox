@@ -17,7 +17,7 @@ using RhythmBox.Tests.pending_files;
 namespace RhythmBox.Tests.VisualTests.Screens
 {
     [TestFixture]
-    public class testSceneMainMenu : TestScene
+    public class TestSceneMainMenu : TestScene
     {
         private ScreenStack stack = null;
 
@@ -89,11 +89,11 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     Origin = Anchor.Centre,
                     RelativePositionAxes = Axes.Both,
                     RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(0.25f),
+                    Size = new Vector2(0.2f),
                     text = "Play",
                     FontSize = 60f,
                     Y = 0f,
-                    X = -0.3f,
+                    X = -0.375f,
                     Alpha = 1f,
                     ClickAction = () =>
                     {
@@ -106,11 +106,11 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     Origin = Anchor.Centre,
                     RelativePositionAxes = Axes.Both,
                     RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(0.25f),
+                    Size = new Vector2(0.2f),
                     text = "Settings",
                     FontSize = 60f,
                     Y = 0f,
-                    X = 0f,
+                    X = -0.125f,
                     Alpha = 1f,
                     ClickAction = () =>
                     {
@@ -124,11 +124,28 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     Origin = Anchor.Centre,
                     RelativePositionAxes = Axes.Both,
                     RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(0.25f),
+                    Size = new Vector2(0.2f),
+                    text = "Editor",
+                    FontSize = 60f,
+                    Y = 0f,
+                    X = 0.125f,
+                    Alpha = 1f,
+                    ClickAction = () =>
+                    {
+                    }
+                },
+                new TestSceneMainMenuBox
+                {
+                    Depth = 1,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativePositionAxes = Axes.Both,
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(0.2f),
                     text = "Exit",
                     FontSize = 60f,
                     Y = 0f,
-                    X = 0.3f,
+                    X = 0.375f,
                     Alpha = 1f,
                     ClickAction = () =>
                     {
