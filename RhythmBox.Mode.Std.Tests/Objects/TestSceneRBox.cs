@@ -1,13 +1,13 @@
 ﻿using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
 using RhythmBox.Mode.Std.Tests.Animations;
 using RhythmBox.Mode.Std.Tests.Interfaces;
-using Container = osu.Framework.Graphics.Containers.Container;
 
 namespace RhythmBox.Mode.Std.Tests.Objects
 {

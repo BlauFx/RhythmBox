@@ -37,6 +37,14 @@ namespace RhythmBox.Window.Screens
         {
             InternalChildren = new Drawable[]
             {
+                new Sprite
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(1f),
+                    Texture = store.Get("Skin/menu-background"), //TOOD: Maybe Map => Background?
+                },
                 new SpriteButton
                 {
                     Anchor = Anchor.BottomLeft,
