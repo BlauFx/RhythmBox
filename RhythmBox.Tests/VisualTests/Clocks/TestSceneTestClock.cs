@@ -73,7 +73,7 @@ namespace RhythmBox.Tests.VisualTests.Clock
 
             rhythmBoxClockContainer.Children = new Drawable[]
             {
-                playfield = new TestSceneRbPlayfield
+                playfield = new TestSceneRbPlayfield(null)
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,

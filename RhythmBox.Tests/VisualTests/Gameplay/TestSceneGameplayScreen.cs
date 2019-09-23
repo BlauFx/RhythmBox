@@ -17,10 +17,12 @@ using osuTK;
 using osuTK.Graphics;
 using RhythmBox.Mode.Std.Tests.Animations;
 using RhythmBox.Mode.Std.Tests.Maps;
+using RhythmBox.Mode.Std.Tests.Mods;
 using RhythmBox.Tests.Clock;
 using RhythmBox.Tests.pending_files;
 using RhythmBox.Tests.VisualTests.Animations;
 using RhythmBox.Tests.VisualTests.Overlays;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -50,7 +52,10 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                         RelativeSizeAxes = Axes.Both,
                     });
 
-                    LoadComponent(testSceneGameplayScreen = new TestGameplayScreen());
+                    //List<Mod> mods = new List<Mod>();
+                    //mods.Add(new TestMod());
+
+                    LoadComponent(testSceneGameplayScreen = new TestGameplayScreen(null));
                     stack.Push(testSceneGameplayScreen);
                     //LoadComponentAsync(testSceneGameplayScreen = new TestSceneGameplayScreen(), stack.Push);
                 }
@@ -132,8 +137,12 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
 
         private TestGameplayScreenLoader testGameplayScreenLoader;
 
-        public TestGameplayScreen()
+        private List<Mod> ToApplyMods;
+
+        public TestGameplayScreen(List<Mod> ToApplyMods)
         {
+            this.ToApplyMods = ToApplyMods;
+
             string path = "null";
             if (path == "null")
             {
@@ -199,7 +208,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                     Origin = Anchor.Centre,
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f),
-                    Alpha = 0f,
+                    Alpha = 1f,
                 }
             };
 
@@ -209,7 +218,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
             {
                 if (e.NewValue == Visibility.Hidden)
                 {
-                    testSceneBreakOverlay.AnimationOut();
+                    //testSceneBreakOverlay.AnimationOut();
                     await Task.Delay(1500);
                     Resuming.Value = true;
                     rhythmBoxClockContainer.Start();
@@ -220,6 +229,15 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
 
             rhythmBoxClockContainer.Children = new Drawable[]
             {
+                _testSceneRbPlayfield = new TestSceneRbPlayfield(ToApplyMods)
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    RelativePositionAxes = Axes.Both,
+                    Size = new Vector2(0.6f, 1f),
+                    Map = _map,
+                },
                 _hpBar = new Mode.Std.Tests.Animations.TestSceneHpBar
                 {
                     Anchor = Anchor.Centre,
@@ -247,15 +265,6 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                     Size = new Vector2(0.1f),
                     TextAnchor = Anchor.TopRight,
                     X = -0.01f
-                },
-                _testSceneRbPlayfield = new TestSceneRbPlayfield
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Both,
-                    RelativePositionAxes = Axes.Both,
-                    Size = new Vector2(0.6f, 1f),
-                    Map = _map,
                 },
             };
 

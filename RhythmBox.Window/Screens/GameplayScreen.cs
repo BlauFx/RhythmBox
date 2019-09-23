@@ -15,9 +15,11 @@ using osuTK;
 using osuTK.Graphics;
 using RhythmBox.Mode.Std.Animations;
 using RhythmBox.Mode.Std.Maps;
+using RhythmBox.Mode.Std.Mods;
 using RhythmBox.Window.Clocks;
 using RhythmBox.Window.Overlays;
 using RhythmBox.Window.pending_files;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace RhythmBox.Window.Screens
@@ -86,8 +88,12 @@ namespace RhythmBox.Window.Screens
 
         private GameplayScreenLoader GameplayScreenLoader;
 
-        public GameplayScreen(string path)
+        private List<Mod> ToApplyMods;
+
+        public GameplayScreen(string path, List<Mod> ToApplyMods)
         {
+            this.ToApplyMods = ToApplyMods;
+
             var MapReader = new MapReader(path);
             _map = new Map
             {
@@ -164,7 +170,7 @@ namespace RhythmBox.Window.Screens
 
             rhythmBoxClockContainer.Children = new Drawable[]
             {
-                _RbPlayfield = new RbPlayfield
+                _RbPlayfield = new RbPlayfield(ToApplyMods)
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,

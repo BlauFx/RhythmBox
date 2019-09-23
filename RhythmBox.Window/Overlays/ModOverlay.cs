@@ -1,70 +1,23 @@
-using NUnit.Framework;
-using osu.Framework.Allocation;
+﻿using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
-using osu.Framework.Testing;
 using osuTK;
 using osuTK.Graphics;
+using RhythmBox.Window.Objects;
 
-namespace RhythmBox.Tests.VisualTests.Overlays
+namespace RhythmBox.Window.Overlays
 {
-    [TestFixture]
-    public class TestSceneTestBreakOverlay : TestScene
-    {
-        private TestSceneBreakOverlay testSceneBreakOverlay;
-
-        [BackgroundDependencyLoader]
-        private void Load()
-        {
-            Children = new Drawable[]
-            {
-                testSceneBreakOverlay = new TestSceneBreakOverlay
-                {
-                    Depth = -1,
-                    RelativePositionAxes = Axes.Both,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(1f),
-                },
-                new Box
-                {
-                    Depth = 0,
-                    RelativePositionAxes = Axes.Both,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(1f),
-                }
-            };
-
-            testSceneBreakOverlay.State.Value = Visibility.Hidden;
-
-            AddWaitStep("Load", 1);
-
-            AddStep("Animation 1 FadeIn", () =>
-            {
-                testSceneBreakOverlay.State.Value = Visibility.Visible;
-            });
-
-            AddWaitStep("wait for complete", 10);
-
-            AddStep("Animation 1 FadeOut", () =>
-            {
-                testSceneBreakOverlay.State.Value = Visibility.Hidden;
-            });
-        }
-    }
-
-    public class TestSceneBreakOverlay : FocusedOverlayContainer
+    class ModOverlay : FocusedOverlayContainer
     {
         public TextFlowContainer _text;
 
         private Box box;
+
+        public Mods modBox;
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -79,7 +32,7 @@ namespace RhythmBox.Tests.VisualTests.Overlays
                     Origin = Anchor.Centre,
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f),
-                    Colour = Color4.Black.Opacity(0.8f),
+                    Colour = Color4.Black.Opacity(0.3f),
                     Alpha = 0f,
                 },
                 _text = new TextFlowContainer
@@ -92,17 +45,27 @@ namespace RhythmBox.Tests.VisualTests.Overlays
                     Spacing = new Vector2(2f),
                     AutoSizeAxes = Axes.Both,
                     Alpha = 1f,
+                },
+                modBox = new Mods
+                {
+                    Depth = -1,
+                    RelativePositionAxes = Axes.Both,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(0.8f, 0.3f),
+                    Colour = Color4.Green.Opacity(0.8f),
+                    Alpha = 0f,
                 }
             };
         }
 
         protected override bool OnKeyDown(KeyDownEvent e)
         {
-            if (e.Key != osuTK.Input.Key.T)
+            if (e.Key == osuTK.Input.Key.G)
             {
-                return true;
+                this.State.Value = Visibility.Hidden;
             }
-            this.State.Value = Visibility.Hidden;
 
             return base.OnKeyDown(e);
         }
@@ -130,11 +93,13 @@ namespace RhythmBox.Tests.VisualTests.Overlays
             Reset();
             this.FadeInFromZero(100, Easing.In);
             box.FadeInFromZero(100, Easing.In);
-            _text.AddText("You've paused the game!", x => x.Font = new FontUsage("Roboto", 100));
+            _text.AddText("Here are some mods!", x => x.Font = new FontUsage("Roboto", 100));
             _text.Scale = new Vector2(0f);
             _text.FadeInFromZero(500, Easing.InBack);
             _text.ScaleTo(1f, 2000, Easing.OutElastic);
-            Scheduler.AddDelayed(() => _text.MoveToOffset(new Vector2(0f, -0.25f), 500, Easing.In), 1000);
+            Scheduler.AddDelayed(() => _text.MoveToOffset(new Vector2(0f, -0.25f), 500, Easing.In), 700);
+
+            Scheduler.AddDelayed(() => modBox.FadeInFromZero(100, Easing.In), 1200);
         }
 
         public void AnimationOut()

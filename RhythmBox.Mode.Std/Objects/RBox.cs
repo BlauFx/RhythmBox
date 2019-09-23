@@ -8,6 +8,8 @@ using osuTK.Graphics;
 using osuTK.Input;
 using RhythmBox.Mode.Std.Animations;
 using RhythmBox.Mode.Std.Interfaces;
+using RhythmBox.Mode.Std.Mods;
+using System.Collections.Generic;
 
 namespace RhythmBox.Mode.Std.Objects
 {
@@ -25,7 +27,7 @@ namespace RhythmBox.Mode.Std.Objects
 
         public HitObjects.Direction direction;
 
-        private RBoxObj obj { get; set; }
+        public RBoxObj obj { get; set; }
 
         /// <summary>
         /// AlphaA is the alpha of the drawable
@@ -37,6 +39,8 @@ namespace RhythmBox.Mode.Std.Objects
         public bool AddCombo { get; protected set; }
 
         public BindableBool Resuming = new BindableBool();
+
+        public List<Mod> mods { get; set; }
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -55,11 +59,16 @@ namespace RhythmBox.Mode.Std.Objects
                         Resuming = Resuming,
                     },
                 };
+
+                obj.OnLoadComplete += (e) =>
+                {
+                    ApplyMods(mods);
+                };
+
             }, time);
 
             UpdateAlphaA();
         }
-
 
         protected void UpdateAlphaA()
         {
@@ -103,9 +112,19 @@ namespace RhythmBox.Mode.Std.Objects
         {
             return obj.currentHit;
         }
+
+        private void ApplyMods(List<Mod> mod)
+        {
+            if (mod is null) return;
+
+            for (int i = 0; i < mod.Count; i++)
+            {
+                mod[i]?.AppyToHitObj(this);
+            }
+        }
     }
 
-    internal class RBoxObj : Container
+    public class RBoxObj : Container
     {
         public RBoxObj(HitObjects.Direction direction, float speed)
         {

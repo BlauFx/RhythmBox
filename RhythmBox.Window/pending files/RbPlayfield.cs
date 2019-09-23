@@ -3,12 +3,13 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Events;
-using osu.Framework.Logging;
 using osuTK;
 using osuTK.Input;
 using RhythmBox.Mode.Std.Animations;
 using RhythmBox.Mode.Std.Maps;
+using RhythmBox.Mode.Std.Mods;
 using RhythmBox.Mode.Std.Objects;
+using System.Collections.Generic;
 
 namespace RhythmBox.Window.pending_files
 {
@@ -38,6 +39,13 @@ namespace RhythmBox.Window.pending_files
         public BindableBool Resuming = new BindableBool();
 
         public BindableBool CanStart = new BindableBool();
+
+        private List<Mod> mods;
+
+        public RbPlayfield(List<Mod> mods)
+        {
+            this.mods = mods;
+        }
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -182,6 +190,7 @@ namespace RhythmBox.Window.pending_files
                     Size = new Vector2(1f),
                     speed = x.Speed,
                     Resuming = Resuming,
+                    mods = mods,
                 };
 
                 Scheduler.AddDelayed(() =>

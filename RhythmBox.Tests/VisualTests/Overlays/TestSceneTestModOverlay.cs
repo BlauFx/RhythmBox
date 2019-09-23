@@ -9,20 +9,21 @@ using osu.Framework.Input.Events;
 using osu.Framework.Testing;
 using osuTK;
 using osuTK.Graphics;
+using RhythmBox.Tests.Objects;
 
 namespace RhythmBox.Tests.VisualTests.Overlays
 {
     [TestFixture]
-    public class TestSceneTestBreakOverlay : TestScene
+    public class TestSceneTestModOverlay : TestScene
     {
-        private TestSceneBreakOverlay testSceneBreakOverlay;
+        private TestSceneModOverlay testSceneModOverlay;
 
         [BackgroundDependencyLoader]
         private void Load()
         {
             Children = new Drawable[]
             {
-                testSceneBreakOverlay = new TestSceneBreakOverlay
+                testSceneModOverlay = new TestSceneModOverlay
                 {
                     Depth = -1,
                     RelativePositionAxes = Axes.Both,
@@ -42,29 +43,31 @@ namespace RhythmBox.Tests.VisualTests.Overlays
                 }
             };
 
-            testSceneBreakOverlay.State.Value = Visibility.Hidden;
+            testSceneModOverlay.State.Value = Visibility.Hidden;
 
             AddWaitStep("Load", 1);
 
             AddStep("Animation 1 FadeIn", () =>
             {
-                testSceneBreakOverlay.State.Value = Visibility.Visible;
+                testSceneModOverlay.State.Value = Visibility.Visible;
             });
 
             AddWaitStep("wait for complete", 10);
 
             AddStep("Animation 1 FadeOut", () =>
             {
-                testSceneBreakOverlay.State.Value = Visibility.Hidden;
+                testSceneModOverlay.State.Value = Visibility.Hidden;
             });
         }
     }
 
-    public class TestSceneBreakOverlay : FocusedOverlayContainer
+    public class TestSceneModOverlay : FocusedOverlayContainer
     {
         public TextFlowContainer _text;
 
         private Box box;
+
+        public TestSceneMods modBox;
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -79,7 +82,7 @@ namespace RhythmBox.Tests.VisualTests.Overlays
                     Origin = Anchor.Centre,
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f),
-                    Colour = Color4.Black.Opacity(0.8f),
+                    Colour = Color4.Black.Opacity(0.3f),
                     Alpha = 0f,
                 },
                 _text = new TextFlowContainer
@@ -92,17 +95,27 @@ namespace RhythmBox.Tests.VisualTests.Overlays
                     Spacing = new Vector2(2f),
                     AutoSizeAxes = Axes.Both,
                     Alpha = 1f,
+                },
+                modBox = new TestSceneMods
+                {
+                    Depth = -1,
+                    RelativePositionAxes = Axes.Both,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(0.8f, 0.3f),
+                    Colour = Color4.Green.Opacity(0.8f),
+                    Alpha = 0f,
                 }
             };
         }
 
         protected override bool OnKeyDown(KeyDownEvent e)
         {
-            if (e.Key != osuTK.Input.Key.T)
+            if (e.Key == osuTK.Input.Key.G)
             {
-                return true;
+                this.State.Value = Visibility.Hidden;
             }
-            this.State.Value = Visibility.Hidden;
 
             return base.OnKeyDown(e);
         }
@@ -130,11 +143,13 @@ namespace RhythmBox.Tests.VisualTests.Overlays
             Reset();
             this.FadeInFromZero(100, Easing.In);
             box.FadeInFromZero(100, Easing.In);
-            _text.AddText("You've paused the game!", x => x.Font = new FontUsage("Roboto", 100));
+            _text.AddText("Here are some mods!", x => x.Font = new FontUsage("Roboto", 100));
             _text.Scale = new Vector2(0f);
             _text.FadeInFromZero(500, Easing.InBack);
             _text.ScaleTo(1f, 2000, Easing.OutElastic);
-            Scheduler.AddDelayed(() => _text.MoveToOffset(new Vector2(0f, -0.25f), 500, Easing.In), 1000);
+            Scheduler.AddDelayed(() => _text.MoveToOffset(new Vector2(0f, -0.25f), 500, Easing.In), 700);
+
+            Scheduler.AddDelayed(() => modBox.FadeInFromZero(100, Easing.In), 1200);
         }
 
         public void AnimationOut()

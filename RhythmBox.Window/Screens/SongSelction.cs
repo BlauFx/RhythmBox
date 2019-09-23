@@ -17,7 +17,9 @@ using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
 using RhythmBox.Mode.Std.Maps;
+using RhythmBox.Mode.Std.Mods;
 using RhythmBox.Window.Objects;
+using RhythmBox.Window.Overlays;
 using RhythmBox.Window.pending_files;
 
 namespace RhythmBox.Window.Screens
@@ -32,11 +34,22 @@ namespace RhythmBox.Window.Screens
 
         private bool WaitUntilLoaded = true;
 
+        private ModOverlay ModOverlay;
+
         [BackgroundDependencyLoader]
         private void Load(TextureStore store)
         {
             InternalChildren = new Drawable[]
             {
+                ModOverlay = new ModOverlay
+                {
+                    Depth = -1,
+                    RelativePositionAxes = Axes.Both,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(1f),
+                },
                 new Sprite
                 {
                     Anchor = Anchor.Centre,
@@ -53,6 +66,18 @@ namespace RhythmBox.Window.Screens
                     ClickAction = () =>
                     {
                         this.Exit();
+                    },
+                },
+                new SpriteButton
+                {
+                    Anchor = Anchor.BottomLeft,
+                    Origin = Anchor.BottomLeft,
+                    RelativePositionAxes = Axes.Both,
+                    Y = -0.1f,
+                    Texture = store.Get("Skin/Mods"),
+                    ClickAction = () =>
+                    {
+                      ModOverlay.State.Value = Visibility.Visible;
                     },
                 },
                 textBox = new BasicTextBox
@@ -72,9 +97,8 @@ namespace RhythmBox.Window.Screens
                         if (!WaitUntilLoaded)
                         {
                             GameplayScreen gameplayScreen;
-                            LoadComponent(gameplayScreen = new GameplayScreen(bindablePath.Value));
+                            LoadComponent(gameplayScreen = new GameplayScreen(bindablePath.Value, ModOverlay.modBox.ToApplyMods));
                             this.Push(gameplayScreen);
-                            //this.LoadComponentAsync(new GameplayScreen(), this.Push);
                         }
                     },
                 }
@@ -83,6 +107,7 @@ namespace RhythmBox.Window.Screens
             bindablePath.BindTo(scrollContainer.bindablePath);
 
             textBox.Current.ValueChanged += e => scrollContainer.search.SearchTerm = e.NewValue;
+
             scrollContainer.Show();
         }
 

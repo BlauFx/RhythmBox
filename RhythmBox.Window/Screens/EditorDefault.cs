@@ -87,7 +87,7 @@ namespace RhythmBox.Window.Screens
 
             rhythmBoxClockContainer.Children = new Drawable[]
             {
-                _testSceneRbPlayfield = new RbPlayfield
+                _testSceneRbPlayfield = new RbPlayfield(null)
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,

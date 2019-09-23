@@ -16,6 +16,7 @@ using osuTK.Input;
 using RhythmBox.Mode.Std.Tests.Maps;
 using RhythmBox.Tests.Objects;
 using RhythmBox.Tests.pending_files;
+using RhythmBox.Tests.VisualTests.Overlays;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -35,11 +36,22 @@ namespace RhythmBox.Tests.VisualTests.Screens
 
         private bool WaitUntilLoaded = true;
 
+        private TestSceneModOverlay testSceneModOverlay;
+
         [BackgroundDependencyLoader]
         private void Load(TextureStore store)
         {
             Children = new Drawable[]
             {
+                testSceneModOverlay = new TestSceneModOverlay
+                {
+                    Depth = -1,
+                    RelativePositionAxes = Axes.Both,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(1f),
+                },
                 new Sprite
                 {
                     Anchor = Anchor.Centre,
@@ -53,6 +65,18 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     Anchor = Anchor.BottomLeft,
                     Origin = Anchor.BottomLeft,
                     Texture = store.Get("Skin/Back"),
+                },
+                new TestSceneSpriteButton
+                {
+                    Anchor = Anchor.BottomLeft,
+                    Origin = Anchor.BottomLeft,
+                    RelativePositionAxes = Axes.Both,
+                    Y = -0.1f,
+                    Texture = store.Get("Skin/Mods"),
+                    ClickAction = () =>
+                    {
+                      testSceneModOverlay.State.Value = Visibility.Visible;
+                    },
                 },
                 textBox = new BasicTextBox
                 {

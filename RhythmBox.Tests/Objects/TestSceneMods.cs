@@ -1,0 +1,149 @@
+﻿using osu.Framework.Allocation;
+using osu.Framework.Extensions.Color4Extensions;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Shapes;
+using osu.Framework.Graphics.Textures;
+using osu.Framework.Input.Events;
+using osuTK;
+using osuTK.Graphics;
+using RhythmBox.Mode.Std.Tests.Mods;
+using System.Collections.Generic;
+
+namespace RhythmBox.Tests.Objects
+{
+    public class TestSceneMods : Container
+    {
+        public IEnumerable<Mod> Modlist = new Mod[]
+        {
+            new TestMod(),
+        };
+
+        private int IEnumerableLength;
+
+        public new Color4 Colour { get; set; }
+
+        private FillFlowContainer flowContainer;
+
+        public List<int> ToApplyMods = new List<int>();
+
+        [BackgroundDependencyLoader]
+        private void Load()
+        {
+            foreach (var x in Modlist)
+            {
+                IEnumerableLength++;
+            }
+
+            Color4 color = Color4.Red;
+
+            Children = new Drawable[]
+            {
+                new Box
+                {
+                    Depth = 0f,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(1f),
+                    Alpha = 1f,
+                    Colour = Colour,
+                },
+                flowContainer = new FillFlowContainer
+                {
+                    Depth = -1f,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(1f),
+                    Alpha = 1f,
+                },
+            };
+
+            for (int i = 0; i < IEnumerableLength; i++)
+            {
+                flowContainer.Add(new TestSceneDrawMod
+                {
+                    Depth = -2f,
+                    Anchor = Anchor.TopLeft,
+                    Origin = Anchor.TopLeft,
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(0.1f, 0.3f),
+                    Alpha = 1f,
+                    Colour = color,
+                    ToApplyMods = ToApplyMods,
+                    AddThisInt = i,
+                });
+
+                if (color == Color4.Blue)
+                {
+                    color = Color4.Red;
+                }
+                else
+                {
+                    color = Color4.Blue;
+                }
+            }
+        }
+    }
+
+    class TestSceneDrawMod : Container
+    {
+        public List<int> ToApplyMods;
+
+        public int AddThisInt;
+
+        public new Color4 Colour { get; set; }
+
+        private ThisBox box;
+
+        [BackgroundDependencyLoader]
+        private void Load(TextureStore store)
+        {
+            Children = new Drawable[]
+            {
+                box = new ThisBox
+                {
+                    Anchor = Anchor.TopLeft,
+                    Origin = Anchor.TopLeft,
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(1f),
+                    Alpha = 1f,
+                    Colour = Colour,
+                    ToApplyMods = ToApplyMods,
+                    AddThisInt = AddThisInt,
+                },
+            };
+        }
+    }
+
+    internal class ThisBox : Box
+    {
+        public List<int> ToApplyMods;
+
+        public int AddThisInt;
+
+        private bool Applied = false;
+
+        private Color4 orgColor;
+
+        protected override bool OnMouseDown(MouseDownEvent e)
+        {
+            if (!Applied)
+            {
+                Applied = true;
+                ToApplyMods.Add(AddThisInt);
+                orgColor = this.Colour;
+                this.Colour = Color4.Yellow.Opacity(0.7f);
+            }
+            else
+            {
+                //TODO: Remove AddThisInt from ToApplyMods
+                Applied = false;
+                this.Colour = orgColor;
+            }
+            
+            return base.OnMouseDown(e);
+        }
+    }
+}
