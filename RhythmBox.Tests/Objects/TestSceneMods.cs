@@ -25,7 +25,7 @@ namespace RhythmBox.Tests.Objects
 
         private FillFlowContainer flowContainer;
 
-        public List<int> ToApplyMods = new List<int>();
+        public List<Mod> ToApplyMods = new List<Mod>();
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -72,7 +72,6 @@ namespace RhythmBox.Tests.Objects
                     Alpha = 1f,
                     Colour = color,
                     ToApplyMods = ToApplyMods,
-                    AddThisInt = i,
                 });
 
                 if (color == Color4.Blue)
@@ -89,9 +88,7 @@ namespace RhythmBox.Tests.Objects
 
     class TestSceneDrawMod : Container
     {
-        public List<int> ToApplyMods;
-
-        public int AddThisInt;
+        public List<Mod> ToApplyMods;
 
         public new Color4 Colour { get; set; }
 
@@ -105,13 +102,13 @@ namespace RhythmBox.Tests.Objects
                 box = new ThisBox
                 {
                     Anchor = Anchor.TopLeft,
-                    Origin = Anchor.TopLeft,
+                    Origin = Anchor.Centre,
                     RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(1f),
+                    RelativeAnchorPosition = new Vector2(0.5f),
+                    Size = new Vector2(0.9f),
                     Alpha = 1f,
                     Colour = Colour,
                     ToApplyMods = ToApplyMods,
-                    AddThisInt = AddThisInt,
                 },
             };
         }
@@ -119,9 +116,7 @@ namespace RhythmBox.Tests.Objects
 
     internal class ThisBox : Box
     {
-        public List<int> ToApplyMods;
-
-        public int AddThisInt;
+        public List<Mod> ToApplyMods;
 
         private bool Applied = false;
 
@@ -132,14 +127,18 @@ namespace RhythmBox.Tests.Objects
             if (!Applied)
             {
                 Applied = true;
-                ToApplyMods.Add(AddThisInt);
+                ToApplyMods.Add(new TestMod());
                 orgColor = this.Colour;
                 this.Colour = Color4.Yellow.Opacity(0.7f);
+
+                this.Rotation += 20f;
             }
             else
             {
                 //TODO: Remove AddThisInt from ToApplyMods
                 Applied = false;
+
+                this.Rotation -= 20f;
                 this.Colour = orgColor;
             }
             
