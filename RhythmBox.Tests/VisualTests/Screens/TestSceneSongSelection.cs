@@ -36,14 +36,14 @@ namespace RhythmBox.Tests.VisualTests.Screens
 
         private bool WaitUntilLoaded = true;
 
-        private TestSceneModOverlay testSceneModOverlay;
+        private ModOverlay ModOverlay;
 
         [BackgroundDependencyLoader]
         private void Load(TextureStore store)
         {
             Children = new Drawable[]
             {
-                testSceneModOverlay = new TestSceneModOverlay
+                ModOverlay = new ModOverlay
                 {
                     Depth = -1,
                     RelativePositionAxes = Axes.Both,
@@ -75,7 +75,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     Texture = store.Get("Skin/Mods"),
                     ClickAction = () =>
                     {
-                      testSceneModOverlay.State.Value = Visibility.Visible;
+                      ModOverlay.State.Value = Visibility.Visible;
                     },
                 },
                 textBox = new BasicTextBox

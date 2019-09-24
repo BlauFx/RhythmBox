@@ -14,16 +14,16 @@ using RhythmBox.Tests.Objects;
 namespace RhythmBox.Tests.VisualTests.Overlays
 {
     [TestFixture]
-    public class TestSceneTestModOverlay : TestScene
+    public class TestSceneModOverlay : TestScene
     {
-        private TestSceneModOverlay testSceneModOverlay;
+        private ModOverlay modOverlay;
 
         [BackgroundDependencyLoader]
         private void Load()
         {
             Children = new Drawable[]
             {
-                testSceneModOverlay = new TestSceneModOverlay
+                modOverlay = new ModOverlay
                 {
                     Depth = -1,
                     RelativePositionAxes = Axes.Both,
@@ -43,25 +43,25 @@ namespace RhythmBox.Tests.VisualTests.Overlays
                 }
             };
 
-            testSceneModOverlay.State.Value = Visibility.Hidden;
+            modOverlay.State.Value = Visibility.Hidden;
 
             AddWaitStep("Load", 1);
 
             AddStep("Animation 1 FadeIn", () =>
             {
-                testSceneModOverlay.State.Value = Visibility.Visible;
+                modOverlay.State.Value = Visibility.Visible;
             });
 
             AddWaitStep("wait for complete", 10);
 
             AddStep("Animation 1 FadeOut", () =>
             {
-                testSceneModOverlay.State.Value = Visibility.Hidden;
+                modOverlay.State.Value = Visibility.Hidden;
             });
         }
     }
 
-    public class TestSceneModOverlay : FocusedOverlayContainer
+    public class ModOverlay : FocusedOverlayContainer
     {
         public TextFlowContainer _text;
 

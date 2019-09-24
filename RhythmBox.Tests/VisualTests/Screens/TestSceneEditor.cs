@@ -21,7 +21,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
     {
         private ScreenStack stack = null;
 
-        private TestEditorDefault testEditorDefault;
+        private EditorDefault testEditorDefault;
 
         private bool Can_new_TestSceneEditorDefault = true;
 
@@ -39,7 +39,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
                         RelativeSizeAxes = Axes.Both,
                     });
 
-                    LoadComponent(testEditorDefault = new TestEditorDefault()
+                    LoadComponent(testEditorDefault = new EditorDefault()
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
@@ -62,7 +62,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
             });
         }
     }
-    public class TestEditorDefault : Screen
+    public class EditorDefault : Screen
     {
         private Sprite background;
 
@@ -78,7 +78,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
 
         private BindableBool Resuming = new BindableBool(false);
 
-        public TestEditorDefault()
+        public EditorDefault()
         {
             string path = "null";
             if (path == "null")

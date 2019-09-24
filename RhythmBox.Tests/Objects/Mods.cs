@@ -3,11 +3,11 @@ using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
-using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Events;
 using osuTK;
 using osuTK.Graphics;
 using RhythmBox.Mode.Std.Mods;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace RhythmBox.Tests.Objects
@@ -30,11 +30,6 @@ namespace RhythmBox.Tests.Objects
         [BackgroundDependencyLoader]
         private void Load()
         {
-            foreach (var x in Modlist)
-            {
-                IEnumerableLength++;
-            }
-
             Color4 color = Color4.Red;
 
             Children = new Drawable[]
@@ -60,9 +55,9 @@ namespace RhythmBox.Tests.Objects
                 },
             };
 
-            for (int i = 0; i < IEnumerableLength; i++)
+            for (int i = 0; i < Modlist.Count(); i++)
             {
-                flowContainer.Add(new TestDrawMod
+                flowContainer.Add(new DrawMod
                 {
                     Depth = -2f,
                     Anchor = Anchor.TopLeft,
@@ -72,6 +67,7 @@ namespace RhythmBox.Tests.Objects
                     Alpha = 1f,
                     Colour = color,
                     ToApplyMods = ToApplyMods,
+                    Mod = Modlist.ToList()[i],
                 });
 
                 if (color == Color4.Blue)
@@ -86,61 +82,65 @@ namespace RhythmBox.Tests.Objects
         }
     }
 
-    class TestDrawMod : Container
+    class DrawMod : Container
     {
-        public List<Mod> ToApplyMods;
+        public List<Mod> ToApplyMods { get; set; }
+
+        public Mod Mod { get; set; }
 
         public new Color4 Colour { get; set; }
 
-        private ThisBox box;
-
         [BackgroundDependencyLoader]
-        private void Load(TextureStore store)
+        private void Load()
         {
-            Children = new Drawable[]
+            Child = new ThisBox(Mod)
             {
-                box = new ThisBox
-                {
-                    Anchor = Anchor.TopLeft,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Both,
-                    RelativeAnchorPosition = new Vector2(0.5f),
-                    Size = new Vector2(0.9f),
-                    Alpha = 1f,
-                    Colour = Colour,
-                    ToApplyMods = ToApplyMods,
-                },
+                Anchor = Anchor.TopLeft,
+                Origin = Anchor.TopLeft,
+                RelativeSizeAxes = Axes.Both,
+                Size = new Vector2(1f),
+                Alpha = 1f,
+                Colour = Colour,
+                ToApplyMods = ToApplyMods,
             };
         }
     }
 
     internal class ThisBox : Box
     {
-        public List<Mod> ToApplyMods;
+        public List<Mod> ToApplyMods { get; set; }
 
         private bool Applied = false;
 
         private Color4 orgColor;
+
+        public Mod Mod { get; set; }
+
+        public ThisBox(Mod mod)
+        {
+            this.Mod = mod;
+        }
 
         protected override bool OnMouseDown(MouseDownEvent e)
         {
             if (!Applied)
             {
                 Applied = true;
-                ToApplyMods.Add(new DummyMod());
+                ToApplyMods.Add(Mod);
+
                 orgColor = this.Colour;
                 this.Colour = Color4.Yellow.Opacity(0.7f);
-
                 this.Rotation += 20f;
             }
             else
             {
                 Applied = false;
+                ToApplyMods.Remove(Mod);
 
-                this.Rotation -= 20f;
                 this.Colour = orgColor;
+                this.Rotation -= 20f;
             }
-            
+
             return base.OnMouseDown(e);
         }
     }
