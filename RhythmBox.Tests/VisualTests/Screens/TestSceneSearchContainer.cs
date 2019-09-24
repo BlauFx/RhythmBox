@@ -63,9 +63,9 @@ namespace RhythmBox.Tests.VisualTests.Screens
 
             var testSceneMapReader = new TestSceneMapReader(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Songs\\TestMap\\Difficulty1.ini");
 
-            TestSceneMap[,] testSceneMap = new TestSceneMap[MapsCount, short.MaxValue];
+            Map[,] Map = new Map[MapsCount, short.MaxValue];
 
-            testSceneMap[0, 0] = new TestSceneMap
+            Map[0, 0] = new Map
             {
                 AFileName = testSceneMapReader.AFileName,
                 BGFile = testSceneMapReader.BGFile,
@@ -85,7 +85,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
                 Path = testSceneMapReader.Path,
             };
 
-            testSceneMap[1, 0] = new TestSceneMap
+            Map[1, 0] = new Map
             {
                 AFileName = testSceneMapReader.AFileName,
                 BGFile = testSceneMapReader.BGFile,
@@ -116,9 +116,9 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     Anchor = Anchor.CentreRight,
                     Origin = Anchor.CentreRight,
                     Colour = Color4.LightYellow,
-                    testSceneMap = testSceneMap,
+                    Map = Map,
                     testSceneMapPos = i,
-                    Search = testSceneMap[i, 0].Title,
+                    Search = Map[i, 0].Title,
                 };
             }
 

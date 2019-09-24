@@ -85,13 +85,13 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
 
         private TextFlowContainer DispayScore;
 
-        private TestSceneMap _map;
+        private Map _map;
 
         private TestSceneRbPlayfield _testSceneRbPlayfield;
 
-        private Mode.Std.Tests.Animations.TestSceneHpBar _hpBar;
+        private Mode.Std.Tests.Animations.HPBar _hpBar;
 
-        private TestSceneRhythmBoxClockContainer rhythmBoxClockContainer;
+        private TestRhythmBoxClockContainer rhythmBoxClockContainer;
 
         private Bindable<double> UserPlaybackRate = new BindableDouble(1);
 
@@ -154,7 +154,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
             }
 
             var testSceneMapReader = new TestSceneMapReader(path);
-            _map = new TestSceneMap
+            _map = new Map
             {
                 AFileName = testSceneMapReader.AFileName,
                 BGFile = testSceneMapReader.BGFile,
@@ -196,7 +196,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                 },
-                rhythmBoxClockContainer = new TestSceneRhythmBoxClockContainer(0)
+                rhythmBoxClockContainer = new TestRhythmBoxClockContainer(0)
                 {
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f)
@@ -238,7 +238,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                     Size = new Vector2(0.6f, 1f),
                     Map = _map,
                 },
-                _hpBar = new Mode.Std.Tests.Animations.TestSceneHpBar
+                _hpBar = new Mode.Std.Tests.Animations.HPBar
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,

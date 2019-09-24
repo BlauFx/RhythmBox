@@ -15,7 +15,7 @@ namespace RhythmBox.Tests.pending_files
 {
     public class TestSceneRbPlayfield : Container
     {
-        public TestSceneMap Map;
+        public Map Map;
 
         private TestSceneRBox[] objBoxArray;
 

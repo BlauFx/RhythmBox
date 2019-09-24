@@ -5,22 +5,16 @@ using osuTK.Input;
 
 namespace RhythmBox.Tests.Objects
 {
-    public class TestSceneSpriteButton : Sprite
+    public class TestSpriteButton : Sprite
     {
         public Action ClickAction;
 
         protected override bool OnMouseDown(MouseDownEvent e)
         {
             if (e.Button == MouseButton.Left)
-            {
-                Start();
-            }
-            return base.OnMouseDown(e);
-        }
+                ClickAction?.Invoke();
 
-        private void Start()
-        {
-            ClickAction?.Invoke();
+            return base.OnMouseDown(e);
         }
     }
 }

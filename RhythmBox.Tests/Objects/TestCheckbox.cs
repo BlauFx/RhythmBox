@@ -12,7 +12,7 @@ using osuTK.Graphics;
 
 namespace RhythmBox.Tests.Objects
 {
-    public class TestSceneCheckbox : CircularContainer
+    public class TestCheckbox : CircularContainer
     {
         protected Box Flash;
         public Action ClickAction;
@@ -85,7 +85,6 @@ namespace RhythmBox.Tests.Objects
                             RelativeSizeAxes = Axes.Both,
                             Alpha = 1F,
                             Texture = store.Get("Game/" + Texture),
-                           // Size = new Vector2(25),
                         }
                     }
                 },

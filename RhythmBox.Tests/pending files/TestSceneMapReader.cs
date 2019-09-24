@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace RhythmBox.Tests.pending_files
 {
-    public class TestSceneMapReader : ITestSceneMap
+    public class TestSceneMapReader : IMap
     {
         public string AFileName { get; set; } = string.Empty;
 

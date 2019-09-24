@@ -3,9 +3,9 @@ using RhythmBox.Mode.Std.Objects;
 
 namespace RhythmBox.Mode.Std.Mods
 {
-    public class TestMod : Mod
+    public class DummyMod : Mod
     {
-        public override string NAME => "TEST-NAME";
+        public override string NAME => "DummyMod";
 
         public override void AppyToHitObj(RBox obj)
         {

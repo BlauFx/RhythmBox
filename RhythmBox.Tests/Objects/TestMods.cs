@@ -12,7 +12,7 @@ using System.Collections.Generic;
 
 namespace RhythmBox.Tests.Objects
 {
-    public class TestSceneMods : Container
+    public class TestMods : Container
     {
         public IEnumerable<Mod> Modlist = new Mod[]
         {
@@ -62,7 +62,7 @@ namespace RhythmBox.Tests.Objects
 
             for (int i = 0; i < IEnumerableLength; i++)
             {
-                flowContainer.Add(new TestSceneDrawMod
+                flowContainer.Add(new TestDrawMod
                 {
                     Depth = -2f,
                     Anchor = Anchor.TopLeft,
@@ -86,7 +86,7 @@ namespace RhythmBox.Tests.Objects
         }
     }
 
-    class TestSceneDrawMod : Container
+    class TestDrawMod : Container
     {
         public List<Mod> ToApplyMods;
 
@@ -135,7 +135,6 @@ namespace RhythmBox.Tests.Objects
             }
             else
             {
-                //TODO: Remove AddThisInt from ToApplyMods
                 Applied = false;
 
                 this.Rotation -= 20f;

@@ -1,6 +1,6 @@
 ﻿namespace RhythmBox.Mode.Std.Tests.Interfaces
 {
-    public interface ITestSceneMap
+    public interface IMap
     {
         string AFileName { get; set; }
 

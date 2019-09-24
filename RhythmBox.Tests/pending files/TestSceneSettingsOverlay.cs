@@ -15,7 +15,7 @@ namespace RhythmBox.Tests.pending_files
 {
     public class TestSceneSettingsOverlay : FocusedOverlayContainer
     {
-        private TestSceneCheckbox TestCheckbox;
+        private TestCheckbox TestCheckbox;
 
         private Bindable<bool> bindable1 = new Bindable<bool>();
 
@@ -118,7 +118,7 @@ namespace RhythmBox.Tests.pending_files
                                             Text = "Test:",
                                             Font = new FontUsage("Roboto",25),
                                         },
-                                        TestCheckbox = new TestSceneCheckbox
+                                        TestCheckbox = new TestCheckbox
                                         {
                                             Depth = 2,
                                             Anchor = Anchor.TopLeft,

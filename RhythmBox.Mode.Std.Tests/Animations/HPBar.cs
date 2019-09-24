@@ -5,25 +5,22 @@ using osu.Framework.Graphics.Shapes;
 using osuTK;
 using osuTK.Graphics;
 
-namespace RhythmBox.Mode.Std.Animations
+namespace RhythmBox.Mode.Std.Tests.Animations
 {
-    public class HpBar : Container
+    public class HPBar : CompositeDrawable
     {
         public Box _box;
 
         public float BoxMaxValue = 0.4f;
 
-        public float CurrentValue
-        {
-            get => _box.Width;
-        }
+        public float CurrentValue => _box.Width;
 
         public Color4 colour;
         
         [BackgroundDependencyLoader]
         private void Load()
         {
-            Child = _box = new Box
+            InternalChild = _box = new Box
             {
                 Depth = 0,
                 Anchor = Anchor.TopLeft,
@@ -38,6 +35,9 @@ namespace RhythmBox.Mode.Std.Animations
             };
         }
 
-        public void ResizeBox(float value, double duration, Easing easing) => _box.ResizeWidthTo(value, duration, easing);
+        public void ResizeBox(float value, double duration, Easing easing)
+        {
+            _box.ResizeWidthTo(value, duration, easing);
+        }
     }
 }

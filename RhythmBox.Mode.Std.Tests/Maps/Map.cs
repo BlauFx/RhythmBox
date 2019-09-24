@@ -3,7 +3,7 @@ using RhythmBox.Mode.Std.Tests.Interfaces;
 
 namespace RhythmBox.Mode.Std.Tests.Maps
 {
-    public class TestSceneMap : ITestSceneMap, IEnumerable
+    public class Map : IMap, IEnumerable
     {
         /// <summary>
         /// This is the filename of the audio file.

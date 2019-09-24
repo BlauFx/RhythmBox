@@ -68,13 +68,13 @@ namespace RhythmBox.Tests.VisualTests.Screens
 
         private TestSceneRbPlayfield _testSceneRbPlayfield;
 
-        private TestSceneRhythmBoxClockContainer rhythmBoxClockContainer;
+        private TestRhythmBoxClockContainer rhythmBoxClockContainer;
 
         private BindableBool IsPaused = new BindableBool();
 
         private BindableDouble UserPlaybackRate = new BindableDouble(1);
 
-        private TestSceneMap map;
+        private Map map;
 
         private BindableBool Resuming = new BindableBool(false);
 
@@ -91,7 +91,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
             }
 
             var testSceneMapReader = new TestSceneMapReader(path);
-            map = new TestSceneMap
+            map = new Map
             {
                 AFileName = testSceneMapReader.AFileName,
                 BGFile = testSceneMapReader.BGFile,
@@ -126,7 +126,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     Alpha = 0.7f,
                     Texture = store.Get("Skin/menu-background"),
                 },
-                rhythmBoxClockContainer = new TestSceneRhythmBoxClockContainer(0)
+                rhythmBoxClockContainer = new TestRhythmBoxClockContainer(0)
                 {
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f)

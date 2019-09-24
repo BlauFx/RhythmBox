@@ -7,7 +7,7 @@ using osu.Framework.Timing;
 
 namespace RhythmBox.Tests.Clock
 {
-    public class TestSceneRhythmBoxClockContainer : Container
+    public class TestRhythmBoxClockContainer : Container
     {
         private readonly IAdjustableClock adjustableClock;
 
@@ -19,8 +19,8 @@ namespace RhythmBox.Tests.Clock
 
         public readonly Bindable<double> UserPlaybackRate = new BindableDouble(1) { Default = 1, MinValue = 0.1, MaxValue = 3, Precision = 0.1 };
 
-        [Cached]
-        public readonly TestSceneRhythmBoxClock RhythmBoxClock;
+        //TODO:
+        public readonly TestRhythmBoxClock RhythmBoxClock;
 
         private readonly FramedOffsetClock userOffsetClock;
 
@@ -30,20 +30,22 @@ namespace RhythmBox.Tests.Clock
 
         private double totalOffset => userOffsetClock.Offset + platformOffsetClock.Offset;
 
-        public TestSceneRhythmBoxClockContainer(double GamplayStartTime)
+        public TestRhythmBoxClockContainer(double GamplayStartTime)
         {
             this.GamplayStartTime = GamplayStartTime;
 
             adjustableClock = new StopwatchClock();
             (adjustableClock as IAdjustableAudioComponent)?.AddAdjustment(AdjustableProperty.Frequency, pauseFreqAdjust);
 
-            decoupleableClock = new DecoupleableInterpolatingFramedClock { IsCoupled = false };
+            decoupleableClock = new DecoupleableInterpolatingFramedClock { IsCoupled = false, AllowableErrorMilliseconds = 0 };
+
+            decoupleableClock.ChangeSource(adjustableClock);
 
             platformOffsetClock = new FramedOffsetClock(decoupleableClock) { Offset = 0 };
 
-            userOffsetClock = new FramedOffsetClock(platformOffsetClock);
+            userOffsetClock = new FramedOffsetClock(platformOffsetClock) { Offset = 0 };
 
-            RhythmBoxClock = new TestSceneRhythmBoxClock(userOffsetClock);
+            RhythmBoxClock = new TestRhythmBoxClock(userOffsetClock);
 
             RhythmBoxClock.IsPaused.BindTo(IsPaused);
         }

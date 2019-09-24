@@ -60,13 +60,13 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     Size = new Vector2(1f),
                     Texture = store.Get("Skin/menu-background"), //TOOD: Maybe Map => Background?
                 },
-                new TestSceneSpriteButton
+                new TestSpriteButton
                 {
                     Anchor = Anchor.BottomLeft,
                     Origin = Anchor.BottomLeft,
                     Texture = store.Get("Skin/Back"),
                 },
-                new TestSceneSpriteButton
+                new TestSpriteButton
                 {
                     Anchor = Anchor.BottomLeft,
                     Origin = Anchor.BottomLeft,
@@ -202,7 +202,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
             }
 
             int[] MapsCount2 = new int[list.Count];
-            TestSceneMap[,] testSceneMaps = new TestSceneMap[MapsCount2.Length, short.MaxValue];
+            Map[,] Maps = new Map[MapsCount2.Length, short.MaxValue];
 
             for (int i = 0; i < list.Count; i++)
             {
@@ -217,7 +217,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     {
                         var testSceneMapReader = new TestSceneMapReader(Files[j].FullName);
 
-                        testSceneMaps[i, j] = new TestSceneMap
+                        Maps[i, j] = new Map
                         {
                             AFileName = testSceneMapReader.AFileName,
                             BGFile = testSceneMapReader.BGFile,
@@ -251,8 +251,8 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     Anchor = Anchor.TopRight,
                     Origin = Anchor.TopRight,
                     Colour = Color4.Blue,
-                    Search = testSceneMaps[i, 0].Title,
-                    testSceneMap = testSceneMaps,
+                    Search = Maps[i, 0].Title,
+                    Map = Maps,
                     testSceneMapPos = i,
                     InvokeBox = ClickOnMap,
                     bindablePath = bindablePath,

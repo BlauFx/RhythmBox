@@ -216,290 +216,191 @@ namespace RhythmBox.Mode.Std.Objects
             switch (key)
             {
                 case Key.W:
-                {
-                    if (direction == HitObjects.Direction.Up)
                     {
-                        if (bx.Y <= -0.5 + 0.05f && bx.Y >= -0.50001f)
+                        if (direction == HitObjects.Direction.Up)
                         {
-                            AddCombo = true;
-                            Wait++;
-                            currentHit = Hit.Hit300;
-
-                            Add(new HitAnimation(Hit.Hit300)
+                            if (bx.Y <= -0.5 + 0.05f && bx.Y >= -0.50001f)
                             {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                RelativePositionAxes = Axes.Both,
-                                X = bx.X,
-                                Y = bx.Y + 0.00f,
-                            });
-                        }
-                        else if (bx.Y <= -0.35f && bx.Y >= -0.5f + 0.05f)
-                        {
-                            AddCombo = true;
-                            Wait++;
-                            currentHit = Hit.Hit100;
+                                AddCombo = true;
+                                Wait++;
+                                currentHit = Hit.Hit300;
 
-                            Add(new HitAnimation(Hit.Hit100)
+                                Add(HitAnimation(Hit.Hit300, bx.Y));
+                            }
+                            else if (bx.Y <= -0.35f && bx.Y >= -0.5f + 0.05f)
                             {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                RelativePositionAxes = Axes.Both,
-                                X = bx.X,
-                                Y = bx.Y,
-                            });
-                        }
-                        else if (bx.Y <= -0.25f && bx.Y >= -0.35f)
-                        {
-                            AddCombo = true;
-                            Wait++;
-                            currentHit = Hit.Hit50;
+                                AddCombo = true;
+                                Wait++;
+                                currentHit = Hit.Hit100;
 
-                            Add(new HitAnimation(Hit.Hit50)
+                                Add(HitAnimation(Hit.Hit100, bx.Y));
+                            }
+                            else if (bx.Y <= -0.25f && bx.Y >= -0.35f)
                             {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                RelativePositionAxes = Axes.Both,
-                                X = bx.X,
-                                Y = bx.Y,
-                            });
-                        }
-                        else if (bx.Y <= 0f && bx.Y >= -0.25f)
-                        {
-                            //TODO: AddFail = true;
-                            AddCombo = false;
-                            Wait++;
-                            currentHit = Hit.Hitx;
+                                AddCombo = true;
+                                Wait++;
+                                currentHit = Hit.Hit50;
 
-                            Add(new HitAnimation(Hit.Hitx)
+                                Add(HitAnimation(Hit.Hit50, bx.Y));
+                            }
+                            else if (bx.Y <= 0f && bx.Y >= -0.25f)
                             {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                RelativePositionAxes = Axes.Both,
-                                X = bx.X,
-                                Y = bx.Y,
-                            });
+                                //TODO: AddFail = true;
+                                AddCombo = false;
+                                Wait++;
+                                currentHit = Hit.Hitx;
+
+                                Add(HitAnimation(Hit.Hitx, bx.Y));
+                            }
+
+                            Remove(Clear, Expire);
                         }
 
-                        Remove(Clear, Expire);
+                        break;
                     }
-
-                    break;
-                }
 
                 case Key.A:
-                {
-                    if (direction == HitObjects.Direction.Left)
                     {
-                        if (bx.X <= -0.5 + 0.05f && bx.X >= -0.50001f)
+                        if (direction == HitObjects.Direction.Left)
                         {
-                            AddCombo = true;
-                            Wait++;
-                            currentHit = Hit.Hit300;
-
-                            Add(new HitAnimation(Hit.Hit300)
+                            if (bx.X <= -0.5 + 0.05f && bx.X >= -0.50001f)
                             {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                RelativePositionAxes = Axes.Both,
-                                X = bx.X,
-                                Y = bx.Y,
-                            });
-                        }
-                        else if (bx.X <= -0.35f && bx.Y >= -0.5f + 0.05f)
-                        {
-                            AddCombo = true;
-                            Wait++;
-                            currentHit = Hit.Hit100;
+                                AddCombo = true;
+                                Wait++;
+                                currentHit = Hit.Hit300;
 
-                            Add(new HitAnimation(Hit.Hit100)
+                                Add(HitAnimation(Hit.Hit300, bx.Y));
+                            }
+                            else if (bx.X <= -0.35f && bx.Y >= -0.5f + 0.05f)
                             {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                RelativePositionAxes = Axes.Both,
-                                X = bx.X,
-                                Y = bx.Y,
-                            });
-                        }
-                        else if (bx.X <= -0.25f && bx.Y >= -0.35f)
-                        {
-                            AddCombo = true;
-                            Wait++;
-                            currentHit = Hit.Hit50;
+                                AddCombo = true;
+                                Wait++;
+                                currentHit = Hit.Hit100;
 
-                            Add(new HitAnimation(Hit.Hit50)
+                                Add(HitAnimation(Hit.Hit100, bx.Y));
+                            }
+                            else if (bx.X <= -0.25f && bx.Y >= -0.35f)
                             {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                RelativePositionAxes = Axes.Both,
-                                X = bx.X,
-                                Y = bx.Y,
-                            });
-                        }
-                        else if (bx.X <= 0f && bx.Y >= -0.25f)
-                        {
-                            AddCombo = false;
-                            Wait++;
-                            currentHit = Hit.Hitx;
+                                AddCombo = true;
+                                Wait++;
+                                currentHit = Hit.Hit50;
 
-                            Add(new HitAnimation(Hit.Hitx)
+                                Add(HitAnimation(Hit.Hit50, bx.Y));
+                            }
+                            else if (bx.X <= 0f && bx.Y >= -0.25f)
                             {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                RelativePositionAxes = Axes.Both,
-                                X = bx.X,
-                                Y = bx.Y,
-                            });
+                                AddCombo = false;
+                                Wait++;
+                                currentHit = Hit.Hitx;
+
+                                Add(HitAnimation(Hit.Hitx, bx.Y));
+                            }
+
+                            Remove(Clear, Expire);
                         }
 
-                        Remove(Clear, Expire);
+                        break;
                     }
-
-                    break;
-                }
 
                 case Key.S:
-                {
-                    if (direction == HitObjects.Direction.Down)
                     {
-                        if (bx.Y >= 0.5 - 0.05f && bx.Y <= 0.50001f)
+                        if (direction == HitObjects.Direction.Down)
                         {
-                            AddCombo = true;
-                            Wait++;
-                            currentHit = Hit.Hit300;
-
-                            Add(new HitAnimation(Hit.Hit300)
+                            if (bx.Y >= 0.5f - 0.05f && bx.Y <= 0.50001f)
                             {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                RelativePositionAxes = Axes.Both,
-                                X = bx.X,
-                                Y = bx.Y - 0.05f,
-                            });
-                        }
-                        else if (bx.Y >= 0.35f && bx.Y <= 0.5f - 0.05f)
-                        {
-                            AddCombo = true;
-                            Wait++;
-                            currentHit = Hit.Hit100;
+                                AddCombo = true;
+                                Wait++;
+                                currentHit = Hit.Hit300;
 
-                            Add(new HitAnimation(Hit.Hit100)
+                                Add(HitAnimation(Hit.Hit300, bx.Y - 0.05f));
+                            }
+                            else if (bx.Y >= 0.35f && bx.Y <= 0.5f - 0.05f)
                             {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                RelativePositionAxes = Axes.Both,
-                                X = bx.X,
-                                Y = bx.Y - 0.05f,
-                            });
-                        }
-                        else if (bx.Y >= 0.25f && bx.Y <= 0.35f)
-                        {
-                            AddCombo = true;
-                            Wait++;
-                            currentHit = Hit.Hit50;
+                                AddCombo = true;
+                                Wait++;
+                                currentHit = Hit.Hit100;
 
-                            Add(new HitAnimation(Hit.Hit50)
+                                Add(HitAnimation(Hit.Hit100, bx.Y - 0.05f));
+                            }
+                            else if (bx.Y >= 0.25f && bx.Y <= 0.35f)
                             {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                RelativePositionAxes = Axes.Both,
-                                X = bx.X,
-                                Y = bx.Y - 0.05f,
-                            });
-                        }
-                        else if (bx.Y >= 0f && bx.Y <= 0.25f)
-                        {
-                            AddCombo = false;
-                            Wait++;
-                            currentHit = Hit.Hitx;
+                                AddCombo = true;
+                                Wait++;
+                                currentHit = Hit.Hit50;
 
-                            Add(new HitAnimation(Hit.Hitx)
+                                Add(HitAnimation(Hit.Hit50, bx.Y - 0.05f));
+                            }
+                            else if (bx.Y >= 0f && bx.Y <= 0.25f)
                             {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                RelativePositionAxes = Axes.Both,
-                                X = bx.X,
-                                Y = bx.Y - 0.05f,
-                            });
+                                AddCombo = false;
+                                Wait++;
+                                currentHit = Hit.Hitx;
+
+                                Add(HitAnimation(Hit.Hitx, bx.Y - 0.05f));
+                            }
+
+                            Remove(Clear, Expire);
                         }
 
-                        Remove(Clear, Expire);
+                        break;
                     }
-
-                    break;
-                }
 
                 case Key.D:
-                {
-                    if (direction == HitObjects.Direction.Right)
                     {
-                        if (bx.X >= 0.5 - 0.05f && bx.X <= 0.50001f)
+                        if (direction == HitObjects.Direction.Right)
                         {
-                            AddCombo = true;
-                            Wait++;
-                            currentHit = Hit.Hit300;
-
-                            Add(new HitAnimation(Hit.Hit300)
+                            if (bx.X >= 0.5 - 0.05f && bx.X <= 0.50001f)
                             {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                RelativePositionAxes = Axes.Both,
-                                X = bx.X,
-                                Y = bx.Y,
-                            });
-                        }
-                        else if (bx.X >= 0.35f && bx.Y <= 0.5f + 0.05f)
-                        {
-                            AddCombo = true;
-                            Wait++;
-                            currentHit = Hit.Hit100;
+                                AddCombo = true;
+                                Wait++;
+                                currentHit = Hit.Hit300;
 
-                            Add(new HitAnimation(Hit.Hit100)
+                                Add(HitAnimation(Hit.Hit300, bx.Y));
+                            }
+                            else if (bx.X >= 0.35f && bx.Y <= 0.5f + 0.05f)
                             {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                RelativePositionAxes = Axes.Both,
-                                X = bx.X,
-                                Y = bx.Y,
-                            });
-                        }
-                        else if (bx.X >= 0.25f && bx.Y <= 0.35f)
-                        {
-                            AddCombo = true;
-                            Wait++;
-                            currentHit = Hit.Hit50;
+                                AddCombo = true;
+                                Wait++;
+                                currentHit = Hit.Hit100;
 
-                            Add(new HitAnimation(Hit.Hit50)
+                                Add(HitAnimation(Hit.Hit100, bx.Y));
+                            }
+                            else if (bx.X >= 0.25f && bx.Y <= 0.35f)
                             {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                RelativePositionAxes = Axes.Both,
-                                X = bx.X,
-                                Y = bx.Y,
-                            });
-                        }
-                        else if (bx.X >= 0f && bx.Y <= 0.25f)
-                        {
-                            AddCombo = false;
-                            Wait++;
-                            currentHit = Hit.Hitx;
+                                AddCombo = true;
+                                Wait++;
+                                currentHit = Hit.Hit50;
 
-                            Add(new HitAnimation(Hit.Hitx)
+                                Add(HitAnimation(Hit.Hit50, bx.Y));
+                            }
+                            else if (bx.X >= 0f && bx.Y <= 0.25f)
                             {
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                RelativePositionAxes = Axes.Both,
-                                X = bx.X,
-                                Y = bx.Y,
-                            });
+                                AddCombo = false;
+                                Wait++;
+                                currentHit = Hit.Hitx;
+
+                                Add(HitAnimation(Hit.Hitx, bx.Y));
+                            }
+
+                            Remove(Clear, Expire);
                         }
 
-                        Remove(Clear, Expire);
+                        break;
                     }
-
-                    break;
-                }
             }
+        }
+
+        private Drawable HitAnimation(Hit hit, float Y)
+        {
+            return new HitAnimation(hit)
+            {
+                Depth = float.MinValue,
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+                RelativePositionAxes = Axes.Both,
+                X = bx.X,
+                Y = Y,
+            };
         }
     }
 

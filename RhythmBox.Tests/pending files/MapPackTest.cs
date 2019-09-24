@@ -50,7 +50,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
 
         public int Maps { get; set; } = 1;
 
-        public TestSceneMap[,] testSceneMap { get; set; }
+        public Map[,] Map { get; set; }
 
         public int testSceneMapPos { get; set; }
 
@@ -71,7 +71,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
         [BackgroundDependencyLoader]
         private void Load()
         {
-            var testScneneThisMap = testSceneMap[testSceneMapPos, 0];
+            var testScneneThisMap = Map[testSceneMapPos, 0];
 
             RelativeSizeAxes = Axes.X;
             Size = new Vector2(1f, 0f);
@@ -135,7 +135,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
             //TODO: float -int
             for (float i = 1; i < Maps + 1; i++)
             {
-                var x = testSceneMap[testSceneMapPos, (int)i - 1];
+                var x = Map[testSceneMapPos, (int)i - 1];
 
                 Add(new BoxTest
                 {
@@ -181,7 +181,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
 
         private TextFlowContainer textFlowContainer;
 
-        public TestSceneMap testScneneThisMap { get; set; }
+        public Map testScneneThisMap { get; set; }
 
         [BackgroundDependencyLoader]
         private void Load()

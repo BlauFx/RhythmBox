@@ -17,11 +17,11 @@ namespace RhythmBox.Tests.VisualTests.Clock
     {
         private SpriteText sptText;
 
-        private TestSceneMap map;
+        private Map map;
 
         private TestSceneRbPlayfield playfield;
 
-        private TestSceneRhythmBoxClockContainer rhythmBoxClockContainer;
+        private TestRhythmBoxClockContainer rhythmBoxClockContainer;
 
         private BindableDouble UserPlaybackRate = new BindableDouble(1);
 
@@ -32,7 +32,7 @@ namespace RhythmBox.Tests.VisualTests.Clock
         [BackgroundDependencyLoader]
         private void Load()
         {
-            map = new TestSceneMap
+            map = new Map
             {
                 AFileName = "null",
                 BGFile = "none",
@@ -64,7 +64,7 @@ namespace RhythmBox.Tests.VisualTests.Clock
                     Origin = Anchor.Centre,
                     Text = "0",
                 },
-                rhythmBoxClockContainer = new TestSceneRhythmBoxClockContainer(0)
+                rhythmBoxClockContainer = new TestRhythmBoxClockContainer(0)
                 {
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f)

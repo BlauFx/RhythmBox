@@ -2,7 +2,6 @@
 using osu.Framework.Allocation;
 using osu.Framework.Configuration;
 using osu.Framework.IO.Stores;
-using osu.Framework.Platform;
 using RhythmBox.Window.pending_files;
 using System.Collections.Generic;
 using System.Drawing;
