@@ -16,6 +16,11 @@ namespace RhythmBox.Mode.Std.Tests.Objects
     public class RBox : Container
     {
         /// <summary>
+        /// set the time when the drawable should be applied
+        /// </summary>
+        public double time { get; set; } = 0;
+
+        /// <summary>
         /// if speed is higher then the animation / animation of the drawble get's slower
         /// </summary>
         public float speed { get; set; } = 1f;

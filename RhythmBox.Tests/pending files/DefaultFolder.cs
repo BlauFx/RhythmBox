@@ -1,4 +1,4 @@
-﻿using RhythmBox.Mode.Std.Tests.Interfaces;
+﻿using RhythmBox.Mode.Std.Interfaces;
 using System.IO;
 using System.Reflection;
 
@@ -38,10 +38,10 @@ namespace RhythmBox.Tests.pending_files
             HitObjects[2] = new HitObjects();
             HitObjects[3] = new HitObjects();
 
-            HitObjects[0]._direction = Mode.Std.Tests.Interfaces.HitObjects.Direction.Up;
-            HitObjects[1]._direction = Mode.Std.Tests.Interfaces.HitObjects.Direction.Right;
-            HitObjects[2]._direction = Mode.Std.Tests.Interfaces.HitObjects.Direction.Left;
-            HitObjects[3]._direction = Mode.Std.Tests.Interfaces.HitObjects.Direction.Down;
+            HitObjects[0]._direction = Mode.Std.Interfaces.HitObjects.Direction.Up;
+            HitObjects[1]._direction = Mode.Std.Interfaces.HitObjects.Direction.Right;
+            HitObjects[2]._direction = Mode.Std.Interfaces.HitObjects.Direction.Left;
+            HitObjects[3]._direction = Mode.Std.Interfaces.HitObjects.Direction.Down;
 
             HitObjects[0].Speed = 1f;
             HitObjects[1].Speed = 1f;

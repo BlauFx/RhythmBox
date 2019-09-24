@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RhythmBox.Mode.Std.Tests\RhythmBox.Mode.Std.Tests.csproj" />
+    <ProjectReference Include="..\RhythmBox.Mode.Std\RhythmBox.Mode.Std.csproj" />
     <ProjectReference Include="..\RhythmBox.Window.Resources\RhythmBox.Window.Resources.csproj" />
   </ItemGroup>
 

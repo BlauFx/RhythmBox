@@ -7,7 +7,7 @@ using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Events;
 using osuTK;
 using osuTK.Graphics;
-using RhythmBox.Mode.Std.Tests.Mods;
+using RhythmBox.Mode.Std.Mods;
 using System.Collections.Generic;
 
 namespace RhythmBox.Tests.Objects
@@ -16,7 +16,7 @@ namespace RhythmBox.Tests.Objects
     {
         public IEnumerable<Mod> Modlist = new Mod[]
         {
-            new TestMod(),
+            new DummyMod(),
         };
 
         private int IEnumerableLength;
@@ -127,7 +127,7 @@ namespace RhythmBox.Tests.Objects
             if (!Applied)
             {
                 Applied = true;
-                ToApplyMods.Add(new TestMod());
+                ToApplyMods.Add(new DummyMod());
                 orgColor = this.Colour;
                 this.Colour = Color4.Yellow.Opacity(0.7f);
 

@@ -8,7 +8,7 @@ using osu.Framework.Input.Events;
 using osu.Framework.Screens;
 using osu.Framework.Testing;
 using osuTK;
-using RhythmBox.Mode.Std.Tests.Maps;
+using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Tests.Clock;
 using RhythmBox.Tests.pending_files;
 using System.IO;

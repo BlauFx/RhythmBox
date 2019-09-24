@@ -15,9 +15,9 @@ using osu.Framework.Screens;
 using osu.Framework.Testing;
 using osuTK;
 using osuTK.Graphics;
-using RhythmBox.Mode.Std.Tests.Animations;
-using RhythmBox.Mode.Std.Tests.Maps;
-using RhythmBox.Mode.Std.Tests.Mods;
+using RhythmBox.Mode.Std.Animations;
+using RhythmBox.Mode.Std.Maps;
+using RhythmBox.Mode.Std.Mods;
 using RhythmBox.Tests.Clock;
 using RhythmBox.Tests.pending_files;
 using RhythmBox.Tests.VisualTests.Animations;
@@ -89,7 +89,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
 
         private RbPlayfield _testSceneRbPlayfield;
 
-        private Mode.Std.Tests.Animations.HPBar _hpBar;
+        private HpBar _hpBar;
 
         private RhythmBoxClockContainer rhythmBoxClockContainer;
 
@@ -238,7 +238,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                     Size = new Vector2(0.6f, 1f),
                     Map = _map,
                 },
-                _hpBar = new Mode.Std.Tests.Animations.HPBar
+                _hpBar = new Mode.Std.Animations.HpBar
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,

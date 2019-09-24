@@ -5,10 +5,10 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Events;
 using osuTK;
 using osuTK.Input;
-using RhythmBox.Mode.Std.Tests.Animations;
-using RhythmBox.Mode.Std.Tests.Maps;
-using RhythmBox.Mode.Std.Tests.Mods;
-using RhythmBox.Mode.Std.Tests.Objects;
+using RhythmBox.Mode.Std.Animations;
+using RhythmBox.Mode.Std.Maps;
+using RhythmBox.Mode.Std.Mods;
+using RhythmBox.Mode.Std.Objects;
 using System.Collections.Generic;
 
 namespace RhythmBox.Tests.pending_files
@@ -176,7 +176,7 @@ namespace RhythmBox.Tests.pending_files
 
             foreach (var objBox in Map)
             {
-                var x = (Mode.Std.Tests.Interfaces.HitObjects) objBox;
+                var x = (Mode.Std.Interfaces.HitObjects) objBox;
 
                 objBoxArray[i] = new RBox
                 {

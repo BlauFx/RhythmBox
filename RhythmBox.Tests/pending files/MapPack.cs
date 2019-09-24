@@ -8,7 +8,7 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
 using osuTK;
 using osuTK.Graphics;
-using RhythmBox.Mode.Std.Tests.Maps;
+using RhythmBox.Mode.Std.Maps;
 using System;
 using System.Collections.Generic;
 using System.Linq;

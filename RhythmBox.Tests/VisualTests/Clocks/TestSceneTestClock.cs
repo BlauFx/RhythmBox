@@ -6,7 +6,7 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
 using osu.Framework.Testing;
 using osuTK;
-using RhythmBox.Mode.Std.Tests.Maps;
+using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Tests.Clock;
 using RhythmBox.Tests.pending_files;
 
@@ -41,7 +41,7 @@ namespace RhythmBox.Tests.VisualTests.Clock
                 BPM = 150,
                 Objects = 10,
                 AutoMap = false,
-                Mode = RhythmBox.Mode.Std.Tests.Interfaces.GameMode.STD,
+                Mode = Mode.Std.Interfaces.GameMode.STD,
                 Title = "Test Title",
                 Artist = "Test Artist",
                 Creator = "Test Creator",
@@ -50,9 +50,9 @@ namespace RhythmBox.Tests.VisualTests.Clock
                 EndTime = 1000
             };
 
-            map.HitObjects = new Mode.Std.Tests.Interfaces.HitObjects[1];
-            map.HitObjects[0] = new RhythmBox.Mode.Std.Tests.Interfaces.HitObjects();
-            map.HitObjects[0]._direction = RhythmBox.Mode.Std.Tests.Interfaces.HitObjects.Direction.Up;
+            map.HitObjects = new Mode.Std.Interfaces.HitObjects[1];
+            map.HitObjects[0] = new Mode.Std.Interfaces.HitObjects();
+            map.HitObjects[0]._direction = Mode.Std.Interfaces.HitObjects.Direction.Up;
             map.HitObjects[0].Speed = 2f;
             map.HitObjects[0].Time = 200;
 

@@ -13,7 +13,7 @@ using osu.Framework.Testing;
 using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
-using RhythmBox.Mode.Std.Tests.Maps;
+using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Tests.Objects;
 using RhythmBox.Tests.pending_files;
 using RhythmBox.Tests.VisualTests.Overlays;

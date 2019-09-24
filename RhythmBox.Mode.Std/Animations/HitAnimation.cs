@@ -9,15 +9,17 @@ namespace RhythmBox.Mode.Std.Animations
 {
     public class HitAnimation : Container
     {
-        private Sprite hitx;
-
-        private Sprite hit50;
-
-        private Sprite hit100;
-
-        private Sprite hit300;
+        private Sprite hitSprite;
 
         private Hit hit;
+
+        private const float FadeInTime = 400;
+
+        private const float FadeOutTime = 400;
+
+        private const float WaitTilFadeOutTime = 200;
+
+        private const float HitXRoation = FadeInTime - 100;
 
         public HitAnimation(Hit hit = Hit.Hit300)
         {
@@ -27,97 +29,67 @@ namespace RhythmBox.Mode.Std.Animations
         [BackgroundDependencyLoader]
         private void Load(TextureStore store)
         {
-            Children = new Drawable[]
+            Child = hitSprite = new Sprite
             {
-                hit300 = new Sprite
-                {
-                    Depth = 1,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.TopCentre,
-                    Alpha = 0f,
-                    Texture = store.Get("Skin/hit300.png"),
-                    RelativePositionAxes = Axes.Both,
-                },
-                hit100 = new Sprite
-                {
-                    Depth = 1,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.TopCentre,
-                    Alpha = 0f,
-                    Texture = store.Get("Skin/hit100.png"),
-                    RelativePositionAxes = Axes.Both,
-                },
-                hit50 = new Sprite
-                {
-                    Depth = 1,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.TopCentre,
-                    Alpha = 0f,
-                    Texture = store.Get("Skin/hit50.png"),
-                    RelativePositionAxes = Axes.Both,
-                },
-                hitx = new Sprite
-                {
-                    Depth = 1,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.TopCentre,
-                    Alpha = 0f,
-                    Texture = store.Get("Skin/hitx.png"),
-                    RelativePositionAxes = Axes.Both,
-                }
+                Anchor = Anchor.Centre,
+                Origin = Anchor.TopCentre,
+                Alpha = 0f,
+                RelativePositionAxes = Axes.Both,
             };
 
             if (hit == Hit.Hit300)
             {
-                hit300.FadeInFromZero(400, Easing.OutQuart);
+                hitSprite.Texture = store.Get("Skin/hit300.png");
+                hitSprite.FadeInFromZero(FadeInTime, Easing.OutQuart);
 
                 Scheduler.AddDelayed(() =>
                 {
-                    hit300.FadeOutFromOne(400, Easing.OutQuart);
-                    Scheduler.AddDelayed(() => this.Expire(), 450);
-
-                }, 600);
+                    hitSprite.FadeOutFromOne(FadeOutTime, Easing.OutQuart);
+                    Scheduler.AddDelayed(() => this.Expire(), FadeOutTime);
+                }, FadeInTime + WaitTilFadeOutTime);
             }
             else if (hit == Hit.Hit100)
             {
-                hit100.FadeInFromZero(400, Easing.OutQuart);
+                hitSprite.Texture = store.Get("Skin/hit100.png");
+                hitSprite.FadeInFromZero(FadeInTime, Easing.OutQuart);
 
                 Scheduler.AddDelayed(() =>
                 {
-                    hit100.FadeOutFromOne(400, Easing.OutQuart);
-                    Scheduler.AddDelayed(() => this.Expire(), 450);
-
-                }, 600);
+                    hitSprite.FadeOutFromOne(FadeOutTime, Easing.OutQuart);
+                    Scheduler.AddDelayed(() => this.Expire(), FadeOutTime);
+                }, FadeInTime + WaitTilFadeOutTime);
             }
             else if (hit == Hit.Hit50)
             {
-                hit50.FadeInFromZero(400, Easing.OutQuart);
+                hitSprite.Texture = store.Get("Skin/hit50.png");
+                hitSprite.FadeInFromZero(FadeInTime, Easing.OutQuart);
 
                 Scheduler.AddDelayed(() =>
                 {
-                    hit50.FadeOutFromOne(400, Easing.OutQuart);
-                    Scheduler.AddDelayed(() => this.Expire(), 450);
-
-                }, 600);
+                    hitSprite.FadeOutFromOne(FadeOutTime, Easing.OutQuart);
+                    Scheduler.AddDelayed(() => this.Expire(), FadeOutTime);
+                }, FadeInTime + WaitTilFadeOutTime);
             }
             else if (hit == Hit.Hitx)
             {
-                hitx.Rotation = 0f;
+                hitSprite.Texture = store.Get("Skin/hitx.png");
 
-                hitx.FadeInFromZero(400, Easing.OutQuart);
+                hitSprite.Rotation = 0f;
 
-                Scheduler.AddDelayed(() =>
-                {
-                    hitx.FadeOutFromOne(400, Easing.OutQuart);
-                    Scheduler.AddDelayed(() => this.Expire(), 450);
-                }, 600);
+                hitSprite.FadeInFromZero(FadeInTime, Easing.OutQuart);
 
                 Scheduler.AddDelayed(() =>
                 {
-                    hitx.RotateTo(-10, 600, Easing.Out);
-                    hitx.MoveToOffset(new Vector2(0f, 0.01f), 600, Easing.In);
+                    hitSprite.FadeOutFromOne(FadeOutTime, Easing.OutQuart);
+                    Scheduler.AddDelayed(() => this.Expire(), FadeOutTime);
+                }, FadeInTime + WaitTilFadeOutTime);
 
-                }, 300);
+                Scheduler.AddDelayed(() =>
+                {
+                    hitSprite.RotateTo(-10, FadeInTime + WaitTilFadeOutTime, Easing.Out);
+                    hitSprite.MoveToOffset(new Vector2(0f, 0.01f), 600, Easing.In);
+
+                }, HitXRoation);
             }
         }
     }

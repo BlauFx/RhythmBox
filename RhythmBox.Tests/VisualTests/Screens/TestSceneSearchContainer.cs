@@ -6,7 +6,7 @@ using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Testing;
 using osuTK;
 using osuTK.Graphics;
-using RhythmBox.Mode.Std.Tests.Maps;
+using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Tests.pending_files;
 using System.IO;
 using System.Reflection;

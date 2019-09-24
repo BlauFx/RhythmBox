@@ -1,4 +1,4 @@
-using RhythmBox.Mode.Std.Tests.Interfaces;
+using RhythmBox.Mode.Std.Interfaces;
 using System.IO;
 using System.Reflection;
 
