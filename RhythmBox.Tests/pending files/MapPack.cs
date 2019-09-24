@@ -15,7 +15,7 @@ using System.Linq;
 
 namespace RhythmBox.Tests.VisualTests.Screens
 {
-    public class MapPackTest : Container, IHasFilterableChildren
+    public class MapPack : Container, IHasFilterableChildren
     {
         public Bindable<string> bindablePath = new Bindable<string>();
 
@@ -54,7 +54,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
 
         public int testSceneMapPos { get; set; }
 
-        public Color4 Colour;
+        public new Color4 Colour;
 
         //TODO: Maybe store this value in config, so the user can change the value
         /// <summary>

@@ -65,7 +65,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
     { 
         public static Sprite background;
 
-        private TestSceneSettingsOverlay settings;
+        private SettingsOverlay settings;
 
         [BackgroundDependencyLoader] 
         private void Load(TextureStore store)
@@ -152,13 +152,13 @@ namespace RhythmBox.Tests.VisualTests.Screens
                         Environment.Exit(0);
                     }
                 },
-                settings = new TestSceneSettingsOverlay
+                settings = new SettingsOverlay
                 {
                     Depth = int.MinValue,
                 },
             };
 
-            new TestSceneDefaultFolder();
+            new DefaultFolder();
         }
 
         protected override bool OnMouseMove(MouseMoveEvent e)

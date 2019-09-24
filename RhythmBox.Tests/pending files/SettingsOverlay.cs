@@ -9,13 +9,12 @@ using osu.Framework.Input.Events;
 using osuTK;
 using osuTK.Graphics;
 using RhythmBox.Tests.Objects;
-using RhythmBox.Window.pending_files;
 
 namespace RhythmBox.Tests.pending_files
 {
-    public class TestSceneSettingsOverlay : FocusedOverlayContainer
+    public class SettingsOverlay : FocusedOverlayContainer
     {
-        private TestCheckbox TestCheckbox;
+        private Checkbox TestCheckbox;
 
         private Bindable<bool> bindable1 = new Bindable<bool>();
 
@@ -39,7 +38,7 @@ namespace RhythmBox.Tests.pending_files
                     Colour = Color4.DimGray,
                     Alpha = 0.9f,
                 },
-                new TestSceneScrollContainer
+                new ScrollContainer
                 {
                     ScrollbarVisible = true,
                     Depth = -1,
@@ -118,7 +117,7 @@ namespace RhythmBox.Tests.pending_files
                                             Text = "Test:",
                                             Font = new FontUsage("Roboto",25),
                                         },
-                                        TestCheckbox = new TestCheckbox
+                                        TestCheckbox = new Checkbox
                                         {
                                             Depth = 2,
                                             Anchor = Anchor.TopLeft,

@@ -4,9 +4,9 @@ using System.Reflection;
 
 namespace RhythmBox.Tests.pending_files
 {
-    class TestSceneDefaultFolder
+    class DefaultFolder
     {
-        public TestSceneDefaultFolder(bool CreateSongs = true, bool CreateSkins = false)
+        public DefaultFolder(bool CreateSongs = true, bool CreateSkins = false)
         {
             string CurrentFolder = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             if (CreateSongs)
@@ -53,7 +53,7 @@ namespace RhythmBox.Tests.pending_files
             HitObjects[2].Time = 700;
             HitObjects[3].Time = 780;
 
-            var _map = new TestSceneMapWriter
+            var _map = new MapWriter
             {
                 AFileName = "null.mp3",
                 BGFile = "bg.png",

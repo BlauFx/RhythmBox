@@ -7,7 +7,7 @@ namespace RhythmBox.Mode.Std.Tests.Mods
     {
         public override string NAME => "TEST-NAME";
 
-        public override void AppyToHitObj(TestSceneRBox obj)
+        public override void AppyToHitObj(RBox obj)
         {
             obj.obj.bx.Colour = Color4.Red;
 

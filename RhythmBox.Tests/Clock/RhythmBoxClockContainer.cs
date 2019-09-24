@@ -7,7 +7,7 @@ using osu.Framework.Timing;
 
 namespace RhythmBox.Tests.Clock
 {
-    public class TestRhythmBoxClockContainer : Container
+    public class RhythmBoxClockContainer : Container
     {
         private readonly IAdjustableClock adjustableClock;
 
@@ -20,7 +20,7 @@ namespace RhythmBox.Tests.Clock
         public readonly Bindable<double> UserPlaybackRate = new BindableDouble(1) { Default = 1, MinValue = 0.1, MaxValue = 3, Precision = 0.1 };
 
         //TODO:
-        public readonly TestRhythmBoxClock RhythmBoxClock;
+        public readonly RhythmBoxClock RhythmBoxClock;
 
         private readonly FramedOffsetClock userOffsetClock;
 
@@ -30,7 +30,7 @@ namespace RhythmBox.Tests.Clock
 
         private double totalOffset => userOffsetClock.Offset + platformOffsetClock.Offset;
 
-        public TestRhythmBoxClockContainer(double GamplayStartTime)
+        public RhythmBoxClockContainer(double GamplayStartTime)
         {
             this.GamplayStartTime = GamplayStartTime;
 
@@ -45,7 +45,7 @@ namespace RhythmBox.Tests.Clock
 
             userOffsetClock = new FramedOffsetClock(platformOffsetClock) { Offset = 0 };
 
-            RhythmBoxClock = new TestRhythmBoxClock(userOffsetClock);
+            RhythmBoxClock = new RhythmBoxClock(userOffsetClock);
 
             RhythmBoxClock.IsPaused.BindTo(IsPaused);
         }

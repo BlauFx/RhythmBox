@@ -67,7 +67,7 @@ namespace RhythmBox.Tests.VisualTests.Overlays
 
         private Box box;
 
-        public TestMods modBox;
+        public Mods modBox;
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -96,7 +96,7 @@ namespace RhythmBox.Tests.VisualTests.Overlays
                     AutoSizeAxes = Axes.Both,
                     Alpha = 1f,
                 },
-                modBox = new TestMods
+                modBox = new Mods
                 {
                     Depth = -1,
                     RelativePositionAxes = Axes.Both,

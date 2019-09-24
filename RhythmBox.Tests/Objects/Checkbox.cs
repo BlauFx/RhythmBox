@@ -12,7 +12,7 @@ using osuTK.Graphics;
 
 namespace RhythmBox.Tests.Objects
 {
-    public class TestCheckbox : CircularContainer
+    public class Checkbox : CircularContainer
     {
         protected Box Flash;
         public Action ClickAction;

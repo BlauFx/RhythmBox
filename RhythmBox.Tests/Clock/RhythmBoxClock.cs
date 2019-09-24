@@ -3,13 +3,13 @@ using osu.Framework.Timing;
 
 namespace RhythmBox.Tests.Clock
 {
-    public class TestRhythmBoxClock : IFrameBasedClock
+    public class RhythmBoxClock : IFrameBasedClock
     {
         private readonly IFrameBasedClock frameBasedClock;
 
         public readonly BindableBool IsPaused = new BindableBool();
 
-        public TestRhythmBoxClock(IFrameBasedClock underlyingClock)
+        public RhythmBoxClock(IFrameBasedClock underlyingClock)
         {
             this.frameBasedClock = underlyingClock;
         }

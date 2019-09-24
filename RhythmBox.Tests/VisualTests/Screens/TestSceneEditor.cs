@@ -66,9 +66,9 @@ namespace RhythmBox.Tests.VisualTests.Screens
     {
         private Sprite background;
 
-        private TestSceneRbPlayfield _testSceneRbPlayfield;
+        private RbPlayfield _testSceneRbPlayfield;
 
-        private TestRhythmBoxClockContainer rhythmBoxClockContainer;
+        private RhythmBoxClockContainer rhythmBoxClockContainer;
 
         private BindableBool IsPaused = new BindableBool();
 
@@ -86,11 +86,11 @@ namespace RhythmBox.Tests.VisualTests.Screens
                 path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Songs\\TestMap\\Difficulty1.ini";
                 if (!File.Exists(path))
                 {
-                    new TestSceneDefaultFolder();
+                    new DefaultFolder();
                 }
             }
 
-            var testSceneMapReader = new TestSceneMapReader(path);
+            var testSceneMapReader = new MapReader(path);
             map = new Map
             {
                 AFileName = testSceneMapReader.AFileName,
@@ -126,7 +126,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     Alpha = 0.7f,
                     Texture = store.Get("Skin/menu-background"),
                 },
-                rhythmBoxClockContainer = new TestRhythmBoxClockContainer(0)
+                rhythmBoxClockContainer = new RhythmBoxClockContainer(0)
                 {
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f)
@@ -135,7 +135,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
 
             rhythmBoxClockContainer.Children = new Drawable[]
             {
-                _testSceneRbPlayfield = new TestSceneRbPlayfield(null)
+                _testSceneRbPlayfield = new RbPlayfield(null)
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,

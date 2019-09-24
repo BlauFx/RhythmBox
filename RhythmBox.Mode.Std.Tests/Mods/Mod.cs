@@ -6,7 +6,7 @@ namespace RhythmBox.Mode.Std.Tests.Mods
     {
         public abstract string NAME { get; }
 
-        public virtual void AppyToHitObj(TestSceneRBox obj)
+        public virtual void AppyToHitObj(RBox obj)
         {
         }
     }

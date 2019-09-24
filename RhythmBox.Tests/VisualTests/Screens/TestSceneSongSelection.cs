@@ -60,13 +60,13 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     Size = new Vector2(1f),
                     Texture = store.Get("Skin/menu-background"), //TOOD: Maybe Map => Background?
                 },
-                new TestSpriteButton
+                new SpriteButton
                 {
                     Anchor = Anchor.BottomLeft,
                     Origin = Anchor.BottomLeft,
                     Texture = store.Get("Skin/Back"),
                 },
-                new TestSpriteButton
+                new SpriteButton
                 {
                     Anchor = Anchor.BottomLeft,
                     Origin = Anchor.BottomLeft,
@@ -119,7 +119,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
 
         private FillFlowContainer FFContainer;
 
-        private TestSceneScrollContainer FFContainerM;
+        private ScrollContainer FFContainerM;
 
         public SearchContainer search;
 
@@ -141,7 +141,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     Colour = Color4.DimGray,
                     Alpha = 0.9f,
                 },
-                FFContainerM = new TestSceneScrollContainer
+                FFContainerM = new ScrollContainer
                 {
                     ScrollbarVisible = true,
                     Depth = -1,
@@ -215,7 +215,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
 
                     for (int j = 0; j < Files.Length; j++)
                     {
-                        var testSceneMapReader = new TestSceneMapReader(Files[j].FullName);
+                        var testSceneMapReader = new MapReader(Files[j].FullName);
 
                         Maps[i, j] = new Map
                         {
@@ -240,11 +240,11 @@ namespace RhythmBox.Tests.VisualTests.Screens
                 }
             }
 
-            MapPackTest[] mapPackTests = new MapPackTest[MapsCount2.Length];
+            MapPack[] mapPackTests = new MapPack[MapsCount2.Length];
 
             for (int i = 0; i < mapPackTests.Length; i++)
             {
-                mapPackTests[i] = new MapPackTest
+                mapPackTests[i] = new MapPack
                 {
                     Maps = MapsCount2[i],
                     RelativeSizeAxes = Axes.X,

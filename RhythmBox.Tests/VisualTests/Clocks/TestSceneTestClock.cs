@@ -19,9 +19,9 @@ namespace RhythmBox.Tests.VisualTests.Clock
 
         private Map map;
 
-        private TestSceneRbPlayfield playfield;
+        private RbPlayfield playfield;
 
-        private TestRhythmBoxClockContainer rhythmBoxClockContainer;
+        private RhythmBoxClockContainer rhythmBoxClockContainer;
 
         private BindableDouble UserPlaybackRate = new BindableDouble(1);
 
@@ -64,7 +64,7 @@ namespace RhythmBox.Tests.VisualTests.Clock
                     Origin = Anchor.Centre,
                     Text = "0",
                 },
-                rhythmBoxClockContainer = new TestRhythmBoxClockContainer(0)
+                rhythmBoxClockContainer = new RhythmBoxClockContainer(0)
                 {
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f)
@@ -73,7 +73,7 @@ namespace RhythmBox.Tests.VisualTests.Clock
 
             rhythmBoxClockContainer.Children = new Drawable[]
             {
-                playfield = new TestSceneRbPlayfield(null)
+                playfield = new RbPlayfield(null)
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,

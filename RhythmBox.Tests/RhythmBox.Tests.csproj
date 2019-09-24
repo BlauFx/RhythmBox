@@ -14,7 +14,6 @@
   <ItemGroup>
     <ProjectReference Include="..\RhythmBox.Mode.Std.Tests\RhythmBox.Mode.Std.Tests.csproj" />
     <ProjectReference Include="..\RhythmBox.Window.Resources\RhythmBox.Window.Resources.csproj" />
-    <ProjectReference Include="..\RhythmBox.Window\RhythmBox.Window.csproj" />
   </ItemGroup>
 
 </Project>

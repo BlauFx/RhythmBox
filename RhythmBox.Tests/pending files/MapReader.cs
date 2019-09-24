@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace RhythmBox.Tests.pending_files
 {
-    public class TestSceneMapReader : IMap
+    public class MapReader : IMap
     {
         public string AFileName { get; set; } = string.Empty;
 
@@ -43,13 +43,13 @@ namespace RhythmBox.Tests.pending_files
 
         private string[] storageTemp;
 
-        public TestSceneMapReader(string path)
+        public MapReader(string path)
         {
             this.Path = path;
 
             if (!File.Exists(path))
             {
-                new TestSceneDefaultFolder();
+                new DefaultFolder();
             }
             int lineCount = File.ReadLines(path).Count();
 

@@ -13,11 +13,11 @@ using System.Collections.Generic;
 
 namespace RhythmBox.Tests.pending_files
 {
-    public class TestSceneRbPlayfield : Container
+    public class RbPlayfield : Container
     {
         public Map Map;
 
-        private TestSceneRBox[] objBoxArray;
+        private RBox[] objBoxArray;
 
         public int ComboCounter = 0;
 
@@ -42,7 +42,7 @@ namespace RhythmBox.Tests.pending_files
 
         private List<Mod> mods;
 
-        public TestSceneRbPlayfield(List<Mod> mods)
+        public RbPlayfield(List<Mod> mods)
         {
             this.mods = mods;
         }
@@ -50,11 +50,11 @@ namespace RhythmBox.Tests.pending_files
         [BackgroundDependencyLoader]
         private void Load()
         {
-            objBoxArray = new TestSceneRBox[Map.HitObjects.Length];
+            objBoxArray = new RBox[Map.HitObjects.Length];
 
             Children = new Drawable[]
             {
-                new TestSceneRbDrawPlayfield
+                new RbDrawPlayfield
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
@@ -178,7 +178,7 @@ namespace RhythmBox.Tests.pending_files
             {
                 var x = (Mode.Std.Tests.Interfaces.HitObjects) objBox;
 
-                objBoxArray[i] = new TestSceneRBox
+                objBoxArray[i] = new RBox
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,

@@ -8,11 +8,11 @@ using osuTK.Input;
 
 namespace RhythmBox.Tests.pending_files
 {
-    public class TestSceneScrollContainer : ScrollContainer<Drawable>
+    public class ScrollContainer : ScrollContainer<Drawable>
     {
         private float Offset { get; set; }
 
-        public TestSceneScrollContainer(Direction scrollDirection = Direction.Vertical)
+        public ScrollContainer(Direction scrollDirection = Direction.Vertical)
             : base(scrollDirection)
         {
         }

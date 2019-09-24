@@ -12,7 +12,7 @@ using System.Collections.Generic;
 
 namespace RhythmBox.Tests.Objects
 {
-    public class TestMods : Container
+    public class Mods : Container
     {
         public IEnumerable<Mod> Modlist = new Mod[]
         {

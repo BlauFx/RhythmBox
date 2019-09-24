@@ -61,7 +61,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
 
             int MapsCount = 2;
 
-            var testSceneMapReader = new TestSceneMapReader(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Songs\\TestMap\\Difficulty1.ini");
+            var testSceneMapReader = new MapReader(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Songs\\TestMap\\Difficulty1.ini");
 
             Map[,] Map = new Map[MapsCount, short.MaxValue];
 
@@ -105,11 +105,11 @@ namespace RhythmBox.Tests.VisualTests.Screens
                 Path = testSceneMapReader.Path,
             };
 
-            MapPackTest[] mapPackTests = new MapPackTest[MapsCount];
+            MapPack[] mapPackTests = new MapPack[MapsCount];
 
             for (int i = 0; i < mapPackTests.Length; i++)
             {
-                mapPackTests[i] = new MapPackTest
+                mapPackTests[i] = new MapPack
                 {
                     Maps = 1,
                     RelativeSizeAxes = Axes.Both,

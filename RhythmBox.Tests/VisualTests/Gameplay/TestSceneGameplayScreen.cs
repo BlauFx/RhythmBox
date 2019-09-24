@@ -87,11 +87,11 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
 
         private Map _map;
 
-        private TestSceneRbPlayfield _testSceneRbPlayfield;
+        private RbPlayfield _testSceneRbPlayfield;
 
         private Mode.Std.Tests.Animations.HPBar _hpBar;
 
-        private TestRhythmBoxClockContainer rhythmBoxClockContainer;
+        private RhythmBoxClockContainer rhythmBoxClockContainer;
 
         private Bindable<double> UserPlaybackRate = new BindableDouble(1);
 
@@ -149,11 +149,11 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                 path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Songs\\TestMap\\Difficulty1.ini";
                 if (!File.Exists(path))
                 {
-                    new TestSceneDefaultFolder();
+                    new DefaultFolder();
                 }
             }
 
-            var testSceneMapReader = new TestSceneMapReader(path);
+            var testSceneMapReader = new MapReader(path);
             _map = new Map
             {
                 AFileName = testSceneMapReader.AFileName,
@@ -196,7 +196,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                 },
-                rhythmBoxClockContainer = new TestRhythmBoxClockContainer(0)
+                rhythmBoxClockContainer = new RhythmBoxClockContainer(0)
                 {
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f)
@@ -229,7 +229,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
 
             rhythmBoxClockContainer.Children = new Drawable[]
             {
-                _testSceneRbPlayfield = new TestSceneRbPlayfield(ToApplyMods)
+                _testSceneRbPlayfield = new RbPlayfield(ToApplyMods)
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
@@ -365,9 +365,9 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
 
                         foreach (var x in this._testSceneRbPlayfield)
                         {
-                            if (x is TestSceneRbDrawPlayfield)
+                            if (x is RbDrawPlayfield)
                             {
-                                foreach (var y in (x as TestSceneRbDrawPlayfield))
+                                foreach (var y in (x as RbDrawPlayfield))
                                 {
                                     y.TransformTo(nameof(Shear), new Vector2(osu.Framework.MathUtils.RNG.NextSingle(-0.15f, 0.15f)), 1000, Easing.In);
                                     y.TransformTo(nameof(Scale), new Vector2(osu.Framework.MathUtils.RNG.NextSingle(1.1f, 2f)), 1000, Easing.In);

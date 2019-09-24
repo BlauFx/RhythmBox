@@ -13,7 +13,7 @@ using System.Collections.Generic;
 
 namespace RhythmBox.Mode.Std.Tests.Objects
 {
-    public class TestSceneRBox : Container
+    public class RBox : Container
     {
         /// <summary>
         /// if speed is higher then the animation / animation of the drawble get's slower

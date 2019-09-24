@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace RhythmBox.Tests.pending_files
 {
-    public class TestSceneMapWriter : IMap
+    public class MapWriter : IMap
     {
         public string AFileName { get; set; } = string.Empty;
 

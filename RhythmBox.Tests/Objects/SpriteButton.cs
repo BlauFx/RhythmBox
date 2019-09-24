@@ -5,7 +5,7 @@ using osuTK.Input;
 
 namespace RhythmBox.Tests.Objects
 {
-    public class TestSpriteButton : Sprite
+    public class SpriteButton : Sprite
     {
         public Action ClickAction;
 

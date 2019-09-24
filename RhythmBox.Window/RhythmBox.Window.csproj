@@ -13,8 +13,4 @@
     <ProjectReference Include="..\RhythmBox.Mode.Std\RhythmBox.Mode.Std.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Editor\" />
-  </ItemGroup>
-
 </Project>
