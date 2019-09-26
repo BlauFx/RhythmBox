@@ -75,8 +75,9 @@ namespace RhythmBox.Window.pending_files
         protected override bool OnKeyDown(KeyDownEvent e)
         {
             //Info: Using return base.OnKeyDown(e); instead of break is adding a notelock
-            foreach (var x in objBoxArray)
+            for (int i = 0; i < objBoxArray.Length; i++)
             {
+                var x = objBoxArray[i];
                 if (x.AlphaA > 0)
                 {
                     try
@@ -88,6 +89,7 @@ namespace RhythmBox.Window.pending_files
                                 this.UpdateCombo = x.AddComboToCounter();
                                 this.AddMiss = x.Miss();
                                 this.currentHit = x.GetHit();
+                                i = objBoxArray.Length;
                                 break;
                                 //return base.OnKeyDown(e);
 
@@ -96,6 +98,7 @@ namespace RhythmBox.Window.pending_files
                                 this.UpdateCombo = x.AddComboToCounter();
                                 this.AddMiss = x.Miss();
                                 this.currentHit = x.GetHit();
+                                i = objBoxArray.Length;
                                 break;
                                 //return base.OnKeyDown(e);
 
@@ -104,6 +107,7 @@ namespace RhythmBox.Window.pending_files
                                 this.UpdateCombo = x.AddComboToCounter();
                                 this.AddMiss = x.Miss();
                                 this.currentHit = x.GetHit();
+                                i = objBoxArray.Length;
                                 break;
                                 //return base.OnKeyDown(e);
 
@@ -112,6 +116,7 @@ namespace RhythmBox.Window.pending_files
                                 this.UpdateCombo = x.AddComboToCounter();
                                 this.AddMiss = x.Miss();
                                 this.currentHit = x.GetHit();
+                                i = objBoxArray.Length;
                                 break;
                                 //return base.OnKeyDown(e);
                         }
@@ -179,7 +184,7 @@ namespace RhythmBox.Window.pending_files
 
             foreach (var objBox in Map)
             {
-                var x = (Mode.Std.Interfaces.HitObjects) objBox;
+                var x = (Mode.Std.Interfaces.HitObjects)objBox;
 
                 objBoxArray[i] = new RBox
                 {

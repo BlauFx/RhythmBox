@@ -75,8 +75,9 @@ namespace RhythmBox.Tests.pending_files
         protected override bool OnKeyDown(KeyDownEvent e)
         {
             //Info: Using return base.OnKeyDown(e); instead of break is adding a notelock
-            foreach (var x in objBoxArray)
+            for (int i = 0; i < objBoxArray.Length; i++)
             {
+                var x = objBoxArray[i];
                 if (x.AlphaA > 0)
                 {
                     try
@@ -88,30 +89,34 @@ namespace RhythmBox.Tests.pending_files
                                 this.UpdateCombo = x.AddComboToCounter();
                                 this.AddMiss = x.Miss();
                                 this.currentHit = x.GetHit();
+                                i = objBoxArray.Length;
                                 break;
-                                //return base.OnKeyDown(e);
+                            //return base.OnKeyDown(e);
 
                             case Key.S:
                                 x.OnClickKeyDown(Key.S);
                                 this.UpdateCombo = x.AddComboToCounter();
                                 this.AddMiss = x.Miss();
                                 this.currentHit = x.GetHit();
+                                i = objBoxArray.Length;
                                 break;
-                                //return base.OnKeyDown(e);
+                            //return base.OnKeyDown(e);
 
                             case Key.A:
                                 x.OnClickKeyDown(Key.A);
                                 this.UpdateCombo = x.AddComboToCounter();
                                 this.AddMiss = x.Miss();
                                 this.currentHit = x.GetHit();
+                                i = objBoxArray.Length;
                                 break;
-                                //return base.OnKeyDown(e);
+                            //return base.OnKeyDown(e);
 
                             case Key.D:
                                 x.OnClickKeyDown(Key.D);
                                 this.UpdateCombo = x.AddComboToCounter();
                                 this.AddMiss = x.Miss();
                                 this.currentHit = x.GetHit();
+                                i = objBoxArray.Length;
                                 break;
                                 //return base.OnKeyDown(e);
                         }
