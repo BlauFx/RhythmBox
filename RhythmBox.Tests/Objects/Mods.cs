@@ -19,6 +19,7 @@ namespace RhythmBox.Tests.Objects
         public IEnumerable<Mod> Modlist = new Mod[]
         {
             new DummyMod(),
+            new DummyMod2(),
         };
 
         public new Color4 Colour { get; set; }
@@ -116,6 +117,8 @@ namespace RhythmBox.Tests.Objects
     {
         public Mod Mod { get; set; }
 
+        private bool Applied = false;
+
         public OwnSprite(Mod mod)
         {
             this.Mod = mod;
@@ -124,12 +127,8 @@ namespace RhythmBox.Tests.Objects
         [BackgroundDependencyLoader]
         private void Load(TextureStore store)
         {
-            if (this.Mod.GetType() == typeof(DummyMod))
-            {
-                this.Texture = store.Get("Skin/TestMod");
-            }
+            this.Texture = store.Get($"Skin/{this.Mod.SkinElement}");
         }
-        private bool Applied = false;
 
         protected override bool OnMouseDown(MouseDownEvent e)
         {

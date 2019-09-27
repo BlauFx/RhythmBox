@@ -222,6 +222,19 @@ namespace RhythmBox.Window.Screens
             DispayCombo.AddText("0x", x => x.Font = new FontUsage("Roboto", 40));
             DispayScore.AddText("000000", x => x.Font = new FontUsage("Roboto", 40));
 
+            _RbPlayfield.HasFinished.ValueChanged += (e) =>
+            {
+                if (e.NewValue == false) return;
+
+                //LoadComponentAsync(new SongSelction(), this.Push);
+                rhythmBoxClockContainer.Stop();
+                track?.Stop();
+
+                _RbPlayfield.HasFinished.UnbindEvents();
+                //TODO:
+                Scheduler.AddDelayed(() => this.Expire(), 1000);
+            };
+
             Startable.ValueChanged += (e) =>
             {
                 if (_RbPlayfield.CanStart.Value == true)
@@ -263,85 +276,71 @@ namespace RhythmBox.Window.Screens
 
         protected override void Update()
         {
-            if (_RbPlayfield.HasFinished)
+            if (_hpBar.CurrentValue <= 0)
             {
-                if (HasFinished)
+                if (!HasFailed)
                 {
-                    HasFinished = false;
-                    rhythmBoxClockContainer.Stop();
-                    SongSelction songSelction;
-                    LoadComponent(songSelction = new SongSelction());
-                    Schedule(() => this.Push(songSelction));
+                    HasFailed = true;
+
+                    Box box;
+
+                    AddInternal(box = new Box
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Size = new Vector2(1f),
+                        Colour = Color4.Red,
+                        Alpha = 0f,
+                    });
+
+                    box.FadeTo(0.7f, 500, Easing.In);
+
+                    bindableBool.ValueChanged += (e) =>
+                    {
+                        Logger.Log("GameplayScreen: bindableBool.Value changed", LoggingTarget.Runtime, LogLevel.Debug);
+                        rhythmBoxClockContainer.Stop();
+                        SongSelction songSelction;
+                        LoadComponent(songSelction = new SongSelction());
+                        Schedule(() => this.Push(songSelction));
+                    };
+
+                    foreach (var x in this._RbPlayfield)
+                    {
+                        if (x is RbDrawPlayfield)
+                        {
+                            foreach (var y in (x as RbDrawPlayfield))
+                            {
+                                y.TransformTo(nameof(Shear), new Vector2(osu.Framework.MathUtils.RNG.NextSingle(-0.15f, 0.15f)), 1000, Easing.In);
+                                y.TransformTo(nameof(Scale), new Vector2(osu.Framework.MathUtils.RNG.NextSingle(1.1f, 2f)), 1000, Easing.In);
+                            }
+                        }
+                        else
+                        {
+                            x.TransformTo(nameof(Shear), new Vector2(osu.Framework.MathUtils.RNG.NextSingle(-0.15f, 0.15f)), 1000, Easing.In);
+                            x.TransformTo(nameof(Scale), new Vector2(osu.Framework.MathUtils.RNG.NextSingle(0.6f, 2f)), 1000, Easing.In);
+                            x.MoveToOffset(new Vector2(osu.Framework.MathUtils.RNG.NextSingle(0.1f, 0.4f)), 1000, Easing.In);
+                        }
+                    }
+
+                    _ = AddJustTrack();
                 }
             }
             else
             {
-                if (_hpBar.CurrentValue <= 0)
+                if (!Resizing)
                 {
-                    if (!HasFailed)
-                    {
-                        HasFailed = true;
-
-                        Box box;
-
-                        AddInternal(box = new Box
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Size = new Vector2(1f),
-                            Colour = Color4.Red,
-                            Alpha = 0f,
-                        });
-
-                        box.FadeTo(0.7f, 500, Easing.In);
-
-                        bindableBool.ValueChanged += (e) =>
-                        {
-                            Logger.Log("GameplayScreen: bindableBool.Value changed", LoggingTarget.Runtime, LogLevel.Debug);
-                            rhythmBoxClockContainer.Stop();
-                            SongSelction songSelction;
-                            LoadComponent(songSelction = new SongSelction());
-                            Schedule(() => this.Push(songSelction));
-                        };
-
-                        foreach (var x in this._RbPlayfield)
-                        {
-                            if (x is RbDrawPlayfield)
-                            {
-                                foreach (var y in (x as RbDrawPlayfield))
-                                {
-                                    y.TransformTo(nameof(Shear), new Vector2(osu.Framework.MathUtils.RNG.NextSingle(-0.15f, 0.15f)), 1000, Easing.In);
-                                    y.TransformTo(nameof(Scale), new Vector2(osu.Framework.MathUtils.RNG.NextSingle(1.1f, 2f)), 1000, Easing.In);
-                                }
-                            }
-                            else
-                            {
-                                x.TransformTo(nameof(Shear), new Vector2(osu.Framework.MathUtils.RNG.NextSingle(-0.15f, 0.15f)), 1000, Easing.In);
-                                x.TransformTo(nameof(Scale), new Vector2(osu.Framework.MathUtils.RNG.NextSingle(0.6f, 2f)), 1000, Easing.In);
-                                x.MoveToOffset(new Vector2(osu.Framework.MathUtils.RNG.NextSingle(0.1f, 0.4f)), 1000, Easing.In);
-                            }
-                        }
-
-                        _ = AddJustTrack();
-                    }
+                    Resizing = true;
+                    _hpBar.ResizeBox(CalcHpBarValue(_hpBar._box.Width, _hpBar.BoxMaxValue, 0f, Hit.Hit100, true), HP_Update, Easing.OutCirc);
+                    Scheduler.AddDelayed(() => Resizing = false, HP_Update);
                 }
-                else
-                {
-                    if (!Resizing)
-                    {
-                        Resizing = true;
-                        _hpBar.ResizeBox(CalcHpBarValue(_hpBar._box.Width, _hpBar.BoxMaxValue, 0f, Hit.Hit100, true), HP_Update, Easing.OutCirc);
-                        Scheduler.AddDelayed(() => Resizing = false, HP_Update);
-                    }
-                }
-
-                Combo = _RbPlayfield.ComboCounter;
-                DispayCombo.Text = string.Empty;
-                DispayCombo.AddText($"{Combo}x", x => x.Font = new FontUsage("Roboto", 40));
-
-                Score = _RbPlayfield.ScoreCounter;
-                DispayScore.Text = string.Empty;
-                DispayScore.AddText($"{Score}", x => x.Font = new FontUsage("Roboto", 40));
             }
+
+            Combo = _RbPlayfield.ComboCounter;
+            DispayCombo.Text = string.Empty;
+            DispayCombo.AddText($"{Combo}x", x => x.Font = new FontUsage("Roboto", 40));
+
+            Score = _RbPlayfield.ScoreCounter;
+            DispayScore.Text = string.Empty;
+            DispayScore.AddText($"{Score}", x => x.Font = new FontUsage("Roboto", 40));
 
             base.Update();
         }

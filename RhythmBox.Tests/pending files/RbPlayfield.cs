@@ -31,14 +31,14 @@ namespace RhythmBox.Tests.pending_files
 
         public Hit currentHit { get; set; }
 
-        public bool HasFinished { get; set; } = false;
-
         //TODO:
         public bool HasStarted { get; set; } = false;
 
         public BindableBool Resuming = new BindableBool();
 
         public BindableBool CanStart = new BindableBool();
+
+        public BindableBool HasFinished = new BindableBool();
 
         private List<Mod> mods;
 
@@ -169,7 +169,7 @@ namespace RhythmBox.Tests.pending_files
 
             if (this.Clock.CurrentTime >= Map.EndTime)
             {
-                HasFinished = true;
+                HasFinished.Value = true;
             }
             base.Update();
         }
