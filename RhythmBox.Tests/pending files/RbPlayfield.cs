@@ -91,7 +91,7 @@ namespace RhythmBox.Tests.pending_files
                                 this.currentHit = x.GetHit();
                                 i = objBoxArray.Length;
                                 break;
-                            //return base.OnKeyDown(e);
+                               //return base.OnKeyDown(e);
 
                             case Key.S:
                                 x.OnClickKeyDown(Key.S);
@@ -100,7 +100,7 @@ namespace RhythmBox.Tests.pending_files
                                 this.currentHit = x.GetHit();
                                 i = objBoxArray.Length;
                                 break;
-                            //return base.OnKeyDown(e);
+                              //return base.OnKeyDown(e);
 
                             case Key.A:
                                 x.OnClickKeyDown(Key.A);
@@ -109,7 +109,7 @@ namespace RhythmBox.Tests.pending_files
                                 this.currentHit = x.GetHit();
                                 i = objBoxArray.Length;
                                 break;
-                            //return base.OnKeyDown(e);
+                               //return base.OnKeyDown(e);
 
                             case Key.D:
                                 x.OnClickKeyDown(Key.D);

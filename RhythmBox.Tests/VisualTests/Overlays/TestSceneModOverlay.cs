@@ -45,8 +45,6 @@ namespace RhythmBox.Tests.VisualTests.Overlays
 
             modOverlay.State.Value = Visibility.Hidden;
 
-            AddWaitStep("Load", 1);
-
             AddStep("Animation 1 FadeIn", () =>
             {
                 modOverlay.State.Value = Visibility.Visible;

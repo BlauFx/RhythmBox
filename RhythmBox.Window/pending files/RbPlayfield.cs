@@ -91,7 +91,7 @@ namespace RhythmBox.Window.pending_files
                                 this.currentHit = x.GetHit();
                                 i = objBoxArray.Length;
                                 break;
-                                //return base.OnKeyDown(e);
+                               //return base.OnKeyDown(e);
 
                             case Key.S:
                                 x.OnClickKeyDown(Key.S);

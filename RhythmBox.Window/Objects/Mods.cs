@@ -9,6 +9,8 @@ using osuTK.Graphics;
 using RhythmBox.Mode.Std.Mods;
 using System.Linq;
 using System.Collections.Generic;
+using osu.Framework.Graphics.Sprites;
+using osu.Framework.Graphics.Textures;
 
 namespace RhythmBox.Window.Objects
 {
@@ -68,19 +70,12 @@ namespace RhythmBox.Window.Objects
                     Mod = Modlist.ToList()[i],
                 });
 
-                if (color == Color4.Blue)
-                {
-                    color = Color4.Red;
-                }
-                else
-                {
-                    color = Color4.Blue;
-                }
+                color = color == Color4.Blue ? Color4.Red : Color4.Blue;
             }
         }
     }
 
-    class DrawMod : Container<ThisBox>
+    class DrawMod : Container
     {
         public List<Mod> ToApplyMods { get; set; }
 
@@ -91,16 +86,65 @@ namespace RhythmBox.Window.Objects
         [BackgroundDependencyLoader]
         private void Load()
         {
-            Child = new ThisBox(Mod)
+            Children = new Drawable[]
             {
-                Anchor = Anchor.TopLeft,
-                Origin = Anchor.TopLeft,
-                RelativeSizeAxes = Axes.Both,
-                Size = new Vector2(1f),
-                Alpha = 1f,
-                Colour = Colour,
-                ToApplyMods = ToApplyMods,
+                new ThisBox(Mod)
+                {
+                    Depth = 1,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(1f),
+                    Alpha = 1f,
+                    Colour = Colour,
+                    ToApplyMods = ToApplyMods,
+                },
+                new OwnSprite(Mod)
+                {
+                    Depth = 0,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(1f),
+                    Alpha = 1f,
+                },
             };
+        }
+    }
+
+    internal class OwnSprite : Sprite
+    {
+        public Mod Mod { get; set; }
+
+        public OwnSprite(Mod mod)
+        {
+            this.Mod = mod;
+        }
+
+        [BackgroundDependencyLoader]
+        private void Load(TextureStore store)
+        {
+            if (this.Mod.GetType() == typeof(DummyMod))
+            {
+                this.Texture = store.Get("Skin/TestMod");
+            }
+        }
+        private bool Applied = false;
+
+        protected override bool OnMouseDown(MouseDownEvent e)
+        {
+            if (!Applied)
+            {
+                Applied = true;
+                this.Rotation += 20f;
+            }
+            else
+            {
+                Applied = false;
+                this.Rotation -= 20f;
+            }
+
+            return base.OnMouseDown(e);
         }
     }
 
