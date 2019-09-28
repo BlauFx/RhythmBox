@@ -1,5 +1,4 @@
 using osu.Framework.Allocation;
-using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
@@ -14,12 +13,6 @@ namespace RhythmBox.Mode.Std.Animations
 
         public readonly float BoxMaxValue;
 
-        public float GetCurrentValue
-        {
-            get => _box.Width;
-        }
-
-        //We need a second value cuz using GetCurrentValue may be another value than we would expect. (due to animation and we don't want to access the wrong value)
         public float CurrentValue { get; set; } = 0f;
 
         public Color4 colour;

@@ -226,7 +226,7 @@ namespace RhythmBox.Window.Screens
 
             _RbPlayfield.ComboCounter.ValueChanged += (e) =>
             {
-                _hpBar.ResizeBox(CalcHpBarValue(_hpBar.GetCurrentValue, _hpBar.BoxMaxValue, 0f, _RbPlayfield.currentHit), (HP_Update / 1.5f), Easing.OutCirc);
+                _hpBar.ResizeBox(CalcHpBarValue(_hpBar.CurrentValue, _hpBar.BoxMaxValue, 0f, _RbPlayfield.currentHit), (HP_Update / 1.5f), Easing.OutCirc);
             };
 
             _RbPlayfield.HasFinished.ValueChanged += (e) =>
@@ -288,7 +288,7 @@ namespace RhythmBox.Window.Screens
 
             Scheduler.AddDelayed(() =>
             {
-                _hpBar.ResizeBox(CalcHpBarValue(_hpBar.GetCurrentValue, _hpBar.BoxMaxValue, 0f, Hit.Hit100, true), HP_Update, Easing.OutCirc);
+                _hpBar.ResizeBox(CalcHpBarValue(_hpBar.CurrentValue, _hpBar.BoxMaxValue, 0f, Hit.Hit100, true), HP_Update, Easing.OutCirc);
             }, HP_Update, true);
             FirstUpdate = false;
         }

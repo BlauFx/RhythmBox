@@ -39,7 +39,7 @@ namespace RhythmBox.Tests.VisualTests.Animations
 
             AddStep("Reduce Hp by 10%", () =>
             {
-                hpBar.ResizeBox(hpBar.GetCurrentValue - (hpBar.BoxMaxValue / 10), duration, Easing.OutCirc);
+                hpBar.ResizeBox(hpBar.CurrentValue - (hpBar.BoxMaxValue / 10), duration, Easing.OutCirc);
             });
 
             AddStep("Increase Hp by 10%", () =>
