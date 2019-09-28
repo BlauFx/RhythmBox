@@ -6,6 +6,7 @@ using osu.Framework.Input.Events;
 using osuTK;
 using osuTK.Input;
 using RhythmBox.Mode.Std.Animations;
+using RhythmBox.Mode.Std.Interfaces;
 using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Mode.Std.Mods;
 using RhythmBox.Mode.Std.Objects;
@@ -19,9 +20,7 @@ namespace RhythmBox.Window.pending_files
 
         private RBox[] objBoxArray;
 
-        public int ComboCounter = 0;
-
-        private int _previousCombo = 0;
+        public int _previousCombo = 0;
 
         public int ScoreCounter = 0;
 
@@ -39,6 +38,8 @@ namespace RhythmBox.Window.pending_files
         public BindableBool CanStart = new BindableBool();
 
         public BindableBool HasFinished = new BindableBool();
+
+        public BindableInt ComboCounter = new BindableInt(0);
 
         private List<Mod> mods;
 
@@ -132,18 +133,18 @@ namespace RhythmBox.Window.pending_files
             if (UpdateCombo)
             {
                 UpdateCombo = false;
-                _previousCombo = ComboCounter;
-                ComboCounter++;
+                _previousCombo = ComboCounter.Value;
+                ComboCounter.Value++;
             }
             else if (AddMiss)
             {
-                _previousCombo = ComboCounter;
-                ComboCounter = 0;
+                _previousCombo = ComboCounter.Value;
+                ComboCounter.Value = 0;
             }
 
-            if (ComboCounter != _previousCombo)
+            if (ComboCounter.Value != _previousCombo)
             {
-                _previousCombo = ComboCounter;
+                _previousCombo = ComboCounter.Value;
                 int addAmout = 0;
                 switch (currentHit)
                 {
@@ -165,7 +166,7 @@ namespace RhythmBox.Window.pending_files
                 }
 
                 //TODO: Maybe change the way how we calculate the score?
-                var CalcScore = (ComboCounter * addAmout);
+                var CalcScore = (ComboCounter.Value * addAmout);
                 ScoreCounter += CalcScore;
             }
 
@@ -184,7 +185,7 @@ namespace RhythmBox.Window.pending_files
 
             foreach (var objBox in Map)
             {
-                var x = (Mode.Std.Interfaces.HitObjects)objBox;
+                var x = (HitObjects) objBox;
 
                 objBoxArray[i] = new RBox
                 {

@@ -13,6 +13,7 @@ using osu.Framework.Platform;
 using osu.Framework.Screens;
 using osuTK;
 using osuTK.Graphics;
+using osuTK.Input;
 using RhythmBox.Mode.Std.Animations;
 using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Mode.Std.Mods;
@@ -40,7 +41,7 @@ namespace RhythmBox.Window.Screens
 
         private RbPlayfield _RbPlayfield;
 
-        private Mode.Std.Animations.HpBar _hpBar;
+        private HpBar _hpBar;
 
         private RhythmBoxClockContainer rhythmBoxClockContainer;
 
@@ -70,15 +71,15 @@ namespace RhythmBox.Window.Screens
 
         private bool Resizing { get; set; } = false;
 
-        private const float HP_Update = 100f;
+        private const float HP_Update = 80f;
 
-        private const float HP_300 = 0.2f;
+        private const float HP_300 = 0.01f;
 
-        private const float HP_100 = 0.1f;
+        private const float HP_100 = 0.005f;
 
-        private const float HP_50 = 0.05f;
+        private const float HP_50 = 0.0025f;
 
-        private const float HP_X = 0.05f;
+        private const float HP_X = 0.1f;
 
         private const float HP_Drain = 0.001f;
 
@@ -89,6 +90,8 @@ namespace RhythmBox.Window.Screens
         private GameplayScreenLoader GameplayScreenLoader;
 
         private List<Mod> ToApplyMods;
+
+        private bool FirstUpdate = true;
 
         public GameplayScreen(string path, List<Mod> ToApplyMods)
         {
@@ -179,13 +182,12 @@ namespace RhythmBox.Window.Screens
                     Size = new Vector2(0.6f, 1f),
                     Map = _map,
                 },
-                 _hpBar = new Mode.Std.Animations.HpBar
+                 _hpBar = new HpBar(0.1f)
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f),
-                    BoxMaxValue = 0.1f,
                     colour = Color4.AliceBlue,
                 },
                 DispayCombo = new TextFlowContainer
@@ -221,6 +223,11 @@ namespace RhythmBox.Window.Screens
 
             DispayCombo.AddText("0x", x => x.Font = new FontUsage("Roboto", 40));
             DispayScore.AddText("000000", x => x.Font = new FontUsage("Roboto", 40));
+
+            _RbPlayfield.ComboCounter.ValueChanged += (e) =>
+            {
+                _hpBar.ResizeBox(CalcHpBarValue(_hpBar.GetCurrentValue, _hpBar.BoxMaxValue, 0f, _RbPlayfield.currentHit), (HP_Update / 1.5f), Easing.OutCirc);
+            };
 
             _RbPlayfield.HasFinished.ValueChanged += (e) =>
             {
@@ -272,13 +279,29 @@ namespace RhythmBox.Window.Screens
             track?.Seek(_map.StartTime);
             rhythmBoxClockContainer.Start();
             track?.Start();
+            UpdateHPBar();
+        }
+
+        private void UpdateHPBar()
+        {
+            _hpBar.ResizeBox(CalcHpBarValue(_hpBar.BoxMaxValue, _hpBar.BoxMaxValue, 0f, Hit.Hit100, true), HP_Update, Easing.OutCirc);
+
+            Scheduler.AddDelayed(() =>
+            {
+                _hpBar.ResizeBox(CalcHpBarValue(_hpBar.GetCurrentValue, _hpBar.BoxMaxValue, 0f, Hit.Hit100, true), HP_Update, Easing.OutCirc);
+            }, HP_Update, true);
+            FirstUpdate = false;
         }
 
         protected override void Update()
         {
             if (_hpBar.CurrentValue <= 0)
             {
-                if (!HasFailed)
+                if (FirstUpdate)
+                {
+                    return;
+                }
+                else if (!HasFailed)
                 {
                     HasFailed = true;
 
@@ -324,17 +347,8 @@ namespace RhythmBox.Window.Screens
                     _ = AddJustTrack();
                 }
             }
-            else
-            {
-                if (!Resizing)
-                {
-                    Resizing = true;
-                    _hpBar.ResizeBox(CalcHpBarValue(_hpBar._box.Width, _hpBar.BoxMaxValue, 0f, Hit.Hit100, true), HP_Update, Easing.OutCirc);
-                    Scheduler.AddDelayed(() => Resizing = false, HP_Update);
-                }
-            }
 
-            Combo = _RbPlayfield.ComboCounter;
+            Combo = _RbPlayfield.ComboCounter.Value;
             DispayCombo.Text = string.Empty;
             DispayCombo.AddText($"{Combo}x", x => x.Font = new FontUsage("Roboto", 40));
 
@@ -347,7 +361,7 @@ namespace RhythmBox.Window.Screens
 
         protected override bool OnKeyDown(KeyDownEvent e)
         {
-            if (e.Key == osuTK.Input.Key.Escape)
+            if (e.Key == Key.Escape)
             {
                 if (Resuming.Value)
                 {
@@ -359,9 +373,6 @@ namespace RhythmBox.Window.Screens
                 _RbPlayfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
             }
 
-            //TODO: hpbar may be resized on key event even if no obj is alive
-            //TODO: Check if e.Key == Game.Key
-            _hpBar.ResizeBox(CalcHpBarValue(_hpBar._box.Width, _hpBar.BoxMaxValue, 0f, _RbPlayfield.currentHit), 1000, Easing.OutCirc);
             return base.OnKeyDown(e);
         }
 
