@@ -7,8 +7,8 @@ using osu.Framework.Input.Events;
 using osu.Framework.Testing;
 using osuTK;
 using RhythmBox.Mode.Std.Maps;
-using RhythmBox.Tests.Clock;
-using RhythmBox.Tests.pending_files;
+using RhythmBox.Window.Clocks;
+using RhythmBox.Window.pending_files;
 
 namespace RhythmBox.Tests.VisualTests.Clock
 {

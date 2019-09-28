@@ -14,7 +14,7 @@ using osu.Framework.Graphics.Textures;
 
 namespace RhythmBox.Window.Objects
 {
-    class Mods : Container
+    public class Mods : Container
     {
         public IEnumerable<Mod> Modlist = new Mod[]
         {

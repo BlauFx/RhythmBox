@@ -19,7 +19,8 @@ namespace RhythmBox.Window.Clocks
 
         public readonly Bindable<double> UserPlaybackRate = new BindableDouble(1) { Default = 1, MinValue = 0.1, MaxValue = 3, Precision = 0.1 };
 
-        [Cached]
+        //TODO:
+        //[Cached]
         public readonly RhythmBoxClock RhythmBoxClock;
 
         private readonly FramedOffsetClock userOffsetClock;
@@ -37,11 +38,13 @@ namespace RhythmBox.Window.Clocks
             adjustableClock = new StopwatchClock();
             (adjustableClock as IAdjustableAudioComponent)?.AddAdjustment(AdjustableProperty.Frequency, pauseFreqAdjust);
 
-            decoupleableClock = new DecoupleableInterpolatingFramedClock { IsCoupled = false };
+            decoupleableClock = new DecoupleableInterpolatingFramedClock { IsCoupled = false, AllowableErrorMilliseconds = 0 };
+
+            decoupleableClock.ChangeSource(adjustableClock);
 
             platformOffsetClock = new FramedOffsetClock(decoupleableClock) { Offset = 0 };
 
-            userOffsetClock = new FramedOffsetClock(platformOffsetClock);
+            userOffsetClock = new FramedOffsetClock(platformOffsetClock) { Offset = 0 };
 
             RhythmBoxClock = new RhythmBoxClock(userOffsetClock);
 

@@ -13,7 +13,7 @@ using System.Collections.Generic;
 
 namespace RhythmBox.Window.pending_files
 {
-    internal class RbPlayfield : Container
+    public class RbPlayfield : Container
     {
         public Map Map;
 

@@ -9,8 +9,8 @@ using osu.Framework.Screens;
 using osu.Framework.Testing;
 using osuTK;
 using RhythmBox.Mode.Std.Maps;
-using RhythmBox.Tests.Clock;
-using RhythmBox.Tests.pending_files;
+using RhythmBox.Window.Clocks;
+using RhythmBox.Window.pending_files;
 using System.IO;
 using System.Reflection;
 

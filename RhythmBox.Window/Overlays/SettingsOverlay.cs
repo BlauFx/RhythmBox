@@ -11,7 +11,6 @@ using osuTK.Graphics;
 using RhythmBox.Window.Objects;
 using RhythmBox.Window.pending_files;
 
-
 namespace RhythmBox.Window.Overlays
 {
     public class SettingsOverlay : FocusedOverlayContainer

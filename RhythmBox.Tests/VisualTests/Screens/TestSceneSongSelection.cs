@@ -14,9 +14,9 @@ using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
 using RhythmBox.Mode.Std.Maps;
-using RhythmBox.Tests.Objects;
-using RhythmBox.Tests.pending_files;
 using RhythmBox.Tests.VisualTests.Overlays;
+using RhythmBox.Window.Objects;
+using RhythmBox.Window.pending_files;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -253,7 +253,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     Colour = Color4.Blue,
                     Search = Maps[i, 0].Title,
                     Map = Maps,
-                    testSceneMapPos = i,
+                    MapPos = i,
                     InvokeBox = ClickOnMap,
                     bindablePath = bindablePath,
                 };

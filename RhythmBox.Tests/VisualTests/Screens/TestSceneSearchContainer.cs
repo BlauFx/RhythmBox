@@ -7,7 +7,7 @@ using osu.Framework.Testing;
 using osuTK;
 using osuTK.Graphics;
 using RhythmBox.Mode.Std.Maps;
-using RhythmBox.Tests.pending_files;
+using RhythmBox.Window.pending_files;
 using System.IO;
 using System.Reflection;
 
@@ -117,7 +117,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     Origin = Anchor.CentreRight,
                     Colour = Color4.LightYellow,
                     Map = Map,
-                    testSceneMapPos = i,
+                    MapPos = i,
                     Search = Map[i, 0].Title,
                 };
             }

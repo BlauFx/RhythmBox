@@ -9,7 +9,7 @@ using osu.Framework.Input.Events;
 using osu.Framework.Testing;
 using osuTK;
 using osuTK.Graphics;
-using RhythmBox.Tests.Objects;
+using RhythmBox.Window.Objects;
 
 namespace RhythmBox.Tests.VisualTests.Overlays
 {

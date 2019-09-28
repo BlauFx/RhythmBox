@@ -12,7 +12,8 @@ using osu.Framework.Screens;
 using osu.Framework.Testing;
 using osuTK;
 using osuTK.Graphics;
-using RhythmBox.Tests.pending_files;
+using RhythmBox.Window.Overlays;
+using RhythmBox.Window.pending_files;
 
 namespace RhythmBox.Tests.VisualTests.Screens
 {

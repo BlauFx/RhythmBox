@@ -18,10 +18,10 @@ using osuTK.Graphics;
 using RhythmBox.Mode.Std.Animations;
 using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Mode.Std.Mods;
-using RhythmBox.Tests.Clock;
-using RhythmBox.Tests.pending_files;
+using RhythmBox.Window.Clocks;
 using RhythmBox.Tests.VisualTests.Animations;
 using RhythmBox.Tests.VisualTests.Overlays;
+using RhythmBox.Window.pending_files;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -236,7 +236,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                     Size = new Vector2(0.6f, 1f),
                     Map = _map,
                 },
-                _hpBar = new Mode.Std.Animations.HpBar
+                _hpBar = new HpBar
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
