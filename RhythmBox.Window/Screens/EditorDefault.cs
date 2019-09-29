@@ -14,7 +14,7 @@ using System.Reflection;
 
 namespace RhythmBox.Window.Screens
 {
-    class EditorDefault : Screen
+    public class EditorDefault : Screen
     {
         private Sprite background;
 
@@ -65,7 +65,7 @@ namespace RhythmBox.Window.Screens
         }
 
         [BackgroundDependencyLoader]
-        private void Load(TextureStore store)
+        private async void Load(LargeTextureStore largeStore)
         {
             InternalChildren = new Drawable[]
             {
@@ -76,7 +76,7 @@ namespace RhythmBox.Window.Screens
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f),
                     Alpha = 0.7f,
-                    Texture = store.Get("Skin/menu-background"),
+                    Texture = await largeStore.GetAsync("Skin/menu-background"),
                 },
                 rhythmBoxClockContainer = new RhythmBoxClockContainer(0)
                 {

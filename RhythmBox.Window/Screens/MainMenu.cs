@@ -22,7 +22,7 @@ namespace RhythmBox.Window.Screens
         private SettingsOverlay settings;
 
         [BackgroundDependencyLoader]
-        private void Load(TextureStore store)
+        private void Load(LargeTextureStore store)
         {
             InternalChildren = new Drawable[]
             {

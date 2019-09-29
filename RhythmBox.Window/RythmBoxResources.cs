@@ -1,6 +1,7 @@
 ﻿using osu.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Configuration;
+using osu.Framework.Graphics.Textures;
 using osu.Framework.IO.Stores;
 using RhythmBox.Window.pending_files;
 using System.Collections.Generic;
@@ -12,6 +13,8 @@ namespace RhythmBox.Window
     {
         protected new DependencyContainer Dependencies;
 
+        private LargeTextureStore largeStore;
+
         public RhythmBoxResources()
         {
             Name = "RhythmBox";
@@ -20,10 +23,7 @@ namespace RhythmBox.Window
         protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
         {
             Dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
-            Dependencies.Cache(this);
-            Dependencies.Cache(new Gameini(Host.Storage));
-
-            return base.CreateChildDependencies(parent);
+            return Dependencies;
         }
 
         protected override IDictionary<FrameworkSetting, object> GetFrameworkConfigDefaults()
@@ -40,6 +40,13 @@ namespace RhythmBox.Window
         private void Load()
         {
             Resources.AddStore(new DllResourceStore("RhythmBox.Window.Resources.dll"));
+
+            largeStore = new LargeTextureStore(Host.CreateTextureLoaderStore(new NamespacedResourceStore<byte[]>(Resources, @"Textures")));
+
+            Dependencies.Cache(largeStore);
+            Dependencies.Cache(new Gameini(Host.Storage));
+            Dependencies.Cache(this);
+
             Fonts.AddStore(new GlyphStore(Resources, @"Fonts/Roboto-Medium"));
             Fonts.AddStore(new GlyphStore(Resources, @"Fonts/Roboto"));
             Fonts.AddStore(new GlyphStore(Resources, @"Fonts/Roboto-Thin"));

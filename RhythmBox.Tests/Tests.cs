@@ -15,7 +15,7 @@ namespace RhythmBox.Tests
         {
             Child = new DrawSizePreservingFillContainer
             {
-                Children = new Drawable[] 
+                Children = new Drawable[]
                 {
                     new TestBrowser("RhythmBox"),
                     new CursorContainer(),

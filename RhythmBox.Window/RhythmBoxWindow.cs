@@ -12,27 +12,30 @@ namespace RhythmBox.Window
     {
         private ScreenStack Stack;
 
+        private MainMenu mainMenu;
+
         [BackgroundDependencyLoader]
         private void Load()
         {
             Stack = new ScreenStack { RelativeSizeAxes = Axes.Both, Depth = 0 };
 
-            Children = new Drawable[]
-            {
-                Stack
-            };
+            Child = Stack;
+        }
 
-            MainMenu x;
-            LoadComponentAsync(x = new MainMenu()
+        protected override void LoadComplete()
+        {
+            LoadComponentAsync(mainMenu = new MainMenu
             {
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
                 Scale = new Vector2(0f)
             }, Stack.Push);
 
-            x.OnLoadComplete += (e) => x.TransformTo(nameof(Scale), new Vector2(1f), 1000, Easing.OutExpo);
+            mainMenu.OnLoadComplete += (e) => mainMenu.TransformTo(nameof(Scale), new Vector2(1f), 1000, Easing.OutExpo);
 
             Check_Licenses.License();
+
+            base.LoadComplete();
         }
 
         public override void SetHost(GameHost host)
