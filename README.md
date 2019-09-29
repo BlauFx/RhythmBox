@@ -3,7 +3,7 @@
 # RhythmBox
 
 # Getting started
-- Install the [.NET Core 2.2 SDK](https://dotnet.microsoft.com/download/dotnet-core/2.2)
+- Install the [.NET Core 3.0 SDK](https://dotnet.microsoft.com/download/dotnet-core/3.0)
 - Clone the repository
 ```
 git clone https://github.com/BlauFx/RhythmBox
