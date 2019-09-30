@@ -42,6 +42,7 @@ namespace RhythmBox.Window.Clocks
 
             decoupleableClock.ChangeSource(adjustableClock);
 
+            //TODO:
             platformOffsetClock = new FramedOffsetClock(decoupleableClock) { Offset = 0 };
 
             userOffsetClock = new FramedOffsetClock(platformOffsetClock) { Offset = 0 };

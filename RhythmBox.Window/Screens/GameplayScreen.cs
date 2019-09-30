@@ -267,6 +267,7 @@ namespace RhythmBox.Window.Screens
 
             base.LoadComplete();
         }
+    
         private async void Load(int time)
         {
             GameplayScreenLoader.StopRotaing(time);
@@ -319,7 +320,6 @@ namespace RhythmBox.Window.Screens
 
                     bindableBool.ValueChanged += (e) =>
                     {
-                        Logger.Log("GameplayScreen: bindableBool.Value changed", LoggingTarget.Runtime, LogLevel.Debug);
                         rhythmBoxClockContainer.Stop();
                         SongSelction songSelction;
                         LoadComponent(songSelction = new SongSelction());

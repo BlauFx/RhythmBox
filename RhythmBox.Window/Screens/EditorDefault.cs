@@ -6,8 +6,10 @@ using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Events;
 using osu.Framework.Screens;
 using osuTK;
+using osuTK.Graphics;
 using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Window.Clocks;
+using RhythmBox.Window.Objects;
 using RhythmBox.Window.pending_files;
 using System.IO;
 using System.Reflection;
@@ -30,7 +32,7 @@ namespace RhythmBox.Window.Screens
 
         private BindableBool Resuming = new BindableBool(false);
 
-        public EditorDefault()
+        public EditorDefault(/*CurrentMap*/)
         {
             string path = "null";
             if (path == "null")
@@ -42,30 +44,30 @@ namespace RhythmBox.Window.Screens
                 }
             }
 
-            var testSceneMapReader = new MapReader(path);
+            var mapReader = new MapReader(path);
             map = new Map
             {
-                AFileName = testSceneMapReader.AFileName,
-                BGFile = testSceneMapReader.BGFile,
-                MapId = testSceneMapReader.MapId,
-                MapSetId = testSceneMapReader.MapSetId,
-                BPM = testSceneMapReader.BPM,
-                Objects = testSceneMapReader.Objects,
-                AutoMap = testSceneMapReader.AutoMap,
-                Mode = testSceneMapReader.Mode,
-                Title = testSceneMapReader.Title,
-                Artist = testSceneMapReader.Artist,
-                Creator = testSceneMapReader.Creator,
-                DifficultyName = testSceneMapReader.DifficultyName,
-                StartTime = testSceneMapReader.StartTime,
-                EndTime = testSceneMapReader.EndTime,
-                HitObjects = testSceneMapReader.HitObjects,
-                Path = testSceneMapReader.Path,
+                AFileName = mapReader.AFileName,
+                BGFile = mapReader.BGFile,
+                MapId = mapReader.MapId,
+                MapSetId = mapReader.MapSetId,
+                BPM = mapReader.BPM,
+                Objects = mapReader.Objects,
+                AutoMap = mapReader.AutoMap,
+                Mode = mapReader.Mode,
+                Title = mapReader.Title,
+                Artist = mapReader.Artist,
+                Creator = mapReader.Creator,
+                DifficultyName = mapReader.DifficultyName,
+                StartTime = mapReader.StartTime,
+                EndTime = mapReader.EndTime,
+                HitObjects = mapReader.HitObjects,
+                Path = mapReader.Path,
             };
         }
 
         [BackgroundDependencyLoader]
-        private async void Load(LargeTextureStore largeStore)
+        private void Load(LargeTextureStore largeStore)
         {
             InternalChildren = new Drawable[]
             {
@@ -76,14 +78,59 @@ namespace RhythmBox.Window.Screens
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f),
                     Alpha = 0.7f,
-                    Texture = await largeStore.GetAsync("Skin/menu-background"),
                 },
                 rhythmBoxClockContainer = new RhythmBoxClockContainer(0)
                 {
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f)
+                },
+                new SpriteTextButton
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    Alpha = 1f,
+                    Size = new Vector2(0.044f),
+                    RelativePositionAxes = Axes.Both,
+                    X = 0.4f,
+                    Y = 0f,
+                    Text = "50%",
+                    ShadowColour = Color4.Black,
+                    Spacing = new Vector2(0.1f),
+                    Font = new FontUsage("Roboto", 30),
+                    AllowMultiline = false,
+                    ClickAction = () =>
+                    {
+                        UserPlaybackRate.Value = 0.5f;
+                    },
+                },
+                new SpriteTextButton
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    Alpha = 1f,
+                    Size = new Vector2(0.044f),
+                    RelativePositionAxes = Axes.Both,
+                    X = 0.45f,
+                    Y = 0f,
+                    Text = "100%",
+                    ShadowColour = Color4.Black,
+                    Spacing = new Vector2(0.1f),
+                    Font = new FontUsage("Roboto", 30),
+                    AllowMultiline = false,
+                    ClickAction = () =>
+                    {
+                        UserPlaybackRate.Value = 1f;
+                    },
                 }
             };
+
+            Schedule(async () =>
+            {
+                Texture x = await largeStore.GetAsync("Skin/menu-background");
+                background.Texture = x;
+            });
 
             rhythmBoxClockContainer.Children = new Drawable[]
             {

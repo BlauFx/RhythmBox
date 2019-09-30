@@ -1,11 +1,11 @@
-﻿using System;
-using osu.Framework.Graphics.Sprites;
+﻿using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
 using osuTK.Input;
+using System;
 
 namespace RhythmBox.Window.Objects
 {
-    public class SpriteButton : Sprite
+    public class ClickBox : Box
     {
         public Action ClickAction;
 

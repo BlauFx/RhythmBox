@@ -90,36 +90,28 @@ namespace RhythmBox.Window.pending_files
                                 this.UpdateCombo = x.AddComboToCounter();
                                 this.AddMiss = x.Miss();
                                 this.currentHit = x.GetHit();
-                                i = objBoxArray.Length;
                                 break;
-                               //return base.OnKeyDown(e);
 
                             case Key.S:
                                 x.OnClickKeyDown(Key.S);
                                 this.UpdateCombo = x.AddComboToCounter();
                                 this.AddMiss = x.Miss();
                                 this.currentHit = x.GetHit();
-                                i = objBoxArray.Length;
                                 break;
-                                //return base.OnKeyDown(e);
 
                             case Key.A:
                                 x.OnClickKeyDown(Key.A);
                                 this.UpdateCombo = x.AddComboToCounter();
                                 this.AddMiss = x.Miss();
                                 this.currentHit = x.GetHit();
-                                i = objBoxArray.Length;
                                 break;
-                                //return base.OnKeyDown(e);
 
                             case Key.D:
                                 x.OnClickKeyDown(Key.D);
                                 this.UpdateCombo = x.AddComboToCounter();
                                 this.AddMiss = x.Miss();
                                 this.currentHit = x.GetHit();
-                                i = objBoxArray.Length;
                                 break;
-                                //return base.OnKeyDown(e);
                         }
                     }
                     catch { }
