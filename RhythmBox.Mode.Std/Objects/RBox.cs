@@ -138,9 +138,9 @@ namespace RhythmBox.Mode.Std.Objects
 
         private HitObjects.Direction direction;
 
-        private const int Expire = 300;
+        private new const int Expire = 300;
 
-        private const int Clear = 100;
+        private new const int Clear = 100;
 
         public bool AddCombo = false;
 

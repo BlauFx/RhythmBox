@@ -3,6 +3,8 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Events;
+using osu.Framework.Logging;
+using osu.Framework.Threading;
 using osuTK;
 using osuTK.Input;
 using RhythmBox.Mode.Std.Animations;
@@ -18,7 +20,7 @@ namespace RhythmBox.Window.pending_files
     {
         public Map Map;
 
-        private RBox[] objBoxArray;
+        public RBox[] objBoxArray;
 
         public int _previousCombo = 0;
 
@@ -191,6 +193,7 @@ namespace RhythmBox.Window.pending_files
                     mods = mods,
                 };
 
+
                 Scheduler.AddDelayed(() =>
                 {
                     Add(objBoxArray[j]);
@@ -199,6 +202,55 @@ namespace RhythmBox.Window.pending_files
 
                 i++;
             }
+        }
+
+        public void StopScheduler() => Scheduler.CancelDelayedTasks();
+
+        public void LoadMapForEditor(float time)
+        {
+            CanStart.Value = false;
+            int i = 0;
+            int j = 0;
+
+            foreach (var objBox in Map)
+            {
+                //objBoxArray[i].Dispose();
+
+                var x = (HitObjects) objBox;
+
+                objBoxArray[i] = new RBox
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    direction = x._direction,
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(1f),
+                    speed = x.Speed,
+                    Resuming = Resuming,
+                    mods = mods,
+                };
+
+                double SchedulerStartTime = x.Time - Map.StartTime;
+
+                if (time <= SchedulerStartTime)
+                {
+                    Scheduler.AddDelayed(() =>
+                    {
+                        Remove(objBoxArray[j]);
+
+                        Add(objBoxArray[j]);
+
+                        j++;
+                    }, SchedulerStartTime - time);
+                }
+                else
+                {
+                    j++;
+                }
+                i++;
+            }
+
+            CanStart.Value = true;
         }
     }
 }

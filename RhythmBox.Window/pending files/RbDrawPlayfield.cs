@@ -7,88 +7,37 @@ using osuTK.Graphics;
 
 namespace RhythmBox.Window.pending_files
 {
-    public class RbDrawPlayfield : Container
+    public class RbDrawPlayfield : Container<Box>
     {
+        public Color4 color = Color4.White;
+
         [BackgroundDependencyLoader]
         private void Load()
         {
-            Children = new Drawable[]
+            Add(drawable(new Vector2(0.89f, 2f), 0.949f, 0f, Anchor.TopCentre, Axes.X)); //Up
+            Add(drawable(new Vector2(0.89f, 2f), 0.051f, 0f, Anchor.TopCentre, Axes.X)); //Down
+
+            Add(drawable(new Vector2(2f, 1f), 0.5f, 0f)); //Left Outside
+            Add(drawable(new Vector2(2f, 0.9f), 0.5f, 0.057f)); //Left
+
+            Add(drawable(new Vector2(2f, 1f), 0.5f, 1f)); //Right Outside
+            Add(drawable(new Vector2(2f, 0.9f), 0.5f, 0.943f)); //Right
+        }
+
+        private Box drawable(Vector2 size, float Y, float X, Anchor anchor = Anchor.TopLeft, Axes RelativeSizeAxes = Axes.Y)
+        {
+            return new Box
             {
-                new Box //Up
-                {
-                    Depth = int.MinValue,
-                    Anchor = Anchor.TopCentre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.X,
-                    Size = new Vector2(0.89f,2f),
-                    Y = 0.051f,
-                    RelativePositionAxes = Axes.Both, 
-                    Colour = Color4.Yellow,
-                    EdgeSmoothness = new Vector2(2f),
-                },
-                new Box //Down
-                {
-                    Depth = int.MinValue,
-                    Anchor = Anchor.TopCentre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.X,
-                    Size = new Vector2(0.89f,2f),
-                    Y = 0.949f,
-                    RelativePositionAxes = Axes.Both,
-                    Colour = Color4.Yellow,
-                    EdgeSmoothness = new Vector2(2f),
-                },
-                new Box //Left Outside
-                {
-                    Anchor = Anchor.TopLeft,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Y,
-                    Size = new Vector2(2f,1f),
-                    Y = 0.5f,
-                    RelativePositionAxes = Axes.Both,
-                    Colour = Color4.Yellow,
-                    Depth = int.MinValue,
-                    EdgeSmoothness = new Vector2(2f),
-                },
-                new Box //Left
-                {
-                    Anchor = Anchor.TopLeft,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Y,
-                    Size = new Vector2(2f,0.9f),
-                    Y = 0.5f,
-                    X = 0.057f,
-                    RelativePositionAxes = Axes.Both,
-                    Colour = Color4.Yellow,
-                    Depth = int.MinValue,
-                    EdgeSmoothness = new Vector2(2f),
-                },
-                new Box //Right Outside
-                {
-                    Anchor = Anchor.TopLeft,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Y,
-                    Size = new Vector2(2f,1f),
-                    Y = 0.5f,
-                    X = 1f,
-                    RelativePositionAxes = Axes.Both,
-                    Colour = Color4.Yellow,
-                    Depth = int.MinValue,
-                    EdgeSmoothness = new Vector2(2f),
-                },
-                new Box //Right
-                {
-                    Anchor = Anchor.TopLeft,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Y,
-                    Size = new Vector2(2f,0.9f),
-                    Y = 0.5f,
-                    X = 0.943f,
-                    RelativePositionAxes = Axes.Both,
-                    Colour = Color4.Yellow,
-                    Depth = int.MinValue,
-                    EdgeSmoothness = new Vector2(2f),
-                },
+                Anchor = anchor,
+                Origin = Anchor.Centre,
+                RelativeSizeAxes = RelativeSizeAxes,
+                Size = size,
+                Y = Y,
+                X = X,
+                RelativePositionAxes = Axes.Both,
+                Colour = color,
+                Depth = int.MinValue,
+                EdgeSmoothness = new Vector2(2f),
             };
         }
     }

@@ -4,6 +4,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Events;
+using osu.Framework.Logging;
 using osu.Framework.Screens;
 using osuTK;
 using osuTK.Graphics;
@@ -20,7 +21,7 @@ namespace RhythmBox.Window.Screens
     {
         private Sprite background;
 
-        private RbPlayfield _testSceneRbPlayfield;
+        private RbPlayfield playfield;
 
         private RhythmBoxClockContainer rhythmBoxClockContainer;
 
@@ -31,6 +32,10 @@ namespace RhythmBox.Window.Screens
         private Map map;
 
         private BindableBool Resuming = new BindableBool(false);
+
+        private Progress<float> progress;
+
+        private SpriteText SpriteCurrentTime;
 
         public EditorDefault(/*CurrentMap*/)
         {
@@ -82,7 +87,29 @@ namespace RhythmBox.Window.Screens
                 rhythmBoxClockContainer = new RhythmBoxClockContainer(0)
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(1f)
+                    Size = new Vector2(1f),
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                },
+                new SpriteTextButton
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    Alpha = 1f,
+                    Size = new Vector2(0.044f),
+                    RelativePositionAxes = Axes.Both,
+                    X = 0.35f,
+                    Y = 0f,
+                    Text = "10%",
+                    ShadowColour = Color4.Black,
+                    Spacing = new Vector2(0.1f),
+                    Font = new FontUsage("Roboto", 30),
+                    AllowMultiline = false,
+                    ClickAction = () =>
+                    {
+                        UserPlaybackRate.Value = 0.1f;
+                    },
                 },
                 new SpriteTextButton
                 {
@@ -123,6 +150,46 @@ namespace RhythmBox.Window.Screens
                     {
                         UserPlaybackRate.Value = 1f;
                     },
+                },
+                progress = new Progress<float>(0, map.EndTime, map.StartTime)
+                {
+                    Depth = 1,
+                    RelativeSizeAxes = Axes.Both,
+                    Colour = Color4.AliceBlue,
+                    Alpha = 1F,
+                    Size = new Vector2(0.2f, 0.1f),
+                    Anchor = Anchor.TopLeft,
+                    Origin = Anchor.TopLeft,
+                    Action = () =>
+                    {
+                        playfield.StopScheduler();
+                        playfield.RemoveRange(playfield.objBoxArray);
+
+                        float calcPos = map.EndTime * progress.bindableValue.Value;
+
+                        SpriteCurrentTime.Text = string.Empty;
+                        SpriteCurrentTime.Text = $"{calcPos}";
+
+                        rhythmBoxClockContainer.Stop();
+                        rhythmBoxClockContainer.Seek(calcPos);
+                        playfield.LoadMapForEditor(calcPos);
+                    },
+                },
+                SpriteCurrentTime = new SpriteText
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    Alpha = 1f,
+                    Size = new Vector2(0.044f),
+                    RelativePositionAxes = Axes.Both,
+                    X = -0.45f,
+                    Y = -0.35f,
+                    Text = "0",
+                    ShadowColour = Color4.Black,
+                    Spacing = new Vector2(0.1f),
+                    Font = new FontUsage("Roboto", 30),
+                    AllowMultiline = false,
                 }
             };
 
@@ -134,7 +201,7 @@ namespace RhythmBox.Window.Screens
 
             rhythmBoxClockContainer.Children = new Drawable[]
             {
-                _testSceneRbPlayfield = new RbPlayfield(null)
+                playfield = new RbPlayfield(null)
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
@@ -148,17 +215,33 @@ namespace RhythmBox.Window.Screens
             rhythmBoxClockContainer.IsPaused.BindTo(IsPaused);
             rhythmBoxClockContainer.UserPlaybackRate.BindTo(UserPlaybackRate);
 
-            _testSceneRbPlayfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
+            playfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
 
-            _testSceneRbPlayfield.Resuming.BindTo(Resuming);
+            playfield.Resuming.BindTo(Resuming);
         }
 
         protected override void LoadComplete()
         {
+            playfield.CanStart.ValueChanged += CanStart_ValueChanged;
+
             this.TransformTo(nameof(Alpha), 1f, 1500, Easing.OutExpo);
             this.TransformTo(nameof(Scale), new Vector2(1f), 1000, Easing.InExpo).OnComplete((e) => rhythmBoxClockContainer.Start());
 
             base.LoadComplete();
+        }
+
+        private void CanStart_ValueChanged(ValueChangedEvent<bool> obj)
+        {
+            progress.AllowAction = false;
+
+            if (obj.NewValue)
+            {
+                progress.AllowAction = true;
+            }
+
+            rhythmBoxClockContainer.Start();
+
+            // playfield.CanStart.ValueChanged -= CanStart_ValueChanged;
         }
 
         protected override bool OnKeyDown(KeyDownEvent e)

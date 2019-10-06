@@ -8,6 +8,7 @@ using osu.Framework.Testing;
 using osuTK;
 using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Window.Clocks;
+using RhythmBox.Window.Objects;
 using RhythmBox.Window.pending_files;
 
 namespace RhythmBox.Tests.VisualTests.Clock
@@ -67,8 +68,10 @@ namespace RhythmBox.Tests.VisualTests.Clock
                 rhythmBoxClockContainer = new RhythmBoxClockContainer(0)
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(1f)
-                }
+                    Size = new Vector2(1f),
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                },
             };
 
             rhythmBoxClockContainer.Children = new Drawable[]
