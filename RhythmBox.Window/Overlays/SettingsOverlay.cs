@@ -175,7 +175,7 @@ namespace RhythmBox.Window.Overlays
                                             Size = new Vector2(110f,20f),
                                             Colour = Color4.White,
                                             Alpha = 0.8f,
-                                            Text = "07/16/2019/0",
+                                            Text = "0",
                                             Font = new FontUsage("Roboto",25),
                                         },
                                     }

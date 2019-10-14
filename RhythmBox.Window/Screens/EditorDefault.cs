@@ -43,6 +43,8 @@ namespace RhythmBox.Window.Screens
 
         private ClickBox[] box = new ClickBox[4];
 
+        private float LastCalcPos = 0f;
+
         public EditorDefault(/*CurrentMap*/)
         {
             string path = "null";
@@ -168,18 +170,26 @@ namespace RhythmBox.Window.Screens
                     Origin = Anchor.TopLeft,
                     Action = () =>
                     {
-                        playfield.StopScheduler();
-                        playfield.RemoveRange(playfield.objBoxArray);
-
                         float calcPos = map.EndTime * progress.bindableValue.Value;
+                        if (LastCalcPos > calcPos)
+                        {
+                            playfield.StopScheduler();
+                            playfield.RemoveRange(playfield.objBoxArray);
+
+                            rhythmBoxClockContainer.Stop();
+                            rhythmBoxClockContainer.Seek(calcPos);
+                            playfield.LoadMapForEditor(calcPos);
+                            rhythmBoxClockContainer.Start();
+                        }
+                        else
+                        {
+                            rhythmBoxClockContainer.Seek(calcPos);
+                        }
+
+                        LastCalcPos = calcPos;
 
                         SpriteCurrentTime.Text = string.Empty;
                         SpriteCurrentTime.Text = $"{calcPos}";
-
-                        rhythmBoxClockContainer.Stop();
-                        rhythmBoxClockContainer.Seek(calcPos);
-                        playfield.LoadMapForEditor(calcPos);
-                        rhythmBoxClockContainer.Start();
                     },
                 },
                 SpriteCurrentTime = new SpriteText
@@ -318,7 +328,7 @@ namespace RhythmBox.Window.Screens
             {
                 progress.AllowAction = true;
             }
-
+            
             if (!this.IsPaused.Value)
             {
                 rhythmBoxClockContainer.Start();
