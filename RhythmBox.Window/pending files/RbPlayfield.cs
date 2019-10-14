@@ -2,6 +2,7 @@
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
 using osu.Framework.Logging;
 using osu.Framework.Threading;
@@ -12,7 +13,10 @@ using RhythmBox.Mode.Std.Interfaces;
 using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Mode.Std.Mods;
 using RhythmBox.Mode.Std.Objects;
+using RhythmBox.Window.Objects;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RhythmBox.Window.pending_files
 {
@@ -45,6 +49,18 @@ namespace RhythmBox.Window.pending_files
 
         private List<Mod> mods;
 
+        public Action action { get; set; }
+
+        public Action BoxAction { get; set; }
+
+        public Action BoxAction2 { get; set; }
+
+        public bool EditorMode { get; set; }
+
+        public Bindable<HitObjects.Direction> dir { get; set; } = new Bindable<HitObjects.Direction>(HitObjects.Direction.Up);
+
+        public ClickBox[] NewBox { get; set; }
+
         public RbPlayfield(List<Mod> mods)
         {
             this.mods = mods;
@@ -63,6 +79,12 @@ namespace RhythmBox.Window.pending_files
                     Origin = Anchor.Centre,
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f),
+                    action = action,
+                    EditorMode = EditorMode,
+                    dir = dir,
+                    BoxAction = BoxAction,
+                    BoxAction2 = BoxAction2,
+                    NewBox = NewBox,
                 },
             };
         }
@@ -206,13 +228,74 @@ namespace RhythmBox.Window.pending_files
 
         public void StopScheduler() => Scheduler.CancelDelayedTasks();
 
-        public void LoadMapForEditor(float time)
+        public void LoadMapForEditor(double time)
         {
             CanStart.Value = false;
             int i = 0;
             int j = 0;
 
             foreach (var objBox in Map)
+            {
+                //objBoxArray[i].Dispose();
+
+                var x = (HitObjects) objBox;
+
+                objBoxArray[i] = new RBox
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    direction = x._direction,
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(1f),
+                    speed = x.Speed,
+                    Resuming = Resuming,
+                    mods = mods,
+                };
+
+                double SchedulerStartTime = x.Time - Map.StartTime;
+
+                if (time <= SchedulerStartTime)
+                {
+                    Scheduler.AddDelayed(() =>
+                    {
+                        Remove(objBoxArray[j]);
+
+                        Add(objBoxArray[j]);
+
+                        j++;
+                    }, SchedulerStartTime - time);
+                }
+                else
+                {
+                    j++;
+                }
+                i++;
+            }
+
+            CanStart.Value = true;
+        }
+
+        public void LoadMapForEditor2(double time, HitObjects.Direction direction)
+        {
+            CanStart.Value = false;
+            int i = 0;
+            int j = 0;
+
+            var Hitobj = new HitObjects()
+            {
+                Speed = 1f,
+                Time = time,
+                _direction = direction,
+            };
+
+            var list = Map.HitObjects.ToList();
+            list.Add(Hitobj);
+
+            list.ToArray();
+
+            objBoxArray = new RBox[list.Count];
+
+            foreach (var objBox in list)
             {
                 //objBoxArray[i].Dispose();
 

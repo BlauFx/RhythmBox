@@ -3,6 +3,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
+using osu.Framework.Logging;
 using osuTK;
 using osuTK.Graphics;
 using System;
@@ -53,7 +54,6 @@ namespace RhythmBox.Window.Objects
             Current.Value = StartValue;
 
             box.Width = Convert.ToSingle(Current.Value);
-
         }
 
         protected override void UpdateValue(float value)

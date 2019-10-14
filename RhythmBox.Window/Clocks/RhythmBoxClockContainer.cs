@@ -29,6 +29,8 @@ namespace RhythmBox.Window.Clocks
 
         private readonly BindableDouble pauseFreqAdjust = new BindableDouble(1);
 
+        private const float pauseFreqDuration = 250;
+
         private double totalOffset => userOffsetClock.Offset + platformOffsetClock.Offset;
 
         public RhythmBoxClockContainer(double GamplayStartTime)
@@ -70,7 +72,7 @@ namespace RhythmBox.Window.Clocks
             decoupleableClock.Start();
             IsPaused.Value = false;
 
-            this.TransformBindableTo(pauseFreqAdjust, 1, 250, Easing.In);
+            this.TransformBindableTo(pauseFreqAdjust, 1, pauseFreqDuration, Easing.In);
         }
 
         public void Seek(double time)
@@ -81,7 +83,11 @@ namespace RhythmBox.Window.Clocks
 
         public void Stop()
         {
-            this.TransformBindableTo(pauseFreqAdjust, 0, 250, Easing.Out).OnComplete(x => decoupleableClock.Stop());
+            this.TransformBindableTo(pauseFreqAdjust, 0, pauseFreqDuration, Easing.Out).OnComplete(x =>
+            {
+                decoupleableClock.Stop();
+                adjustableClock.Stop();
+            });
 
             IsPaused.Value = true;
         }
