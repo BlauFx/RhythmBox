@@ -14,7 +14,6 @@ namespace RhythmBox.Window.Objects
             if (e.Button == MouseButton.Left)
             {
                 ClickAction?.Invoke();
-                ClickAction = null;
             }
             return base.OnMouseDown(e);
         }

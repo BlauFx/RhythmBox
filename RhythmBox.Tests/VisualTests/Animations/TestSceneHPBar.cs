@@ -16,7 +16,7 @@ namespace RhythmBox.Tests.VisualTests.Animations
         private const float duration = 1000f;
 
         [BackgroundDependencyLoader]
-        private async void Load()
+        private void Load()
         {
             Child = hpBar = new HpBar(0.4f)
             {

@@ -40,8 +40,7 @@ namespace RhythmBox.Window.Clocks
             adjustableClock = new StopwatchClock();
             (adjustableClock as IAdjustableAudioComponent)?.AddAdjustment(AdjustableProperty.Frequency, pauseFreqAdjust);
 
-            //TODO:
-            decoupleableClock = new DecoupleableInterpolatingFramedClock { IsCoupled = true, AllowableErrorMilliseconds = 0 };
+            decoupleableClock = new DecoupleableInterpolatingFramedClock { IsCoupled = true };
 
             decoupleableClock.ChangeSource(adjustableClock);
 

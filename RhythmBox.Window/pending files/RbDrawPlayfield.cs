@@ -41,15 +41,15 @@ namespace RhythmBox.Window.pending_files
 
             if (EditorMode)
             {
-                Add(drawableMiddle(new Vector2(36f, 1f), 0.5f, 0f, Anchor.TopLeft, Anchor.CentreLeft, Axes.Y, true, 0f, HitObjects.Direction.Left)); //Left-Inside
-                Add(drawableMiddle(new Vector2(1f, 36f), 0.949f, 0f, Anchor.TopCentre, Anchor.TopCentre, Axes.X, true, 0f, HitObjects.Direction.Down)); //Down-Inside
-                Add(drawableMiddle(new Vector2(1f, 36f), 0.051f, 0f, Anchor.TopCentre, Anchor.BottomCentre, Axes.X, true, 0f, HitObjects.Direction.Up)); //Up-Inside
-                Add(drawableMiddle(new Vector2(36f, 1f), 0.5f, 0f, Anchor.TopRight, Anchor.CentreRight, Axes.Y, true, 0f, HitObjects.Direction.Right)); //Right-Inside
+                Add(drawableMiddle(new Vector2(36f, 1f), 0.5f, 0f, Anchor.TopLeft, Anchor.CentreLeft, Axes.Y, true, false, 0f, HitObjects.Direction.Left)); //Left-Inside
+                Add(drawableMiddle(new Vector2(1f, 36f), 0.949f, 0f, Anchor.TopCentre, Anchor.TopCentre, Axes.X, true, false, 0f, HitObjects.Direction.Down)); //Down-Inside
+                Add(drawableMiddle(new Vector2(1f, 36f), 0.051f, 0f, Anchor.TopCentre, Anchor.BottomCentre, Axes.X, true, false, 0f, HitObjects.Direction.Up)); //Up-Inside
+                Add(drawableMiddle(new Vector2(36f, 1f), 0.5f, 0f, Anchor.TopRight, Anchor.CentreRight, Axes.Y, true, false, 0f, HitObjects.Direction.Right)); //Right-Inside
 
-                NewBox[0] = drawableMiddle(new Vector2(36f, 1f), 0.5f, 0.2f, Anchor.TopLeft, Anchor.CentreLeft, Axes.Y, false, 1f, HitObjects.Direction.Left);
-                NewBox[1] = drawableMiddle(new Vector2(0.6f, 36f), 0.949f, 0f, Anchor.TopCentre, Anchor.TopCentre, Axes.X, false, 1f, HitObjects.Direction.Down);
-                NewBox[2] = drawableMiddle(new Vector2(0.6f, 36f), 0.051f, 0f, Anchor.TopCentre, Anchor.BottomCentre, Axes.X, false, 1f, HitObjects.Direction.Up);
-                NewBox[3] = drawableMiddle(new Vector2(36f, 1f), 0.5f, -0.2f, Anchor.TopRight, Anchor.CentreRight, Axes.Y, false, 1f, HitObjects.Direction.Right);
+                NewBox[0] = drawableMiddle(new Vector2(36f, 1f), 0.5f, 0.2f, Anchor.TopLeft, Anchor.CentreLeft, Axes.Y, false, true, 1f, HitObjects.Direction.Left);
+                NewBox[1] = drawableMiddle(new Vector2(0.6f, 36f), 0.949f, 0f, Anchor.TopCentre, Anchor.TopCentre, Axes.X, false, true, 1f, HitObjects.Direction.Down);
+                NewBox[2] = drawableMiddle(new Vector2(0.6f, 36f), 0.051f, 0f, Anchor.TopCentre, Anchor.BottomCentre, Axes.X, false, true, 1f, HitObjects.Direction.Up);
+                NewBox[3] = drawableMiddle(new Vector2(36f, 1f), 0.5f, -0.2f, Anchor.TopRight, Anchor.CentreRight, Axes.Y, false, true, 1f, HitObjects.Direction.Right);
             }
         }
 
@@ -79,7 +79,7 @@ namespace RhythmBox.Window.pending_files
         }
 
         private ClickBox drawableMiddle(Vector2 size, float Y, float X, Anchor anchor, Anchor origin, Axes relativsize,
-            bool Editor = false, float alpha = 0.5f, HitObjects.Direction direction = HitObjects.Direction.Up)
+            bool Editor = false, bool Editor2 = false, float alpha = 0.5f, HitObjects.Direction direction = HitObjects.Direction.Up)
         {
             return new ClickBox
             {
@@ -95,6 +95,7 @@ namespace RhythmBox.Window.pending_files
                 EdgeSmoothness = new Vector2(2f),
                 ClickAction = action,
                 EditorMode = Editor,
+                EditorMode2 = Editor2,
                 Alpha = alpha,
                 dir = direction,
                 ChangeDir = dir,

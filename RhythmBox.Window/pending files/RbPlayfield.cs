@@ -275,7 +275,7 @@ namespace RhythmBox.Window.pending_files
             CanStart.Value = true;
         }
 
-        public void LoadMapForEditor2(double time, HitObjects.Direction direction)
+        public void LoadMapForEditor2(double time, HitObjects.Direction direction, float speed)
         {
             CanStart.Value = false;
             int i = 0;
@@ -283,7 +283,7 @@ namespace RhythmBox.Window.pending_files
 
             var Hitobj = new HitObjects()
             {
-                Speed = 1f,
+                Speed = speed,
                 Time = time,
                 _direction = direction,
             };
@@ -291,7 +291,7 @@ namespace RhythmBox.Window.pending_files
             var list = Map.HitObjects.ToList();
             list.Add(Hitobj);
 
-            list.ToArray();
+            Map.HitObjects = list.ToArray();
 
             objBoxArray = new RBox[list.Count];
 

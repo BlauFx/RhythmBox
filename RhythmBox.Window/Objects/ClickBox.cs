@@ -14,6 +14,8 @@ namespace RhythmBox.Window.Objects
 
         public bool EditorMode { get; set; } = false;
 
+        public bool EditorMode2 { get; set; } = false;
+
         public HitObjects.Direction dir { get; set; }
 
         public Bindable<HitObjects.Direction> ChangeDir { get; set; }
@@ -35,7 +37,10 @@ namespace RhythmBox.Window.Objects
         {
             if (e.Button == MouseButton.Left)
             {
-                ClickAction?.Invoke();
+                if (EditorMode2)
+                {
+                    ClickAction?.Invoke();
+                }
             }
             return base.OnMouseDown(e);
         }

@@ -4,7 +4,6 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Events;
-using osu.Framework.Logging;
 using osu.Framework.Screens;
 using osuTK;
 using osuTK.Graphics;
@@ -12,13 +11,17 @@ using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Window.Clocks;
 using RhythmBox.Window.Objects;
 using RhythmBox.Window.pending_files;
+using System;
 using System.IO;
 using System.Reflection;
+using osu.Framework.Platform;
 
 namespace RhythmBox.Window.Screens
 {
     public class EditorDefault : Screen
     {
+        private RhythmBoxCursor _cursor;
+        
         private Sprite background;
 
         private RbPlayfield playfield;
@@ -33,17 +36,19 @@ namespace RhythmBox.Window.Screens
 
         private BindableBool Resuming = new BindableBool(false);
 
-        private Progress<float> progress;
+        private Objects.Progress<float> progress;
 
         private SpriteText SpriteCurrentTime;
 
-        private bool AddNewHitObj = false;
-
-        private double time = 0;
-
         private ClickBox[] box = new ClickBox[4];
 
-        private float LastCalcPos = 0f;
+        BindableFloat bindable = new BindableFloat();
+
+        private double time = 0f;
+
+        private bool CursorCreated = false;
+
+        private bool HitObjCursorActive = false;
 
         public EditorDefault(/*CurrentMap*/)
         {
@@ -53,7 +58,7 @@ namespace RhythmBox.Window.Screens
                 path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Songs\\TestMap\\Difficulty1.ini";
                 if (!File.Exists(path))
                 {
-                    new DefaultFolder();
+                    //new DefaultFolder();
                 }
             }
 
@@ -80,7 +85,7 @@ namespace RhythmBox.Window.Screens
         }
 
         [BackgroundDependencyLoader]
-        private void Load(LargeTextureStore largeStore)
+        private void Load(LargeTextureStore largeStore, GameHost host, TextureStore store)
         {
             InternalChildren = new Drawable[]
             {
@@ -159,7 +164,7 @@ namespace RhythmBox.Window.Screens
                         UserPlaybackRate.Value = 1f;
                     },
                 },
-                progress = new Progress<float>(0, map.EndTime, map.StartTime)
+                progress = new Objects.Progress<float>(0, map.EndTime, map.StartTime)
                 {
                     Depth = 1,
                     RelativeSizeAxes = Axes.Both,
@@ -168,29 +173,6 @@ namespace RhythmBox.Window.Screens
                     Size = new Vector2(0.2f, 0.1f),
                     Anchor = Anchor.TopLeft,
                     Origin = Anchor.TopLeft,
-                    Action = () =>
-                    {
-                        float calcPos = map.EndTime * progress.bindableValue.Value;
-                        if (LastCalcPos > calcPos)
-                        {
-                            playfield.StopScheduler();
-                            playfield.RemoveRange(playfield.objBoxArray);
-
-                            rhythmBoxClockContainer.Stop();
-                            rhythmBoxClockContainer.Seek(calcPos);
-                            playfield.LoadMapForEditor(calcPos);
-                            rhythmBoxClockContainer.Start();
-                        }
-                        else
-                        {
-                            rhythmBoxClockContainer.Seek(calcPos);
-                        }
-
-                        LastCalcPos = calcPos;
-
-                        SpriteCurrentTime.Text = string.Empty;
-                        SpriteCurrentTime.Text = $"{calcPos}";
-                    },
                 },
                 SpriteCurrentTime = new SpriteText
                 {
@@ -225,7 +207,55 @@ namespace RhythmBox.Window.Screens
                     AllowMultiline = false,
                     ClickAction = () =>
                     {
-                        //TODO:
+                        host.Window.CursorState = CursorState.Hidden;
+
+                        if (CursorCreated)
+                        {
+                            RemoveInternal(_cursor);
+                        }
+                        
+                        AddInternal(_cursor = new RhythmBoxCursor(@"Game/HitObjCursor")
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Size = new Vector2(1f),
+                        });
+
+                        CursorCreated = true;
+                        HitObjCursorActive = true;
+                    },
+                },
+                new SpriteTextButton
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    Alpha = 1f,
+                    Size = new Vector2(0.05f),
+                    RelativePositionAxes = Axes.Both,
+                    X = -0.45f,
+                    Y = -0.2f,
+                    Text = "DefaultCursor",
+                    ShadowColour = Color4.Black,
+                    Spacing = new Vector2(0.1f),
+                    Font = new FontUsage("Roboto", 30),
+                    AllowMultiline = false,
+                    ClickAction = () =>
+                    {
+                        host.Window.CursorState = CursorState.Hidden;
+
+                        if (CursorCreated)
+                        {
+                            RemoveInternal(_cursor);
+                        }
+                        
+                        AddInternal(_cursor = new RhythmBoxCursor(@"Game/DefaultCursor")
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Size = new Vector2(1f),
+                        });
+
+                        CursorCreated = true;
+                        HitObjCursorActive = false;
                     },
                 }
             };
@@ -250,45 +280,42 @@ namespace RhythmBox.Window.Screens
                     NewBox = box,
                     action = () =>
                     {
-                        rhythmBoxClockContainer.Stop();
+                        if (HitObjCursorActive)
+                        {
+                            rhythmBoxClockContainer.Stop();
 
-                        var x = rhythmBoxClockContainer.RhythmBoxClock.CurrentTime;
+                            time = rhythmBoxClockContainer.RhythmBoxClock.CurrentTime;
 
-                        playfield.StopScheduler();
-                        playfield.RemoveRange(playfield.objBoxArray);
+                            playfield.StopScheduler();
+                            playfield.RemoveRange(playfield.objBoxArray);
 
-                        SpriteCurrentTime.Text = string.Empty;
-                        SpriteCurrentTime.Text = $"{x}";
-
-                        time = x;
-                        AddNewHitObj = true;
-
-                        rhythmBoxClockContainer.Seek(time);
-                        playfield.LoadMapForEditor2(time, playfield.dir.Value);
-                        rhythmBoxClockContainer.Start();
-
-                        rhythmBoxClockContainer.Stop();
+                            rhythmBoxClockContainer.Seek(time);
+                            playfield.LoadMapForEditor2(time, playfield.dir.Value, 1f);
+                        }
                     },
                     BoxAction = () =>
                     {
-                        switch (playfield.dir.Value)
+                        if (HitObjCursorActive)
                         {
-                            case Mode.Std.Interfaces.HitObjects.Direction.Left:
-                                RemoveInternal(box[0]);
-                                AddInternal(box[0]);
-                                break;
-                            case Mode.Std.Interfaces.HitObjects.Direction.Down:
-                                RemoveInternal(box[1]);
-                                AddInternal(box[1]);
-                                break;
-                            case Mode.Std.Interfaces.HitObjects.Direction.Up:
-                                RemoveInternal(box[2]);
-                                AddInternal(box[2]);
-                                break;
-                            case Mode.Std.Interfaces.HitObjects.Direction.Right:
-                                RemoveInternal(box[3]);
-                                AddInternal(box[3]);
-                                break;
+                            int i = 0;
+                            switch (playfield.dir.Value)
+                            {
+                                case Mode.Std.Interfaces.HitObjects.Direction.Left:
+                                    i = 0;
+                                    break;
+                                case Mode.Std.Interfaces.HitObjects.Direction.Down:
+                                    i = 1;
+                                    break;
+                                case Mode.Std.Interfaces.HitObjects.Direction.Up:
+                                    i = 2;
+                                    break;
+                                case Mode.Std.Interfaces.HitObjects.Direction.Right:
+                                    i = 3;
+                                    break;
+                            }
+
+                            RemoveInternal(box[i]);
+                            AddInternal(box[i]);
                         }
                     },
                     BoxAction2 = () =>
@@ -311,8 +338,9 @@ namespace RhythmBox.Window.Screens
 
         protected override void LoadComplete()
         {
-
             playfield.CanStart.ValueChanged += CanStart_ValueChanged;
+            progress.BoxWidth.ValueChanged += BoxWidth_ValueChanged;
+            bindable.ValueChanged += Bindable_ValueChanged;
 
             this.TransformTo(nameof(Alpha), 1f, 1500, Easing.OutExpo);
             this.TransformTo(nameof(Scale), new Vector2(1f), 1000, Easing.InExpo).OnComplete((e) => rhythmBoxClockContainer.Start());
@@ -320,44 +348,57 @@ namespace RhythmBox.Window.Screens
             base.LoadComplete();
         }
 
+        private void Bindable_ValueChanged(ValueChangedEvent<float> obj)
+        {
+            if (!this.IsPaused.Value)
+            {
+                if (!progress.CurrentlyDragging)
+                {
+                    var x = rhythmBoxClockContainer.RhythmBoxClock.CurrentTime;
+                    var y = map.EndTime;
+
+                    var z = (x / y) * 1;
+
+                    progress.box.Width = (float)z;
+                }
+                else
+                {
+                    Scheduler.CancelDelayedTasks();
+                }
+            }
+        }
+
         private void CanStart_ValueChanged(ValueChangedEvent<bool> obj)
         {
-            progress.AllowAction = false;
+            Scheduler.CancelDelayedTasks();
 
-            if (obj.NewValue)
-            {
-                progress.AllowAction = true;
-            }
-            
             if (!this.IsPaused.Value)
             {
                 rhythmBoxClockContainer.Start();
             }
-
-            Scheduler.AddDelayed(() =>
-            {
-                if (progress.AllowAction)
-                {
-                    if (!this.IsPaused.Value)
-                    {
-                        //progress.Current.Value += 0.01f;
-
-                        float calcPos = map.EndTime * progress.bindableValue.Value;
-
-                        SpriteCurrentTime.Text = string.Empty;
-                        SpriteCurrentTime.Text = $"{calcPos}";
-                    }
-                }
-
-            }, 10, true);
 
             // playfield.CanStart.ValueChanged -= CanStart_ValueChanged;
         }
 
         protected override void Update()
         {
-            //Logger.Log(rhythmBoxClockContainer.RhythmBoxClock.CurrentTime.ToString());
             base.Update();
+
+            if (rhythmBoxClockContainer.RhythmBoxClock.IsRunning)
+            {
+                if (rhythmBoxClockContainer.RhythmBoxClock.CurrentTime <= map.EndTime)
+                {
+                    TimeSpan result = TimeSpan.FromMilliseconds(rhythmBoxClockContainer.RhythmBoxClock.CurrentTime);
+                    string time = result.ToString(@"mm\:ss");
+                    time += $":{result.Milliseconds}";
+                    SpriteCurrentTime.Text = time;
+                    bindable.Value = (float)rhythmBoxClockContainer.RhythmBoxClock.CurrentTime;
+                }
+                else
+                {
+                    rhythmBoxClockContainer.Stop();
+                }
+            }
         }
 
         protected override bool OnKeyDown(KeyDownEvent e)
@@ -372,16 +413,39 @@ namespace RhythmBox.Window.Screens
                 }
                 else
                 {
-                    if (AddNewHitObj)
-                    {
-                        AddNewHitObj = false;
-                        //rhythmBoxClockContainer.Seek(time);
-                        //playfield.LoadMapForEditor2(time, playfield.dir.Value);
-                    }
                     rhythmBoxClockContainer.Start();
                 }
             }
             return base.OnKeyDown(e);
+        }
+
+        private void BoxWidth_ValueChanged(ValueChangedEvent<float> obj)
+        {
+            bool IsPaused = this.IsPaused.Value;
+
+            double calcPos = map.EndTime * progress.box.Width;
+
+            playfield.StopScheduler();
+            playfield.RemoveRange(playfield.objBoxArray);
+
+            rhythmBoxClockContainer.Stop();
+            rhythmBoxClockContainer.Seek(calcPos);
+
+            rhythmBoxClockContainer.Start();
+            rhythmBoxClockContainer.Stop();
+
+            playfield.LoadMapForEditor(calcPos);
+
+            TimeSpan result = TimeSpan.FromMilliseconds(calcPos);
+            string time = result.ToString(@"mm\:ss");
+            time += $":{result.Milliseconds}";
+            SpriteCurrentTime.Text = time;
+            bindable.Value = (float)rhythmBoxClockContainer.RhythmBoxClock.CurrentTime;
+
+            if (!IsPaused)
+            {
+                rhythmBoxClockContainer.Start();
+            }
         }
     }
 }
