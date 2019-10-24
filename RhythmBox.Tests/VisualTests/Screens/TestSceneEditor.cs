@@ -1,9 +1,12 @@
-﻿using NUnit.Framework;
+﻿using System.IO;
+using System.Reflection;
+using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Screens;
 using osu.Framework.Testing;
 using osuTK;
+using RhythmBox.Window.pending_files;
 using RhythmBox.Window.Screens;
 
 namespace RhythmBox.Tests.VisualTests.Screens
@@ -31,7 +34,13 @@ namespace RhythmBox.Tests.VisualTests.Screens
                         RelativeSizeAxes = Axes.Both,
                     });
 
-                    LoadComponent(testEditorDefault = new EditorDefault()
+                    string path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Songs\\TestMap\\Difficulty1.ini";
+                    if (!File.Exists(path))
+                    {
+                        new DefaultFolder();
+                    }
+
+                    LoadComponent(testEditorDefault = new EditorDefault(path)
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,

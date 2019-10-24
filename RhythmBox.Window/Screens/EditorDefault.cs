@@ -50,18 +50,13 @@ namespace RhythmBox.Window.Screens
 
         private bool HitObjCursorActive = false;
 
-        public EditorDefault(/*CurrentMap*/)
+        public EditorDefault(string path = null)
         {
-            string path = "null";
-            if (path == "null")
+            if (path is null)
             {
-                path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Songs\\TestMap\\Difficulty1.ini";
-                if (!File.Exists(path))
-                {
-                    //new DefaultFolder();
-                }
+                throw new NullReferenceException("Path/Map cannot be null");
             }
-
+            
             var mapReader = new MapReader(path);
             map = new Map
             {

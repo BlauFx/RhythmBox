@@ -11,7 +11,7 @@ using RhythmBox.Window.Objects;
 
 namespace RhythmBox.Window.Overlays
 {
-    class ModOverlay : FocusedOverlayContainer
+    public class ModOverlay : FocusedOverlayContainer
     {
         public TextFlowContainer _text;
 

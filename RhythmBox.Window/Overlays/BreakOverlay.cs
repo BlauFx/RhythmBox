@@ -8,7 +8,6 @@ using osu.Framework.Input.Events;
 using osuTK;
 using osuTK.Graphics;
 
-
 namespace RhythmBox.Window.Overlays
 {
     public class BreakOverlay : FocusedOverlayContainer
