@@ -3,7 +3,6 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
-using osu.Framework.Logging;
 using osuTK;
 using osuTK.Graphics;
 using System;
@@ -14,7 +13,7 @@ namespace RhythmBox.Window.Objects
     /// <typeparamref name="T"/> only supports float and int.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class Progress<T> : SliderBar<T> where T : struct, IConvertible, IComparable
+    public class Progress<T> : SliderBar<T> where T : struct, IConvertible, IComparable<T>, IEquatable<T>
     {
         public Box box;
 

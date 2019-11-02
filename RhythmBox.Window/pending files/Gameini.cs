@@ -9,7 +9,10 @@ namespace RhythmBox.Window.pending_files
 
         protected override void InitialiseDefaults()
         {
-
+            Set(SettingsConfig.KeyBindingUp, "W");
+            Set(SettingsConfig.KeyBindingDown, "S");
+            Set(SettingsConfig.KeyBindingLeft, "A");
+            Set(SettingsConfig.KeyBindingRight, "D");
         }
 
         public Gameini(Storage storage)
@@ -17,8 +20,12 @@ namespace RhythmBox.Window.pending_files
         {
         }
     }
+
     public enum SettingsConfig
     {
-
+        KeyBindingUp,
+        KeyBindingDown,
+        KeyBindingLeft,
+        KeyBindingRight,
     }
 }
