@@ -21,8 +21,6 @@ namespace RhythmBox.Window.Screens
     {
         public static Sprite background;
 
-        private SettingsOverlay settings;
-
         [BackgroundDependencyLoader]
         private void Load(LargeTextureStore store)
         {
@@ -71,7 +69,7 @@ namespace RhythmBox.Window.Screens
                     Alpha = 1f,
                     ClickAction = () =>
                     {
-                        settings.Show();
+                        this.Push(new Settings());
                     }
                 },
                 new MainMenuBox
@@ -115,10 +113,6 @@ namespace RhythmBox.Window.Screens
                     {
                         Environment.Exit(0);
                     }
-                },
-                settings = new SettingsOverlay
-                {
-                    Depth = int.MinValue,
                 },
             };
 

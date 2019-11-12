@@ -3,25 +3,45 @@ using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Input.Events;
 using osu.Framework.Screens;
 using osuTK;
 using osuTK.Graphics;
 using RhythmBox.Window.Objects;
+using RhythmBox.Window.Overlays;
 using RhythmBox.Window.pending_files;
 
 namespace RhythmBox.Window.Screens
 {
     public class Settings : Screen
     {
-        private SpriteText key1, key2, key3, key4;
+        private SpriteText[] key = new SpriteText[4];
+
+        private RBfocusedOverlayContainer focusedOverlayContainer;
+
+        private bool OverlayActive = false;
+
+        private int CurrentKey;
+
+        [Resolved]
+        private Gameini gameini { get; set; }
 
         [BackgroundDependencyLoader]
-        private void Load(Gameini gameini)
+        private void Load()
         {
             InternalChildren = new Drawable[]
             {
+                focusedOverlayContainer = new RBfocusedOverlayContainer(Color4.Black.Opacity(0.9f), true)
+                {
+                    Depth = float.MinValue,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(1f),
+                },
                 new Box
                 {
+                    Depth = 0,
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                     RelativeSizeAxes = Axes.Both,
@@ -30,6 +50,7 @@ namespace RhythmBox.Window.Screens
                 },
                 new SpriteText
                 {
+                    Depth = 0,
                     Anchor = Anchor.TopCentre,
                     Origin = Anchor.TopCentre,
                     Size = new Vector2(120f),
@@ -40,6 +61,7 @@ namespace RhythmBox.Window.Screens
                 //TODO:
                 new SpriteText
                 {
+                    Depth = 0,
                     Anchor = Anchor.CentreLeft,
                     Origin = Anchor.CentreLeft,
                     Size = new Vector2(160f, 100f),
@@ -48,9 +70,9 @@ namespace RhythmBox.Window.Screens
                     X = 10f,
                     Font = new FontUsage("Roboto", 40f)
                 },
-                key1 = new SpriteText
+                key[0] = new SpriteText
                 {
-                    Depth = float.MinValue,
+                    Depth = -1,
                     Anchor = Anchor.CentreLeft,
                     Origin = Anchor.Centre,
                     RelativePositionAxes = Axes.Both,
@@ -59,9 +81,9 @@ namespace RhythmBox.Window.Screens
                     Text = $"{gameini.GetBindable<string>(SettingsConfig.KeyBindingUp).Value}",
                     Font = new FontUsage("Roboto", 40f)
                 },
-                key2 = new SpriteText
+                key[1] = new SpriteText
                 {
-                    Depth = float.MinValue,
+                    Depth = -1,
                     Anchor = Anchor.CentreLeft,
                     Origin = Anchor.Centre,
                     RelativePositionAxes = Axes.Both,
@@ -70,9 +92,9 @@ namespace RhythmBox.Window.Screens
                     Text = $"{gameini.GetBindable<string>(SettingsConfig.KeyBindingLeft).Value}",
                     Font = new FontUsage("Roboto", 40f)
                 },
-                key3 = new SpriteText
+                key[2] = new SpriteText
                 {
-                    Depth = float.MinValue,
+                    Depth = -1,
                     Anchor = Anchor.CentreLeft,
                     Origin = Anchor.Centre,
                     RelativePositionAxes = Axes.Both,
@@ -81,9 +103,9 @@ namespace RhythmBox.Window.Screens
                     Text = $"{gameini.GetBindable<string>(SettingsConfig.KeyBindingDown).Value}",
                     Font = new FontUsage("Roboto", 40f)
                 },
-                key4 = new SpriteText
+                key[3] = new SpriteText
                 {
-                    Depth = float.MinValue,
+                    Depth = -1,
                     Anchor = Anchor.CentreLeft,
                     Origin = Anchor.Centre,
                     RelativePositionAxes = Axes.Both,
@@ -103,6 +125,12 @@ namespace RhythmBox.Window.Screens
                     Y = 0.03f,
                     Colour = Color4.Gray.Opacity(0.9f),
                     EditorMode2 = true,
+                    ClickAction = () =>
+                    {
+                        focusedOverlayContainer.State.Value = osu.Framework.Graphics.Containers.Visibility.Visible;
+                        OverlayActive = true;
+                        CurrentKey = 0;
+                    },
                 },
                 new ClickBox
                 {
@@ -115,6 +143,12 @@ namespace RhythmBox.Window.Screens
                     Y = 0.03f,
                     Colour = Color4.Gray.Opacity(0.9f),
                     EditorMode2 = true,
+                    ClickAction = () =>
+                    {
+                        focusedOverlayContainer.State.Value = osu.Framework.Graphics.Containers.Visibility.Visible;
+                        OverlayActive = true;
+                        CurrentKey = 1;
+                    },
                 },
                 new ClickBox
                 {
@@ -127,6 +161,12 @@ namespace RhythmBox.Window.Screens
                     Y = 0.03f,
                     Colour = Color4.Gray.Opacity(0.9f),
                     EditorMode2 = true,
+                    ClickAction = () =>
+                    {
+                        focusedOverlayContainer.State.Value = osu.Framework.Graphics.Containers.Visibility.Visible;
+                        OverlayActive = true;
+                        CurrentKey = 2;
+                    },
                 },
                 new ClickBox
                 {
@@ -139,8 +179,50 @@ namespace RhythmBox.Window.Screens
                     Y = 0.03f,
                     Colour = Color4.Gray.Opacity(0.9f),
                     EditorMode2 = true,
+                    ClickAction = () =>
+                    {
+                        focusedOverlayContainer.State.Value = osu.Framework.Graphics.Containers.Visibility.Visible;
+                        OverlayActive = true;
+                        CurrentKey = 3;
+                    },
                 }
             };
+        }
+
+        protected override bool OnKeyDown(KeyDownEvent e)
+        {
+            if (e.Key == osuTK.Input.Key.Escape)
+            {
+                if (focusedOverlayContainer.State.Value == osu.Framework.Graphics.Containers.Visibility.Visible)
+                {
+                    focusedOverlayContainer.State.Value = osu.Framework.Graphics.Containers.Visibility.Hidden;
+                }
+                else
+                {
+                    this.Exit();
+                }
+            }
+
+            if (OverlayActive)
+            {
+                _ = CurrentKey switch
+                {
+                    0 => gameini.GetBindable<string>(SettingsConfig.KeyBindingUp).Value = e.Key.ToString(),
+                    1 => gameini.GetBindable<string>(SettingsConfig.KeyBindingLeft).Value = e.Key.ToString(),
+                    2 => gameini.GetBindable<string>(SettingsConfig.KeyBindingDown).Value = e.Key.ToString(),
+                    3 => gameini.GetBindable<string>(SettingsConfig.KeyBindingRight).Value = e.Key.ToString(),
+                    _ => throw new System.Exception(),
+                };
+
+                key[0].Text = $"{gameini.GetBindable<string>(SettingsConfig.KeyBindingUp).Value}";
+                key[1].Text = $"{gameini.GetBindable<string>(SettingsConfig.KeyBindingLeft).Value}";
+                key[2].Text = $"{gameini.GetBindable<string>(SettingsConfig.KeyBindingDown).Value}";
+                key[3].Text = $"{gameini.GetBindable<string>(SettingsConfig.KeyBindingRight).Value}";
+
+                focusedOverlayContainer.State.Value = osu.Framework.Graphics.Containers.Visibility.Hidden;
+            }
+
+            return base.OnKeyDown(e);
         }
 
         public override void OnEntering(IScreen last)

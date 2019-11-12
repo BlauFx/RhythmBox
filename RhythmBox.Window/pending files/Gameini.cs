@@ -5,6 +5,7 @@ namespace RhythmBox.Window.pending_files
 {
     public class Gameini : IniConfigManager<SettingsConfig>
     {
+        //TODO:
         protected override string Filename => @"game.ini";
 
         protected override void InitialiseDefaults()
