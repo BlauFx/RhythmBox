@@ -66,8 +66,6 @@ namespace RhythmBox.Tests.VisualTests.Screens
     { 
         public static Sprite background;
 
-        private SettingsOverlay settings;
-
         [BackgroundDependencyLoader] 
         private void Load(TextureStore store)
         {
@@ -115,7 +113,6 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     Alpha = 1f,
                     ClickAction = () =>
                     {
-                        settings.Show();
                     }
                 },
                 new TestSceneMainMenuBox
@@ -152,10 +149,6 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     {
                         Environment.Exit(0);
                     }
-                },
-                settings = new SettingsOverlay
-                {
-                    Depth = int.MinValue,
                 },
             };
 
