@@ -6,7 +6,6 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
-using osu.Framework.Input.Events;
 using osuTK;
 using osuTK.Graphics;
 using RhythmBox.Window.Objects;
@@ -20,16 +19,34 @@ namespace RhythmBox.Window.Overlays
         private SpriteText _text;
 
         private const float Duration = 1000;
-        
-        public Action Action { get; set; }
-        
+
+        public TypeOfOverlay typeOfOverlay = TypeOfOverlay.Default;
+
+        public Action ActionYes { get; set; }
+        public Action ActionNo { get; set; }
+        public Action ActionCancel { get; set; }
+
+        private SpriteTextButton[] spriteTextButtons = new SpriteTextButton[2];
+
         [BackgroundDependencyLoader]
         private void Load(TextureStore store)
         {
             Children = new Drawable[]
             {
+                new Box
+                {
+                    Depth = float.MaxValue,
+                    RelativePositionAxes = Axes.Both,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(1f),
+                    Colour = Color4.Black.Opacity(1f),
+                    Alpha = 1f,
+                },
                 _box = new Box
                 {
+                    Depth = float.MaxValue - 1,
                     RelativePositionAxes = Axes.Both,
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
@@ -60,19 +77,73 @@ namespace RhythmBox.Window.Overlays
                     Text = "Test Notification!",
                     Colour = Color4.Black,
                 },
+                spriteTextButtons[0] = new SpriteTextButton
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativePositionAxes = Axes.Both,
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(0.1f),
+                    Y = 0.25f,
+                    X = -0.125f,
+                    Text = "Yes",
+                    ClickAction = () =>
+                    {
+                        ActionYes?.Invoke();
+                        this.State.Value = Visibility.Hidden;
+                    },
+                },
+                spriteTextButtons[1] = new SpriteTextButton
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativePositionAxes = Axes.Both,
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(0.15f, 0.1f),
+                    Text = "No",
+                    Y = 0.25f,
+                    X = 0.125f,
+                    ClickAction = () =>
+                    {
+                        switch (typeOfOverlay)
+                        {
+                            case TypeOfOverlay.Default:
+                                spriteTextButtons[0].Alpha = 1f;
+                                spriteTextButtons[1].Alpha = 0f;
+                                break;
+                            case TypeOfOverlay.YesNo:
+                                ActionNo?.Invoke();
+                                break;
+                            case TypeOfOverlay.YesCancel:
+                                ActionCancel?.Invoke();
+                                break;
+                        }
+                        this.State.Value = Visibility.Hidden;
+                    },
+                },
             };
-        }
-
-        protected override bool OnMouseDown(MouseDownEvent e)
-        {
-            Action?.Invoke();
-            this.State.Value = Visibility.Hidden;
-
-            return base.OnMouseDown(e);
         }
 
         protected override void PopIn()
         {
+            switch (typeOfOverlay)
+            {
+                case TypeOfOverlay.Default:
+                    spriteTextButtons[0].Alpha = 1f;
+                    spriteTextButtons[1].Alpha = 0f;
+                    break;
+                case TypeOfOverlay.YesNo:
+                    spriteTextButtons[0].Alpha = 1f;
+                    spriteTextButtons[1].Alpha = 1f;
+                    spriteTextButtons[1].Text = "No";
+                    break;
+                case TypeOfOverlay.YesCancel:
+                    spriteTextButtons[0].Alpha = 1f;
+                    spriteTextButtons[1].Alpha = 1f;
+                    spriteTextButtons[1].Text = "Cancel";
+                    break;
+            }
+
             this.MoveTo(new Vector2(0f, -0.1f), 0, Easing.None);
             this.MoveToOffset(new Vector2(0, 0.1f), Duration, Easing.InOutQuint);
             this.FadeInFromZero(Duration, Easing.InOutQuint);
@@ -84,6 +155,13 @@ namespace RhythmBox.Window.Overlays
             this.MoveToOffset(new Vector2(0, -0.1f), Duration, Easing.InOutQuint);
             this.FadeOutFromOne(Duration, Easing.InOutQuint);
             _box.FadeOutFromOne(Duration, Easing.InOutQuint);
+        }
+
+        public enum TypeOfOverlay
+        {
+            Default = 0x1,
+            YesNo = 0x2,
+            YesCancel = 0x3,
         }
     }
 }

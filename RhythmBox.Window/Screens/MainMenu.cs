@@ -21,8 +21,14 @@ namespace RhythmBox.Window.Screens
     {
         public static Sprite background;
 
+        private NotificationOverlay _overlay;
+
+        private Box box;
+
+        protected bool Disable_buttons = false;
+
         [BackgroundDependencyLoader]
-        private void Load(LargeTextureStore store)
+        private async void Load(LargeTextureStore store)
         {
             InternalChildren = new Drawable[]
             {
@@ -51,6 +57,7 @@ namespace RhythmBox.Window.Screens
                     Alpha = 1f,
                     ClickAction = () =>
                     {
+                        if (Disable_buttons) return;
                         this.Push(new SongSelction());
                     }
                 },
@@ -69,6 +76,7 @@ namespace RhythmBox.Window.Screens
                     Alpha = 1f,
                     ClickAction = () =>
                     {
+                        if (Disable_buttons) return;
                         this.Push(new Settings());
                     }
                 },
@@ -86,7 +94,8 @@ namespace RhythmBox.Window.Screens
                     X = 0.125f,
                     Alpha = 1f,
                     ClickAction = () =>
-                    {
+                    {                
+                        if (Disable_buttons) return;
                         string path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Songs\\TestMap\\Difficulty1.ini";
                         if (!File.Exists(path))
                         {
@@ -111,12 +120,47 @@ namespace RhythmBox.Window.Screens
                     Alpha = 1f,
                     ClickAction = () =>
                     {
+                        if (Disable_buttons) return;
                         Environment.Exit(0);
                     }
                 },
             };
 
             new DefaultFolder();
+
+            AddInternal(box = new Box
+            {
+                Depth = float.MinValue + 1,
+                RelativePositionAxes = Axes.Both,
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+                Colour = Color4.Black.Opacity(0.8f),
+                RelativeSizeAxes = Axes.Both,
+                Size = new Vector2(1f),
+                Alpha = 0f,
+            });
+
+            AddInternal(_overlay = new NotificationOverlay
+            {
+                Depth = float.MinValue,
+                RelativePositionAxes = Axes.Both,
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+                RelativeSizeAxes = Axes.Both,
+                Size = new Vector2(0.3f),
+            });
+
+            var updater = new Updater();
+
+            bool NewUpdate = await updater.SearchAsyncForUpdates();
+
+            if (NewUpdate)
+            {
+                box.Size = new Vector2(3f);
+                box.FadeIn(0d, Easing.OutCirc);
+                _overlay.State.Value = Visibility.Visible;
+                _overlay.State.ValueChanged += (e) => box.FadeOut(250d);
+            }
         }
 
         protected override bool OnMouseMove(MouseMoveEvent e)
@@ -163,13 +207,13 @@ namespace RhythmBox.Window.Screens
         }
     }
 
-    internal class MainMenuBox : Container
+    public class MainMenuBox : Container
     {
         public string text { get; set; } = string.Empty;
 
         public float FontSize { get; set; } = 20f;
 
-        public Action ClickAction;
+        public Action ClickAction { get; set; }
 
         protected SpriteText sprite;
 

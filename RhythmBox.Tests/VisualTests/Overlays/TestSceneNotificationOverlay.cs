@@ -30,11 +30,37 @@ namespace RhythmBox.Tests.VisualTests.Overlays
 
             AddStep("Pop In", () =>
             {
+                _overlay.typeOfOverlay = NotificationOverlay.TypeOfOverlay.Default;
                 _overlay.State.Value = Visibility.Visible;
             });
             
             AddStep("Pop Out", () =>
             {
+                _overlay.typeOfOverlay = NotificationOverlay.TypeOfOverlay.Default;
+                _overlay.State.Value = Visibility.Hidden;
+            });
+
+            AddStep("Pop In | YesNO", () =>
+            {
+                _overlay.typeOfOverlay = NotificationOverlay.TypeOfOverlay.YesNo;
+                _overlay.State.Value = Visibility.Visible;
+            });
+
+            AddStep("Pop Out| YesNO", () =>
+            {
+                _overlay.typeOfOverlay = NotificationOverlay.TypeOfOverlay.YesNo;
+                _overlay.State.Value = Visibility.Hidden;
+            });
+
+            AddStep("Pop In | YesCancel", () =>
+            {
+                _overlay.typeOfOverlay = NotificationOverlay.TypeOfOverlay.YesCancel;
+                _overlay.State.Value = Visibility.Visible;
+            });
+
+            AddStep("Pop Out| YesCancel", () =>
+            {
+                _overlay.typeOfOverlay = NotificationOverlay.TypeOfOverlay.YesCancel;
                 _overlay.State.Value = Visibility.Hidden;
             });
         }
