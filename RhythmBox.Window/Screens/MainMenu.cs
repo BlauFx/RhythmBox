@@ -158,7 +158,8 @@ namespace RhythmBox.Window.Screens
 
             if (NewUpdate)
             {
-                updater.PrepareUpdate();
+                updater.DownloadUpdate();
+                updater.ApplyUpdate();
 
                 //box.Size = new Vector2(3f);
                 //box.FadeIn(0d, Easing.OutCirc);
