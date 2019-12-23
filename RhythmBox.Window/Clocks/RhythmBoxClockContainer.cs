@@ -110,9 +110,9 @@ namespace RhythmBox.Window.Clocks
 
             adjustableClock.ResetSpeedAdjustments();
 
-            if (adjustableClock is IHasTempoAdjust tempo)
+            if (adjustableClock is IAdjustableAudioComponent tempo)
             {
-                tempo.TempoAdjust = UserPlaybackRate.Value;
+                tempo.Tempo.Value = UserPlaybackRate.Value;
             }
             else
             {

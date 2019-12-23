@@ -24,7 +24,7 @@ namespace RhythmBox.Window.Objects
 
         protected const int Multiplier = 1;
 
-        public BindableFloat BoxWidth { get; private set; } = new BindableFloat();
+        public BindableFloat BoxWidth { get; private set; } = new BindableFloat(1);
 
         public bool CurrentlyDragging { get; set; } = false;
 

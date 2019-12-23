@@ -140,15 +140,17 @@ namespace RhythmBox.Window.Screens
                 Alpha = 0f,
             });
 
-            AddInternal(_overlay = new NotificationOverlay
-            {
-                Depth = float.MinValue,
-                RelativePositionAxes = Axes.Both,
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                RelativeSizeAxes = Axes.Both,
-                Size = new Vector2(0.3f),
-            });
+            //TODO:
+            //AddInternal(_overlay = new NotificationOverlay
+            //{
+            //    Depth = float.MinValue,
+            //    RelativePositionAxes = Axes.Both,
+            //    Anchor = Anchor.Centre,
+            //    Origin = Anchor.Centre,
+            //    RelativeSizeAxes = Axes.Both,
+            //    Size = new Vector2(0.3f),
+            //    typeOfOverlay = NotificationOverlay.TypeOfOverlay.Default
+            //});
 
             var updater = new Updater();
 
@@ -156,10 +158,12 @@ namespace RhythmBox.Window.Screens
 
             if (NewUpdate)
             {
-                box.Size = new Vector2(3f);
-                box.FadeIn(0d, Easing.OutCirc);
-                _overlay.State.Value = Visibility.Visible;
-                _overlay.State.ValueChanged += (e) => box.FadeOut(250d);
+                updater.PrepareUpdate();
+
+                //box.Size = new Vector2(3f);
+                //box.FadeIn(0d, Easing.OutCirc);
+                //_overlay.State.Value = Visibility.Visible;
+                //_overlay.State.ValueChanged += (e) => box.FadeOut(250d);
             }
         }
 

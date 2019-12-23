@@ -12,8 +12,6 @@ using RhythmBox.Window.Clocks;
 using RhythmBox.Window.Objects;
 using RhythmBox.Window.pending_files;
 using System;
-using System.IO;
-using System.Reflection;
 using osu.Framework.Platform;
 
 namespace RhythmBox.Window.Screens
@@ -42,13 +40,15 @@ namespace RhythmBox.Window.Screens
 
         private ClickBox[] box = new ClickBox[4];
 
-        BindableFloat bindable = new BindableFloat();
+        BindableFloat bindable = new BindableFloat(0);
 
         private double time = 0f;
 
         private bool CursorCreated = false;
 
         private bool HitObjCursorActive = false;
+
+        private bool first_run = false;
 
         public EditorDefault(string path = null)
         {
@@ -416,11 +416,18 @@ namespace RhythmBox.Window.Screens
 
         private void BoxWidth_ValueChanged(ValueChangedEvent<float> obj)
         {
+            if (!first_run)
+            {
+                first_run = true;
+                return;
+            }
+
             bool IsPaused = this.IsPaused.Value;
 
             double calcPos = map.EndTime * progress.box.Width;
 
             playfield.StopScheduler();
+
             playfield.RemoveRange(playfield.objBoxArray);
 
             rhythmBoxClockContainer.Stop();
