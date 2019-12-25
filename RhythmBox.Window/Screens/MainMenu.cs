@@ -14,6 +14,7 @@ using osuTK;
 using osuTK.Graphics;
 using RhythmBox.Window.Overlays;
 using RhythmBox.Window.pending_files;
+using RhythmBox.Window.Updater;
 
 namespace RhythmBox.Window.Screens
 {
@@ -152,7 +153,7 @@ namespace RhythmBox.Window.Screens
             //    typeOfOverlay = NotificationOverlay.TypeOfOverlay.Default
             //});
 
-            var updater = new Updater();
+            var updater = new Update();
 
             bool NewUpdate = await updater.SearchAsyncForUpdates();
 
