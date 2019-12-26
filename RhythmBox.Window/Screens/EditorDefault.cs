@@ -329,6 +329,8 @@ namespace RhythmBox.Window.Screens
             playfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
 
             playfield.Resuming.BindTo(Resuming);
+
+            rhythmBoxClockContainer.Stop();
         }
 
         protected override void LoadComplete()
@@ -336,9 +338,6 @@ namespace RhythmBox.Window.Screens
             playfield.CanStart.ValueChanged += CanStart_ValueChanged;
             progress.BoxWidth.ValueChanged += BoxWidth_ValueChanged;
             bindable.ValueChanged += Bindable_ValueChanged;
-
-            this.TransformTo(nameof(Alpha), 1f, 1500, Easing.OutExpo);
-            this.TransformTo(nameof(Scale), new Vector2(1f), 1000, Easing.InExpo).OnComplete((e) => rhythmBoxClockContainer.Start());
 
             base.LoadComplete();
         }
@@ -413,6 +412,8 @@ namespace RhythmBox.Window.Screens
             }
             else if (e.Key == osuTK.Input.Key.Escape)
             {
+                this.ClearTransforms();
+                rhythmBoxClockContainer?.Stop();
                 this.Exit();
             }
             return base.OnKeyDown(e);
@@ -456,16 +457,24 @@ namespace RhythmBox.Window.Screens
 
         public override void OnEntering(IScreen last)
         {
+            this.Anchor = Anchor.Centre;
+            this.Origin = Anchor.Centre;
+            this.Scale = new Vector2(1.5f);
+
+            this.FadeInFromZero<EditorDefault>(1500, Easing.OutExpo);
+            this.TransformTo(nameof(Scale), new Vector2(1f), 1500, Easing.InOutCirc).OnComplete((e) => rhythmBoxClockContainer.Start());
+
             Discord.DiscordRichPresence.UpdateRPC(
-              new DiscordRPC.RichPresence()
-              {
-                  Details = "Editing a map",
-                  State = " ",
-                  Assets = new DiscordRPC.Assets()
-                  {
-                      LargeImageKey = "three",
-                  }
-              });
+             new DiscordRPC.RichPresence()
+             {
+                 Details = "Editing a map",
+                 State = " ",
+                 Assets = new DiscordRPC.Assets()
+                 {
+                     LargeImageKey = "three",
+                 }
+             });
+
             base.OnEntering(last);
         }
     }

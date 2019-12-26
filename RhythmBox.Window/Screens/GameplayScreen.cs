@@ -23,6 +23,8 @@ using RhythmBox.Window.pending_files;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace RhythmBox.Window.Screens
 {
     public class GameplayScreen : Screen
@@ -233,13 +235,13 @@ namespace RhythmBox.Window.Screens
             {
                 if (e.NewValue == false) return;
 
-                //LoadComponentAsync(new SongSelction(), this.Push);
                 rhythmBoxClockContainer.Stop();
                 track?.Stop();
 
                 _RbPlayfield.HasFinished.UnbindEvents();
-                //TODO:
+
                 Scheduler.AddDelayed(() => this.Expire(), 1000);
+                LoadComponentAsync(new SongSelction(), this.Push);
             };
 
             Startable.ValueChanged += (e) =>

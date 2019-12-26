@@ -17,7 +17,6 @@ using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
 using RhythmBox.Mode.Std.Maps;
-using RhythmBox.Mode.Std.Mods;
 using RhythmBox.Window.Objects;
 using RhythmBox.Window.Overlays;
 using RhythmBox.Window.pending_files;
@@ -123,6 +122,7 @@ namespace RhythmBox.Window.Screens
 
         public override void OnEntering(IScreen last)
         {
+
             this.FadeInFromZero<SongSelction>(250, Easing.In);
             Scheduler.AddDelayed(() => WaitUntilLoaded = false, 250);
             base.OnEntering(last);
