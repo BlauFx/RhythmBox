@@ -57,14 +57,22 @@ namespace RhythmBox.Window.Updater
 
         private bool CheckNewVersionAvailable()
         {
-            var x = github_Releases.First(x => x.assets == x.assets);
-
-            if (!(GetCurrentVersion().Equals(x.tag_name)))
+            try
             {
-                return true;
-            }
+                var x = github_Releases.First(x => x.assets == x.assets);
 
-            return false;
+                if (!(GetCurrentVersion().Equals(x?.tag_name)))
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception e)
+            {
+                Logger.Log(e.Message, LoggingTarget.Network, LogLevel.Error);
+                return false;
+            }
         }
 
         //TODO:

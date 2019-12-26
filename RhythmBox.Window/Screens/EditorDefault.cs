@@ -411,6 +411,10 @@ namespace RhythmBox.Window.Screens
                     rhythmBoxClockContainer.Start();
                 }
             }
+            else if (e.Key == osuTK.Input.Key.Escape)
+            {
+                this.Exit();
+            }
             return base.OnKeyDown(e);
         }
 
@@ -448,6 +452,21 @@ namespace RhythmBox.Window.Screens
             {
                 rhythmBoxClockContainer.Start();
             }
+        }
+
+        public override void OnEntering(IScreen last)
+        {
+            Discord.DiscordRichPresence.UpdateRPC(
+              new DiscordRPC.RichPresence()
+              {
+                  Details = "Editing a map",
+                  State = " ",
+                  Assets = new DiscordRPC.Assets()
+                  {
+                      LargeImageKey = "three",
+                  }
+              });
+            base.OnEntering(last);
         }
     }
 }

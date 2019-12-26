@@ -167,6 +167,19 @@ namespace RhythmBox.Window.Screens
                 //_overlay.State.Value = Visibility.Visible;
                 //_overlay.State.ValueChanged += (e) => box.FadeOut(250d);
             }
+            
+            Discord.DiscordRichPresence.ctor();
+
+            Discord.DiscordRichPresence.UpdateRPC(
+                new DiscordRPC.RichPresence()
+                {
+                    Details = "MainMenu",
+                    State = " ",
+                    Assets = new DiscordRPC.Assets()
+                    {
+                        LargeImageKey = "three",
+                    }
+                });
         }
 
         protected override bool OnMouseMove(MouseMoveEvent e)
@@ -204,6 +217,17 @@ namespace RhythmBox.Window.Screens
         {
             this.FadeInFromZero<MainMenu>(175, Easing.In);
             base.OnResuming(last);
+
+            Discord.DiscordRichPresence.UpdateRPC(
+                new DiscordRPC.RichPresence()
+                {
+                    Details = "MainMenu",
+                    State = " ",
+                    Assets = new DiscordRPC.Assets()
+                    {
+                        LargeImageKey = "three",
+                    }
+                });
         }
 
         public override void OnSuspending(IScreen next)
