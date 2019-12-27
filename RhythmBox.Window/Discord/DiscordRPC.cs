@@ -8,7 +8,9 @@ namespace RhythmBox.Window.Discord
 	{
         public static DiscordRpcClient client;
 
-        public static void ctor()
+		public static bool Initialized { get; private set; }
+
+		public static void ctor()
         {
 			client = new DiscordRpcClient("659551055138521118");
 
@@ -25,6 +27,7 @@ namespace RhythmBox.Window.Discord
 			};
 
 			client.Initialize();
+			Initialized = true;
 		}
 
 		public static void UpdateRPC(RichPresence rpc)

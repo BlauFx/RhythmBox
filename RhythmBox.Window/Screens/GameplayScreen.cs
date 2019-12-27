@@ -413,20 +413,23 @@ namespace RhythmBox.Window.Screens
 
         private async Task AddJustTrack()
         {
-            await Task.Run(async () =>
+            if (track != null)
             {
-                for (double i = track.Frequency.Value; i > 0; i -= 0.01d)
+                await Task.Run(async () =>
                 {
-                    try
+                    for (double i = track.Frequency.Value; i > 0; i -= 0.01d)
                     {
-                        track.Frequency.Value = i;
+                        try
+                        {
+                            track.Frequency.Value = i;
+                        }
+                        catch { }
+                        await Task.Delay(1);
                     }
-                    catch { }
-                    await Task.Delay(1);
-                }
-            });
+                });
 
-            bindableBool.Value = true;
+                bindableBool.Value = true;
+            }
         }
 
         public override void OnEntering(IScreen last)

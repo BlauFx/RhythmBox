@@ -122,6 +122,7 @@ namespace RhythmBox.Window.pending_files
 
             if (nxtobjDir != null)
                 list[pos].OnClickKeyDown(key);
+            //list.RemoveAt(pos);
         }
 
         private HitObjects.Direction? GetNextObjDir(Key key)

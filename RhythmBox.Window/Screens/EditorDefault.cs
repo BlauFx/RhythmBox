@@ -464,6 +464,11 @@ namespace RhythmBox.Window.Screens
             this.FadeInFromZero<EditorDefault>(1500, Easing.OutExpo);
             this.TransformTo(nameof(Scale), new Vector2(1f), 1500, Easing.InOutCirc).OnComplete((e) => rhythmBoxClockContainer.Start());
 
+            if (!Discord.DiscordRichPresence.Initialized)
+            {
+                Discord.DiscordRichPresence.ctor();
+            }
+
             Discord.DiscordRichPresence.UpdateRPC(
              new DiscordRPC.RichPresence()
              {
