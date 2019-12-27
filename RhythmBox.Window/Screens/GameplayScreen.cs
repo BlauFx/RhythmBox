@@ -23,16 +23,10 @@ using RhythmBox.Window.pending_files;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace RhythmBox.Window.Screens
 {
     public class GameplayScreen : Screen
     {
-        private int Score { get; set; } = 0;
-
-        private int Combo { get; set; } = 0;
-
         private double Accuracy { get; set; } = 100; //TODO:
 
         private TextFlowContainer DispayCombo;
@@ -226,9 +220,9 @@ namespace RhythmBox.Window.Screens
             DispayCombo.AddText("0x", x => x.Font = new FontUsage("Roboto", 40));
             DispayScore.AddText("000000", x => x.Font = new FontUsage("Roboto", 40));
 
-            _RbPlayfield.ComboCounter.ValueChanged += (e) =>
+            Score.Combo.PrivateComboBindable.ValueChanged += (e) =>
             {
-                _hpBar.ResizeBox(CalcHpBarValue(_hpBar.CurrentValue, _hpBar.BoxMaxValue, 0f, _RbPlayfield.currentHit), (HP_Update / 1.5f), Easing.OutCirc);
+                _hpBar.ResizeBox(CalcHpBarValue(_hpBar.CurrentValue, _hpBar.BoxMaxValue, 0f, Score.Combo.currentHit), (HP_Update / 1.5f), Easing.OutCirc);
             };
 
             _RbPlayfield.HasFinished.ValueChanged += (e) =>
@@ -350,13 +344,11 @@ namespace RhythmBox.Window.Screens
                 }
             }
 
-            Combo = _RbPlayfield.ComboCounter.Value;
             DispayCombo.Text = string.Empty;
-            DispayCombo.AddText($"{Combo}x", x => x.Font = new FontUsage("Roboto", 40));
-
-            Score = _RbPlayfield.ScoreCounter;
+            DispayCombo.AddText($"{Score.Combo.ComboInt}x", x => x.Font = new FontUsage("Roboto", 40));
+           
             DispayScore.Text = string.Empty;
-            DispayScore.AddText($"{Score}", x => x.Font = new FontUsage("Roboto", 40));
+            DispayScore.AddText($"{Score.Score.ScoreInt}", x => x.Font = new FontUsage("Roboto", 40));
 
             base.Update();
         }

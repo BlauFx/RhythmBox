@@ -9,12 +9,19 @@ using osuTK.Input;
 using RhythmBox.Mode.Std.Animations;
 using RhythmBox.Mode.Std.Interfaces;
 using RhythmBox.Mode.Std.Mods;
+using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace RhythmBox.Mode.Std.Objects
 {
     public class RBox : Container
     {
+        public RBox(double time)
+        {
+            this.time = time;
+        }
+
         /// <summary>
         /// set the time when the drawable should be applied
         /// </summary>
@@ -25,20 +32,16 @@ namespace RhythmBox.Mode.Std.Objects
         /// </summary>
         public float speed { get; set; } = 1f;
 
-        public HitObjects.Direction direction;
+        public HitObjects.Direction direction { get; set; }
 
         public RBoxObj obj { get; set; }
 
         /// <summary>
         /// AlphaA is the alpha of the drawable
         /// </summary>
-        public float AlphaA { get => alpha; protected set => alpha = value; }
+        public float AlphaA => obj.bx.Alpha;
 
-        protected float alpha;
-
-        public bool AddCombo { get; protected set; }
-
-        public BindableBool Resuming = new BindableBool();
+        public BindableBool Resuming { get; set; } = new BindableBool();
 
         public List<Mod> mods { get; set; }
 
@@ -66,51 +69,13 @@ namespace RhythmBox.Mode.Std.Objects
                 };
 
             }, time);
-
-            UpdateAlphaA();
-        }
-
-        protected void UpdateAlphaA()
-        {
-            try
-            {
-                AlphaA = alpha = obj.bx.Alpha;
-            }
-            catch { }
-
-            _ = Schedule(() => UpdateAlphaA());
         }
 
         public void OnClickKeyDown(Key key)
         {
             obj.ClickKeyDown(key);
-            this.AddCombo = obj.AddCombo;
+
             Scheduler.AddDelayed(() => this.Expire(), 1800 * speed); //TODO:
-        }
-
-        public bool AddComboToCounter()
-        {
-            if (obj.Wait == 2 && obj.AddCombo)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        public bool Miss()
-        {
-            if (obj.Wait == 2 && !obj.AddCombo)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        public Hit GetHit()
-        {
-            return obj.currentHit;
         }
 
         private void ApplyMods(List<Mod> mod)
@@ -136,15 +101,11 @@ namespace RhythmBox.Mode.Std.Objects
 
         public float speed { get; set; }
 
-        private HitObjects.Direction direction;
+        private HitObjects.Direction direction { get; set; }
 
         private new const int Expire = 300;
 
         private new const int Clear = 100;
-
-        public bool AddCombo = false;
-
-        public int Wait = 0;
 
         public Hit currentHit { get; protected set; }
 
@@ -161,6 +122,7 @@ namespace RhythmBox.Mode.Std.Objects
                 Size = new Vector2(0.1f, 0.01f),
                 RelativePositionAxes = Axes.Both,
             });
+
             bx.FadeIn(100 * speed);
             bx.MoveToY(0f, 0, Easing.InCirc);
 
@@ -207,11 +169,25 @@ namespace RhythmBox.Mode.Std.Objects
 
         public void ClickKeyDown(Key key)
         {
+            async void Click(bool AddCombo, Hit currentHit)
+            {
+                if (AddCombo)
+                {
+                    object[] param = new object[1];
+
+                    param[0] = currentHit;
+
+                    await System.Threading.Tasks.Task.Run(() =>
+                    {
+                        _InvokeNamespaceClassesStaticMethod("RhythmBox.Window.Score", "UpdateCombo", param);
+                    });
+                }
+            }
+
             if (!Resuming.Value)
             {
                 return;
             }
-            Wait++;
 
             switch (key)
             {
@@ -221,35 +197,22 @@ namespace RhythmBox.Mode.Std.Objects
                         {
                             if (bx.Y <= -0.5 + 0.05f && bx.Y >= -0.50001f)
                             {
-                                AddCombo = true;
-                                Wait++;
-                                currentHit = Hit.Hit300;
-
+                                Click(true, Hit.Hit300);
                                 Add(HitAnimation(Hit.Hit300, bx.Y));
                             }
                             else if (bx.Y <= -0.35f && bx.Y >= -0.5f + 0.05f)
                             {
-                                AddCombo = true;
-                                Wait++;
-                                currentHit = Hit.Hit100;
-
+                                Click(true, Hit.Hit100);
                                 Add(HitAnimation(Hit.Hit100, bx.Y));
                             }
                             else if (bx.Y <= -0.25f && bx.Y >= -0.35f)
                             {
-                                AddCombo = true;
-                                Wait++;
-                                currentHit = Hit.Hit50;
-
+                                Click(true, Hit.Hit50);
                                 Add(HitAnimation(Hit.Hit50, bx.Y));
                             }
                             else if (bx.Y <= 0f && bx.Y >= -0.25f)
                             {
-                                //TODO: AddFail = true;
-                                AddCombo = false;
-                                Wait++;
-                                currentHit = Hit.Hitx;
-
+                                Click(false, Hit.Hitx);
                                 Add(HitAnimation(Hit.Hitx, bx.Y));
                             }
 
@@ -265,34 +228,22 @@ namespace RhythmBox.Mode.Std.Objects
                         {
                             if (bx.X <= -0.5 + 0.05f && bx.X >= -0.50001f)
                             {
-                                AddCombo = true;
-                                Wait++;
-                                currentHit = Hit.Hit300;
-
+                                Click(true, Hit.Hit300);
                                 Add(HitAnimation(Hit.Hit300, bx.Y));
                             }
                             else if (bx.X <= -0.35f && bx.Y >= -0.5f + 0.05f)
                             {
-                                AddCombo = true;
-                                Wait++;
-                                currentHit = Hit.Hit100;
-
+                                Click(true, Hit.Hit100);
                                 Add(HitAnimation(Hit.Hit100, bx.Y));
                             }
                             else if (bx.X <= -0.25f && bx.Y >= -0.35f)
                             {
-                                AddCombo = true;
-                                Wait++;
-                                currentHit = Hit.Hit50;
-
+                                Click(true, Hit.Hit50);
                                 Add(HitAnimation(Hit.Hit50, bx.Y));
                             }
                             else if (bx.X <= 0f && bx.Y >= -0.25f)
                             {
-                                AddCombo = false;
-                                Wait++;
-                                currentHit = Hit.Hitx;
-
+                                Click(false, Hit.Hitx);
                                 Add(HitAnimation(Hit.Hitx, bx.Y));
                             }
 
@@ -308,34 +259,22 @@ namespace RhythmBox.Mode.Std.Objects
                         {
                             if (bx.Y >= 0.5f - 0.05f && bx.Y <= 0.50001f)
                             {
-                                AddCombo = true;
-                                Wait++;
-                                currentHit = Hit.Hit300;
-
+                                Click(true, Hit.Hit300);
                                 Add(HitAnimation(Hit.Hit300, bx.Y - 0.05f));
                             }
                             else if (bx.Y >= 0.35f && bx.Y <= 0.5f - 0.05f)
                             {
-                                AddCombo = true;
-                                Wait++;
-                                currentHit = Hit.Hit100;
-
+                                Click(true, Hit.Hit100);
                                 Add(HitAnimation(Hit.Hit100, bx.Y - 0.05f));
                             }
                             else if (bx.Y >= 0.25f && bx.Y <= 0.35f)
                             {
-                                AddCombo = true;
-                                Wait++;
-                                currentHit = Hit.Hit50;
-
+                                Click(true, Hit.Hit50);
                                 Add(HitAnimation(Hit.Hit50, bx.Y - 0.05f));
                             }
                             else if (bx.Y >= 0f && bx.Y <= 0.25f)
                             {
-                                AddCombo = false;
-                                Wait++;
-                                currentHit = Hit.Hitx;
-
+                                Click(false, Hit.Hitx);
                                 Add(HitAnimation(Hit.Hitx, bx.Y - 0.05f));
                             }
 
@@ -351,34 +290,22 @@ namespace RhythmBox.Mode.Std.Objects
                         {
                             if (bx.X >= 0.5 - 0.05f && bx.X <= 0.50001f)
                             {
-                                AddCombo = true;
-                                Wait++;
-                                currentHit = Hit.Hit300;
-
+                                Click(true, Hit.Hit300);
                                 Add(HitAnimation(Hit.Hit300, bx.Y));
                             }
                             else if (bx.X >= 0.35f && bx.Y <= 0.5f + 0.05f)
                             {
-                                AddCombo = true;
-                                Wait++;
-                                currentHit = Hit.Hit100;
-
+                                Click(true, Hit.Hit100);
                                 Add(HitAnimation(Hit.Hit100, bx.Y));
                             }
                             else if (bx.X >= 0.25f && bx.Y <= 0.35f)
                             {
-                                AddCombo = true;
-                                Wait++;
-                                currentHit = Hit.Hit50;
-
+                                Click(true, Hit.Hit50);
                                 Add(HitAnimation(Hit.Hit50, bx.Y));
                             }
                             else if (bx.X >= 0f && bx.Y <= 0.25f)
                             {
-                                AddCombo = false;
-                                Wait++;
-                                currentHit = Hit.Hitx;
-
+                                Click(false, Hit.Hitx);
                                 Add(HitAnimation(Hit.Hitx, bx.Y));
                             }
 
@@ -402,13 +329,21 @@ namespace RhythmBox.Mode.Std.Objects
                 Y = Y,
             };
         }
-    }
 
-    public enum Direction
-    {
-        Up,
-        Down,
-        Left,
-        Right
+        //https://stackoverflow.com/a/48728076
+        private void _InvokeNamespaceClassesStaticMethod(string namespaceName, string methodName, params object[] parameters)
+        {
+            foreach (var _a in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                foreach (var _t in _a.GetTypes())
+                {
+                    try
+                    {
+                        if ((_t.Namespace == namespaceName) && _t.IsClass) _t.GetMethod(methodName, (BindingFlags.Static | BindingFlags.Public))?.Invoke(null, parameters);
+                    }
+                    catch { }
+                }
+            }
+        }
     }
 }
