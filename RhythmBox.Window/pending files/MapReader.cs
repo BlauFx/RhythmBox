@@ -17,8 +17,10 @@ namespace RhythmBox.Window.pending_files
 
         public int BPM { get; set; } = 0;
 
+        [Obsolete]
         public int Objects { get; set; } = 0;
 
+        [Obsolete]
         public bool AutoMap { get; set; } = false;
 
         public GameMode Mode { get; set; } = GameMode.STD;
@@ -87,22 +89,18 @@ namespace RhythmBox.Window.pending_files
 
         private string SearchThis(string[] storage, string searchStr)
         {
-            int sr = 0;
+            int num = 0;
 
-            int xd = 0;
-
-            foreach (var x in storage)
+            for (int i = 0; i < storage.Length; i++)
             {
-                if (x.Contains(searchStr))
+                if (storage[i].Contains(searchStr))
                 {
-                    xd = sr;
+                    num = i;
                     break;
                 }
-
-                sr++;
             }
 
-            return Cutter(storage[xd]);
+            return Cutter(storage[num]);
         }
 
         private string Cutter(string cutThis)
@@ -118,10 +116,7 @@ namespace RhythmBox.Window.pending_files
         private GameMode GameModeParser(string parse)
         {
             if (parse != null)
-            {
-                GameMode dir = (GameMode)Enum.Parse(typeof(GameMode), parse, true);
-                return dir;
-            }
+                return (GameMode)Enum.Parse(typeof(GameMode), parse, true);
             throw new NullReferenceException("GameMode can not be null");
         }
 
@@ -180,24 +175,18 @@ namespace RhythmBox.Window.pending_files
 
                 return obj;
             }
+
             return null;
         }
 
         private HitObjects.Direction parseDirection(string direction)
         {
-            if (!(string.IsNullOrEmpty(direction)) && direction.Contains("Direction"))
+            if (string.IsNullOrEmpty(direction))
             {
-                int num = direction.IndexOf(".") + 1;
-                direction = direction.Substring(num, direction.Length - num);
-                HitObjects.Direction dir = (HitObjects.Direction)Enum.Parse(typeof(HitObjects.Direction), direction, true);
-                return dir;
+                throw new NullReferenceException("Direction can not be null");
             }
-            else if (!(string.IsNullOrEmpty(direction)))
-            {
-                HitObjects.Direction dir = (HitObjects.Direction)Enum.Parse(typeof(HitObjects.Direction), direction, true);
-                return dir;
-            }
-            throw new NullReferenceException("Direction can not be null");
+            
+            return (HitObjects.Direction)Enum.Parse(typeof(HitObjects.Direction), direction, true); ;
         }
     }
 }

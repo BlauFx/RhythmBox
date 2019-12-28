@@ -3,7 +3,6 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Events;
-using osu.Framework.Logging;
 using osu.Framework.Threading;
 using osuTK;
 using osuTK.Input;
@@ -118,11 +117,16 @@ namespace RhythmBox.Window.pending_files
 
         private void CheckClick(Key key)
         {
-            var nxtobjDir = GetNextObjDir(key);
+            HitObjects.Direction? dir = null;
+            try 
+            {
+                dir = GetNextObjDir(key);
+            }
+            catch { }
 
-            if (nxtobjDir != null)
+            if (dir != null)
                 list[pos].OnClickKeyDown(key);
-            //list.RemoveAt(pos);
+                //list.RemoveAt(pos);
         }
 
         private HitObjects.Direction? GetNextObjDir(Key key)
@@ -199,7 +203,7 @@ namespace RhythmBox.Window.pending_files
         {
             var x = (HitObjects)objBox;
 
-            objBoxArray[i] = new RBox(x.Time - Map.StartTime)
+            objBoxArray[i] = new RBox
             {
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
@@ -210,7 +214,6 @@ namespace RhythmBox.Window.pending_files
                 Resuming = Resuming,
                 mods = mods,
             };
-
 
             Scheduler.AddDelayed(() =>
             {
@@ -236,7 +239,7 @@ namespace RhythmBox.Window.pending_files
 
             var x = (HitObjects)objBox;
 
-            objBoxArray[i] = new RBox(x.Time - Map.StartTime)
+            objBoxArray[i] = new RBox
             {
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
@@ -297,7 +300,7 @@ namespace RhythmBox.Window.pending_files
 
             var x = (HitObjects)objBox;
 
-            objBoxArray[i] = new RBox(x.Time - Map.StartTime)
+            objBoxArray[i] = new RBox
             {
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,

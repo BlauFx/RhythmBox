@@ -1,4 +1,5 @@
 ﻿using RhythmBox.Mode.Std.Interfaces;
+using System;
 using System.IO;
 using System.Reflection;
 
@@ -16,8 +17,10 @@ namespace RhythmBox.Window.pending_files
 
         public int BPM { get; set; } = 0;
 
+        [Obsolete]
         public int Objects { get; set; } = 0;
 
+        [Obsolete]
         public bool AutoMap { get; set; } = false;
 
         public GameMode Mode { get; set; } = GameMode.STD;
@@ -129,7 +132,7 @@ namespace RhythmBox.Window.pending_files
             {
                 using (StreamWriter streamWriter = new StreamWriter(path, true))
                 {
-                    streamWriter.WriteLine($"Direction.{hitObjects[i]._direction}, {hitObjects[i].Time}, {hitObjects[i].Speed}f");
+                    streamWriter.WriteLine($"{hitObjects[i]._direction}, {hitObjects[i].Time}, {hitObjects[i].Speed}f");
                 }
             }
         }

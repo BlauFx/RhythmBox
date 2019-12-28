@@ -17,16 +17,6 @@ namespace RhythmBox.Mode.Std.Objects
 {
     public class RBox : Container
     {
-        public RBox(double time)
-        {
-            this.time = time;
-        }
-
-        /// <summary>
-        /// set the time when the drawable should be applied
-        /// </summary>
-        public double time { get; set; } = 0;
-
         /// <summary>
         /// if speed is higher then the animation / animation of the drawble get's slower
         /// </summary>
@@ -48,27 +38,23 @@ namespace RhythmBox.Mode.Std.Objects
         [BackgroundDependencyLoader]
         private void Load()
         {
-            Scheduler.AddDelayed(() =>
+            Children = new Drawable[]
             {
-                Children = new Drawable[]
+                obj = new RBoxObj(speed, direction)
                 {
-                    obj = new RBoxObj(speed, direction)
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Size = new Vector2(1f),
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Alpha = 1f,
-                        Resuming = Resuming,
-                    },
-                };
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(1f),
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Alpha = 1f,
+                    Resuming = Resuming,
+                },
+            };
 
-                obj.OnLoadComplete += (e) =>
-                {
-                    ApplyMods(mods);
-                };
-
-            }, time);
+            obj.OnLoadComplete += (e) =>
+            {
+                ApplyMods(mods);
+            };
         }
 
         public void OnClickKeyDown(Key key)
