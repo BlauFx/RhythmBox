@@ -26,9 +26,9 @@ namespace RhythmBox.Window.pending_files
 
             //TODO: This is only temporary
             //Side note: maybe add our own fileformat? 
-            if (!File.Exists(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Songs\\TestMap\\Difficulty1.ini"))
+            if (!File.Exists(CurrentFolder + "\\Songs\\TestMap\\Difficulty1.ini"))
             {
-                TempMap(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Songs\\TestMap\\Difficulty1.ini");
+                TempMap(CurrentFolder + "\\Songs\\TestMap\\Difficulty1.ini");
             }
         }
 

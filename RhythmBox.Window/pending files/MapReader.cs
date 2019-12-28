@@ -168,7 +168,7 @@ namespace RhythmBox.Window.pending_files
                     var dir3_1 = storageTmp[i].LastIndexOf(",", StringComparison.Ordinal) + 2;
                     var dir3_2_Speed = storageTmp[i].Substring(dir3_1, storageTmp[i].Length - (dir3_1 + 1));
 
-                    obj[i]._direction = parseDirection(dir1_2_Dir);
+                    obj[i]._direction = parseDirection(dir1_2_Dir.Substring(dir1_2_Dir.IndexOf(".")+1, dir1_2_Dir.Length - dir1_2_Dir.IndexOf(".")-1));
                     obj[i].Time = double.Parse(dir2_3_Time);
                     obj[i].Speed = float.Parse(dir3_2_Speed);
                 }
