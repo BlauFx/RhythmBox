@@ -20,6 +20,7 @@ using RhythmBox.Mode.Std.Mods;
 using RhythmBox.Window.Clocks;
 using RhythmBox.Window.Overlays;
 using RhythmBox.Window.pending_files;
+using RhythmBox.Window.Playfield;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -35,7 +36,7 @@ namespace RhythmBox.Window.Screens
 
         private Map _map;
 
-        private RbPlayfield _RbPlayfield;
+        private Playfield.Playfield _RbPlayfield;
 
         private HpBar _hpBar;
 
@@ -169,7 +170,7 @@ namespace RhythmBox.Window.Screens
 
             rhythmBoxClockContainer.Children = new Drawable[]
             {
-                _RbPlayfield = new RbPlayfield(ToApplyMods)
+                _RbPlayfield = new Playfield.Playfield(ToApplyMods)
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,

@@ -8,8 +8,7 @@ using osu.Framework.Testing;
 using osuTK;
 using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Window.Clocks;
-using RhythmBox.Window.Objects;
-using RhythmBox.Window.pending_files;
+using RhythmBox.Window.Playfield;
 
 namespace RhythmBox.Tests.VisualTests.Clock
 {
@@ -20,7 +19,7 @@ namespace RhythmBox.Tests.VisualTests.Clock
 
         private Map map;
 
-        private RbPlayfield playfield;
+        private Playfield playfield;
 
         private RhythmBoxClockContainer rhythmBoxClockContainer;
 
@@ -76,7 +75,7 @@ namespace RhythmBox.Tests.VisualTests.Clock
 
             rhythmBoxClockContainer.Children = new Drawable[]
             {
-                playfield = new RbPlayfield(null)
+                playfield = new Playfield(null)
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,

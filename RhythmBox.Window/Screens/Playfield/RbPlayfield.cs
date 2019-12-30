@@ -14,11 +14,10 @@ using RhythmBox.Mode.Std.Objects;
 using RhythmBox.Window.Objects;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
-namespace RhythmBox.Window.pending_files
+namespace RhythmBox.Window.Playfield
 {
-    public class RbPlayfield : Container
+    public class Playfield : Container
     {
         public Map Map;
 
@@ -33,11 +32,11 @@ namespace RhythmBox.Window.pending_files
 
         public BindableBool Resuming = new BindableBool();
 
-        public BindableBool CanStart = new BindableBool();
+        public BindableBool CanStart { get; set; } = new BindableBool();
 
         public BindableBool HasFinished = new BindableBool();
 
-        private List<Mod> mods;
+        private List<Mod> mods { get; set; }
 
         public Action action { get; set; }
 
@@ -45,17 +44,16 @@ namespace RhythmBox.Window.pending_files
 
         public Action BoxAction2 { get; set; }
 
-        public bool EditorMode { get; set; }
-
         public Bindable<HitObjects.Direction> dir { get; set; } = new Bindable<HitObjects.Direction>(HitObjects.Direction.Up);
 
+        [Obsolete]
         public ClickBox[] NewBox { get; set; }
 
         private List<RBox> list { get; set; }
 
         private int pos = 0;
 
-        public RbPlayfield(List<Mod> mods)
+        public Playfield(List<Mod> mods)
         {
             this.mods = mods;
         }
@@ -74,7 +72,6 @@ namespace RhythmBox.Window.pending_files
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f),
                     action = action,
-                    EditorMode = EditorMode,
                     dir = dir,
                     BoxAction = BoxAction,
                     BoxAction2 = BoxAction2,
@@ -118,7 +115,7 @@ namespace RhythmBox.Window.pending_files
         private void CheckClick(Key key)
         {
             HitObjects.Direction? dir = null;
-            try 
+            try
             {
                 dir = GetNextObjDir(key);
             }
@@ -126,7 +123,7 @@ namespace RhythmBox.Window.pending_files
 
             if (dir != null)
                 list[pos].OnClickKeyDown(key);
-                //list.RemoveAt(pos);
+            //list.RemoveAt(pos);
         }
 
         private HitObjects.Direction? GetNextObjDir(Key key)
@@ -181,158 +178,118 @@ namespace RhythmBox.Window.pending_files
             return dir;
         }
 
-    protected override void Update()
-    {
-        if (this.Clock.CurrentTime >= Map.EndTime)
+        protected override void Update()
         {
-            HasFinished.Value = true;
+            if (this.Clock.CurrentTime >= Map.EndTime)
+            {
+                HasFinished.Value = true;
+            }
+
+            base.Update();
         }
 
-        base.Update();
-    }
-
-    private void LoadMap()
-    {
-        Score.Score.ResetScore();
-        Score.Combo.ResetCombo();
-
-        int i = 0;
-        int j = 0;
-
-        foreach (var objBox in Map)
+        private void LoadMap()
         {
-            var x = (HitObjects)objBox;
+            Score.Score.ResetScore();
+            Score.Combo.ResetCombo();
 
-            objBoxArray[i] = new RBox
+            int i = 0;
+            int j = 0;
+
+            foreach (var objBox in Map)
             {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                direction = x._direction,
-                RelativeSizeAxes = Axes.Both,
-                Size = new Vector2(1f),
-                speed = x.Speed,
-                Resuming = Resuming,
-                mods = mods,
-            };
+                var x = (HitObjects)objBox;
 
-            Scheduler.AddDelayed(() =>
-            {
-                Add(objBoxArray[j]);
-                j++;
-            }, x.Time - Map.StartTime);
+                objBoxArray[i] = new RBox
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    direction = x._direction,
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(1f),
+                    speed = x.Speed,
+                    Resuming = Resuming,
+                    mods = mods,
+                };
 
-            i++;
-        }
-    }
-
-    public void StopScheduler() => Scheduler.CancelDelayedTasks();
-
-    public void LoadMapForEditor(double time)
-    {
-        CanStart.Value = false;
-        int i = 0;
-        int j = 0;
-
-        foreach (var objBox in Map)
-        {
-            //objBoxArray[i].Dispose();
-
-            var x = (HitObjects)objBox;
-
-            objBoxArray[i] = new RBox
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                direction = x._direction,
-                RelativeSizeAxes = Axes.Both,
-                Size = new Vector2(1f),
-                speed = x.Speed,
-                Resuming = Resuming,
-                mods = mods,
-            };
-
-            double SchedulerStartTime = x.Time - Map.StartTime;
-
-            if (time <= SchedulerStartTime)
-            {
                 Scheduler.AddDelayed(() =>
                 {
-                    Remove(objBoxArray[j]);
-
                     Add(objBoxArray[j]);
-
                     j++;
-                }, SchedulerStartTime - time);
+                }, x.Time - Map.StartTime);
+
+                i++;
             }
-            else
-            {
-                j++;
-            }
-            i++;
         }
 
-        CanStart.Value = true;
-    }
+        public void StopScheduler() => Scheduler.CancelDelayedTasks();
 
-    public void LoadMapForEditor2(double time, HitObjects.Direction direction, float speed)
-    {
-        CanStart.Value = false;
-        int i = 0;
-        int j = 0;
-
-        var Hitobj = new HitObjects()
+        public void LoadMapForEditor(double time)
         {
-            Speed = speed,
-            Time = time,
-            _direction = direction,
-        };
 
-        var list = Map.HitObjects.ToList();
-        list.Add(Hitobj);
 
-        Map.HitObjects = list.ToArray();
 
-        objBoxArray = new RBox[list.Count];
 
-        foreach (var objBox in list)
-        {
-            //objBoxArray[i].Dispose();
 
-            var x = (HitObjects)objBox;
 
-            objBoxArray[i] = new RBox
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                direction = x._direction,
-                RelativeSizeAxes = Axes.Both,
-                Size = new Vector2(1f),
-                speed = x.Speed,
-                Resuming = Resuming,
-                mods = mods,
-            };
 
-            double SchedulerStartTime = x.Time - Map.StartTime;
 
-            if (time <= SchedulerStartTime)
-            {
-                Scheduler.AddDelayed(() =>
-                {
-                    Remove(objBoxArray[j]);
 
-                    Add(objBoxArray[j]);
 
-                    j++;
-                }, SchedulerStartTime - time);
-            }
-            else
-            {
-                j++;
-            }
-            i++;
+
+            //CanStart.Value = false;
+            //int i = 0;
+            //int j = 0;
+            //RemoveRange(objBoxArray);
+
+            //foreach (var objBox in Map)
+            //{
+            //    //objBoxArray[i].Dispose();
+
+            //    var x = (HitObjects)objBox;
+
+            //    objBoxArray[i] = new RBox
+            //    {
+            //        Anchor = Anchor.Centre,
+            //        Origin = Anchor.Centre,
+            //        direction = x._direction,
+            //        RelativeSizeAxes = Axes.Both,
+            //        Size = new Vector2(1f),
+            //        speed = x.Speed,
+            //        Resuming = Resuming,
+            //        mods = mods,
+            //    };
+
+            //    double SchedulerStartTime = x.Time;
+            //    var calc = x.Time + (1500 * 1f);
+
+            //    Logger.Log("LoadMapForEditor: " + SchedulerStartTime.ToString());
+            //    Logger.Log("I: " + i.ToString());
+            //    Logger.Log(calc.ToString());
+            //    Logger.Log(time.ToString());
+
+            //    var lol = calc - time;
+
+            //    var lol2 = time - lol;
+
+            //    if (true)
+            //    {
+            //        Scheduler.AddDelayed(() =>
+            //        {
+            //            Add(objBoxArray[j]);
+            //            j++;
+            //        }, 0);
+            //    }
+            //    else
+            //    {
+            //        j++;
+            //    }
+            //    i++;
+            //}
+
+            //CanStart.Value = true;
+
+            //return;
         }
-
-        CanStart.Value = true;
     }
-}
 }

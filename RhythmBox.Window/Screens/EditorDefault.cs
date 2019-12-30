@@ -1,9 +1,13 @@
 ﻿using osu.Framework.Allocation;
+using osu.Framework.Audio;
+using osu.Framework.Audio.Track;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Events;
+using osu.Framework.IO.Stores;
+using osu.Framework.Platform;
 using osu.Framework.Screens;
 using osuTK;
 using osuTK.Graphics;
@@ -11,18 +15,18 @@ using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Window.Clocks;
 using RhythmBox.Window.Objects;
 using RhythmBox.Window.pending_files;
+using RhythmBox.Window.Playfield;
 using System;
-using osu.Framework.Platform;
 
 namespace RhythmBox.Window.Screens
 {
     public class EditorDefault : Screen
     {
         private RhythmBoxCursor _cursor;
-        
+
         private Sprite background;
 
-        private RbPlayfield playfield;
+        private PlayfieldLite playfield;
 
         private RhythmBoxClockContainer rhythmBoxClockContainer;
 
@@ -30,7 +34,7 @@ namespace RhythmBox.Window.Screens
 
         private BindableDouble UserPlaybackRate = new BindableDouble(1);
 
-        private Map map;
+        private Map map { get; set; }
 
         private BindableBool Resuming = new BindableBool(false);
 
@@ -40,7 +44,7 @@ namespace RhythmBox.Window.Screens
 
         private ClickBox[] box = new ClickBox[4];
 
-        BindableFloat bindable = new BindableFloat(0);
+        BindableFloat bindable { get; set; } = new BindableFloat(0);
 
         private double time = 0f;
 
@@ -50,13 +54,25 @@ namespace RhythmBox.Window.Screens
 
         private bool first_run = false;
 
+        [Resolved]
+        private AudioManager audio { get; set; }
+
+        [Resolved]
+        private GameHost gameHost { get; set; }
+
+        private ITrackStore trackStore;
+
+        private IResourceStore<byte[]> store;
+
+        private Track track;
+
         public EditorDefault(string path = null)
         {
             if (path is null)
             {
-                throw new NullReferenceException("Path/Map cannot be null");
+                throw new NullReferenceException("Path/Map can not be null");
             }
-            
+
             var mapReader = new MapReader(path);
             map = new Map
             {
@@ -80,7 +96,7 @@ namespace RhythmBox.Window.Screens
         }
 
         [BackgroundDependencyLoader]
-        private void Load(LargeTextureStore largeStore, GameHost host, TextureStore store)
+        private void Load(LargeTextureStore largeStore, GameHost host)
         {
             InternalChildren = new Drawable[]
             {
@@ -208,7 +224,7 @@ namespace RhythmBox.Window.Screens
                         {
                             RemoveInternal(_cursor);
                         }
-                        
+
                         AddInternal(_cursor = new RhythmBoxCursor(@"Game/HitObjCursor")
                         {
                             RelativeSizeAxes = Axes.Both,
@@ -242,7 +258,7 @@ namespace RhythmBox.Window.Screens
                         {
                             RemoveInternal(_cursor);
                         }
-                        
+
                         AddInternal(_cursor = new RhythmBoxCursor(@"Game/DefaultCursor")
                         {
                             RelativeSizeAxes = Axes.Both,
@@ -261,9 +277,10 @@ namespace RhythmBox.Window.Screens
                 background.Texture = x;
             });
 
+
             rhythmBoxClockContainer.Children = new Drawable[]
             {
-                playfield = new RbPlayfield(null)
+                playfield = new PlayfieldLite
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
@@ -271,43 +288,31 @@ namespace RhythmBox.Window.Screens
                     RelativePositionAxes = Axes.Both,
                     Size = new Vector2(0.6f, 1f),
                     Map = map,
-                    EditorMode = true,
                     NewBox = box,
                     action = () =>
                     {
                         if (HitObjCursorActive)
                         {
+                            double time = rhythmBoxClockContainer.RhythmBoxClock.CurrentTime;
                             rhythmBoxClockContainer.Stop();
 
-                            time = rhythmBoxClockContainer.RhythmBoxClock.CurrentTime;
+                            playfield.AddHitObj(time, playfield.dir.Value, 1f);
 
-                            playfield.StopScheduler();
-                            playfield.RemoveRange(playfield.objBoxArray);
-
-                            rhythmBoxClockContainer.Seek(time);
-                            playfield.LoadMapForEditor2(time, playfield.dir.Value, 1f);
+                            rhythmBoxClockContainer.Start();
                         }
                     },
                     BoxAction = () =>
                     {
                         if (HitObjCursorActive)
                         {
-                            int i = 0;
-                            switch (playfield.dir.Value)
+                            int i = playfield.dir.Value switch
                             {
-                                case Mode.Std.Interfaces.HitObjects.Direction.Left:
-                                    i = 0;
-                                    break;
-                                case Mode.Std.Interfaces.HitObjects.Direction.Down:
-                                    i = 1;
-                                    break;
-                                case Mode.Std.Interfaces.HitObjects.Direction.Up:
-                                    i = 2;
-                                    break;
-                                case Mode.Std.Interfaces.HitObjects.Direction.Right:
-                                    i = 3;
-                                    break;
-                            }
+                                Mode.Std.Interfaces.HitObjects.Direction.Left => 0,
+                                Mode.Std.Interfaces.HitObjects.Direction.Down => 1,
+                                Mode.Std.Interfaces.HitObjects.Direction.Up => 2,
+                                Mode.Std.Interfaces.HitObjects.Direction.Right => 3,
+                                _ => 4,
+                            };
 
                             RemoveInternal(box[i]);
                             AddInternal(box[i]);
@@ -317,7 +322,7 @@ namespace RhythmBox.Window.Screens
                     {
                         for (int i = 0; i < box.Length; i++)
                         {
-                             RemoveInternal(box[i]);
+                            RemoveInternal(box[i]);
                         }
                     },
                 },
@@ -331,6 +336,16 @@ namespace RhythmBox.Window.Screens
             playfield.Resuming.BindTo(Resuming);
 
             rhythmBoxClockContainer.Stop();
+
+            this.store = new StorageBackedResourceStore(gameHost.Storage);
+            trackStore = audio.GetTrackStore(this.store);
+
+            int num = map.Path.LastIndexOf("\\");
+            string tmp = map.Path.Substring(0, num);
+
+            string AudioFile = $"{tmp}\\{map.AFileName}";
+            track = trackStore.Get(AudioFile);
+            track?.Stop();
         }
 
         protected override void LoadComplete()
@@ -369,9 +384,10 @@ namespace RhythmBox.Window.Screens
             if (!this.IsPaused.Value)
             {
                 rhythmBoxClockContainer.Start();
+                track?.Start();
             }
 
-            // playfield.CanStart.ValueChanged -= CanStart_ValueChanged;
+            playfield.CanStart.ValueChanged -= CanStart_ValueChanged;
         }
 
         protected override void Update()
@@ -404,16 +420,19 @@ namespace RhythmBox.Window.Screens
                 if (IsPaused.Value)
                 {
                     rhythmBoxClockContainer.Stop();
+                    track?.Stop();
                 }
                 else
                 {
                     rhythmBoxClockContainer.Start();
+                    track?.Start();
                 }
             }
             else if (e.Key == osuTK.Input.Key.Escape)
             {
                 this.ClearTransforms();
                 rhythmBoxClockContainer?.Stop();
+                track?.Stop();
                 this.Exit();
             }
             return base.OnKeyDown(e);
@@ -428,20 +447,13 @@ namespace RhythmBox.Window.Screens
             }
 
             bool IsPaused = this.IsPaused.Value;
-
             double calcPos = map.EndTime * progress.box.Width;
 
-            playfield.StopScheduler();
-
-            playfield.RemoveRange(playfield.objBoxArray);
-
             rhythmBoxClockContainer.Stop();
+            playfield.LoadMapForEditor(calcPos);
             rhythmBoxClockContainer.Seek(calcPos);
-
             rhythmBoxClockContainer.Start();
             rhythmBoxClockContainer.Stop();
-
-            playfield.LoadMapForEditor(calcPos);
 
             TimeSpan result = TimeSpan.FromMilliseconds(calcPos);
             string time = result.ToString(@"mm\:ss");
@@ -462,7 +474,11 @@ namespace RhythmBox.Window.Screens
             this.Scale = new Vector2(1.5f);
 
             this.FadeInFromZero<EditorDefault>(1500, Easing.OutExpo);
-            this.TransformTo(nameof(Scale), new Vector2(1f), 1500, Easing.InOutCirc).OnComplete((e) => rhythmBoxClockContainer.Start());
+            this.TransformTo(nameof(Scale), new Vector2(1f), 1500, Easing.InOutCirc).OnComplete((e) =>
+            {
+                rhythmBoxClockContainer.Start();
+                track?.Start();
+            });
 
             if (!Discord.DiscordRichPresence.Initialized)
             {

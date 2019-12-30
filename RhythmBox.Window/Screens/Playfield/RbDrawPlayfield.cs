@@ -2,14 +2,13 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Shapes;
 using osuTK;
 using osuTK.Graphics;
 using RhythmBox.Mode.Std.Interfaces;
 using RhythmBox.Window.Objects;
 using System;
 
-namespace RhythmBox.Window.pending_files
+namespace RhythmBox.Window.Playfield
 {
     public class RbDrawPlayfield : Container<ClickBox>
     {
@@ -17,7 +16,7 @@ namespace RhythmBox.Window.pending_files
 
         public Action action;
 
-        public bool EditorMode { get; set; }
+        public bool EditorMode { get; set; } = false;
 
         public Bindable<HitObjects.Direction> dir { get; set; }
 

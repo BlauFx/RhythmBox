@@ -46,7 +46,6 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
 
                     LoadComponent(gameplayScreen = new GameplayScreen(path, mods));
                     stack.Push(gameplayScreen);
-                    //LoadComponentAsync(testSceneGameplayScreen = new TestSceneGameplayScreen(), stack.Push);
                 }
             });
 
