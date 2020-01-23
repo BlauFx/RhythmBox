@@ -112,20 +112,20 @@ namespace RhythmBox.Window.pending_files
                 return true;
             }
 
-            protected override bool OnDrag(DragEvent e)
+            protected override void OnDrag(DragEvent e)
             {
-                //Logger.Log(e.MousePosition.Y.ToString());
+                //    //Logger.Log(e.MousePosition.Y.ToString());
 
-                return base.OnDrag(e);
+                base.OnDrag(e);
             }
 
-            protected override bool OnMouseUp(MouseUpEvent e)
+            protected override void OnMouseUp(MouseUpEvent e)
             {
-                if (e.Button != MouseButton.Left) return false;
+                //    if (e.Button != MouseButton.Left) return false;
 
-                box.FadeColour(Color4.White, 100);
+                //    box.FadeColour(Color4.White, 100);
 
-                return base.OnMouseUp(e);
+                base.OnMouseUp(e);
             }
         }
     }

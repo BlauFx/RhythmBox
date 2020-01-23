@@ -74,7 +74,6 @@ namespace RhythmBox.Window.Objects
         }
 
         protected override bool OnDragStart(DragStartEvent e) => CurrentlyDragging = true;
-
-        protected override bool OnDragEnd(DragEndEvent e) => CurrentlyDragging = false;
+        protected override void OnDragEnd(DragEndEvent e) => CurrentlyDragging = false;
     }
 }
