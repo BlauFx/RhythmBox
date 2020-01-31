@@ -11,7 +11,6 @@ using RhythmBox.Mode.Std.Interfaces;
 using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Mode.Std.Mods;
 using RhythmBox.Mode.Std.Objects;
-using RhythmBox.Window.Objects;
 using System;
 using System.Collections.Generic;
 
@@ -46,9 +45,6 @@ namespace RhythmBox.Window.Playfield
 
         public Bindable<HitObjects.Direction> dir { get; set; } = new Bindable<HitObjects.Direction>(HitObjects.Direction.Up);
 
-        [Obsolete]
-        public ClickBox[] NewBox { get; set; }
-
         private List<RBox> list { get; set; }
 
         private int pos = 0;
@@ -75,7 +71,6 @@ namespace RhythmBox.Window.Playfield
                     dir = dir,
                     BoxAction = BoxAction,
                     BoxAction2 = BoxAction2,
-                    NewBox = NewBox,
                 },
             };
         }

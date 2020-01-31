@@ -63,8 +63,6 @@ namespace RhythmBox.Window.pending_files
                 MapId = 0,
                 MapSetId = 0,
                 BPM = 150,
-                Objects = HitObjects.Length,
-                AutoMap = false,
                 Mode = GameMode.STD,
                 Title = "TEST Title",
                 Artist = "test",

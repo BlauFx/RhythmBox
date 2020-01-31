@@ -12,10 +12,6 @@ namespace RhythmBox.Mode.Std.Interfaces
 
         int BPM { get; set; }
         
-        int Objects { get; set; }
-
-        bool AutoMap { get; set; }
-
         GameMode Mode { get; set; }
         
         string Title { get; set; }

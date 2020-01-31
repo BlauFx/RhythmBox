@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using RhythmBox.Mode.Std.Interfaces;
 
 namespace RhythmBox.Mode.Std.Maps
@@ -15,12 +14,6 @@ namespace RhythmBox.Mode.Std.Maps
         public int MapSetId  { get; set; } = 0; 
 
         public int BPM  { get; set; } = 0;
-
-        [Obsolete]
-        public int Objects  { get; set; } = 0; //TODO might be unnecessary cuz we could do this => HitObjects.Length
-
-        [Obsolete]
-        public bool AutoMap  { get; set; } = false;
 
         public GameMode Mode  { get; set; } = GameMode.STD;
 

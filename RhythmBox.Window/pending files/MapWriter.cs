@@ -1,5 +1,4 @@
 ﻿using RhythmBox.Mode.Std.Interfaces;
-using System;
 using System.IO;
 using System.Reflection;
 
@@ -16,12 +15,6 @@ namespace RhythmBox.Window.pending_files
         public int MapSetId { get; set; } = 0;
 
         public int BPM { get; set; } = 0;
-
-        [Obsolete]
-        public int Objects { get; set; } = 0;
-
-        [Obsolete]
-        public bool AutoMap { get; set; } = false;
 
         public GameMode Mode { get; set; } = GameMode.STD;
 
@@ -61,8 +54,6 @@ namespace RhythmBox.Window.pending_files
             WriteToFile(path, "MapId", MapId.ToString());
             WriteToFile(path, "MapSetId", MapSetId.ToString(), true);
             WriteToFile(path, "BPM", BPM.ToString(), true);
-            WriteToFile(path, "Objects", Objects.ToString(), true);
-            WriteToFile(path, "AutoMap", AutoMap.ToString(), true);
             WriteToFile(path, "Mode", Mode.ToString());
             WriteToFile(path, "Title", Title);
             WriteToFile(path, "Artist", Artist);
@@ -136,7 +127,6 @@ namespace RhythmBox.Window.pending_files
                 }
             }
         }
-
 
         private void WriteToFile(string path, string leftside, string value, bool extraEmptyLine = false)
         {

@@ -224,8 +224,6 @@ namespace RhythmBox.Tests.VisualTests.Screens
                             MapId = testSceneMapReader.MapId,
                             MapSetId = testSceneMapReader.MapSetId,
                             BPM = testSceneMapReader.BPM,
-                            Objects = testSceneMapReader.Objects,
-                            AutoMap = testSceneMapReader.AutoMap,
                             Mode = testSceneMapReader.Mode,
                             Title = testSceneMapReader.Title,
                             Artist = testSceneMapReader.Artist,

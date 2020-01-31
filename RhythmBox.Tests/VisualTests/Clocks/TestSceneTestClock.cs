@@ -39,8 +39,6 @@ namespace RhythmBox.Tests.VisualTests.Clock
                 MapId = 0,
                 MapSetId = 0,
                 BPM = 150,
-                Objects = 10,
-                AutoMap = false,
                 Mode = Mode.Std.Interfaces.GameMode.STD,
                 Title = "Test Title",
                 Artist = "Test Artist",

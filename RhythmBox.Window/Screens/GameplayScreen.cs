@@ -102,8 +102,6 @@ namespace RhythmBox.Window.Screens
                 MapId = MapReader.MapId,
                 MapSetId = MapReader.MapSetId,
                 BPM = MapReader.BPM,
-                Objects = MapReader.Objects,
-                AutoMap = MapReader.AutoMap,
                 Mode = MapReader.Mode,
                 Title = MapReader.Title,
                 Artist = MapReader.Artist,

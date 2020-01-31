@@ -17,12 +17,6 @@ namespace RhythmBox.Window.pending_files
 
         public int BPM { get; set; } = 0;
 
-        [Obsolete]
-        public int Objects { get; set; } = 0;
-
-        [Obsolete]
-        public bool AutoMap { get; set; } = false;
-
         public GameMode Mode { get; set; } = GameMode.STD;
 
         public string Title { get; set; } = string.Empty;
@@ -74,8 +68,6 @@ namespace RhythmBox.Window.pending_files
                 MapId = int.Parse(SearchThis(storageTemp, "MapId"));
                 MapSetId = int.Parse(SearchThis(storageTemp, "MapSetId"));
                 BPM = int.Parse(SearchThis(storageTemp, "BPM"));
-                Objects = int.Parse(SearchThis(storageTemp, "Objects"));
-                AutoMap = bool.Parse(SearchThis(storageTemp, "AutoMap"));
                 Mode = GameModeParser(SearchThis(storageTemp, "Mode"));
                 Title = SearchThis(storageTemp, "Title");
                 Artist = SearchThis(storageTemp, "Artist");
@@ -109,7 +101,7 @@ namespace RhythmBox.Window.pending_files
             {
                 return cutThis;
             }
-            var x = cutThis.IndexOf(":", StringComparison.Ordinal) + 2;
+            int x = cutThis.IndexOf(":", StringComparison.Ordinal) + 2;
             return cutThis.Substring(x, cutThis.Length - x);
         }
 
@@ -142,41 +134,37 @@ namespace RhythmBox.Window.pending_files
 
             int counter = 0;
 
-            if (!AutoMap)
+            string[] storageTmp = new string[lineCount - startHitObjects];
+
+            obj = new HitObjects[storageTmp.Length];
+
+            for (int i = startHitObjects; i < lineCount; i++)
             {
-                string[] storageTmp = new string[lineCount - startHitObjects];
-
-                obj = new HitObjects[storageTmp.Length];
-
-                for (int i = startHitObjects; i < lineCount; i++)
-                {
-                    storageTmp[counter] = storageTemp[i];
-                    counter++;
-                }
-
-                for (int i = 0; i < storageTmp.Length; i++)
-                {
-                    obj[i] = new HitObjects();
-
-                    var dir1_1 = storageTmp[i].IndexOf(",", StringComparison.Ordinal);
-                    var dir1_2_Dir = storageTmp[i].Substring(0, dir1_1);
-
-                    var dir2_1 = storageTmp[i].IndexOf(",", StringComparison.Ordinal) + 2;
-                    var dir2_2 = storageTmp[i].LastIndexOf(",", StringComparison.Ordinal) + 0;
-                    var dir2_3_Time = storageTmp[i].Substring(dir2_1, dir2_2 - dir2_1);
-
-                    var dir3_1 = storageTmp[i].LastIndexOf(",", StringComparison.Ordinal) + 2;
-                    var dir3_2_Speed = storageTmp[i].Substring(dir3_1, storageTmp[i].Length - (dir3_1 + 1));
-
-                    obj[i]._direction = parseDirection(dir1_2_Dir.Substring(dir1_2_Dir.IndexOf(".")+1, dir1_2_Dir.Length - dir1_2_Dir.IndexOf(".")-1));
-                    obj[i].Time = double.Parse(dir2_3_Time);
-                    obj[i].Speed = float.Parse(dir3_2_Speed);
-                }
-
-                return obj;
+                storageTmp[counter] = storageTemp[i];
+                counter++;
             }
 
-            return null;
+            for (int i = 0; i < storageTmp.Length; i++)
+            {
+                obj[i] = new HitObjects();
+
+                var dir1_1 = storageTmp[i].IndexOf(",", StringComparison.Ordinal);
+                var dir1_2_Dir = storageTmp[i].Substring(0, dir1_1);
+
+                var dir2_1 = storageTmp[i].IndexOf(",", StringComparison.Ordinal) + 2;
+                var dir2_2 = storageTmp[i].LastIndexOf(",", StringComparison.Ordinal) + 0;
+                var dir2_3_Time = storageTmp[i].Substring(dir2_1, dir2_2 - dir2_1);
+
+                var dir3_1 = storageTmp[i].LastIndexOf(",", StringComparison.Ordinal) + 2;
+                var dir3_2_Speed = storageTmp[i].Substring(dir3_1, storageTmp[i].Length - (dir3_1 + 1));
+
+                obj[i]._direction = parseDirection(dir1_2_Dir.Substring(dir1_2_Dir.IndexOf(".")+1, dir1_2_Dir.Length - dir1_2_Dir.IndexOf(".")-1));
+                obj[i].Time = double.Parse(dir2_3_Time);
+                obj[i].Speed = float.Parse(dir3_2_Speed);
+            }
+
+            return obj;
+
         }
 
         private HitObjects.Direction parseDirection(string direction)

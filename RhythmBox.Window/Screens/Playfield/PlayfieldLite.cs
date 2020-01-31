@@ -3,7 +3,6 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Logging;
-using osu.Framework.Threading;
 using osuTK;
 using RhythmBox.Mode.Std.Interfaces;
 using RhythmBox.Mode.Std.Maps;

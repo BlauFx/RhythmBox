@@ -9,10 +9,6 @@ using System;
 
 namespace RhythmBox.Window.Objects
 {
-    /// <summary>
-    /// <typeparamref name="T"/> only supports float and int.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
     public class Progress<T> : SliderBar<T> where T : struct, IConvertible, IComparable<T>, IEquatable<T>
     {
         public Box box;
@@ -58,17 +54,8 @@ namespace RhythmBox.Window.Objects
 
         protected override void UpdateValue(float value)
         {
-            if (Current.Value.GetType() == typeof(float))
-            {
-                var x = (T) Convert.ChangeType(value * Multiplier, TypeCode.Single);
-                bindableValue.Value = x;
-            }
-            else if (Current.Value.GetType() == typeof(int))
-            {
-                var x = (T) Convert.ChangeType(Convert.ToInt32(value * Multiplier), TypeCode.Int32);
-                bindableValue.Value = x;
-            }
-
+            bindableValue.Value = (T) Convert.ChangeType(value * Multiplier, Current.Value.GetType());
+                        
             box.Width = value;
             BoxWidth.Value = box.Width;
         }

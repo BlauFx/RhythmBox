@@ -52,10 +52,9 @@ namespace RhythmBox.Window.Playfield
             }
         }
 
-        private ClickBox drawable(Vector2 size, float Y, float X, Anchor anchor = Anchor.TopLeft, Anchor origin = Anchor.Centre, Axes RelativeSizeAxes = Axes.Y, 
-            bool Editor = false, float Alpha = 1f, HitObjects.Direction direction = HitObjects.Direction.Up)
-        {
-            return new ClickBox
+        private ClickBox drawable(Vector2 size, float Y, float X, Anchor anchor = Anchor.TopLeft, Anchor origin = Anchor.Centre, Axes RelativeSizeAxes = Axes.Y,
+            bool Editor = false, float Alpha = 1f, HitObjects.Direction direction = HitObjects.Direction.Up) =>
+            new ClickBox
             {
                 Anchor = anchor,
                 Origin = origin,
@@ -75,12 +74,10 @@ namespace RhythmBox.Window.Playfield
                 BoxAction = BoxAction,
                 BoxAction2 = BoxAction2,
             };
-        }
 
         private ClickBox drawableMiddle(Vector2 size, float Y, float X, Anchor anchor, Anchor origin, Axes relativsize,
-            bool Editor = false, bool Editor2 = false, float alpha = 0.5f, HitObjects.Direction direction = HitObjects.Direction.Up)
-        {
-            return new ClickBox
+            bool Editor = false, bool Editor2 = false, float alpha = 0.5f, HitObjects.Direction direction = HitObjects.Direction.Up) =>
+            new ClickBox
             {
                 Anchor = anchor,
                 Origin = origin,
@@ -101,6 +98,5 @@ namespace RhythmBox.Window.Playfield
                 BoxAction = BoxAction,
                 BoxAction2 = BoxAction2,
             };
-        }
     }
 }

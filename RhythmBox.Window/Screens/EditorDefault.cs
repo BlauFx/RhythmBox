@@ -58,7 +58,7 @@ namespace RhythmBox.Window.Screens
         private AudioManager audio { get; set; }
 
         [Resolved]
-        private GameHost gameHost { get; set; }
+        private GameHost GameHost { get; set; }
 
         private ITrackStore trackStore;
 
@@ -81,8 +81,6 @@ namespace RhythmBox.Window.Screens
                 MapId = mapReader.MapId,
                 MapSetId = mapReader.MapSetId,
                 BPM = mapReader.BPM,
-                Objects = mapReader.Objects,
-                AutoMap = mapReader.AutoMap,
                 Mode = mapReader.Mode,
                 Title = mapReader.Title,
                 Artist = mapReader.Artist,
@@ -337,7 +335,7 @@ namespace RhythmBox.Window.Screens
 
             rhythmBoxClockContainer.Stop();
 
-            this.store = new StorageBackedResourceStore(gameHost.Storage);
+            this.store = new StorageBackedResourceStore(GameHost.Storage);
             trackStore = audio.GetTrackStore(this.store);
 
             int num = map.Path.LastIndexOf("\\");
