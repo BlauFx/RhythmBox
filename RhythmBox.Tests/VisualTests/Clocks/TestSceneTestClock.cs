@@ -32,7 +32,7 @@ namespace RhythmBox.Tests.VisualTests.Clock
         [BackgroundDependencyLoader]
         private void Load()
         {
-            map = new Map
+            map = new Map("")
             {
                 AFileName = "null",
                 BGFile = "none",

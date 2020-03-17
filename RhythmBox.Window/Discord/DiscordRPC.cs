@@ -32,8 +32,9 @@ namespace RhythmBox.Window.Discord
 
 		public static void UpdateRPC(RichPresence rpc)
 		{
-			client.SetPresence(rpc);
-			client.Invoke();
+			//Disabled for now
+			//client.SetPresence(rpc);
+			//client.Invoke();
 		}
 	}
 }

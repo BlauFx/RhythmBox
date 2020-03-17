@@ -17,7 +17,7 @@ namespace RhythmBox.Window.Clocks
 
         private readonly double GamplayStartTime;
 
-        public readonly Bindable<double> UserPlaybackRate = new BindableDouble(1) { Default = 1, MinValue = 0.1, MaxValue = 3, Precision = 0.1 };
+        public BindableDouble UserPlaybackRate = new BindableDouble(1) { Default = 1, MinValue = 0.1, MaxValue = 3, Precision = 0.1 };
 
         //TODO:
         //[Cached]

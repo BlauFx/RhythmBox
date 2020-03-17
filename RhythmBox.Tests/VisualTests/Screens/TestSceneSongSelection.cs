@@ -215,25 +215,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
 
                     for (int j = 0; j < Files.Length; j++)
                     {
-                        var testSceneMapReader = new MapReader(Files[j].FullName);
-
-                        Maps[i, j] = new Map
-                        {
-                            AFileName = testSceneMapReader.AFileName,
-                            BGFile = testSceneMapReader.BGFile,
-                            MapId = testSceneMapReader.MapId,
-                            MapSetId = testSceneMapReader.MapSetId,
-                            BPM = testSceneMapReader.BPM,
-                            Mode = testSceneMapReader.Mode,
-                            Title = testSceneMapReader.Title,
-                            Artist = testSceneMapReader.Artist,
-                            Creator = testSceneMapReader.Creator,
-                            DifficultyName = testSceneMapReader.DifficultyName,
-                            StartTime = testSceneMapReader.StartTime,
-                            EndTime = testSceneMapReader.EndTime,
-                            HitObjects = testSceneMapReader.HitObjects,
-                            Path = testSceneMapReader.Path,
-                        };
+                        Maps[i, j] = new Map(Files[j].FullName);
                     }
                 }
             }

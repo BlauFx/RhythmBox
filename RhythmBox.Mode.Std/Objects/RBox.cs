@@ -93,6 +93,8 @@ namespace RhythmBox.Mode.Std.Objects
 
         private new const int Clear = 100;
 
+        private const int DurationTime = 1500;
+
         public Hit currentHit { get; protected set; }
 
         public BindableBool Resuming = new BindableBool();
@@ -112,42 +114,41 @@ namespace RhythmBox.Mode.Std.Objects
                 Alpha = 0,
             });
 
-            var Duration = (1500 * speed) * 0.3;
-            var Duration2 = (1500 * speed);
+            var Duration = (DurationTime * speed);
             bx.MoveToY(0f, 0, Easing.InCirc);
 
             Scheduler.AddDelayed(() =>
             {
                 bx.FadeInFromZero((1500 * speed) * 0.2, Easing.None);
-            }, Duration);
+            }, (DurationTime * speed) * 0.3);
 
             if (direction == HitObjects.Direction.Up)
             {
-                bx.MoveToY(-0.5f, Duration2, Easing.InCirc);
-                bx.ResizeTo(new Vector2(1f, 0.05f), Duration2, Easing.InCirc);
+                bx.MoveToY(-0.5f, Duration, Easing.InCirc);
+                bx.ResizeTo(new Vector2(1f, 0.05f), Duration, Easing.InCirc);
             }
             else if (direction == HitObjects.Direction.Down)
             {
                 bx.Rotation = 180f;
-                bx.MoveToY(0.5f, Duration2, Easing.InCirc);
-                bx.ResizeTo(new Vector2(1f, 0.05f), Duration2, Easing.InCirc);
+                bx.MoveToY(0.5f, Duration, Easing.InCirc);
+                bx.ResizeTo(new Vector2(1f, 0.05f), Duration, Easing.InCirc);
             }
             else if (direction == HitObjects.Direction.Left)
             {
                 bx.Origin = Anchor.CentreLeft;
                 bx.Size = new Vector2(0.01f, 0.1f);
-                bx.ResizeTo(new Vector2(0.056f, 1f), Duration2, Easing.InCirc);
-                bx.MoveToX(-0.5f, Duration2, Easing.InCirc);
+                bx.ResizeTo(new Vector2(0.056f, 1f), Duration, Easing.InCirc);
+                bx.MoveToX(-0.5f, Duration, Easing.InCirc);
             }
             else if (direction == HitObjects.Direction.Right)
             {
                 bx.Origin = Anchor.CentreRight;
                 bx.Size = new Vector2(0.01f, 0.1f);
-                bx.ResizeTo(new Vector2(0.056f, 1f), Duration2, Easing.InCirc);
-                bx.MoveToX(0.5f, Duration2, Easing.InCirc);
+                bx.ResizeTo(new Vector2(0.056f, 1f), Duration, Easing.InCirc);
+                bx.MoveToX(0.5f, Duration, Easing.InCirc);
             }
 
-            Scheduler.AddDelayed(() => Remove(Clear, Expire), 1800 * speed);
+            Scheduler.AddDelayed(() => Remove(Clear, Expire), (DurationTime + Expire) * speed);
         }
 
         private async void Remove(int clear, int expire)

@@ -131,41 +131,29 @@ namespace RhythmBox.Window.Playfield
 
                 if (list[i].AlphaA > 0)
                 {
-                    if (key == Key.W)
+                    if (key == Key.W && x == HitObjects.Direction.Up)
                     {
-                        if (x == HitObjects.Direction.Up)
-                        {
-                            dir = x;
-                            pos = i;
-                            break;
-                        }
+                        dir = x;
+                        pos = i;
+                        break;
                     }
-                    else if (key == Key.A)
+                    else if (key == Key.A && x == HitObjects.Direction.Left)
                     {
-                        if (x == HitObjects.Direction.Left)
-                        {
-                            dir = x;
-                            pos = i;
-                            break;
-                        }
+                        dir = x;
+                        pos = i;
+                        break;
                     }
-                    else if (key == Key.S)
+                    else if (key == Key.S && x == HitObjects.Direction.Down)
                     {
-                        if (x == HitObjects.Direction.Down)
-                        {
-                            dir = x;
-                            pos = i;
-                            break;
-                        }
+                        dir = x;
+                        pos = i;
+                        break;
                     }
-                    else if (key == Key.D)
+                    else if (key == Key.D && x == HitObjects.Direction.Right)
                     {
-                        if (x == HitObjects.Direction.Right)
-                        {
-                            dir = x;
-                            pos = i;
-                            break;
-                        }
+                        dir = x;
+                        pos = i;
+                        break;
                     }
                 }
             }
@@ -215,76 +203,6 @@ namespace RhythmBox.Window.Playfield
 
                 i++;
             }
-        }
-
-        public void StopScheduler() => Scheduler.CancelDelayedTasks();
-
-        public void LoadMapForEditor(double time)
-        {
-
-
-
-
-
-
-
-
-
-
-
-            //CanStart.Value = false;
-            //int i = 0;
-            //int j = 0;
-            //RemoveRange(objBoxArray);
-
-            //foreach (var objBox in Map)
-            //{
-            //    //objBoxArray[i].Dispose();
-
-            //    var x = (HitObjects)objBox;
-
-            //    objBoxArray[i] = new RBox
-            //    {
-            //        Anchor = Anchor.Centre,
-            //        Origin = Anchor.Centre,
-            //        direction = x._direction,
-            //        RelativeSizeAxes = Axes.Both,
-            //        Size = new Vector2(1f),
-            //        speed = x.Speed,
-            //        Resuming = Resuming,
-            //        mods = mods,
-            //    };
-
-            //    double SchedulerStartTime = x.Time;
-            //    var calc = x.Time + (1500 * 1f);
-
-            //    Logger.Log("LoadMapForEditor: " + SchedulerStartTime.ToString());
-            //    Logger.Log("I: " + i.ToString());
-            //    Logger.Log(calc.ToString());
-            //    Logger.Log(time.ToString());
-
-            //    var lol = calc - time;
-
-            //    var lol2 = time - lol;
-
-            //    if (true)
-            //    {
-            //        Scheduler.AddDelayed(() =>
-            //        {
-            //            Add(objBoxArray[j]);
-            //            j++;
-            //        }, 0);
-            //    }
-            //    else
-            //    {
-            //        j++;
-            //    }
-            //    i++;
-            //}
-
-            //CanStart.Value = true;
-
-            //return;
         }
     }
 }

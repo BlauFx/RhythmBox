@@ -61,45 +61,10 @@ namespace RhythmBox.Tests.VisualTests.Screens
 
             int MapsCount = 2;
 
-            var testSceneMapReader = new MapReader(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Songs\\TestMap\\Difficulty1.ini");
-
             Map[,] Map = new Map[MapsCount, short.MaxValue];
 
-            Map[0, 0] = new Map
-            {
-                AFileName = testSceneMapReader.AFileName,
-                BGFile = testSceneMapReader.BGFile,
-                MapId = testSceneMapReader.MapId,
-                MapSetId = testSceneMapReader.MapSetId,
-                BPM = testSceneMapReader.BPM,
-                Mode = testSceneMapReader.Mode,
-                Title = "random text",//testSceneMapReader.Title,
-                Artist = testSceneMapReader.Artist,
-                Creator = testSceneMapReader.Creator,
-                DifficultyName = testSceneMapReader.DifficultyName,
-                StartTime = testSceneMapReader.StartTime,
-                EndTime = testSceneMapReader.EndTime,
-                HitObjects = testSceneMapReader.HitObjects,
-                Path = testSceneMapReader.Path,
-            };
-
-            Map[1, 0] = new Map
-            {
-                AFileName = testSceneMapReader.AFileName,
-                BGFile = testSceneMapReader.BGFile,
-                MapId = testSceneMapReader.MapId,
-                MapSetId = testSceneMapReader.MapSetId,
-                BPM = testSceneMapReader.BPM,
-                Mode = testSceneMapReader.Mode,
-                Title = "title of this test map",//testSceneMapReader.Title,
-                Artist = testSceneMapReader.Artist,
-                Creator = testSceneMapReader.Creator,
-                DifficultyName = testSceneMapReader.DifficultyName,
-                StartTime = testSceneMapReader.StartTime,
-                EndTime = testSceneMapReader.EndTime,
-                HitObjects = testSceneMapReader.HitObjects,
-                Path = testSceneMapReader.Path,
-            };
+            Map[0, 0] = new Map(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Songs\\TestMap\\Difficulty1.ini", "random text");
+            Map[1, 0] = new Map(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Songs\\TestMap\\Difficulty1.ini", "title of this test map");
 
             MapPack[] mapPackTests = new MapPack[MapsCount];
 

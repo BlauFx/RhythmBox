@@ -8,7 +8,6 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
 using osu.Framework.IO.Stores;
-using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osu.Framework.Screens;
 using osuTK;
@@ -42,7 +41,7 @@ namespace RhythmBox.Window.Screens
 
         private RhythmBoxClockContainer rhythmBoxClockContainer;
 
-        private Bindable<double> UserPlaybackRate = new BindableDouble(1);
+        public BindableDouble UserPlaybackRate = new BindableDouble(1) { Default = 1, MinValue = 0.1, MaxValue = 3, Precision = 0.1 };
 
         public readonly BindableBool IsPaused = new BindableBool();
 
@@ -94,24 +93,7 @@ namespace RhythmBox.Window.Screens
         {
             this.ToApplyMods = ToApplyMods;
 
-            var MapReader = new MapReader(path);
-            _map = new Map
-            {
-                AFileName = MapReader.AFileName,
-                BGFile = MapReader.BGFile,
-                MapId = MapReader.MapId,
-                MapSetId = MapReader.MapSetId,
-                BPM = MapReader.BPM,
-                Mode = MapReader.Mode,
-                Title = MapReader.Title,
-                Artist = MapReader.Artist,
-                Creator = MapReader.Creator,
-                DifficultyName = MapReader.DifficultyName,
-                StartTime = MapReader.StartTime,
-                EndTime = MapReader.EndTime,
-                HitObjects = MapReader.HitObjects,
-                Path = MapReader.Path,
-            };
+            _map = new Map(path);
         }
 
         [BackgroundDependencyLoader]
@@ -125,6 +107,8 @@ namespace RhythmBox.Window.Screens
 
             string AudioFile = $"{tmp}\\{_map.AFileName}";
             track = trackStore.Get(AudioFile);
+
+            track.Volume.Value = 0.2d;
 
             InternalChildren = new Drawable[]
             {
@@ -262,7 +246,7 @@ namespace RhythmBox.Window.Screens
 
             base.LoadComplete();
         }
-    
+
         private async void Load(int time)
         {
             GameplayScreenLoader.StopRotaing(time);
@@ -345,7 +329,7 @@ namespace RhythmBox.Window.Screens
 
             DispayCombo.Text = string.Empty;
             DispayCombo.AddText($"{Score.Combo.ComboInt}x", x => x.Font = new FontUsage("Roboto", 40));
-           
+
             DispayScore.Text = string.Empty;
             DispayScore.AddText($"{Score.Score.ScoreInt}", x => x.Font = new FontUsage("Roboto", 40));
 

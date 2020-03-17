@@ -15,7 +15,6 @@ using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Window.Clocks;
 using RhythmBox.Window.Objects;
 using RhythmBox.Window.pending_files;
-using RhythmBox.Window.Playfield;
 using System;
 
 namespace RhythmBox.Window.Screens
@@ -26,7 +25,7 @@ namespace RhythmBox.Window.Screens
 
         private Sprite background;
 
-        private PlayfieldLite playfield;
+        private Playfield.Playfield playfield;
 
         private RhythmBoxClockContainer rhythmBoxClockContainer;
 
@@ -73,24 +72,7 @@ namespace RhythmBox.Window.Screens
                 throw new NullReferenceException("Path/Map can not be null");
             }
 
-            var mapReader = new MapReader(path);
-            map = new Map
-            {
-                AFileName = mapReader.AFileName,
-                BGFile = mapReader.BGFile,
-                MapId = mapReader.MapId,
-                MapSetId = mapReader.MapSetId,
-                BPM = mapReader.BPM,
-                Mode = mapReader.Mode,
-                Title = mapReader.Title,
-                Artist = mapReader.Artist,
-                Creator = mapReader.Creator,
-                DifficultyName = mapReader.DifficultyName,
-                StartTime = mapReader.StartTime,
-                EndTime = mapReader.EndTime,
-                HitObjects = mapReader.HitObjects,
-                Path = mapReader.Path,
-            };
+            map = new Map(path);
         }
 
         [BackgroundDependencyLoader]
@@ -278,7 +260,7 @@ namespace RhythmBox.Window.Screens
 
             rhythmBoxClockContainer.Children = new Drawable[]
             {
-                playfield = new PlayfieldLite
+                playfield = new Playfield.Playfield(null)
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
@@ -286,7 +268,7 @@ namespace RhythmBox.Window.Screens
                     RelativePositionAxes = Axes.Both,
                     Size = new Vector2(0.6f, 1f),
                     Map = map,
-                    NewBox = box,
+                    //NewBox = box,
                     action = () =>
                     {
                         if (HitObjCursorActive)
@@ -294,7 +276,7 @@ namespace RhythmBox.Window.Screens
                             double time = rhythmBoxClockContainer.RhythmBoxClock.CurrentTime;
                             rhythmBoxClockContainer.Stop();
 
-                            playfield.AddHitObj(time, playfield.dir.Value, 1f);
+                            //playfield.AddHitObj(time, playfield.dir.Value, 1f);
 
                             rhythmBoxClockContainer.Start();
                         }
@@ -343,6 +325,8 @@ namespace RhythmBox.Window.Screens
 
             string AudioFile = $"{tmp}\\{map.AFileName}";
             track = trackStore.Get(AudioFile);
+
+            track.Volume.Value = 0.2d;
             track?.Stop();
         }
 
@@ -448,7 +432,6 @@ namespace RhythmBox.Window.Screens
             double calcPos = map.EndTime * progress.box.Width;
 
             rhythmBoxClockContainer.Stop();
-            playfield.LoadMapForEditor(calcPos);
             rhythmBoxClockContainer.Seek(calcPos);
             rhythmBoxClockContainer.Start();
             rhythmBoxClockContainer.Stop();
@@ -495,6 +478,12 @@ namespace RhythmBox.Window.Screens
              });
 
             base.OnEntering(last);
+        }
+
+        public override bool OnExiting(IScreen next)
+        {
+            track?.Stop();
+            return base.OnExiting(next);
         }
     }
 }
