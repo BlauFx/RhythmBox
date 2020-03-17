@@ -43,9 +43,10 @@ namespace RhythmBox.Mode.Std.Maps
 
         public Map(string path, string? title = null)
         {
+            if (path == null) return;
+
             MapReader2 MapReader = new MapReader2(path);
-
-
+            
             AFileName = MapReader.AFileName;
             BGFile = MapReader.BGFile;
             MapId = MapReader.MapId;
