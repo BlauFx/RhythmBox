@@ -110,6 +110,7 @@ namespace RhythmBox.Window.Playfield
         private void CheckClick(Key key)
         {
             HitObjects.Direction? dir = null;
+
             try
             {
                 dir = GetNextObjDir(key);
@@ -131,25 +132,7 @@ namespace RhythmBox.Window.Playfield
 
                 if (list[i].AlphaA > 0)
                 {
-                    if (key == Key.W && x == HitObjects.Direction.Up)
-                    {
-                        dir = x;
-                        pos = i;
-                        break;
-                    }
-                    else if (key == Key.A && x == HitObjects.Direction.Left)
-                    {
-                        dir = x;
-                        pos = i;
-                        break;
-                    }
-                    else if (key == Key.S && x == HitObjects.Direction.Down)
-                    {
-                        dir = x;
-                        pos = i;
-                        break;
-                    }
-                    else if (key == Key.D && x == HitObjects.Direction.Right)
+                    if ((key == Key.W && x == HitObjects.Direction.Up) || key == Key.A && x == HitObjects.Direction.Left || key == Key.S && x == HitObjects.Direction.Down || key == Key.D && x == HitObjects.Direction.Right)
                     {
                         dir = x;
                         pos = i;
@@ -164,9 +147,7 @@ namespace RhythmBox.Window.Playfield
         protected override void Update()
         {
             if (this.Clock.CurrentTime >= Map.EndTime)
-            {
                 HasFinished.Value = true;
-            }
 
             base.Update();
         }
@@ -183,14 +164,26 @@ namespace RhythmBox.Window.Playfield
             {
                 var x = (HitObjects)objBox;
 
-                objBoxArray[i] = new RBox
+                int MinStartSpeed = 200;
+                double MaxStartSpeed = x.Speed * 1000;
+
+                if (MaxStartSpeed < MinStartSpeed)
+                    MaxStartSpeed = MinStartSpeed;
+
+                var time = x.Time - MaxStartSpeed;
+
+                if (x.Time - MaxStartSpeed < 0)
+                {
+                    time = 0;
+                    MaxStartSpeed = x.Time;
+                }
+
+                objBoxArray[i] = new RBox(x.Speed, x._direction, MaxStartSpeed)
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                    direction = x._direction,
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f),
-                    speed = x.Speed,
                     Resuming = Resuming,
                     mods = mods,
                 };
@@ -199,7 +192,7 @@ namespace RhythmBox.Window.Playfield
                 {
                     Add(objBoxArray[j]);
                     j++;
-                }, x.Time - Map.StartTime);
+                }, time);
 
                 i++;
             }

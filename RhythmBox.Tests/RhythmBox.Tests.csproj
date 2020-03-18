@@ -7,16 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="pending files\**" />
+    <EmbeddedResource Remove="pending files\**" />
+    <None Remove="pending files\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="ppy.osu.Framework" Version="2020.317.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\RhythmBox.Window.Resources\RhythmBox.Window.Resources.csproj" />
     <ProjectReference Include="..\RhythmBox.Window\RhythmBox.Window.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="pending files\" />
   </ItemGroup>
 
 </Project>

@@ -29,7 +29,7 @@ namespace RhythmBox.Window.Clocks
 
         private readonly BindableDouble pauseFreqAdjust = new BindableDouble(1);
 
-        private const float pauseFreqDuration = 250;
+        private const float pauseFreqDuration = 1;
 
         private double totalOffset => userOffsetClock.Offset + platformOffsetClock.Offset;
 

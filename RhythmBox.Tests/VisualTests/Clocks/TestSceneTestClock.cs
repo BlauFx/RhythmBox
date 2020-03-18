@@ -2,6 +2,7 @@
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
 using osu.Framework.Testing;
@@ -28,6 +29,8 @@ namespace RhythmBox.Tests.VisualTests.Clock
         public readonly BindableBool IsPaused = new BindableBool();
 
         private bool Resuming { get; set; } = true;
+
+        private TextFlowContainer DispayCombo;
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -69,6 +72,15 @@ namespace RhythmBox.Tests.VisualTests.Clock
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                 },
+                DispayCombo = new TextFlowContainer
+                {
+                    Anchor = Anchor.BottomLeft,
+                    Origin = Anchor.BottomLeft,
+                    RelativeSizeAxes = Axes.Both,
+                    RelativePositionAxes = Axes.Both,
+                    Size = new Vector2(0.1f),
+                    TextAnchor = Anchor.BottomLeft,
+                }
             };
 
             rhythmBoxClockContainer.Children = new Drawable[]
@@ -93,6 +105,7 @@ namespace RhythmBox.Tests.VisualTests.Clock
 
         protected override void Update()
         {
+            DispayCombo.Text = rhythmBoxClockContainer.RhythmBoxClock.CurrentTime.ToString();
             sptText.Text = rhythmBoxClockContainer.IsPaused.ToString();
             base.Update();
         }

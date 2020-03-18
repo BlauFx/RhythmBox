@@ -12,6 +12,7 @@ using RhythmBox.Mode.Std.Mods;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace RhythmBox.Mode.Std.Objects
 {
@@ -35,12 +36,21 @@ namespace RhythmBox.Mode.Std.Objects
 
         public List<Mod> mods { get; set; }
 
+        public double Duration { get; set; }
+
+        public RBox(float speed, HitObjects.Direction direction, double Duration)
+        {
+            this.speed = speed;
+            this.direction = direction;
+            this.Duration = Duration;
+        }
+
         [BackgroundDependencyLoader]
         private void Load()
         {
             Children = new Drawable[]
             {
-                obj = new RBoxObj(speed, direction)
+                obj = new RBoxObj(speed, direction, Duration)
                 {
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f),
@@ -55,13 +65,18 @@ namespace RhythmBox.Mode.Std.Objects
             {
                 ApplyMods(mods);
             };
+
+            obj.DisposableBx += (e) =>
+            {
+                this.Expire(true);
+            };
         }
 
         public void OnClickKeyDown(Key key)
         {
             obj.ClickKeyDown(key);
 
-            Scheduler.AddDelayed(() => this.Expire(), 1800 * speed); //TODO:
+            // Scheduler.AddDelayed(() => this.Expire(), 1800 * speed); //TODO:
         }
 
         private void ApplyMods(List<Mod> mod)
@@ -75,31 +90,36 @@ namespace RhythmBox.Mode.Std.Objects
         }
     }
 
+    public delegate void DisposableBxHandler(EventArgs e);
+
     public class RBoxObj : Container
     {
-        public RBoxObj(float speed, HitObjects.Direction direction)
+        public RBoxObj(float speed, HitObjects.Direction direction, double DurationTime)
         {
-            this.speed = speed;
             this.direction = direction;
+            this.Duration = DurationTime * speed;
+
+            this.Expire = 300; // (int)speed;
+            this.Clear = this.Expire * 0.5;
         }
 
         public Box bx;
 
-        public float speed { get; set; }
-
         private HitObjects.Direction direction { get; set; }
 
-        private new const int Expire = 300;
+        private new int Expire { get; set; }
 
-        private new const int Clear = 100;
+        private new double Clear { get; set; }
 
-        private const int DurationTime = 1500;
+        private double Duration { get; set; }
 
         public Hit currentHit { get; protected set; }
 
         public BindableBool Resuming = new BindableBool();
 
         private bool Clicked = false;
+
+        public event DisposableBxHandler DisposableBx;
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -112,15 +132,11 @@ namespace RhythmBox.Mode.Std.Objects
                 Size = new Vector2(0.1f, 0.01f),
                 RelativePositionAxes = Axes.Both,
                 Alpha = 0,
+                Depth = int.MinValue
             });
 
-            var Duration = (DurationTime * speed);
             bx.MoveToY(0f, 0, Easing.InCirc);
-
-            Scheduler.AddDelayed(() =>
-            {
-                bx.FadeInFromZero((1500 * speed) * 0.2, Easing.None);
-            }, (DurationTime * speed) * 0.3);
+            bx.FadeInFromZero(Duration * 0.2, Easing.None);
 
             if (direction == HitObjects.Direction.Up)
             {
@@ -148,10 +164,10 @@ namespace RhythmBox.Mode.Std.Objects
                 bx.MoveToX(0.5f, Duration, Easing.InCirc);
             }
 
-            Scheduler.AddDelayed(() => Remove(Clear, Expire), (DurationTime + Expire) * speed);
+            Scheduler.AddDelayed(() => Remove(), Duration + Expire);
         }
 
-        private async void Remove(int clear, int expire)
+        private async void Remove()
         {
             if (!Clicked)
             {
@@ -159,31 +175,34 @@ namespace RhythmBox.Mode.Std.Objects
 
                 param[0] = Hit.Hitx;
 
-                await System.Threading.Tasks.Task.Run(() =>
+                await Task.Run(() =>
                 {
                     _InvokeNamespaceClassesStaticMethod("RhythmBox.Window.Score", "UpdateCombo", param);
                 });
             }
-            this.ClearTransformsAfter(clear);
-            Scheduler.AddDelayed(() => this.Expire(), expire);
+
             bx.Colour = Color4.Red;
 
-            Scheduler.AddDelayed(() => bx.Colour = Color4.White, 50);
+            Scheduler.AddDelayed(() => bx.Colour = Color4.White, this.Clear / 2);
 
-            bx.FadeOut(100);
-            bx.ScaleTo(1.1f, 100, Easing.OutCirc);
+            bx.FadeOut(this.Clear);
+            bx.ScaleTo(1.1f, this.Clear, Easing.OutCirc).OnComplete((x) =>
+            {
+                DisposableBx?.Invoke(new EventArgs());
+            });
         }
 
         public void ClickKeyDown(Key key)
         {
             Clicked = true;
+
             async void Click(Hit currentHit)
             {
                 object[] param = new object[1];
 
                 param[0] = currentHit;
 
-                await System.Threading.Tasks.Task.Run(() =>
+                await Task.Run(() =>
                 {
                     _InvokeNamespaceClassesStaticMethod("RhythmBox.Window.Score", "UpdateCombo", param);
                 });
@@ -221,7 +240,7 @@ namespace RhythmBox.Mode.Std.Objects
                                 Add(HitAnimation(Hit.Hitx, bx.Y));
                             }
 
-                            Remove(Clear, Expire);
+                            Remove();
                         }
 
                         break;
@@ -252,7 +271,7 @@ namespace RhythmBox.Mode.Std.Objects
                                 Add(HitAnimation(Hit.Hitx, bx.Y));
                             }
 
-                            Remove(Clear, Expire);
+                            Remove();
                         }
 
                         break;
@@ -283,7 +302,7 @@ namespace RhythmBox.Mode.Std.Objects
                                 Add(HitAnimation(Hit.Hitx, bx.Y - 0.05f));
                             }
 
-                            Remove(Clear, Expire);
+                            Remove();
                         }
 
                         break;
@@ -314,7 +333,7 @@ namespace RhythmBox.Mode.Std.Objects
                                 Add(HitAnimation(Hit.Hitx, bx.Y));
                             }
 
-                            Remove(Clear, Expire);
+                            Remove();
                         }
 
                         break;
@@ -322,9 +341,8 @@ namespace RhythmBox.Mode.Std.Objects
             }
         }
 
-        private Drawable HitAnimation(Hit hit, float Y)
-        {
-            return new HitAnimation(hit)
+        private Drawable HitAnimation(Hit hit, float Y) =>
+            new HitAnimation(hit)
             {
                 Depth = float.MinValue,
                 Anchor = Anchor.Centre,
@@ -333,7 +351,6 @@ namespace RhythmBox.Mode.Std.Objects
                 X = bx.X,
                 Y = Y,
             };
-        }
 
         //https://stackoverflow.com/a/48728076
         private void _InvokeNamespaceClassesStaticMethod(string namespaceName, string methodName, params object[] parameters)

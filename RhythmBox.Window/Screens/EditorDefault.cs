@@ -14,7 +14,6 @@ using osuTK.Graphics;
 using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Window.Clocks;
 using RhythmBox.Window.Objects;
-using RhythmBox.Window.pending_files;
 using System;
 
 namespace RhythmBox.Window.Screens
@@ -31,7 +30,7 @@ namespace RhythmBox.Window.Screens
 
         private BindableBool IsPaused = new BindableBool();
 
-        private BindableDouble UserPlaybackRate = new BindableDouble(1);
+        public BindableDouble UserPlaybackRate = new BindableDouble(1) { Default = 1, MinValue = 0.1, MaxValue = 3, Precision = 0.1 };
 
         private Map map { get; set; }
 
