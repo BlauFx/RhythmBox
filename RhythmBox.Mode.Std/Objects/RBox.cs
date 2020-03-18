@@ -99,7 +99,8 @@ namespace RhythmBox.Mode.Std.Objects
             this.direction = direction;
             this.Duration = DurationTime * speed;
 
-            this.Expire = 300; // (int)speed;
+            //TODO: Leave it 300 or muiltply it with speed?
+            this.Expire = 300; // speed;
             this.Clear = this.Expire * 0.5;
         }
 
@@ -169,6 +170,8 @@ namespace RhythmBox.Mode.Std.Objects
 
         private async void Remove()
         {
+            Scheduler.CancelDelayedTasks();
+
             if (!Clicked)
             {
                 object[] param = new object[1];

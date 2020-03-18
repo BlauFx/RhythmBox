@@ -108,7 +108,7 @@ namespace RhythmBox.Window.Screens
             string AudioFile = $"{tmp}\\{_map.AFileName}";
             track = trackStore.Get(AudioFile);
 
-            track.Volume.Value = 0.2d;
+            track.Volume.Value = 0.1d;
 
             InternalChildren = new Drawable[]
             {
