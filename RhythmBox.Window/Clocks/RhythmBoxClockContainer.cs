@@ -29,7 +29,7 @@ namespace RhythmBox.Window.Clocks
 
         private readonly BindableDouble pauseFreqAdjust = new BindableDouble(1);
 
-        private const float pauseFreqDuration = 1;
+        private const float pauseFreqDuration = 300;
 
         private double totalOffset => userOffsetClock.Offset + platformOffsetClock.Offset;
 
@@ -71,6 +71,15 @@ namespace RhythmBox.Window.Clocks
             decoupleableClock.Start();
             IsPaused.Value = false;
 
+            this.TransformBindableTo(pauseFreqAdjust, 1, 1, Easing.In);
+        }
+
+        public void StartWithDelay()
+        {
+            Seek(RhythmBoxClock.CurrentTime);
+            decoupleableClock.Start();
+            IsPaused.Value = false;
+
             this.TransformBindableTo(pauseFreqAdjust, 1, pauseFreqDuration, Easing.In);
         }
 
@@ -82,13 +91,23 @@ namespace RhythmBox.Window.Clocks
 
         public void Stop()
         {
-            this.TransformBindableTo(pauseFreqAdjust, 0, pauseFreqDuration, Easing.Out).OnComplete(x =>
+            this.TransformBindableTo(pauseFreqAdjust, 0, 1, Easing.Out).OnComplete(x =>
             {
                 decoupleableClock.Stop();
                 adjustableClock.Stop();
             });
 
             IsPaused.Value = true;
+        }
+
+        public void StopWithDelay()
+        {
+            this.TransformBindableTo(pauseFreqAdjust, 0, pauseFreqDuration, Easing.InCirc).OnComplete(x =>
+            {
+                decoupleableClock.Stop();
+                adjustableClock.Stop();
+                IsPaused.Value = true;
+            });
         }
 
         protected override void Update()

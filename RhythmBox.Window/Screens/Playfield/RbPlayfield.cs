@@ -49,6 +49,8 @@ namespace RhythmBox.Window.Playfield
 
         private int pos = 0;
 
+        public bool Failed { get; set; } = false;
+
         public Playfield(List<Mod> mods)
         {
             this.mods = mods;
@@ -146,7 +148,7 @@ namespace RhythmBox.Window.Playfield
 
         protected override void Update()
         {
-            if (this.Clock.CurrentTime >= Map.EndTime)
+            if (this.Clock.CurrentTime >= Map.EndTime && !this.Failed)
                 HasFinished.Value = true;
 
             base.Update();
@@ -170,7 +172,7 @@ namespace RhythmBox.Window.Playfield
                 if (MaxStartSpeed < MinStartSpeed)
                     MaxStartSpeed = MinStartSpeed;
 
-                var time = x.Time - MaxStartSpeed;
+                var time = x.Time - MaxStartSpeed - Map.StartTime;
 
                 if (x.Time - MaxStartSpeed < 0)
                 {

@@ -49,6 +49,16 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                 }
             });
 
+            AddStep("Fail", () =>
+            {
+                this.gameplayScreen._hpBar.CurrentValue = 0;
+            });
+
+            AddStep("Go back to SongSelection", () =>
+            {
+                this.gameplayScreen.ReturntoSongSelectionAfterFail.TriggerChange();
+            });
+
             AddStep("Remove TestSceneGameplayScreen", () =>
             {
                 this.stack?.Expire();

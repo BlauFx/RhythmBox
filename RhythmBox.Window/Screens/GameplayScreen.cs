@@ -20,6 +20,7 @@ using RhythmBox.Window.Clocks;
 using RhythmBox.Window.Overlays;
 using RhythmBox.Window.pending_files;
 using RhythmBox.Window.Playfield;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -37,7 +38,7 @@ namespace RhythmBox.Window.Screens
 
         private Playfield.Playfield _RbPlayfield;
 
-        private HpBar _hpBar;
+        public HpBar _hpBar { get; set; }
 
         private RhythmBoxClockContainer rhythmBoxClockContainer;
 
@@ -49,7 +50,7 @@ namespace RhythmBox.Window.Screens
 
         private bool HasFinished { get; set; } = true;
 
-        private bool HasFailed { get; set; } = false;
+        public bool HasFailed { get; set; } = false;
 
         private BreakOverlay BreakOverlay;
 
@@ -79,7 +80,7 @@ namespace RhythmBox.Window.Screens
 
         private const float HP_Drain = 0.001f;
 
-        private BindableBool bindableBool = new BindableBool();
+        public BindableBool ReturntoSongSelectionAfterFail { get; set; } = new BindableBool();
 
         private BindableBool Startable = new BindableBool();
 
@@ -221,6 +222,14 @@ namespace RhythmBox.Window.Screens
                 LoadComponentAsync(new SongSelction(), this.Push);
             };
 
+            ReturntoSongSelectionAfterFail.ValueChanged += (e) =>
+            {
+                rhythmBoxClockContainer.Stop();
+                SongSelction songSelction;
+                LoadComponent(songSelction = new SongSelction());
+                Schedule(() => this.Push(songSelction));
+            };
+
             Startable.ValueChanged += (e) =>
             {
                 if (_RbPlayfield.CanStart.Value == true)
@@ -257,8 +266,10 @@ namespace RhythmBox.Window.Screens
 
             rhythmBoxClockContainer.Seek(_map.StartTime);
             track?.Seek(_map.StartTime);
+
             rhythmBoxClockContainer.Start();
             track?.Start();
+
             UpdateHPBar();
         }
 
@@ -284,6 +295,7 @@ namespace RhythmBox.Window.Screens
                 else if (!HasFailed)
                 {
                     HasFailed = true;
+                    _RbPlayfield.Failed = true;
 
                     Box box;
 
@@ -297,31 +309,25 @@ namespace RhythmBox.Window.Screens
 
                     box.FadeTo(0.7f, 500, Easing.In);
 
-                    bindableBool.ValueChanged += (e) =>
-                    {
-                        rhythmBoxClockContainer.Stop();
-                        SongSelction songSelction;
-                        LoadComponent(songSelction = new SongSelction());
-                        Schedule(() => this.Push(songSelction));
-                    };
-
                     foreach (var x in this._RbPlayfield)
                     {
                         if (x is RbDrawPlayfield)
                         {
                             foreach (var y in (x as RbDrawPlayfield))
                             {
-                                y.TransformTo(nameof(Shear), new Vector2(osu.Framework.Utils.RNG.NextSingle(-0.15f, 0.15f)), 1000, Easing.In);
-                                y.TransformTo(nameof(Scale), new Vector2(osu.Framework.Utils.RNG.NextSingle(1.1f, 2f)), 1000, Easing.In);
+                                y.TransformTo(nameof(Shear), new Vector2(osu.Framework.Utils.RNG.NextSingle(-0.15f, 0.15f)), 5000, Easing.OutBack);
+                                y.TransformTo(nameof(Scale), new Vector2(osu.Framework.Utils.RNG.NextSingle(1.1f, 2f)), 5000, Easing.OutBack);
                             }
                         }
                         else
                         {
-                            x.TransformTo(nameof(Shear), new Vector2(osu.Framework.Utils.RNG.NextSingle(-0.15f, 0.15f)), 1000, Easing.In);
-                            x.TransformTo(nameof(Scale), new Vector2(osu.Framework.Utils.RNG.NextSingle(0.6f, 2f)), 1000, Easing.In);
-                            x.MoveToOffset(new Vector2(osu.Framework.Utils.RNG.NextSingle(0.1f, 0.4f)), 1000, Easing.In);
+                            x.TransformTo(nameof(Shear), new Vector2(osu.Framework.Utils.RNG.NextSingle(-0.15f, 0.15f)), 1000, Easing.OutBack);
+                            x.TransformTo(nameof(Scale), new Vector2(osu.Framework.Utils.RNG.NextSingle(0.6f, 2f)), 1000, Easing.OutBack);
+                            x.MoveToOffset(new Vector2(osu.Framework.Utils.RNG.NextSingle(0.1f, 0.4f)), 1000, Easing.OutBack);
                         }
                     }
+
+                    rhythmBoxClockContainer.StopWithDelay();
 
                     _ = AddJustTrack();
                 }
@@ -357,38 +363,21 @@ namespace RhythmBox.Window.Screens
         {
             if (!auto)
             {
-                float result = 0;
-                switch (hit)
+                float result = hit switch
                 {
-                    case Hit.Hit300:
-                        result = currentvalue + HP_300;
-                        break;
-
-                    case Hit.Hit100:
-                        result = currentvalue + HP_100;
-                        break;
-
-                    case Hit.Hit50:
-                        result = currentvalue + HP_50;
-                        break;
-
-                    case Hit.Hitx:
-                        result = currentvalue - HP_X;
-                        break;
-                }
+                    Hit.Hit300 => currentvalue + HP_300,
+                    Hit.Hit100 => currentvalue + HP_100,
+                    Hit.Hit50 => currentvalue + HP_50,
+                    Hit.Hitx => currentvalue - HP_X * 10,
+                    _ => 0
+                };
 
                 if (result < maxvalue && result > minvalue)
-                {
                     return result;
-                }
                 else if (result > maxvalue)
-                {
                     return maxvalue;
-                }
                 else if (result < minvalue)
-                {
                     return minvalue;
-                }
             }
 
             return currentvalue - HP_Drain;
@@ -396,23 +385,19 @@ namespace RhythmBox.Window.Screens
 
         private async Task AddJustTrack()
         {
-            if (track != null)
-            {
-                await Task.Run(async () =>
-                {
-                    for (double i = track.Frequency.Value; i > 0; i -= 0.01d)
-                    {
-                        try
-                        {
-                            track.Frequency.Value = i;
-                        }
-                        catch { }
-                        await Task.Delay(1);
-                    }
-                });
+            if (track == null) return;
 
-                bindableBool.Value = true;
+            for (double i = track.Frequency.Value; i > 0; i -= 0.1d)
+            {
+                try
+                {
+                    track.Frequency.Value = i;
+                }
+                catch { }
+                await Task.Delay(500);
             }
+
+            //ReturntoSongSelectionAfterFail.Value = true;
         }
 
         public override void OnEntering(IScreen last)
@@ -428,6 +413,13 @@ namespace RhythmBox.Window.Screens
             Scheduler.AddDelayed(() => this.Exit(), 0);
 
             base.OnSuspending(next);
+        }
+
+        public override bool OnExiting(IScreen next)
+        {
+            track?.Stop();
+
+            return base.OnExiting(next);
         }
     }
 }
