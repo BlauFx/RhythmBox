@@ -16,7 +16,7 @@ namespace RhythmBox.Window.Overlays
     {
         private Box _box;
 
-        private SpriteText _text;
+        public SpriteText _text { get; set; }
 
         private const float Duration = 1000;
 
@@ -72,10 +72,13 @@ namespace RhythmBox.Window.Overlays
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
                     RelativePositionAxes = Axes.Both,
+                    Size = new Vector2(0.9f, .2f),
                     Font = new FontUsage("Roboto, 30f"),
                     Text = "Test Notification!",
                     Colour = Color4.Black,
+                    AllowMultiline = true,
                 },
                 spriteTextButtons[0] = new SpriteTextButton
                 {

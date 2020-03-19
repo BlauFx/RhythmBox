@@ -20,13 +20,15 @@ namespace RhythmBox.Window.Screens
 {
     public class MainMenu : Screen
     {
-        public static Sprite background;
+        public Sprite background { get; set; }
 
         private NotificationOverlay _overlay;
 
         private Box box;
 
         protected bool Disable_buttons = false;
+
+        private const float Font_Size = 40f;
 
         [BackgroundDependencyLoader]
         private async void Load(LargeTextureStore store)
@@ -52,7 +54,7 @@ namespace RhythmBox.Window.Screens
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(0.2f),
                     text = "Play",
-                    FontSize = 60f,
+                    FontSize = Font_Size,
                     Y = 0f,
                     X = -0.375f,
                     Alpha = 1f,
@@ -71,7 +73,7 @@ namespace RhythmBox.Window.Screens
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(0.2f),
                     text = "Settings",
-                    FontSize = 60f,
+                    FontSize = Font_Size,
                     Y = 0f,
                     X = -0.125f,
                     Alpha = 1f,
@@ -90,7 +92,7 @@ namespace RhythmBox.Window.Screens
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(0.2f),
                     text = "Editor",
-                    FontSize = 60f,
+                    FontSize = Font_Size,
                     Y = 0f,
                     X = 0.125f,
                     Alpha = 1f,
@@ -115,7 +117,7 @@ namespace RhythmBox.Window.Screens
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(0.2f),
                     text = "Exit",
-                    FontSize = 60f,
+                    FontSize = Font_Size,
                     Y = 0f,
                     X = 0.375f,
                     Alpha = 1f,
@@ -141,31 +143,36 @@ namespace RhythmBox.Window.Screens
                 Alpha = 0f,
             });
 
-            //TODO:
-            //AddInternal(_overlay = new NotificationOverlay
-            //{
-            //    Depth = float.MinValue,
-            //    RelativePositionAxes = Axes.Both,
-            //    Anchor = Anchor.Centre,
-            //    Origin = Anchor.Centre,
-            //    RelativeSizeAxes = Axes.Both,
-            //    Size = new Vector2(0.3f),
-            //    typeOfOverlay = NotificationOverlay.TypeOfOverlay.Default
-            //});
-
             var updater = new Update();
+            
+            AddInternal(_overlay = new NotificationOverlay
+            {
+                Depth = float.MinValue,
+                RelativePositionAxes = Axes.Both,
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+                RelativeSizeAxes = Axes.Both,
+                Size = new Vector2(0.3f),
+                typeOfOverlay = NotificationOverlay.TypeOfOverlay.YesNo,
+                ActionYes = () =>
+                {
+                    updater.DownloadUpdate();
+                    updater.ApplyUpdate();
+                }
+            });
 
             bool NewUpdate = await updater.SearchAsyncForUpdates();
 
             if (NewUpdate)
             {
-                updater.DownloadUpdate();
-                updater.ApplyUpdate();
+                //TODO:
+                _overlay._text.Text = "A new update is available!                                      " +
+                    "Do you want to install it now?";
 
-                //box.Size = new Vector2(3f);
-                //box.FadeIn(0d, Easing.OutCirc);
-                //_overlay.State.Value = Visibility.Visible;
-                //_overlay.State.ValueChanged += (e) => box.FadeOut(250d);
+                box.Size = new Vector2(3f);
+                box.FadeIn(0d, Easing.OutCirc);
+                _overlay.State.Value = Visibility.Visible;
+                _overlay.State.ValueChanged += (e) => box.FadeOut(250d);
             }
             
             Discord.DiscordRichPresence.ctor();
@@ -205,6 +212,13 @@ namespace RhythmBox.Window.Screens
             }
 
             return base.OnMouseMove(e);
+        }
+
+        protected override void OnHoverLost(HoverLostEvent e)
+        {
+            background.MoveTo(new Vector2(0), 1000, Easing.InBack);
+
+            base.OnHoverLost(e);
         }
 
         public override void OnEntering(IScreen last)
@@ -275,7 +289,7 @@ namespace RhythmBox.Window.Screens
                     Text = text,
                     X = 0,
                     //Y = (0.25f/2f),
-                    Font = new FontUsage("Roboto",FontSize),
+                    Font = new FontUsage("Roboto", FontSize),
                 },
             };
         }
