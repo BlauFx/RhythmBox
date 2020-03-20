@@ -20,7 +20,6 @@ using RhythmBox.Window.Clocks;
 using RhythmBox.Window.Overlays;
 using RhythmBox.Window.pending_files;
 using RhythmBox.Window.Playfield;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -230,11 +229,13 @@ namespace RhythmBox.Window.Screens
                 Schedule(() => this.Push(songSelction));
             };
 
+            int LoadingTime = 1000;
+
             Startable.ValueChanged += (e) =>
             {
                 if (_RbPlayfield.CanStart.Value == true)
                 {
-                    Load(500);
+                    Load(LoadingTime);
                 }
                 else
                 {
@@ -242,7 +243,7 @@ namespace RhythmBox.Window.Screens
                     {
                         if (e2.NewValue == true)
                         {
-                            Load(500);
+                            Load(LoadingTime);
                         }
                     };
                 }
@@ -258,11 +259,12 @@ namespace RhythmBox.Window.Screens
 
         private async void Load(int time)
         {
-            GameplayScreenLoader.StopRotaing(time);
-
-            GameplayScreenLoader.FadeOut(time, Easing.In).Delay(time).Finally((Action) => GameplayScreenLoader.Expire());
+            GameplayScreenLoader.StartRoating();
 
             await Task.Delay(time);
+
+            GameplayScreenLoader.StopRotaing();
+            GameplayScreenLoader.FadeOut(time, Easing.In).Delay(time).Finally((Action) => GameplayScreenLoader.Expire());
 
             rhythmBoxClockContainer.Seek(_map.StartTime);
             track?.Seek(_map.StartTime);

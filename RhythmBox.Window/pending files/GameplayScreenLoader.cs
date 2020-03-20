@@ -4,71 +4,29 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osuTK;
+using System;
 using System.Threading.Tasks;
 
 namespace RhythmBox.Window.pending_files
 {
-    public class GameplayScreenLoader : Container
+    public class GameplayScreenLoader : CompositeDrawable
     {
         private Sprite boxLoading;
 
-        private bool ShouldRotate = true;
-
-        private float newRotationValue = 360f;
-
-        public float RotationValue = 360f;
-
-        public double Duration = 1000;
+        public double Duration { get; set; } = 1000;
 
         [BackgroundDependencyLoader]
-        private void Load(TextureStore store)
+        private void Load(TextureStore store) 
+            => InternalChild = boxLoading = new Sprite
         {
-            Children = new Drawable[]
-            {
-                boxLoading = new Sprite
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Size = new Vector2(100f),
-                    Texture = store.Get("Skin/LoadingCircle"),
-                }
-            };
-        }
+            Anchor = Anchor.Centre,
+            Origin = Anchor.Centre,
+            Size = new Vector2(100f),
+            Texture = store.Get("Skin/LoadingCircle"),
+        };
 
-        protected override void LoadAsyncComplete()
-        {
-            StartRoating();
+        public void StartRoating() => boxLoading.Spin(Duration, RotationDirection.Clockwise, 0, Int16.MaxValue);
 
-            base.LoadAsyncComplete();
-        }
-
-        public void StartRoating()
-        {
-            ShouldRotate = true;
-            Rotate();
-        }
-
-        private async void Rotate()
-        {
-            if (ShouldRotate)
-            {
-                RotationValue = newRotationValue;
-                newRotationValue += 360f;
-
-                boxLoading.TransformTo(nameof(Rotation), RotationValue, Duration);
-
-                await Task.Delay((int)Duration);
-                Rotate();
-            }
-        }
-
-        public void StopRotaing(double timeUntilStop)
-        {
-            Scheduler.AddDelayed(() =>
-            {
-                ShouldRotate = false;
-                boxLoading.ClearTransforms();
-            }, timeUntilStop);
-        }
+        public async void StopRotaing() => await Task.Run(() => boxLoading.ClearTransforms());
     }
 }
