@@ -122,6 +122,8 @@ namespace RhythmBox.Mode.Std.Objects
 
         public event DisposableBxHandler DisposableBx;
 
+        private HitAnimation hitAnimation { get; set; } = null;
+
         [BackgroundDependencyLoader]
         private void Load()
         {
@@ -182,6 +184,8 @@ namespace RhythmBox.Mode.Std.Objects
                 {
                     _InvokeNamespaceClassesStaticMethod("RhythmBox.Window.Score", "UpdateCombo", param);
                 });
+
+                Schedule(() => Add(hitAnimation = HitAnimation(Hit.Hitx)));
             }
 
             bx.Colour = Color4.Red;
@@ -189,9 +193,31 @@ namespace RhythmBox.Mode.Std.Objects
             Scheduler.AddDelayed(() => bx.Colour = Color4.White, this.Clear / 2);
 
             bx.FadeOut(this.Clear);
-            bx.ScaleTo(1.1f, this.Clear, Easing.OutCirc).OnComplete((x) =>
+
+            bx.ScaleTo(1.1f, this.Clear, Easing.OutCirc);
+
+            async void WaitAndInvoke()
             {
-                DisposableBx?.Invoke(new EventArgs());
+                //We need to wait so the HitAnimation class can finish it's animation.
+                await Task.Run(async () =>
+                {
+                    //TODO:
+                    await Task.Delay(hitAnimation.WaitTime);
+                    DisposableBx?.Invoke(new EventArgs());
+                });
+            }
+
+            if (hitAnimation != null)
+            {
+                WaitAndInvoke();
+                return;
+            }
+
+            Schedule(() =>
+            {
+                Add(hitAnimation = HitAnimation(Hit.Hitx));
+
+                WaitAndInvoke();
             });
         }
 
@@ -225,22 +251,22 @@ namespace RhythmBox.Mode.Std.Objects
                             if (bx.Y <= -0.5 + 0.05f && bx.Y >= -0.50001f)
                             {
                                 Click(Hit.Hit300);
-                                Add(HitAnimation(Hit.Hit300, bx.Y));
+                                Add(hitAnimation = HitAnimation(Hit.Hit300, bx.Y + 0.025f));
                             }
                             else if (bx.Y <= -0.35f && bx.Y >= -0.5f + 0.05f)
                             {
                                 Click(Hit.Hit100);
-                                Add(HitAnimation(Hit.Hit100, bx.Y));
+                                Add(hitAnimation = HitAnimation(Hit.Hit100));
                             }
                             else if (bx.Y <= -0.25f && bx.Y >= -0.35f)
                             {
                                 Click(Hit.Hit50);
-                                Add(HitAnimation(Hit.Hit50, bx.Y));
+                                Add(hitAnimation = HitAnimation(Hit.Hit50));
                             }
                             else if (bx.Y <= 0f && bx.Y >= -0.25f)
                             {
                                 Click(Hit.Hitx);
-                                Add(HitAnimation(Hit.Hitx, bx.Y));
+                                Add(hitAnimation = HitAnimation(Hit.Hitx));
                             }
 
                             Remove();
@@ -256,22 +282,22 @@ namespace RhythmBox.Mode.Std.Objects
                             if (bx.X <= -0.5 + 0.05f && bx.X >= -0.50001f)
                             {
                                 Click(Hit.Hit300);
-                                Add(HitAnimation(Hit.Hit300, bx.Y));
+                                Add(hitAnimation = HitAnimation(Hit.Hit300, bx.Y, bx.X + 0.025f));
                             }
                             else if (bx.X <= -0.35f && bx.Y >= -0.5f + 0.05f)
                             {
                                 Click(Hit.Hit100);
-                                Add(HitAnimation(Hit.Hit100, bx.Y));
+                                Add(hitAnimation = HitAnimation(Hit.Hit100, bx.Y, bx.X + 0.025f));
                             }
                             else if (bx.X <= -0.25f && bx.Y >= -0.35f)
                             {
                                 Click(Hit.Hit50);
-                                Add(HitAnimation(Hit.Hit50, bx.Y));
+                                Add(hitAnimation = HitAnimation(Hit.Hit50, bx.Y, bx.X + 0.025f));
                             }
                             else if (bx.X <= 0f && bx.Y >= -0.25f)
                             {
                                 Click(Hit.Hitx);
-                                Add(HitAnimation(Hit.Hitx, bx.Y));
+                                Add(hitAnimation = HitAnimation(Hit.Hitx));
                             }
 
                             Remove();
@@ -287,22 +313,22 @@ namespace RhythmBox.Mode.Std.Objects
                             if (bx.Y >= 0.5f - 0.05f && bx.Y <= 0.50001f)
                             {
                                 Click(Hit.Hit300);
-                                Add(HitAnimation(Hit.Hit300, bx.Y - 0.05f));
+                                Add(hitAnimation = HitAnimation(Hit.Hit300, bx.Y - 0.025f));
                             }
                             else if (bx.Y >= 0.35f && bx.Y <= 0.5f - 0.05f)
                             {
                                 Click(Hit.Hit100);
-                                Add(HitAnimation(Hit.Hit100, bx.Y - 0.05f));
+                                Add(hitAnimation = HitAnimation(Hit.Hit100));
                             }
                             else if (bx.Y >= 0.25f && bx.Y <= 0.35f)
                             {
                                 Click(Hit.Hit50);
-                                Add(HitAnimation(Hit.Hit50, bx.Y - 0.05f));
+                                Add(hitAnimation = HitAnimation(Hit.Hit50));
                             }
                             else if (bx.Y >= 0f && bx.Y <= 0.25f)
                             {
                                 Click(Hit.Hitx);
-                                Add(HitAnimation(Hit.Hitx, bx.Y - 0.05f));
+                                Add(hitAnimation = HitAnimation(Hit.Hitx));
                             }
 
                             Remove();
@@ -318,22 +344,22 @@ namespace RhythmBox.Mode.Std.Objects
                             if (bx.X >= 0.5 - 0.05f && bx.X <= 0.50001f)
                             {
                                 Click(Hit.Hit300);
-                                Add(HitAnimation(Hit.Hit300, bx.Y));
+                                Add(hitAnimation = HitAnimation(Hit.Hit300, bx.Y, bx.X - 0.025f));
                             }
                             else if (bx.X >= 0.35f && bx.Y <= 0.5f + 0.05f)
                             {
                                 Click(Hit.Hit100);
-                                Add(HitAnimation(Hit.Hit100, bx.Y));
+                                Add(hitAnimation = HitAnimation(Hit.Hit100));
                             }
                             else if (bx.X >= 0.25f && bx.Y <= 0.35f)
                             {
                                 Click(Hit.Hit50);
-                                Add(HitAnimation(Hit.Hit50, bx.Y));
+                                Add(hitAnimation = HitAnimation(Hit.Hit50));
                             }
                             else if (bx.X >= 0f && bx.Y <= 0.25f)
                             {
                                 Click(Hit.Hitx);
-                                Add(HitAnimation(Hit.Hitx, bx.Y));
+                                Add(hitAnimation = HitAnimation(Hit.Hitx));
                             }
 
                             Remove();
@@ -344,15 +370,15 @@ namespace RhythmBox.Mode.Std.Objects
             }
         }
 
-        private Drawable HitAnimation(Hit hit, float Y) =>
+        private HitAnimation HitAnimation(Hit hit, float Y = int.MaxValue, float X = int.MaxValue) =>
             new HitAnimation(hit)
             {
                 Depth = float.MinValue,
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
                 RelativePositionAxes = Axes.Both,
-                X = bx.X,
-                Y = Y,
+                X = X == int.MaxValue ? bx.X : X,
+                Y = Y == int.MaxValue ? bx.Y : Y,
             };
 
         //https://stackoverflow.com/a/48728076

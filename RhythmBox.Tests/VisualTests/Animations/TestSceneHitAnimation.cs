@@ -1,96 +1,51 @@
 ﻿using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Sprites;
-using osu.Framework.Graphics.Textures;
 using osu.Framework.Testing;
-using osuTK;
+using RhythmBox.Mode.Std.Animations;
+using System.Threading.Tasks;
 
 namespace RhythmBox.Tests.VisualTests.Animations
 {
     [TestFixture]
     public class TestSceneHitAnimation : TestScene
     {
-        private Sprite hitx;
+        private HitAnimation hitAnimation { get; set; }
 
-        private Sprite hit50;
-
-        private Sprite hit100;
+        private bool CanContinue = false;
 
         [BackgroundDependencyLoader]
-        private void Load(TextureStore store)
+        private async void Load()
         {
-            Children = new Drawable[]
+            Child = hitAnimation = new HitAnimation(Hit.Hit300, true)
             {
-                hit100 = new Sprite
-                {
-                    Depth = 1,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Alpha = 0f,
-                    Texture = store.Get("Skin/hit100.png"),
-                    RelativePositionAxes = Axes.Both,
-                },
-                hit50 = new Sprite
-                {
-                    Depth = 1,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Alpha = 0f,
-                    Texture = store.Get("Skin/hit50.png"),
-                    RelativePositionAxes = Axes.Both,
-                },
-                hitx = new Sprite
-                {
-                    Depth = 1,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Alpha = 0f,
-                    Texture = store.Get("Skin/hitx.png"),
-                    RelativePositionAxes = Axes.Both,
-                }
+                Depth = float.MinValue,
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+                RelativePositionAxes = Axes.Both,
             };
+            
+            AddStep("Start hit300", async () => Wait(Hit.Hit300));
 
-            AddStep("Start hit100", () =>
-            {
-                hit100.FadeInFromZero(400, Easing.OutQuart);
+            AddUntilStep("Wait until hit300 finished", () => CanContinue);
+            AddStep("Start hit100", async () => Wait(Hit.Hit100));
 
-                Scheduler.AddDelayed(() =>
-                {
-                    hit100.FadeOutFromOne(400, Easing.OutQuart);
-                    
-                }, 600);
-            });
+            AddUntilStep("Wait until hit100 finished", () => CanContinue);
+            AddStep("Start hit50", async () => Wait(Hit.Hit50));
 
-            AddStep("Start hit50", () =>
-            {
-                hit50.FadeInFromZero(400, Easing.OutQuart);
+            AddUntilStep("Wait until hit50 finished", () => CanContinue);
+            AddStep("Start hitx", async () => Wait(Hit.Hitx));
+        }
 
-                Scheduler.AddDelayed(() =>
-                {
-                    hit50.FadeOutFromOne(400, Easing.OutQuart);
+        private async void Wait(Hit hit)
+        {
+            CanContinue = false;
 
-                }, 600);
-            });
+            hitAnimation.Hit = hit;
+            hitAnimation.LoadAndPrepareHitSpirte();
 
-            AddStep("Start hitx", () =>
-            {
-                hitx.Rotation = 0f;
-
-                hitx.FadeInFromZero(400, Easing.OutQuart);
-
-                Scheduler.AddDelayed(() =>
-                {
-                    hitx.RotateTo(-15, 600, Easing.Out);
-                    hitx.MoveToOffset(new Vector2(0f, 0.01f), 600, Easing.In);
-                }, 300);
-
-                Scheduler.AddDelayed(() =>
-                {
-                    hitx.FadeOutFromOne(400, Easing.OutQuart);
-
-                }, 600);
-            });
+            await Task.Delay(hitAnimation.WaitTime);
+            CanContinue = true;
         }
     }
 }

@@ -11,86 +11,65 @@ namespace RhythmBox.Mode.Std.Animations
     {
         private Sprite hitSprite;
 
-        private Hit hit;
+        public Hit Hit { get; set; }
 
-        private const float FadeInTime = 400;
+        private TextureStore store { get; set; }
 
-        private const float FadeOutTime = 400;
+        public int WaitTime => Delay + FadeOutDuration;
 
-        private const float WaitTilFadeOutTime = 200;
+        private const int FadeInDuration = 400;
+        private const int FadeOutDuration = FadeInDuration;
+        private const int Delay = FadeInDuration + 200;
 
-        private const float HitXRoation = FadeInTime - 100;
+        private const Easing easing = Easing.OutQuart;
+        private const Easing RotationEasing1 = Easing.Out;
+        private const Easing RotationEasing2 = Easing.In;
 
-        public HitAnimation(Hit hit = Hit.Hit300)
+        private bool Testing;
+
+        public HitAnimation(Hit hit = Hit.Hit300, bool Testing = false)
         {
-            this.hit = hit;
+            this.Hit = hit;
+            this.Testing = Testing;
         }
 
         [BackgroundDependencyLoader]
         private void Load(TextureStore store)
         {
+            this.store = store;
+
+            if (!Testing)
+                LoadAndPrepareHitSpirte();
+        }
+
+        public void LoadAndPrepareHitSpirte()
+        {
             Child = hitSprite = new Sprite
             {
                 Anchor = Anchor.Centre,
-                Origin = Anchor.TopCentre,
+                Origin = Anchor.Centre,
                 Alpha = 0f,
                 RelativePositionAxes = Axes.Both,
             };
 
-            if (hit == Hit.Hit300)
-            {
+            if (Hit == Hit.Hit300)
                 hitSprite.Texture = store.Get("Skin/hit300.png");
-                hitSprite.FadeInFromZero(FadeInTime, Easing.OutQuart);
-
-                Scheduler.AddDelayed(() =>
-                {
-                    hitSprite.FadeOutFromOne(FadeOutTime, Easing.OutQuart);
-                    Scheduler.AddDelayed(() => this.Expire(), FadeOutTime);
-                }, FadeInTime + WaitTilFadeOutTime);
-            }
-            else if (hit == Hit.Hit100)
-            {
+            else if (Hit == Hit.Hit100)
                 hitSprite.Texture = store.Get("Skin/hit100.png");
-                hitSprite.FadeInFromZero(FadeInTime, Easing.OutQuart);
-
-                Scheduler.AddDelayed(() =>
-                {
-                    hitSprite.FadeOutFromOne(FadeOutTime, Easing.OutQuart);
-                    Scheduler.AddDelayed(() => this.Expire(), FadeOutTime);
-                }, FadeInTime + WaitTilFadeOutTime);
-            }
-            else if (hit == Hit.Hit50)
-            {
+            else if (Hit == Hit.Hit50)
                 hitSprite.Texture = store.Get("Skin/hit50.png");
-                hitSprite.FadeInFromZero(FadeInTime, Easing.OutQuart);
-
-                Scheduler.AddDelayed(() =>
-                {
-                    hitSprite.FadeOutFromOne(FadeOutTime, Easing.OutQuart);
-                    Scheduler.AddDelayed(() => this.Expire(), FadeOutTime);
-                }, FadeInTime + WaitTilFadeOutTime);
-            }
-            else if (hit == Hit.Hitx)
+            else if (Hit == Hit.Hitx)
             {
                 hitSprite.Texture = store.Get("Skin/hitx.png");
 
-                hitSprite.Rotation = 0f;
-
-                hitSprite.FadeInFromZero(FadeInTime, Easing.OutQuart);
-
-                Scheduler.AddDelayed(() =>
-                {
-                    hitSprite.FadeOutFromOne(FadeOutTime, Easing.OutQuart);
-                    Scheduler.AddDelayed(() => this.Expire(), FadeOutTime);
-                }, FadeInTime + WaitTilFadeOutTime);
-
-                Scheduler.AddDelayed(() =>
-                {
-                    hitSprite.RotateTo(-10, FadeInTime + WaitTilFadeOutTime, Easing.Out);
-                    hitSprite.MoveToOffset(new Vector2(0f, 0.01f), 600, Easing.In);
-
-                }, HitXRoation);
+                hitSprite.RotateTo(0f).MoveTo(new Vector2(0f)).FadeInFromZero(FadeInDuration, easing);
+                hitSprite.Delay(Delay / 2).RotateTo(-15f, Delay, RotationEasing1).MoveToOffset(new Vector2(0f, 0.015f), Delay, RotationEasing2);
             }
+
+            if (Hit != Hit.Hitx)
+                hitSprite.FadeInFromZero(FadeInDuration, easing);
+
+            hitSprite.Delay(Delay).FadeOutFromOne(FadeOutDuration, easing).Finally((x) => x.Expire(true));
         }
     }
 
