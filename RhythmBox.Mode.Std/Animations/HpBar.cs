@@ -17,9 +17,22 @@ namespace RhythmBox.Mode.Std.Animations
 
         public Color4 colour;
 
+        private const float HP_300 = 0.01f;
+
+        private const float HP_100 = 0.005f;
+
+        private const float HP_50 = 0.0025f;
+
+        private const float HP_X = 0.1f;
+
+        private readonly float HP_Drain = - 0.001f;
+
+        public float HP_Update = 80f;
+
         public HpBar(float BoxMaxValue)
         {
             this.BoxMaxValue = BoxMaxValue;
+            this.CurrentValue = BoxMaxValue;
         }
 
         [BackgroundDependencyLoader]
@@ -49,6 +62,33 @@ namespace RhythmBox.Mode.Std.Animations
             CurrentValue = value;
 
             _box.ResizeWidthTo(value, duration, easing);
+        }
+
+        public float CalcHpBarValue(float currentvalue, float maxvalue, float minvalue, Hit hit, bool auto = false)
+        {
+            if (!auto)
+            {
+                float result = hit switch
+                {
+                    Hit.Hit300 => currentvalue + HP_300,
+                    Hit.Hit100 => currentvalue + HP_100,
+                    Hit.Hit50 => currentvalue + HP_50,
+                    Hit.Hitx => currentvalue - HP_X * 10,
+                    _ => 0
+                };
+
+                if (result < maxvalue && result > minvalue)
+                    return result;
+                else if (result > maxvalue)
+                    return maxvalue;
+                else if (result < minvalue)
+                    return minvalue;
+            }
+
+            //TODO: HP_Drain has a different value if BoxMaxValue has as well a different value
+            //TODO: There is a huge diffrence between BoxMaxValue .1f and 1f.
+            //TODO: This is definitly a huge game breaker
+            return currentvalue - HP_Drain;
         }
     }
 }

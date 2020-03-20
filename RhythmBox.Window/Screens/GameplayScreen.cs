@@ -67,18 +67,6 @@ namespace RhythmBox.Window.Screens
 
         private bool Resizing { get; set; } = false;
 
-        private const float HP_Update = 80f;
-
-        private const float HP_300 = 0.01f;
-
-        private const float HP_100 = 0.005f;
-
-        private const float HP_50 = 0.0025f;
-
-        private const float HP_X = 0.1f;
-
-        private const float HP_Drain = 0.001f;
-
         public BindableBool ReturntoSongSelectionAfterFail { get; set; } = new BindableBool();
 
         private BindableBool Startable = new BindableBool();
@@ -86,8 +74,6 @@ namespace RhythmBox.Window.Screens
         private GameplayScreenLoader GameplayScreenLoader;
 
         private List<Mod> ToApplyMods;
-
-        private bool FirstUpdate = true;
 
         public GameplayScreen(string path, List<Mod> ToApplyMods)
         {
@@ -161,7 +147,7 @@ namespace RhythmBox.Window.Screens
                     Size = new Vector2(0.6f, 1f),
                     Map = _map,
                 },
-                 _hpBar = new HpBar(0.1f)
+                 _hpBar = new HpBar(.1f)
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
@@ -205,7 +191,8 @@ namespace RhythmBox.Window.Screens
 
             Score.Combo.PrivateComboBindable.ValueChanged += (e) =>
             {
-                _hpBar.ResizeBox(CalcHpBarValue(_hpBar.CurrentValue, _hpBar.BoxMaxValue, 0f, Score.Combo.currentHit), (HP_Update / 1.5f), Easing.OutCirc);
+                //TODO:
+                _hpBar.ResizeBox(_hpBar.CalcHpBarValue(_hpBar.CurrentValue, _hpBar.BoxMaxValue, 0f, Score.Combo.currentHit), (_hpBar.HP_Update / 1.5f), Easing.OutCirc);
             };
 
             _RbPlayfield.HasFinished.ValueChanged += (e) =>
@@ -272,29 +259,17 @@ namespace RhythmBox.Window.Screens
             rhythmBoxClockContainer.Start();
             track?.Start();
 
-            UpdateHPBar();
-        }
-
-        private void UpdateHPBar()
-        {
-            _hpBar.ResizeBox(CalcHpBarValue(_hpBar.BoxMaxValue, _hpBar.BoxMaxValue, 0f, Hit.Hit100, true), HP_Update, Easing.OutCirc);
-
             Scheduler.AddDelayed(() =>
             {
-                _hpBar.ResizeBox(CalcHpBarValue(_hpBar.CurrentValue, _hpBar.BoxMaxValue, 0f, Hit.Hit100, true), HP_Update, Easing.OutCirc);
-            }, HP_Update, true);
-            FirstUpdate = false;
+                _hpBar.ResizeBox(_hpBar.CalcHpBarValue(_hpBar.CurrentValue, _hpBar.BoxMaxValue, 0f, Hit.Hit100, true), _hpBar.HP_Update, Easing.OutCirc);
+            }, _hpBar.HP_Update, true);
         }
 
         protected override void Update()
         {
             if (_hpBar.CurrentValue <= 0)
             {
-                if (FirstUpdate)
-                {
-                    return;
-                }
-                else if (!HasFailed)
+                if (!HasFailed)
                 {
                     HasFailed = true;
                     _RbPlayfield.Failed = true;
@@ -359,30 +334,6 @@ namespace RhythmBox.Window.Screens
             }
 
             return base.OnKeyDown(e);
-        }
-
-        private float CalcHpBarValue(float currentvalue, float maxvalue, float minvalue, Hit hit, bool auto = false)
-        {
-            if (!auto)
-            {
-                float result = hit switch
-                {
-                    Hit.Hit300 => currentvalue + HP_300,
-                    Hit.Hit100 => currentvalue + HP_100,
-                    Hit.Hit50 => currentvalue + HP_50,
-                    Hit.Hitx => currentvalue - HP_X * 10,
-                    _ => 0
-                };
-
-                if (result < maxvalue && result > minvalue)
-                    return result;
-                else if (result > maxvalue)
-                    return maxvalue;
-                else if (result < minvalue)
-                    return minvalue;
-            }
-
-            return currentvalue - HP_Drain;
         }
 
         private async Task AddJustTrack()
