@@ -7,9 +7,11 @@ using osu.Framework.Input.Events;
 using osu.Framework.Screens;
 using osuTK;
 using osuTK.Graphics;
+using osuTK.Input;
 using RhythmBox.Window.Objects;
 using RhythmBox.Window.Overlays;
 using RhythmBox.Window.pending_files;
+using System;
 
 namespace RhythmBox.Window.Screens
 {
@@ -191,7 +193,7 @@ namespace RhythmBox.Window.Screens
 
         protected override bool OnKeyDown(KeyDownEvent e)
         {
-            if (e.Key == osuTK.Input.Key.Escape)
+            if (e.Key == Key.Escape)
             {
                 if (focusedOverlayContainer.State.Value == osu.Framework.Graphics.Containers.Visibility.Visible)
                 {
@@ -202,16 +204,23 @@ namespace RhythmBox.Window.Screens
                     this.Exit();
                 }
             }
-
-            if (OverlayActive)
+            else if (OverlayActive)
             {
+                OverlayActive = false;
+
+                if (CheckIfAlreadyInUse(e.Key))
+                {
+                    focusedOverlayContainer.State.Value = osu.Framework.Graphics.Containers.Visibility.Hidden;
+                    return base.OnKeyDown(e);
+                }
+
                 _ = CurrentKey switch
                 {
-                    0 => gameini.GetBindable<string>(SettingsConfig.KeyBindingUp).Value = e.Key.ToString(),
-                    1 => gameini.GetBindable<string>(SettingsConfig.KeyBindingLeft).Value = e.Key.ToString(),
-                    2 => gameini.GetBindable<string>(SettingsConfig.KeyBindingDown).Value = e.Key.ToString(),
-                    3 => gameini.GetBindable<string>(SettingsConfig.KeyBindingRight).Value = e.Key.ToString(),
-                    _ => throw new System.Exception(),
+                    0 => gameini.Set<string>(SettingsConfig.KeyBindingUp, e.Key.ToString()),
+                    1 => gameini.Set<string>(SettingsConfig.KeyBindingLeft, e.Key.ToString()),
+                    2 => gameini.Set<string>(SettingsConfig.KeyBindingDown, e.Key.ToString()),
+                    3 => gameini.Set<string>(SettingsConfig.KeyBindingRight, e.Key.ToString()),
+                    _ => throw new Exception($"CurrentKey cannot be {CurrentKey}")
                 };
 
                 key[0].Text = $"{gameini.GetBindable<string>(SettingsConfig.KeyBindingUp).Value}";
@@ -220,9 +229,21 @@ namespace RhythmBox.Window.Screens
                 key[3].Text = $"{gameini.GetBindable<string>(SettingsConfig.KeyBindingRight).Value}";
 
                 focusedOverlayContainer.State.Value = osu.Framework.Graphics.Containers.Visibility.Hidden;
+
+                gameini.Save();
             }
 
             return base.OnKeyDown(e);
+        }
+
+        private bool CheckIfAlreadyInUse(Key e)
+        {
+            Enum.TryParse(gameini.Get<string>(SettingsConfig.KeyBindingUp), out Key KeyUp);
+            Enum.TryParse(gameini.Get<string>(SettingsConfig.KeyBindingLeft), out Key KeyLeft);
+            Enum.TryParse(gameini.Get<string>(SettingsConfig.KeyBindingDown), out Key KeyDown);
+            Enum.TryParse(gameini.Get<string>(SettingsConfig.KeyBindingRight), out Key KeyRight);
+
+            return (e == KeyUp || e == KeyLeft || e == KeyDown || e == KeyRight);
         }
 
         public override void OnEntering(IScreen last)

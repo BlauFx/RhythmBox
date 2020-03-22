@@ -6,6 +6,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Events;
 using osu.Framework.IO.Stores;
 using osu.Framework.Platform;
@@ -20,6 +21,7 @@ using RhythmBox.Window.Clocks;
 using RhythmBox.Window.Overlays;
 using RhythmBox.Window.pending_files;
 using RhythmBox.Window.Playfield;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -33,7 +35,7 @@ namespace RhythmBox.Window.Screens
 
         private TextFlowContainer DispayScore;
 
-        private Map _map;
+        private readonly Map _map;
 
         private Playfield.Playfield _RbPlayfield;
 
@@ -75,6 +77,13 @@ namespace RhythmBox.Window.Screens
 
         private List<Mod> ToApplyMods;
 
+        private Sprite[] KeyPress = new Sprite[4];
+
+        private Key[] keys = new Key[4];
+
+        [Resolved]
+        private Gameini gameini { get; set; }
+
         public GameplayScreen(string path, List<Mod> ToApplyMods)
         {
             this.ToApplyMods = ToApplyMods;
@@ -83,7 +92,7 @@ namespace RhythmBox.Window.Screens
         }
 
         [BackgroundDependencyLoader]
-        private void Load()
+        private void Load(TextureStore textureStore)
         {
             store = new StorageBackedResourceStore(gameHost.Storage);
             trackStore = audio.GetTrackStore(store);
@@ -118,7 +127,39 @@ namespace RhythmBox.Window.Screens
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f),
                     Alpha = 0f,
-                }
+                },
+                KeyPress[0] = new Sprite
+                {
+                    RelativePositionAxes = Axes.Both,
+                    Anchor = Anchor.TopRight,
+                    Origin = Anchor.CentreRight,
+                    Texture = textureStore.Get("Skin/K1"),
+                    Y = 0.3f,
+                },
+                KeyPress[1] = new Sprite
+                {
+                    RelativePositionAxes = Axes.Both,
+                    Anchor = Anchor.TopRight,
+                    Origin = Anchor.CentreRight,
+                    Texture = textureStore.Get("Skin/K2"),
+                    Y = 0.4f,
+                },
+                KeyPress[2] = new Sprite
+                {
+                    RelativePositionAxes = Axes.Both,
+                    Anchor = Anchor.TopRight,
+                    Origin = Anchor.CentreRight,
+                    Texture = textureStore.Get("Skin/K3"),
+                    Y = 0.5f,
+                },
+                KeyPress[3] = new Sprite
+                {
+                    RelativePositionAxes = Axes.Both,
+                    Anchor = Anchor.TopRight,
+                    Origin = Anchor.CentreRight,
+                    Texture = textureStore.Get("Skin/K4"),
+                    Y = 0.6f,
+                },
             };
 
             BreakOverlay.State.Value = Visibility.Hidden;
@@ -239,6 +280,16 @@ namespace RhythmBox.Window.Screens
 
         protected override void LoadComplete()
         {
+            Enum.TryParse(gameini.Get<string>(SettingsConfig.KeyBindingUp), out Key KeyUp);
+            Enum.TryParse(gameini.Get<string>(SettingsConfig.KeyBindingLeft), out Key KeyLeft);
+            Enum.TryParse(gameini.Get<string>(SettingsConfig.KeyBindingDown), out Key KeyDown);
+            Enum.TryParse(gameini.Get<string>(SettingsConfig.KeyBindingRight), out Key KeyRight);
+
+            keys[0] = KeyUp;
+            keys[1] = KeyLeft;
+            keys[2] = KeyDown;
+            keys[3] = KeyRight;
+
             Startable.Value = true;
 
             base.LoadComplete();
@@ -333,8 +384,33 @@ namespace RhythmBox.Window.Screens
                 _RbPlayfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
             }
 
+            CheckKey(e.Key, true);
+
             return base.OnKeyDown(e);
         }
+
+        private void CheckKey(Key e, bool Down = true)
+        {
+            int i;
+
+            if (e == keys[0])
+                i = 0;
+            else if (e == keys[1])
+                i = 1;
+            else if (e == keys[2])
+                i = 2;
+            else if (e == keys[3])
+                i = 3;
+            else
+                return;
+
+            if (Down)
+                KeyPress[i].FadeTo(0.5f, 50);
+            else
+                KeyPress[i].FadeTo(1f, 50);
+        }
+
+        protected override void OnKeyUp(KeyUpEvent e) => CheckKey(e.Key, false);
 
         private async Task AddJustTrack()
         {

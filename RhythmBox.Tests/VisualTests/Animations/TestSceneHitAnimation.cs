@@ -15,7 +15,7 @@ namespace RhythmBox.Tests.VisualTests.Animations
         private bool CanContinue = false;
 
         [BackgroundDependencyLoader]
-        private async void Load()
+        private void Load()
         {
             Child = hitAnimation = new HitAnimation(Hit.Hit300, true)
             {
@@ -25,16 +25,16 @@ namespace RhythmBox.Tests.VisualTests.Animations
                 RelativePositionAxes = Axes.Both,
             };
             
-            AddStep("Start hit300", async () => Wait(Hit.Hit300));
+            AddStep("Start hit300", () => Wait(Hit.Hit300));
 
             AddUntilStep("Wait until hit300 finished", () => CanContinue);
-            AddStep("Start hit100", async () => Wait(Hit.Hit100));
+            AddStep("Start hit100", () => Wait(Hit.Hit100));
 
             AddUntilStep("Wait until hit100 finished", () => CanContinue);
-            AddStep("Start hit50", async () => Wait(Hit.Hit50));
+            AddStep("Start hit50", () => Wait(Hit.Hit50));
 
             AddUntilStep("Wait until hit50 finished", () => CanContinue);
-            AddStep("Start hitx", async () => Wait(Hit.Hitx));
+            AddStep("Start hitx", () => Wait(Hit.Hitx));
         }
 
         private async void Wait(Hit hit)

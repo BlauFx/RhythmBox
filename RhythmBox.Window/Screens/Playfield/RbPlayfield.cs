@@ -11,6 +11,7 @@ using RhythmBox.Mode.Std.Interfaces;
 using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Mode.Std.Mods;
 using RhythmBox.Mode.Std.Objects;
+using RhythmBox.Window.pending_files;
 using System;
 using System.Collections.Generic;
 
@@ -51,6 +52,11 @@ namespace RhythmBox.Window.Playfield
 
         public bool Failed { get; set; } = false;
 
+        [Resolved]
+        private Gameini gameini { get; set; }
+
+        private Key[] keys = new Key[4];
+
         public Playfield(List<Mod> mods)
         {
             this.mods = mods;
@@ -79,6 +85,16 @@ namespace RhythmBox.Window.Playfield
 
         protected override void LoadComplete()
         {
+            Enum.TryParse(gameini.Get<string>(SettingsConfig.KeyBindingUp), out Key KeyUp);
+            Enum.TryParse(gameini.Get<string>(SettingsConfig.KeyBindingDown), out Key KeyDown);
+            Enum.TryParse(gameini.Get<string>(SettingsConfig.KeyBindingLeft), out Key KeyLeft);
+            Enum.TryParse(gameini.Get<string>(SettingsConfig.KeyBindingRight), out Key KeyRight);
+
+            keys[0] = KeyUp;
+            keys[1] = KeyLeft;
+            keys[2] = KeyDown;
+            keys[3] = KeyRight;
+
             LoadMap();
             list = new List<RBox>();
             list.AddRange(objBoxArray);
@@ -90,20 +106,9 @@ namespace RhythmBox.Window.Playfield
 
         protected override bool OnKeyDown(KeyDownEvent e)
         {
-            switch (e.Key)
+            if (e.Key == keys[0] || e.Key == keys[1] || e.Key == keys[2] || e.Key == keys[3])
             {
-                case Key.W:
-                    CheckClick(Key.W);
-                    break;
-                case Key.A:
-                    CheckClick(Key.A);
-                    break;
-                case Key.S:
-                    CheckClick(Key.S);
-                    break;
-                case Key.D:
-                    CheckClick(Key.D);
-                    break;
+                CheckClick(e.Key);
             }
 
             return base.OnKeyDown(e);
@@ -120,7 +125,9 @@ namespace RhythmBox.Window.Playfield
             catch { }
 
             if (dir != null)
+            {
                 list[pos].OnClickKeyDown(key);
+            }
             //list.RemoveAt(pos);
         }
 
@@ -134,7 +141,7 @@ namespace RhythmBox.Window.Playfield
 
                 if (list[i].AlphaA > 0)
                 {
-                    if ((key == Key.W && x == HitObjects.Direction.Up) || key == Key.A && x == HitObjects.Direction.Left || key == Key.S && x == HitObjects.Direction.Down || key == Key.D && x == HitObjects.Direction.Right)
+                    if ((key == keys[0] && x == HitObjects.Direction.Up) || key == keys[1] && x == HitObjects.Direction.Left || key == keys[2] && x == HitObjects.Direction.Down || key == keys[3] && x == HitObjects.Direction.Right)
                     {
                         dir = x;
                         pos = i;
@@ -180,7 +187,7 @@ namespace RhythmBox.Window.Playfield
                     MaxStartSpeed = x.Time;
                 }
 
-                objBoxArray[i] = new RBox(x.Speed, x._direction, MaxStartSpeed)
+                objBoxArray[i] = new RBox(x.Speed, x._direction, MaxStartSpeed, keys)
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,

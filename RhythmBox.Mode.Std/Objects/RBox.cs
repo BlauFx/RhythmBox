@@ -38,11 +38,15 @@ namespace RhythmBox.Mode.Std.Objects
 
         public double Duration { get; set; }
 
-        public RBox(float speed, HitObjects.Direction direction, double Duration)
+        private Key[] keys = new Key[4];
+
+        public RBox(float speed, HitObjects.Direction direction, double Duration, Key[] keys)
         {
             this.speed = speed;
             this.direction = direction;
             this.Duration = Duration;
+
+            this.keys = keys;
         }
 
         [BackgroundDependencyLoader]
@@ -50,7 +54,7 @@ namespace RhythmBox.Mode.Std.Objects
         {
             Children = new Drawable[]
             {
-                obj = new RBoxObj(speed, direction, Duration)
+                obj = new RBoxObj(speed, direction, Duration, keys)
                 {
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f),
@@ -61,23 +65,11 @@ namespace RhythmBox.Mode.Std.Objects
                 },
             };
 
-            obj.OnLoadComplete += (e) =>
-            {
-                ApplyMods(mods);
-            };
-
-            obj.DisposableBx += (e) =>
-            {
-                this.Expire(true);
-            };
+            obj.OnLoadComplete += (e) => ApplyMods(mods);
+            obj.DisposableBx += (e) => this.Expire(true);
         }
 
-        public void OnClickKeyDown(Key key)
-        {
-            obj.ClickKeyDown(key);
-
-            // Scheduler.AddDelayed(() => this.Expire(), 1800 * speed); //TODO:
-        }
+        public void OnClickKeyDown(Key e) => obj.ClickKeyDown(e);
 
         private void ApplyMods(List<Mod> mod)
         {
@@ -94,7 +86,7 @@ namespace RhythmBox.Mode.Std.Objects
 
     public class RBoxObj : Container
     {
-        public RBoxObj(float speed, HitObjects.Direction direction, double DurationTime)
+        public RBoxObj(float speed, HitObjects.Direction direction, double DurationTime, Key[] keys)
         {
             this.direction = direction;
             this.Duration = DurationTime * speed;
@@ -102,6 +94,8 @@ namespace RhythmBox.Mode.Std.Objects
             //TODO: Leave it 300 or muiltply it with speed?
             this.Expire = 300; // speed;
             this.Clear = this.Expire * 0.5;
+
+            this.keys = keys;
         }
 
         public Box bx;
@@ -123,6 +117,8 @@ namespace RhythmBox.Mode.Std.Objects
         public event DisposableBxHandler DisposableBx;
 
         private HitAnimation hitAnimation { get; set; } = null;
+
+        private Key[] keys = new Key[4];
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -237,136 +233,108 @@ namespace RhythmBox.Mode.Std.Objects
                 });
             }
 
-            if (!Resuming.Value)
+            if (!Resuming.Value) return;
+
+            if (key == keys[0] && direction == HitObjects.Direction.Up)
             {
-                return;
+                if (bx.Y <= -0.5 + 0.05f && bx.Y >= -0.50001f)
+                {
+                    Click(Hit.Hit300);
+                    Add(hitAnimation = HitAnimation(Hit.Hit300, bx.Y + 0.025f));
+                }
+                else if (bx.Y <= -0.35f && bx.Y >= -0.5f + 0.05f)
+                {
+                    Click(Hit.Hit100);
+                    Add(hitAnimation = HitAnimation(Hit.Hit100));
+                }
+                else if (bx.Y <= -0.25f && bx.Y >= -0.35f)
+                {
+                    Click(Hit.Hit50);
+                    Add(hitAnimation = HitAnimation(Hit.Hit50));
+                }
+                else if (bx.Y <= 0f && bx.Y >= -0.25f)
+                {
+                    Click(Hit.Hitx);
+                    Add(hitAnimation = HitAnimation(Hit.Hitx));
+                }
+
+                Remove();
             }
-
-            switch (key)
+            else if (key == keys[1] && direction == HitObjects.Direction.Left)
             {
-                case Key.W:
-                    {
-                        if (direction == HitObjects.Direction.Up)
-                        {
-                            if (bx.Y <= -0.5 + 0.05f && bx.Y >= -0.50001f)
-                            {
-                                Click(Hit.Hit300);
-                                Add(hitAnimation = HitAnimation(Hit.Hit300, bx.Y + 0.025f));
-                            }
-                            else if (bx.Y <= -0.35f && bx.Y >= -0.5f + 0.05f)
-                            {
-                                Click(Hit.Hit100);
-                                Add(hitAnimation = HitAnimation(Hit.Hit100));
-                            }
-                            else if (bx.Y <= -0.25f && bx.Y >= -0.35f)
-                            {
-                                Click(Hit.Hit50);
-                                Add(hitAnimation = HitAnimation(Hit.Hit50));
-                            }
-                            else if (bx.Y <= 0f && bx.Y >= -0.25f)
-                            {
-                                Click(Hit.Hitx);
-                                Add(hitAnimation = HitAnimation(Hit.Hitx));
-                            }
+                if (bx.X <= -0.5 + 0.05f && bx.X >= -0.50001f)
+                {
+                    Click(Hit.Hit300);
+                    Add(hitAnimation = HitAnimation(Hit.Hit300, bx.Y, bx.X + 0.025f));
+                }
+                else if (bx.X <= -0.35f && bx.Y >= -0.5f + 0.05f)
+                {
+                    Click(Hit.Hit100);
+                    Add(hitAnimation = HitAnimation(Hit.Hit100, bx.Y, bx.X + 0.025f));
+                }
+                else if (bx.X <= -0.25f && bx.Y >= -0.35f)
+                {
+                    Click(Hit.Hit50);
+                    Add(hitAnimation = HitAnimation(Hit.Hit50, bx.Y, bx.X + 0.025f));
+                }
+                else if (bx.X <= 0f && bx.Y >= -0.25f)
+                {
+                    Click(Hit.Hitx);
+                    Add(hitAnimation = HitAnimation(Hit.Hitx));
+                }
 
-                            Remove();
-                        }
+                Remove();
+            }
+            else if (key == keys[2] && direction == HitObjects.Direction.Down)
+            {
+                if (bx.Y >= 0.5f - 0.05f && bx.Y <= 0.50001f)
+                {
+                    Click(Hit.Hit300);
+                    Add(hitAnimation = HitAnimation(Hit.Hit300, bx.Y - 0.025f));
+                }
+                else if (bx.Y >= 0.35f && bx.Y <= 0.5f - 0.05f)
+                {
+                    Click(Hit.Hit100);
+                    Add(hitAnimation = HitAnimation(Hit.Hit100));
+                }
+                else if (bx.Y >= 0.25f && bx.Y <= 0.35f)
+                {
+                    Click(Hit.Hit50);
+                    Add(hitAnimation = HitAnimation(Hit.Hit50));
+                }
+                else if (bx.Y >= 0f && bx.Y <= 0.25f)
+                {
+                    Click(Hit.Hitx);
+                    Add(hitAnimation = HitAnimation(Hit.Hitx));
+                }
 
-                        break;
-                    }
+                Remove();
+            }
+            else if (key == keys[3] && direction == HitObjects.Direction.Right)
+            {
+                if (bx.X >= 0.5 - 0.05f && bx.X <= 0.50001f)
+                {
+                    Click(Hit.Hit300);
+                    Add(hitAnimation = HitAnimation(Hit.Hit300, bx.Y, bx.X - 0.025f));
+                }
+                else if (bx.X >= 0.35f && bx.Y <= 0.5f + 0.05f)
+                {
+                    Click(Hit.Hit100);
+                    Add(hitAnimation = HitAnimation(Hit.Hit100));
+                }
+                else if (bx.X >= 0.25f && bx.Y <= 0.35f)
+                {
+                    Click(Hit.Hit50);
+                    Add(hitAnimation = HitAnimation(Hit.Hit50));
+                }
+                else if (bx.X >= 0f && bx.Y <= 0.25f)
+                {
+                    Click(Hit.Hitx);
+                    Add(hitAnimation = HitAnimation(Hit.Hitx));
+                }
 
-                case Key.A:
-                    {
-                        if (direction == HitObjects.Direction.Left)
-                        {
-                            if (bx.X <= -0.5 + 0.05f && bx.X >= -0.50001f)
-                            {
-                                Click(Hit.Hit300);
-                                Add(hitAnimation = HitAnimation(Hit.Hit300, bx.Y, bx.X + 0.025f));
-                            }
-                            else if (bx.X <= -0.35f && bx.Y >= -0.5f + 0.05f)
-                            {
-                                Click(Hit.Hit100);
-                                Add(hitAnimation = HitAnimation(Hit.Hit100, bx.Y, bx.X + 0.025f));
-                            }
-                            else if (bx.X <= -0.25f && bx.Y >= -0.35f)
-                            {
-                                Click(Hit.Hit50);
-                                Add(hitAnimation = HitAnimation(Hit.Hit50, bx.Y, bx.X + 0.025f));
-                            }
-                            else if (bx.X <= 0f && bx.Y >= -0.25f)
-                            {
-                                Click(Hit.Hitx);
-                                Add(hitAnimation = HitAnimation(Hit.Hitx));
-                            }
+                Remove();
 
-                            Remove();
-                        }
-
-                        break;
-                    }
-
-                case Key.S:
-                    {
-                        if (direction == HitObjects.Direction.Down)
-                        {
-                            if (bx.Y >= 0.5f - 0.05f && bx.Y <= 0.50001f)
-                            {
-                                Click(Hit.Hit300);
-                                Add(hitAnimation = HitAnimation(Hit.Hit300, bx.Y - 0.025f));
-                            }
-                            else if (bx.Y >= 0.35f && bx.Y <= 0.5f - 0.05f)
-                            {
-                                Click(Hit.Hit100);
-                                Add(hitAnimation = HitAnimation(Hit.Hit100));
-                            }
-                            else if (bx.Y >= 0.25f && bx.Y <= 0.35f)
-                            {
-                                Click(Hit.Hit50);
-                                Add(hitAnimation = HitAnimation(Hit.Hit50));
-                            }
-                            else if (bx.Y >= 0f && bx.Y <= 0.25f)
-                            {
-                                Click(Hit.Hitx);
-                                Add(hitAnimation = HitAnimation(Hit.Hitx));
-                            }
-
-                            Remove();
-                        }
-
-                        break;
-                    }
-
-                case Key.D:
-                    {
-                        if (direction == HitObjects.Direction.Right)
-                        {
-                            if (bx.X >= 0.5 - 0.05f && bx.X <= 0.50001f)
-                            {
-                                Click(Hit.Hit300);
-                                Add(hitAnimation = HitAnimation(Hit.Hit300, bx.Y, bx.X - 0.025f));
-                            }
-                            else if (bx.X >= 0.35f && bx.Y <= 0.5f + 0.05f)
-                            {
-                                Click(Hit.Hit100);
-                                Add(hitAnimation = HitAnimation(Hit.Hit100));
-                            }
-                            else if (bx.X >= 0.25f && bx.Y <= 0.35f)
-                            {
-                                Click(Hit.Hit50);
-                                Add(hitAnimation = HitAnimation(Hit.Hit50));
-                            }
-                            else if (bx.X >= 0f && bx.Y <= 0.25f)
-                            {
-                                Click(Hit.Hitx);
-                                Add(hitAnimation = HitAnimation(Hit.Hitx));
-                            }
-
-                            Remove();
-                        }
-
-                        break;
-                    }
             }
         }
 
