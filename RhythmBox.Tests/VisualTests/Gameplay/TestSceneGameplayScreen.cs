@@ -51,7 +51,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
 
             AddStep("Fail", () =>
             {
-                this.gameplayScreen._hpBar.CurrentValue = 0;
+                this.gameplayScreen.HpBar.CurrentValue = 0;
             });
 
             AddStep("Go back to SongSelection", () =>

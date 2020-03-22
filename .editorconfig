@@ -2,3 +2,6 @@
 
 # CA1712: Do not prefix enum values with type name
 dotnet_diagnostic.CA1712.severity = none
+
+# IDE0051: Remove unused private members
+dotnet_diagnostic.IDE0051.severity = none

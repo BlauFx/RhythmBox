@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using osu.Framework.Allocation;
+﻿using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -20,6 +15,11 @@ using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Window.Objects;
 using RhythmBox.Window.Overlays;
 using RhythmBox.Window.pending_files;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 
 namespace RhythmBox.Window.Screens
 {
@@ -38,6 +38,8 @@ namespace RhythmBox.Window.Screens
         [BackgroundDependencyLoader]
         private void Load(TextureStore store)
         {
+            SpriteButton Back;
+
             InternalChildren = new Drawable[]
             {
                 ModOverlay = new ModOverlay
@@ -57,10 +59,14 @@ namespace RhythmBox.Window.Screens
                     Size = new Vector2(1f),
                     Texture = store.Get("Skin/menu-background"), //TOOD: Maybe Map => Background?
                 },
-                new SpriteButton
+                Back = new SpriteButton
                 {
                     Anchor = Anchor.BottomLeft,
                     Origin = Anchor.BottomLeft,
+                    RelativePositionAxes = Axes.Both,
+                    Y = 0f,
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(0.1f),
                     Texture = store.Get("Skin/Back"),
                     ClickAction = () =>
                     {
@@ -74,6 +80,8 @@ namespace RhythmBox.Window.Screens
                     RelativePositionAxes = Axes.Both,
                     Y = -0.1f,
                     Texture = store.Get("Skin/Mods"),
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(0.1f),
                     ClickAction = () =>
                     {
                       ModOverlay.State.Value = Visibility.Visible;
@@ -113,29 +121,22 @@ namespace RhythmBox.Window.Screens
         protected override bool OnKeyDown(KeyDownEvent e)
         {
             if (e.Key == Key.Escape)
-            {
                 this.Exit();
-            }
 
             return base.OnKeyDown(e);
         }
 
         public override void OnEntering(IScreen last)
         {
-
             this.FadeInFromZero<SongSelction>(250, Easing.In);
             Scheduler.AddDelayed(() => WaitUntilLoaded = false, 250);
             base.OnEntering(last);
         }
 
-        public override void OnSuspending(IScreen next)
-        {
-            Scheduler.AddDelayed(() => this.Exit(), 0);
-            base.OnSuspending(next);
-        }
+        public override void OnSuspending(IScreen next) => Schedule(() => this.Exit());
     }
 
-    internal class ThisScrollContainer : FocusedOverlayContainer
+    public class ThisScrollContainer : FocusedOverlayContainer
     {
         public Bindable<string> bindablePath = new Bindable<string>();
 
@@ -308,7 +309,7 @@ namespace RhythmBox.Window.Screens
         }
     }
 
-    internal class HeaderContainer : Container, IHasFilterableChildren
+    public class HeaderContainer : Container, IHasFilterableChildren
     {
         public IEnumerable<string> FilterTerms => header.FilterTerms;
 
@@ -357,7 +358,7 @@ namespace RhythmBox.Window.Screens
         }
     }
 
-    internal class HeaderText : SpriteText, IFilterable
+    public class HeaderText : SpriteText, IFilterable
     {
         public bool MatchingFilter
         {

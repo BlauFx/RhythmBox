@@ -9,6 +9,7 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Events;
+using osu.Framework.Localisation;
 using osu.Framework.Screens;
 using osuTK;
 using osuTK.Graphics;
@@ -20,11 +21,15 @@ namespace RhythmBox.Window.Screens
 {
     public class MainMenu : Screen
     {
-        public Sprite background { get; set; }
+        public Sprite Background { get; set; }
 
         private NotificationOverlay _overlay;
 
+        private SongSelction songSelction;
+
         private Box box;
+
+        private SpriteText CurrentPlaying;
 
         protected bool Disable_buttons = false;
 
@@ -35,7 +40,7 @@ namespace RhythmBox.Window.Screens
         {
             InternalChildren = new Drawable[]
             {
-                background = new Sprite
+                Background = new Sprite
                 {
                     Depth = 2,
                     Anchor = Anchor.Centre,
@@ -53,7 +58,7 @@ namespace RhythmBox.Window.Screens
                     RelativePositionAxes = Axes.Both,
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(0.2f),
-                    text = "Play",
+                    Text = "Play",
                     FontSize = Font_Size,
                     Y = 0f,
                     X = -0.375f,
@@ -61,7 +66,9 @@ namespace RhythmBox.Window.Screens
                     ClickAction = () =>
                     {
                         if (Disable_buttons) return;
-                        this.Push(new SongSelction());
+
+                        if (songSelction.ValidForPush)
+                            this.Push(songSelction);
                     }
                 },
                 new MainMenuBox
@@ -72,7 +79,7 @@ namespace RhythmBox.Window.Screens
                     RelativePositionAxes = Axes.Both,
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(0.2f),
-                    text = "Settings",
+                    Text = "Settings",
                     FontSize = Font_Size,
                     Y = 0f,
                     X = -0.125f,
@@ -91,7 +98,7 @@ namespace RhythmBox.Window.Screens
                     RelativePositionAxes = Axes.Both,
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(0.2f),
-                    text = "Editor",
+                    Text = "Editor",
                     FontSize = Font_Size,
                     Y = 0f,
                     X = 0.125f,
@@ -116,7 +123,7 @@ namespace RhythmBox.Window.Screens
                     RelativePositionAxes = Axes.Both,
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(0.2f),
-                    text = "Exit",
+                    Text = "Exit",
                     FontSize = Font_Size,
                     Y = 0f,
                     X = 0.375f,
@@ -127,7 +134,21 @@ namespace RhythmBox.Window.Screens
                         Environment.Exit(0);
                     }
                 },
+                CurrentPlaying = new SpriteText
+                {
+                    Anchor = Anchor.TopCentre,
+                    Origin = Anchor.Centre,
+                    Alpha = 1f,
+                    RelativePositionAxes = Axes.Both,
+                    Y = 0.1f,
+                    Text = new LocalisedString($"Currently playing: {null}"),
+                },
             };
+
+            Schedule(async () =>
+            {
+                await LoadComponentAsync(songSelction = new SongSelction());
+            });
 
             new DefaultFolder();
 
@@ -193,22 +214,22 @@ namespace RhythmBox.Window.Screens
         {
             if (e.LastMousePosition.Y >= e.MousePosition.Y)
             {
-                background.MoveToOffset(new Vector2(0f, -0.05f), 100, Easing.OutQuart);
+                Background.MoveToOffset(new Vector2(0f, -0.05f), 100, Easing.OutQuart);
             }
 
             if (e.LastMousePosition.Y <= e.MousePosition.Y)
             {
-                background.MoveToOffset(new Vector2(0f, 0.05f), 100, Easing.OutQuart);
+                Background.MoveToOffset(new Vector2(0f, 0.05f), 100, Easing.OutQuart);
             }
 
             if (e.LastMousePosition.X >= e.MousePosition.X)
             {
-                background.MoveToOffset(new Vector2(-0.05f, 0), 100, Easing.OutQuart);
+                Background.MoveToOffset(new Vector2(-0.05f, 0), 100, Easing.OutQuart);
             }
 
             if (e.LastMousePosition.X <= e.MousePosition.X)
             {
-                background.MoveToOffset(new Vector2(0.05f, 0), 100, Easing.OutQuart);
+                Background.MoveToOffset(new Vector2(0.05f, 0), 100, Easing.OutQuart);
             }
 
             return base.OnMouseMove(e);
@@ -216,20 +237,22 @@ namespace RhythmBox.Window.Screens
 
         protected override void OnHoverLost(HoverLostEvent e)
         {
-            background.MoveTo(new Vector2(0), 1000, Easing.InBack);
+            Background.MoveTo(new Vector2(0), 1000, Easing.InBack);
 
             base.OnHoverLost(e);
         }
 
-        public override void OnEntering(IScreen last)
-        {
-            this.FadeInFromZero<MainMenu>(250, Easing.In);
-            base.OnEntering(last);
-        }
+        public override void OnEntering(IScreen last) => this.FadeInFromZero<MainMenu>(250, Easing.In);
 
         public override void OnResuming(IScreen last)
         {
             this.FadeInFromZero<MainMenu>(175, Easing.In);
+
+            Schedule(async () =>
+            {
+                await LoadComponentAsync(songSelction = new SongSelction());
+            });
+
             base.OnResuming(last);
 
             Discord.DiscordRichPresence.UpdateRPC(
@@ -253,7 +276,7 @@ namespace RhythmBox.Window.Screens
 
     public class MainMenuBox : Container
     {
-        public string text { get; set; } = string.Empty;
+        public string Text { get; set; } = string.Empty;
 
         public float FontSize { get; set; } = 20f;
 
@@ -263,7 +286,7 @@ namespace RhythmBox.Window.Screens
 
         protected Box box;
 
-        private Color4 color { get; set; } = Color4.White;
+        private Color4 Color { get; set; } = Color4.White;
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -277,7 +300,7 @@ namespace RhythmBox.Window.Screens
                     Origin = Anchor.Centre,
                     RelativePositionAxes = Axes.Both,
                     RelativeSizeAxes = Axes.Both,
-                    Colour = color,
+                    Colour = Color,
                 },
                 sprite = new SpriteText
                 {
@@ -286,7 +309,7 @@ namespace RhythmBox.Window.Screens
                     Origin = Anchor.Centre,
                     Colour = Color4.Black,
                     RelativePositionAxes = Axes.Both,
-                    Text = text,
+                    Text = Text,
                     X = 0,
                     //Y = (0.25f/2f),
                     Font = new FontUsage("Roboto", FontSize),
@@ -296,13 +319,13 @@ namespace RhythmBox.Window.Screens
 
         protected override bool OnHover(HoverEvent e)
         {
-            box.Colour = color.Opacity(0.7f);
+            box.Colour = Color.Opacity(0.7f);
             return base.OnHover(e);
         }
 
         protected override void OnHoverLost(HoverLostEvent e)
         {
-            box.Colour = color.Opacity(1f);
+            box.Colour = Color.Opacity(1f);
             base.OnHoverLost(e);
         }
 

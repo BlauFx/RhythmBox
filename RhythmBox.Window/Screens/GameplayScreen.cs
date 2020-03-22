@@ -39,7 +39,7 @@ namespace RhythmBox.Window.Screens
 
         private Playfield.Playfield _RbPlayfield;
 
-        public HpBar _hpBar { get; set; }
+        public HpBar HpBar { get; set; }
 
         private RhythmBoxClockContainer rhythmBoxClockContainer;
 
@@ -82,7 +82,7 @@ namespace RhythmBox.Window.Screens
         private Key[] keys = new Key[4];
 
         [Resolved]
-        private Gameini gameini { get; set; }
+        private Gameini Gameini { get; set; }
 
         public GameplayScreen(string path, List<Mod> ToApplyMods)
         {
@@ -188,7 +188,7 @@ namespace RhythmBox.Window.Screens
                     Size = new Vector2(0.6f, 1f),
                     Map = _map,
                 },
-                 _hpBar = new HpBar(.1f)
+                 HpBar = new HpBar(.1f)
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
@@ -223,7 +223,7 @@ namespace RhythmBox.Window.Screens
             _RbPlayfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
             DispayScore.Clock = rhythmBoxClockContainer.RhythmBoxClock;
             DispayCombo.Clock = rhythmBoxClockContainer.RhythmBoxClock;
-            _hpBar.Clock = rhythmBoxClockContainer.RhythmBoxClock;
+            HpBar.Clock = rhythmBoxClockContainer.RhythmBoxClock;
 
             _RbPlayfield.Resuming.BindTo(Resuming);
 
@@ -233,7 +233,7 @@ namespace RhythmBox.Window.Screens
             Score.Combo.PrivateComboBindable.ValueChanged += (e) =>
             {
                 //TODO:
-                _hpBar.ResizeBox(_hpBar.CalcHpBarValue(_hpBar.CurrentValue, _hpBar.BoxMaxValue, 0f, Score.Combo.currentHit), (_hpBar.HP_Update / 1.5f), Easing.OutCirc);
+                HpBar.ResizeBox(HpBar.CalcHpBarValue(HpBar.CurrentValue, HpBar.BoxMaxValue, 0f, Score.Combo.currentHit), (HpBar.HP_Update / 1.5f), Easing.OutCirc);
             };
 
             _RbPlayfield.HasFinished.ValueChanged += (e) =>
@@ -280,10 +280,10 @@ namespace RhythmBox.Window.Screens
 
         protected override void LoadComplete()
         {
-            Enum.TryParse(gameini.Get<string>(SettingsConfig.KeyBindingUp), out Key KeyUp);
-            Enum.TryParse(gameini.Get<string>(SettingsConfig.KeyBindingLeft), out Key KeyLeft);
-            Enum.TryParse(gameini.Get<string>(SettingsConfig.KeyBindingDown), out Key KeyDown);
-            Enum.TryParse(gameini.Get<string>(SettingsConfig.KeyBindingRight), out Key KeyRight);
+            Enum.TryParse(Gameini.Get<string>(SettingsConfig.KeyBindingUp), out Key KeyUp);
+            Enum.TryParse(Gameini.Get<string>(SettingsConfig.KeyBindingLeft), out Key KeyLeft);
+            Enum.TryParse(Gameini.Get<string>(SettingsConfig.KeyBindingDown), out Key KeyDown);
+            Enum.TryParse(Gameini.Get<string>(SettingsConfig.KeyBindingRight), out Key KeyRight);
 
             keys[0] = KeyUp;
             keys[1] = KeyLeft;
@@ -312,13 +312,13 @@ namespace RhythmBox.Window.Screens
 
             Scheduler.AddDelayed(() =>
             {
-                _hpBar.ResizeBox(_hpBar.CalcHpBarValue(_hpBar.CurrentValue, _hpBar.BoxMaxValue, 0f, Hit.Hit100, true), _hpBar.HP_Update, Easing.OutCirc);
-            }, _hpBar.HP_Update, true);
+                HpBar.ResizeBox(HpBar.CalcHpBarValue(HpBar.CurrentValue, HpBar.BoxMaxValue, 0f, Hit.Hit100, true), HpBar.HP_Update, Easing.OutCirc);
+            }, HpBar.HP_Update, true);
         }
 
         protected override void Update()
         {
-            if (_hpBar.CurrentValue <= 0)
+            if (HpBar.CurrentValue <= 0)
             {
                 if (!HasFailed)
                 {
@@ -439,7 +439,7 @@ namespace RhythmBox.Window.Screens
         {
             track?.Stop();
 
-            Scheduler.AddDelayed(() => this.Exit(), 0);
+            Schedule(() => this.Exit());
 
             base.OnSuspending(next);
         }

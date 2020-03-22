@@ -8,6 +8,7 @@ using osuTK;
 using osuTK.Graphics;
 using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Window.pending_files;
+using RhythmBox.Window.Screens;
 using System.IO;
 using System.Reflection;
 
