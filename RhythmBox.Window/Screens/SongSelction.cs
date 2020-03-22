@@ -12,6 +12,7 @@ using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
 using RhythmBox.Mode.Std.Maps;
+using RhythmBox.Window.Maps;
 using RhythmBox.Window.Objects;
 using RhythmBox.Window.Overlays;
 using RhythmBox.Window.pending_files;
@@ -34,6 +35,9 @@ namespace RhythmBox.Window.Screens
         private bool WaitUntilLoaded = true;
 
         private ModOverlay ModOverlay;
+
+        [Resolved]
+        private CurrentMap currentMap { get; set; }
 
         [BackgroundDependencyLoader]
         private void Load(TextureStore store)
@@ -101,8 +105,12 @@ namespace RhythmBox.Window.Screens
                     Size = new Vector2(0.5f,1f),
                     ClickOnMap = () =>
                     {
+                        currentMap.Map = new Map(bindablePath.Value);
+
                         if (!WaitUntilLoaded)
                         {
+                            currentMap.Stop();
+
                             GameplayScreen gameplayScreen;
                             LoadComponent(gameplayScreen = new GameplayScreen(bindablePath.Value, ModOverlay.modBox.ToApplyMods));
                             this.Push(gameplayScreen);

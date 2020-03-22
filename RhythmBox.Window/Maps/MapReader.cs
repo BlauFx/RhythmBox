@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using System.Linq;
 
-namespace RhythmBox.Window.pending_files
+namespace RhythmBox.Window.Maps
 {
     public class MapReader : IMap
     {

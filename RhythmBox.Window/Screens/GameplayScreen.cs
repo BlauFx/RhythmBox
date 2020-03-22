@@ -381,6 +381,10 @@ namespace RhythmBox.Window.Screens
                     track?.Stop();
                     BreakOverlay.ToggleVisibility();
                 }
+
+                if (HasFailed)
+                    this.Exit();
+
                 _RbPlayfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
             }
 

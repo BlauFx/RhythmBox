@@ -2,7 +2,7 @@
 using System.IO;
 using System.Reflection;
 
-namespace RhythmBox.Window.pending_files
+namespace RhythmBox.Window.Maps
 {
     public class MapWriter : IMap
     {

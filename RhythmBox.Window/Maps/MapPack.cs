@@ -13,7 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RhythmBox.Window.pending_files
+namespace RhythmBox.Window.Maps
 {
     public class MapPack : Container, IHasFilterableChildren
     {
@@ -181,7 +181,7 @@ namespace RhythmBox.Window.pending_files
 
         private TextFlowContainer textFlowContainer;
 
-        public Map ThisMap { get; set; }
+        public Mode.Std.Maps.Map ThisMap { get; set; }
 
         [BackgroundDependencyLoader]
         private void Load()

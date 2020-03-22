@@ -1,4 +1,5 @@
 ﻿using RhythmBox.Mode.Std.Interfaces;
+using RhythmBox.Window.Maps;
 using System.IO;
 using System.Reflection;
 

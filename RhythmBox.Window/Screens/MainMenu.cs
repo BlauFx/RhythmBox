@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using osu.Framework.Allocation;
+using osu.Framework.Audio;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -10,9 +11,11 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Events;
 using osu.Framework.Localisation;
+using osu.Framework.Platform;
 using osu.Framework.Screens;
 using osuTK;
 using osuTK.Graphics;
+using RhythmBox.Window.Maps;
 using RhythmBox.Window.Overlays;
 using RhythmBox.Window.pending_files;
 using RhythmBox.Window.Updater;
@@ -30,6 +33,15 @@ namespace RhythmBox.Window.Screens
         private Box box;
 
         private SpriteText CurrentPlaying;
+
+        [Resolved]
+        private CurrentMap currentMap { get; set; }
+
+        [Resolved]
+        private AudioManager audio { get; set; }
+
+        [Resolved]
+        private GameHost host { get; set; }
 
         protected bool Disable_buttons = false;
 
@@ -87,6 +99,8 @@ namespace RhythmBox.Window.Screens
                     ClickAction = () =>
                     {
                         if (Disable_buttons) return;
+
+                        currentMap.Stop();
                         this.Push(new Settings());
                     }
                 },
@@ -111,7 +125,8 @@ namespace RhythmBox.Window.Screens
                         {
                             new DefaultFolder();
                         }
-                        
+
+                        currentMap.Stop();
                         this.Push(new EditorDefault(path));
                     }
                 },
@@ -141,7 +156,7 @@ namespace RhythmBox.Window.Screens
                     Alpha = 1f,
                     RelativePositionAxes = Axes.Both,
                     Y = 0.1f,
-                    Text = new LocalisedString($"Currently playing: {null}"),
+                    //Text = new LocalisedString($"Currently playing: {currentMap?.Map.Title}"),
                 },
             };
 
@@ -242,11 +257,40 @@ namespace RhythmBox.Window.Screens
             base.OnHoverLost(e);
         }
 
-        public override void OnEntering(IScreen last) => this.FadeInFromZero<MainMenu>(250, Easing.In);
+        protected override void UpdateAfterChildren()
+        {
+            //TODO:
+            CurrentPlaying.Text = new LocalisedString($"Currently playing: {currentMap?.Map?.Title}");
+
+            base.UpdateAfterChildren();
+        }
+
+        private void LimitFPS()
+        {
+            host.MaximumDrawHz = 1000;
+            host.MaximumUpdateHz = 1000;
+        }
+
+        private void UnlockFPS()
+        {
+            host.MaximumDrawHz = int.MaxValue;
+            host.MaximumUpdateHz = int.MaxValue;
+        }
+
+        public override void OnEntering(IScreen last) 
+        {
+            LimitFPS();
+
+            this.FadeInFromZero<MainMenu>(250, Easing.In);
+        }
 
         public override void OnResuming(IScreen last)
         {
+            LimitFPS();
+
             this.FadeInFromZero<MainMenu>(175, Easing.In);
+
+            currentMap?.Play(audio, 0);
 
             Schedule(async () =>
             {
@@ -269,6 +313,8 @@ namespace RhythmBox.Window.Screens
 
         public override void OnSuspending(IScreen next)
         {
+            UnlockFPS();
+
             this.FadeOutFromOne<MainMenu>(0, Easing.In);
             base.OnSuspending(next);
         }
