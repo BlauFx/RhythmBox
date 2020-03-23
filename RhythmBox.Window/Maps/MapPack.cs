@@ -181,7 +181,7 @@ namespace RhythmBox.Window.Maps
 
         private TextFlowContainer textFlowContainer;
 
-        public Mode.Std.Maps.Map ThisMap { get; set; }
+        public Map ThisMap { get; set; }
 
         [BackgroundDependencyLoader]
         private void Load()

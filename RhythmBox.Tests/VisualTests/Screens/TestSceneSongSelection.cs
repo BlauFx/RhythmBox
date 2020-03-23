@@ -13,14 +13,14 @@ namespace RhythmBox.Tests.VisualTests.Screens
     {
         private ScreenStack stack = null;
 
-        private SongSelction gameplayScreen;
+        private SongSelcetion SongSelction;
 
         private bool newScreen = true;
 
         [BackgroundDependencyLoader]
         private void Load()
         {
-            AddStep("Add TestSceneGameplayScreen", () =>
+            AddStep("Add TestSceneSongSelection", () =>
             {
                 if (newScreen)
                 {
@@ -31,17 +31,17 @@ namespace RhythmBox.Tests.VisualTests.Screens
                         RelativeSizeAxes = Axes.Both,
                     });
 
-                    LoadComponent(gameplayScreen = new SongSelction());
-                    stack.Push(gameplayScreen);
+                    LoadComponent(SongSelction = new SongSelcetion(true));
+                    stack.Push(SongSelction);
                 }
             });
 
-            AddStep("Remove TestSceneGameplayScreen", () =>
+            AddStep("Remove TestSceneSongSelection", () =>
             {
                 this.stack?.Expire();
-                this.gameplayScreen?.Exit();
-                this.gameplayScreen?.Expire();
-                this.gameplayScreen = null;
+                this.SongSelction?.Exit();
+                this.SongSelction?.Expire();
+                this.SongSelction = null;
 
                 newScreen = true;
             });

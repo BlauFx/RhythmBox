@@ -24,7 +24,7 @@ using System.Reflection;
 
 namespace RhythmBox.Window.Screens
 {
-    public class SongSelction : Screen
+    public class SongSelcetion : Screen
     {
         Bindable<string> bindablePath = new Bindable<string>();
 
@@ -36,8 +36,16 @@ namespace RhythmBox.Window.Screens
 
         private ModOverlay ModOverlay;
 
+        private bool AllowToPlay = true;
+
         [Resolved]
         private CurrentMap currentMap { get; set; }
+
+        public SongSelcetion(bool test = false)
+        {
+            if (test)
+                AllowToPlay = false;
+        }
 
         [BackgroundDependencyLoader]
         private void Load(TextureStore store)
@@ -107,6 +115,8 @@ namespace RhythmBox.Window.Screens
                     {
                         currentMap.Map = new Map(bindablePath.Value);
 
+                        if (!AllowToPlay) return;
+
                         if (!WaitUntilLoaded)
                         {
                             currentMap.Stop();
@@ -136,7 +146,7 @@ namespace RhythmBox.Window.Screens
 
         public override void OnEntering(IScreen last)
         {
-            this.FadeInFromZero<SongSelction>(250, Easing.In);
+            this.FadeInFromZero<SongSelcetion>(250, Easing.In);
             Scheduler.AddDelayed(() => WaitUntilLoaded = false, 250);
             base.OnEntering(last);
         }

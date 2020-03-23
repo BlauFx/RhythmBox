@@ -246,14 +246,14 @@ namespace RhythmBox.Window.Screens
                 _RbPlayfield.HasFinished.UnbindEvents();
 
                 Scheduler.AddDelayed(() => this.Expire(), 1000);
-                LoadComponentAsync(new SongSelction(), this.Push);
+                LoadComponentAsync(new SongSelcetion(), this.Push);
             };
 
             ReturntoSongSelectionAfterFail.ValueChanged += (e) =>
             {
                 rhythmBoxClockContainer.Stop();
-                SongSelction songSelction;
-                LoadComponent(songSelction = new SongSelction());
+                SongSelcetion songSelction;
+                LoadComponent(songSelction = new SongSelcetion());
                 Schedule(() => this.Push(songSelction));
             };
 

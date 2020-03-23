@@ -28,7 +28,7 @@ namespace RhythmBox.Window.Screens
 
         private NotificationOverlay _overlay;
 
-        private SongSelction songSelction;
+        private SongSelcetion songSelction;
 
         private Box box;
 
@@ -162,7 +162,7 @@ namespace RhythmBox.Window.Screens
 
             Schedule(async () =>
             {
-                await LoadComponentAsync(songSelction = new SongSelction());
+                await LoadComponentAsync(songSelction = new SongSelcetion());
             });
 
             new DefaultFolder();
@@ -294,7 +294,7 @@ namespace RhythmBox.Window.Screens
 
             Schedule(async () =>
             {
-                await LoadComponentAsync(songSelction = new SongSelction());
+                await LoadComponentAsync(songSelction = new SongSelcetion());
             });
 
             base.OnResuming(last);
