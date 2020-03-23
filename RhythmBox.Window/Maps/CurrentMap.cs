@@ -1,14 +1,8 @@
-﻿using osu.Framework.Allocation;
-using osu.Framework.Audio;
+﻿using osu.Framework.Audio;
 using osu.Framework.Audio.Track;
-using osu.Framework.Graphics;
 using osu.Framework.IO.Stores;
 using osu.Framework.Platform;
 using RhythmBox.Mode.Std.Maps;
-using System;
-using System.IO;
-using System.Reflection;
-using System.Threading.Tasks;
 
 namespace RhythmBox.Window.Maps
 {
@@ -42,7 +36,7 @@ namespace RhythmBox.Window.Maps
             track?.Seek(time);
         }
 
-        public void Play(AudioManager audio, double time) 
+        public void Play(AudioManager audio, double time)
         {
             this.audio = audio;
 
