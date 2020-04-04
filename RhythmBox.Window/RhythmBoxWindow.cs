@@ -10,28 +10,19 @@ namespace RhythmBox.Window
 {
     public class RhythmBoxWindow : RhythmBoxResources
     {
-        private ScreenStack Stack;
-
-        private MainMenu mainMenu;
+        private ScreenStack _stack;
 
         [BackgroundDependencyLoader]
-        private void Load()
-        {
-            Stack = new ScreenStack { RelativeSizeAxes = Axes.Both, Depth = 0 };
-
-            Child = Stack;
-        }
+        private void Load() => Child = _stack = new ScreenStack { RelativeSizeAxes = Axes.Both, Depth = 0 };
 
         protected override void LoadComplete()
         {
-            LoadComponentAsync(mainMenu = new MainMenu
+            LoadComponentAsync(new MainMenu
             {
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
                 Scale = new Vector2(0f)
-            }, Stack.Push);
-
-            mainMenu.OnLoadComplete += (e) => mainMenu.TransformTo(nameof(Scale), new Vector2(1f), 1000, Easing.OutExpo);
+            }, _stack.Push);
 
             Check_Licenses.License();
 

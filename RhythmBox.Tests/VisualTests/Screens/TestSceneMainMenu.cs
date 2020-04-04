@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using System;
+using System.Collections.Generic;
+using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Screens;
@@ -11,53 +13,37 @@ namespace RhythmBox.Tests.VisualTests.Screens
     [TestFixture]
     public class TestSceneMainMenu : TestScene
     {
-        private ScreenStack stack = null;
-
-        private TestMainMenu testMainMenu;
-
-        private bool Can_new_TestSceneMainMenu = true;
+        public override IReadOnlyList<Type> RequiredTypes => new[]
+            { typeof(ScreenStack), typeof(TestMainMenu) };
+        
+        private ScreenStack _stack = null;
 
         [BackgroundDependencyLoader]
         private void Load()
         {
             AddStep("Add TestMainMenu", () =>
             {
-                if (Can_new_TestSceneMainMenu)
+                if (_stack?.IsAlive ?? false) return;
+                
+                Add(_stack = new ScreenStack
                 {
-                    Can_new_TestSceneMainMenu = false;
+                    RelativeSizeAxes = Axes.Both
+                });
 
-                    Add(stack = new ScreenStack
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                    });
-
-                    LoadComponent(testMainMenu = new TestMainMenu()
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Scale = new Vector2(0f)
-                    });
-                    testMainMenu.TransformTo(nameof(Scale), new Vector2(1f), 1000, Easing.OutExpo);
-                    stack.Push(testMainMenu);
-                }
+                LoadComponentAsync(new TestMainMenu
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Scale = new Vector2(0f)
+                }, _stack.Push);
             });
 
             AddStep("Remove TestMainMenu", () =>
             {
-                this.stack?.Expire();
-                this.testMainMenu?.Exit();
-                this.testMainMenu?.Expire();
-                this.testMainMenu = null;
-
-                Can_new_TestSceneMainMenu = true;
+                this._stack?.Expire();
             });
         }
     }
-    public class TestMainMenu : MainMenu
-    {
-        public TestMainMenu()
-        {
-            base.Disable_buttons = true;
-        }
-    }
+    
+    public class TestMainMenu : MainMenu { public override Action GetAction(int pos) => null; }
 }

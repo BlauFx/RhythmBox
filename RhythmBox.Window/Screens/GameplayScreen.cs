@@ -24,6 +24,7 @@ using RhythmBox.Window.Playfield;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using RhythmBox.Window.Screens.SongSelection;
 
 namespace RhythmBox.Window.Screens
 {
@@ -433,6 +434,8 @@ namespace RhythmBox.Window.Screens
             //ReturntoSongSelectionAfterFail.Value = true;
         }
 
+        public void StopTrack() => track?.Stop();
+
         public override void OnEntering(IScreen last)
         {
             this.FadeInFromZero<GameplayScreen>(500, Easing.In);
@@ -441,17 +444,15 @@ namespace RhythmBox.Window.Screens
 
         public override void OnSuspending(IScreen next)
         {
-            track?.Stop();
-
-            Schedule(() => this.Exit());
+            StopTrack();
+            Schedule(this.Exit);
 
             base.OnSuspending(next);
         }
 
         public override bool OnExiting(IScreen next)
         {
-            track?.Stop();
-
+            StopTrack();
             return base.OnExiting(next);
         }
     }

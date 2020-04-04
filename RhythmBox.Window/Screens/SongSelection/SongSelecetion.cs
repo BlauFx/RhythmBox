@@ -1,4 +1,9 @@
-﻿using osu.Framework.Allocation;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -16,13 +21,8 @@ using RhythmBox.Window.Maps;
 using RhythmBox.Window.Objects;
 using RhythmBox.Window.Overlays;
 using RhythmBox.Window.pending_files;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
 
-namespace RhythmBox.Window.Screens
+namespace RhythmBox.Window.Screens.SongSelection
 {
     public class SongSelcetion : Screen
     {
@@ -383,13 +383,9 @@ namespace RhythmBox.Window.Screens
             set
             {
                 if (value)
-                {
                     Show();
-                }
                 else
-                {
                     Hide();
-                }
             }
         }
 

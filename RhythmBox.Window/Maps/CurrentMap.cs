@@ -14,7 +14,7 @@ namespace RhythmBox.Window.Maps
 
         private IResourceStore<byte[]> store;
 
-        private static Track track;
+        public Track track { get; set; }
 
         public Map Map { get; set; } = null;
 

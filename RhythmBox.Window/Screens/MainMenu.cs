@@ -1,8 +1,7 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
-using osu.Framework.Allocation;
+﻿using osu.Framework.Allocation;
 using osu.Framework.Audio;
+using osu.Framework.Audio.Track;
+using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -10,15 +9,21 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Events;
+using osu.Framework.IO.Stores;
 using osu.Framework.Localisation;
 using osu.Framework.Platform;
 using osu.Framework.Screens;
 using osuTK;
 using osuTK.Graphics;
+using RhythmBox.Window.Animation;
 using RhythmBox.Window.Maps;
 using RhythmBox.Window.Overlays;
 using RhythmBox.Window.pending_files;
+using RhythmBox.Window.Screens.SongSelection;
 using RhythmBox.Window.Updater;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace RhythmBox.Window.Screens
 {
@@ -38,18 +43,61 @@ namespace RhythmBox.Window.Screens
         private CurrentMap currentMap { get; set; }
 
         [Resolved]
-        private AudioManager audio { get; set; }
+        private AudioManager Audio { get; set; }
 
         [Resolved]
-        private GameHost host { get; set; }
+        private GameHost Host { get; set; }
 
-        protected bool Disable_buttons = false;
+        private Track track = null;
 
         private const float Font_Size = 40f;
+
+        public virtual Action GetAction(int pos)
+        {
+            Action[] clickAction = new Action[4];
+
+            clickAction[0] = () =>
+            {
+                if (songSelction.ValidForPush)
+                    this.Push(songSelction);
+            };
+
+            clickAction[1] = () =>
+            {
+                currentMap.Stop();
+                this.Push(new Settings());
+            };
+
+            clickAction[2] = () =>
+            {
+                string path = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) + "\\Songs\\TestMap\\Difficulty1.ini";
+
+                if (!File.Exists(path))
+                    _ = new DefaultFolder();
+
+                currentMap.Stop();
+                this.Push(new EditorDefault(path));
+            };
+
+            clickAction[3] = () => Environment.Exit(0);
+
+            return clickAction[pos];
+        }
 
         [BackgroundDependencyLoader]
         private async void Load(LargeTextureStore store)
         {
+            string path = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) + "\\Songs\\";
+
+            int GetAmountOfFolder = osu.Framework.Utils.RNG.Next(0, Directory.GetDirectories(path).Length);
+            string GetFolder = Directory.GetDirectories(path)[GetAmountOfFolder];
+
+            string[] GetAudioFile = Directory.GetFiles(GetFolder, "**.mp3");
+            string GetAudio = GetAudioFile[0];
+
+            track = Audio.GetTrackStore(new StorageBackedResourceStore(Host.Storage)).Get(GetAudio);
+            track.Volume.Value = 0.1d;
+
             InternalChildren = new Drawable[]
             {
                 Background = new Sprite
@@ -62,6 +110,27 @@ namespace RhythmBox.Window.Screens
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1.1f),
                 },
+                new Box
+                {
+                    Depth = Background.Depth - 0.1f,
+                    RelativePositionAxes = Axes.Both,
+                    Anchor = Anchor.CentreLeft,
+                    Origin = Anchor.CentreLeft,
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(0.15f, 1.1f),
+                    Position = new Vector2(0.05f, 0f),
+                    Shear = new Vector2(.15f, 0f),
+                    EdgeSmoothness = new Vector2(2f)
+                },
+                new MusicVisualizationLinear(3f, 120, 0f, new Bindable<Track>(track))
+                {
+                    Depth = Background.Depth - 0.2f,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.CentreLeft,
+                    RelativePositionAxes = Axes.Both,
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(.25f, 0f),
+                },
                 new MainMenuBox
                 {
                     Depth = 1,
@@ -69,19 +138,13 @@ namespace RhythmBox.Window.Screens
                     Origin = Anchor.Centre,
                     RelativePositionAxes = Axes.Both,
                     RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(0.2f),
+                    Size = new Vector2(0.2f, 0.1f),
                     Text = "Play",
                     FontSize = Font_Size,
-                    Y = 0f,
-                    X = -0.375f,
+                    Y = -0.25f,
+                    X = -0.2f,
                     Alpha = 1f,
-                    ClickAction = () =>
-                    {
-                        if (Disable_buttons) return;
-
-                        if (songSelction.ValidForPush)
-                            this.Push(songSelction);
-                    }
+                    ClickAction = GetAction(0)
                 },
                 new MainMenuBox
                 {
@@ -90,19 +153,13 @@ namespace RhythmBox.Window.Screens
                     Origin = Anchor.Centre,
                     RelativePositionAxes = Axes.Both,
                     RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(0.2f),
+                    Size = new Vector2(0.2f, 0.1f),
                     Text = "Settings",
                     FontSize = Font_Size,
-                    Y = 0f,
-                    X = -0.125f,
+                    Y = -0.05f,
+                    X = -0.21f,
                     Alpha = 1f,
-                    ClickAction = () =>
-                    {
-                        if (Disable_buttons) return;
-
-                        currentMap.Stop();
-                        this.Push(new Settings());
-                    }
+                    ClickAction = GetAction(1)
                 },
                 new MainMenuBox
                 {
@@ -111,24 +168,13 @@ namespace RhythmBox.Window.Screens
                     Origin = Anchor.Centre,
                     RelativePositionAxes = Axes.Both,
                     RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(0.2f),
+                    Size = new Vector2(0.2f, 0.1f),
                     Text = "Editor",
                     FontSize = Font_Size,
-                    Y = 0f,
-                    X = 0.125f,
+                    Y = 0.15f,
+                    X = -0.25f,
                     Alpha = 1f,
-                    ClickAction = () =>
-                    {                
-                        if (Disable_buttons) return;
-                        string path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Songs\\TestMap\\Difficulty1.ini";
-                        if (!File.Exists(path))
-                        {
-                            new DefaultFolder();
-                        }
-
-                        currentMap.Stop();
-                        this.Push(new EditorDefault(path));
-                    }
+                    ClickAction = GetAction(2)
                 },
                 new MainMenuBox
                 {
@@ -137,17 +183,13 @@ namespace RhythmBox.Window.Screens
                     Origin = Anchor.Centre,
                     RelativePositionAxes = Axes.Both,
                     RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(0.2f),
+                    Size = new Vector2(0.2f, 0.1f),
                     Text = "Exit",
                     FontSize = Font_Size,
-                    Y = 0f,
-                    X = 0.375f,
+                    Y = 0.35f,
+                    X = -0.3f,
                     Alpha = 1f,
-                    ClickAction = () =>
-                    {
-                        if (Disable_buttons) return;
-                        Environment.Exit(0);
-                    }
+                    ClickAction = GetAction(3)
                 },
                 CurrentPlaying = new SpriteText
                 {
@@ -160,10 +202,7 @@ namespace RhythmBox.Window.Screens
                 },
             };
 
-            Schedule(async () =>
-            {
-                await LoadComponentAsync(songSelction = new SongSelcetion());
-            });
+            track.Start();
 
             new DefaultFolder();
 
@@ -180,7 +219,7 @@ namespace RhythmBox.Window.Screens
             });
 
             var updater = new Update();
-            
+
             AddInternal(_overlay = new NotificationOverlay
             {
                 Depth = float.MinValue,
@@ -210,7 +249,7 @@ namespace RhythmBox.Window.Screens
                 _overlay.State.Value = Visibility.Visible;
                 _overlay.State.ValueChanged += (e) => box.FadeOut(250d);
             }
-            
+
             Discord.DiscordRichPresence.ctor();
 
             Discord.DiscordRichPresence.UpdateRPC(
@@ -227,75 +266,69 @@ namespace RhythmBox.Window.Screens
 
         protected override bool OnMouseMove(MouseMoveEvent e)
         {
+            var Durationn = 100;
+            var easing = Easing.OutQuart;
+
+            //TODO: I currently don't like the way how it's done
             if (e.LastMousePosition.Y >= e.MousePosition.Y)
             {
-                Background.MoveToOffset(new Vector2(0f, -0.05f), 100, Easing.OutQuart);
+                Background.MoveToOffset(new Vector2(0f, -0.05f), Durationn, easing);
             }
 
             if (e.LastMousePosition.Y <= e.MousePosition.Y)
             {
-                Background.MoveToOffset(new Vector2(0f, 0.05f), 100, Easing.OutQuart);
+                Background.MoveToOffset(new Vector2(0f, 0.05f), Durationn, easing);
             }
 
             if (e.LastMousePosition.X >= e.MousePosition.X)
             {
-                Background.MoveToOffset(new Vector2(-0.05f, 0), 100, Easing.OutQuart);
+                Background.MoveToOffset(new Vector2(-0.05f, 0), Durationn, easing);
             }
 
             if (e.LastMousePosition.X <= e.MousePosition.X)
             {
-                Background.MoveToOffset(new Vector2(0.05f, 0), 100, Easing.OutQuart);
+                Background.MoveToOffset(new Vector2(0.05f, 0), Durationn, easing);
             }
 
             return base.OnMouseMove(e);
         }
 
-        protected override void OnHoverLost(HoverLostEvent e)
-        {
-            Background.MoveTo(new Vector2(0), 1000, Easing.InBack);
+        protected override void OnHoverLost(HoverLostEvent e) => Background.MoveTo(new Vector2(0), 2000);
 
-            base.OnHoverLost(e);
-        }
-
-        protected override void UpdateAfterChildren()
-        {
-            //TODO:
-            CurrentPlaying.Text = new LocalisedString($"Currently playing: {currentMap?.Map?.Title}");
-
-            base.UpdateAfterChildren();
-        }
+        protected override void UpdateAfterChildren() => CurrentPlaying.Text = new LocalisedString($"Currently playing: {currentMap?.Map?.Title}");
 
         private void LimitFPS()
         {
-            host.MaximumDrawHz = 1000;
-            host.MaximumUpdateHz = 1000;
+            Host.MaximumDrawHz = 200;
+            Host.MaximumUpdateHz = 200;
         }
 
         private void UnlockFPS()
         {
-            host.MaximumDrawHz = int.MaxValue;
-            host.MaximumUpdateHz = int.MaxValue;
+            Host.MaximumDrawHz = int.MaxValue;
+            Host.MaximumUpdateHz = int.MaxValue;
         }
 
-        public override void OnEntering(IScreen last) 
+        public override void OnEntering(IScreen last)
         {
+            Schedule(async () => await LoadComponentAsync(songSelction = new SongSelcetion()));
+
             LimitFPS();
 
+            this.TransformTo(nameof(Scale), new Vector2(1f), 1000, Easing.OutExpo);
             this.FadeInFromZero<MainMenu>(250, Easing.In);
         }
 
         public override void OnResuming(IScreen last)
         {
+            Schedule(async () => await LoadComponentAsync(songSelction = new SongSelcetion()));
+            track?.Start();
+
             LimitFPS();
 
             this.FadeInFromZero<MainMenu>(175, Easing.In);
 
-            currentMap?.Play(audio, 0);
-
-            Schedule(async () =>
-            {
-                await LoadComponentAsync(songSelction = new SongSelcetion());
-            });
+            currentMap?.Play(Audio, 0);
 
             base.OnResuming(last);
 
@@ -313,10 +346,19 @@ namespace RhythmBox.Window.Screens
 
         public override void OnSuspending(IScreen next)
         {
+            track?.Stop();
+
             UnlockFPS();
 
             this.FadeOutFromOne<MainMenu>(0, Easing.In);
             base.OnSuspending(next);
+        }
+
+        protected override void Dispose(bool isDisposing)
+        {
+            track?.Stop();
+
+            base.Dispose(isDisposing);
         }
     }
 

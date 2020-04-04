@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using NUnit.Framework;
 using osu.Framework.Allocation;
@@ -14,52 +16,43 @@ namespace RhythmBox.Tests.VisualTests.Screens
     [TestFixture]
     public class TestSceneEditor : TestScene
     {
-        private ScreenStack stack = null;
+        public override IReadOnlyList<Type> RequiredTypes => new[]
+            { typeof(ScreenStack), typeof(EditorDefault) };
+        
+        private ScreenStack _stack = null;
 
-        private EditorDefault testEditorDefault;
-
-        private bool Can_new_TestSceneEditorDefault = true;
-
+        private EditorDefault _editorDefault;
+        
         [BackgroundDependencyLoader]
         private void Load()
         {
             AddStep("Add TestEditorDefault", () =>
             {
-                if (Can_new_TestSceneEditorDefault)
+                if (_stack?.IsAlive ?? false) return;
+                
+                Add(_stack = new ScreenStack
                 {
-                    Can_new_TestSceneEditorDefault = false;
+                    RelativeSizeAxes = Axes.Both
+                });
 
-                    Add(stack = new ScreenStack
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                    });
+                string path = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) + "\\Songs\\TestMap\\Difficulty1.ini";
+                
+                if (!File.Exists(path))
+                    _ = new DefaultFolder();
 
-                    string path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Songs\\TestMap\\Difficulty1.ini";
-                    if (!File.Exists(path))
-                    {
-                        new DefaultFolder();
-                    }
-
-                    LoadComponent(testEditorDefault = new EditorDefault(path)
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Scale = new Vector2(2f),
-                        Alpha = 0f,
-                    });
-
-                    stack.Push(testEditorDefault);
-                }
+                LoadComponentAsync(_editorDefault = new EditorDefault(path)
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Scale = new Vector2(2f),
+                    Alpha = 0f,
+                }, _stack.Push);
             });
 
             AddStep("Remove TestEditorDefault", () =>
             {
-                this.stack?.Expire();
-                this.testEditorDefault?.Exit();
-                this.testEditorDefault?.Expire();
-                this.testEditorDefault = null;
-
-                Can_new_TestSceneEditorDefault = true;
+                this._editorDefault?.StopTrack();
+                this._stack?.Expire();
             });
         }
     }

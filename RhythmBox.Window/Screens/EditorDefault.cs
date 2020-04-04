@@ -30,7 +30,8 @@ namespace RhythmBox.Window.Screens
 
         private BindableBool IsPaused = new BindableBool();
 
-        public BindableDouble UserPlaybackRate = new BindableDouble(1) { Default = 1, MinValue = 0.1, MaxValue = 3, Precision = 0.1 };
+        public BindableDouble UserPlaybackRate = new BindableDouble(1)
+            {Default = 1, MinValue = 0.1, MaxValue = 3, Precision = 0.1};
 
         private Map map { get; set; }
 
@@ -52,11 +53,9 @@ namespace RhythmBox.Window.Screens
 
         private bool first_run = false;
 
-        [Resolved]
-        private AudioManager audio { get; set; }
+        [Resolved] private AudioManager audio { get; set; }
 
-        [Resolved]
-        private GameHost GameHost { get; set; }
+        [Resolved] private GameHost GameHost { get; set; }
 
         private ITrackStore trackStore;
 
@@ -109,10 +108,7 @@ namespace RhythmBox.Window.Screens
                     Spacing = new Vector2(0.1f),
                     Font = new FontUsage("Roboto", 30),
                     AllowMultiline = false,
-                    ClickAction = () =>
-                    {
-                        UserPlaybackRate.Value = 0.1f;
-                    },
+                    ClickAction = () => { UserPlaybackRate.Value = 0.1f; },
                 },
                 new SpriteTextButton
                 {
@@ -129,10 +125,7 @@ namespace RhythmBox.Window.Screens
                     Spacing = new Vector2(0.1f),
                     Font = new FontUsage("Roboto", 30),
                     AllowMultiline = false,
-                    ClickAction = () =>
-                    {
-                        UserPlaybackRate.Value = 0.5f;
-                    },
+                    ClickAction = () => { UserPlaybackRate.Value = 0.5f; },
                 },
                 new SpriteTextButton
                 {
@@ -149,10 +142,7 @@ namespace RhythmBox.Window.Screens
                     Spacing = new Vector2(0.1f),
                     Font = new FontUsage("Roboto", 30),
                     AllowMultiline = false,
-                    ClickAction = () =>
-                    {
-                        UserPlaybackRate.Value = 1f;
-                    },
+                    ClickAction = () => { UserPlaybackRate.Value = 1f; },
                 },
                 progress = new Objects.Progress<float>(0, map.EndTime, map.StartTime)
                 {
@@ -349,7 +339,7 @@ namespace RhythmBox.Window.Screens
 
                     var z = (x / y) * 1;
 
-                    progress.box.Width = (float)z;
+                    progress.box.Width = (float) z;
                 }
                 else
                 {
@@ -383,7 +373,7 @@ namespace RhythmBox.Window.Screens
                     string time = result.ToString(@"mm\:ss");
                     time += $":{result.Milliseconds}";
                     SpriteCurrentTime.Text = time;
-                    bindable.Value = (float)rhythmBoxClockContainer.RhythmBoxClock.CurrentTime;
+                    bindable.Value = (float) rhythmBoxClockContainer.RhythmBoxClock.CurrentTime;
                 }
                 else
                 {
@@ -416,6 +406,7 @@ namespace RhythmBox.Window.Screens
                 track?.Stop();
                 this.Exit();
             }
+
             return base.OnKeyDown(e);
         }
 
@@ -439,7 +430,7 @@ namespace RhythmBox.Window.Screens
             string time = result.ToString(@"mm\:ss");
             time += $":{result.Milliseconds}";
             SpriteCurrentTime.Text = time;
-            bindable.Value = (float)rhythmBoxClockContainer.RhythmBoxClock.CurrentTime;
+            bindable.Value = (float) rhythmBoxClockContainer.RhythmBoxClock.CurrentTime;
 
             if (!IsPaused)
             {
@@ -466,23 +457,28 @@ namespace RhythmBox.Window.Screens
             }
 
             Discord.DiscordRichPresence.UpdateRPC(
-             new DiscordRPC.RichPresence()
-             {
-                 Details = "Editing a map",
-                 State = " ",
-                 Assets = new DiscordRPC.Assets()
-                 {
-                     LargeImageKey = "three",
-                 }
-             });
+                new DiscordRPC.RichPresence()
+                {
+                    Details = "Editing a map",
+                    State = " ",
+                    Assets = new DiscordRPC.Assets()
+                    {
+                        LargeImageKey = "three",
+                    }
+                });
 
             base.OnEntering(last);
         }
 
+        public void StopTrack() => track?.Stop();
+
         public override bool OnExiting(IScreen next)
         {
-            track?.Stop();
+            StopTrack();
+
             return base.OnExiting(next);
         }
+
+        public override void OnSuspending(IScreen next) => StopTrack();
     }
 }

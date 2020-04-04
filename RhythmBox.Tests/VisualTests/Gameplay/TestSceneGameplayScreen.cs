@@ -15,58 +15,52 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
     [TestFixture]
     public class TestSceneGameplayScreen : TestScene
     {
-        private ScreenStack stack = null;
+        private ScreenStack _stack = null;
 
-        private GameplayScreen gameplayScreen;
+        private GameplayScreen _gameplayScreen;
 
-        private bool newScreen = true;
+        private bool _newScreen = true;
 
         [BackgroundDependencyLoader]
         private void Load()
         {
             AddStep("Add TestSceneGameplayScreen", () =>
             {
-                if (newScreen)
+                if (!_newScreen) return;
+                _newScreen = false;
+
+                Add(_stack = new ScreenStack
                 {
-                    newScreen = false;
+                    RelativeSizeAxes = Axes.Both,
+                });
 
-                    Add(stack = new ScreenStack
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                    });
+                List<Mod> mods = new List<Mod>();
+                //mods.Add(new DummyMod());
 
-                    List<Mod> mods = new List<Mod>();
-                    //mods.Add(new DummyMod());
+                string path = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) + "\\Songs\\TestMap\\Difficulty1.ini";
+                
+                if (!File.Exists(path))
+                    _ = new DefaultFolder();
 
-                    string path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Songs\\TestMap\\Difficulty1.ini";
-                    if (!File.Exists(path))
-                    {
-                        new DefaultFolder();
-                    }
-
-                    LoadComponent(gameplayScreen = new GameplayScreen(path, mods));
-                    stack.Push(gameplayScreen);
-                }
+                LoadComponentAsync(_gameplayScreen = new GameplayScreen(path, mods), _stack.Push);
             });
 
             AddStep("Fail", () =>
             {
-                this.gameplayScreen.HpBar.CurrentValue = 0;
+                this._gameplayScreen.HpBar.CurrentValue = 0;
             });
 
             AddStep("Go back to SongSelection", () =>
             {
-                this.gameplayScreen.ReturntoSongSelectionAfterFail.TriggerChange();
+                this._gameplayScreen.ReturntoSongSelectionAfterFail.TriggerChange();
             });
 
             AddStep("Remove TestSceneGameplayScreen", () =>
             {
-                this.stack?.Expire();
-                this.gameplayScreen?.Exit();
-                this.gameplayScreen?.Expire();
-                this.gameplayScreen = null;
+                _gameplayScreen?.StopTrack();
+                this._stack?.Expire();
 
-                newScreen = true;
+                _newScreen = true;
             });
         }
     }
