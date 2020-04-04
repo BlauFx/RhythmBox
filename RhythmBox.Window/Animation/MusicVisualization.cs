@@ -101,8 +101,13 @@ namespace RhythmBox.Window.Animation
             RestoreBars();
             Scheduler.AddDelayed(() =>
             {
-                if (bindableTrack == null) return;
-                if (bindableTrack.Value == null) return;
+                if (bindableTrack == null || bindableTrack.Value == null)
+                {
+                    foreach (VisualBox bar in Bars)
+                        bar.FadeOut();
+
+                    return;
+                }
 
                 float[] amplitudes = bindableTrack?.Value?.CurrentAmplitudes.FrequencyAmplitudes;
 

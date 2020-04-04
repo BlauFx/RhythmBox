@@ -315,7 +315,9 @@ namespace RhythmBox.Window.Screens
             string AudioFile = $"{tmp}\\{map.AFileName}";
             track = trackStore.Get(AudioFile);
 
-            track.Volume.Value = 0.2d;
+            if (track != null)
+                track.Volume.Value = 0.2d;
+
             track?.Stop();
         }
 

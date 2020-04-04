@@ -9,10 +9,20 @@ namespace RhythmBox.Window.Maps
         {
             string path = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) + "\\Songs\\";
 
-            int GetAmountOfFolder = osu.Framework.Utils.RNG.Next(0, Directory.GetDirectories(path).Length);
+            int GetDirectoriesLength = Directory.GetDirectories(path).Length;
+
+            int GetAmountOfFolder = osu.Framework.Utils.RNG.Next(0, GetDirectoriesLength);
+
+            if (GetDirectoriesLength == 0)
+                return null;
+
             string GetFolder = Directory.GetDirectories(path)[GetAmountOfFolder];
 
             string[] GetAudioFile = Directory.GetFiles(GetFolder, "**.mp3");
+
+            if (GetAudioFile.Length == 0)
+                return null;
+
             return GetAudioFile[0];
         }
     }

@@ -7,6 +7,7 @@ using RhythmBox.Window.Maps;
 using RhythmBox.Window.pending_files;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 
 namespace RhythmBox.Window
 {
@@ -53,6 +54,9 @@ namespace RhythmBox.Window
             Fonts.AddStore(new GlyphStore(Resources, @"Fonts/Roboto"));
             Fonts.AddStore(new GlyphStore(Resources, @"Fonts/Roboto-Thin"));
             Fonts.AddStore(new GlyphStore(Resources, @"Fonts/Roboto-Bold"));
+
+            if (!Directory.Exists("Songs"))
+                Directory.CreateDirectory("Songs");
         }
     }
 }

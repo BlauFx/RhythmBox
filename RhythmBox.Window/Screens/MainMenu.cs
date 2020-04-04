@@ -87,16 +87,10 @@ namespace RhythmBox.Window.Screens
         [BackgroundDependencyLoader]
         private async void Load(LargeTextureStore store)
         {
-            string path = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) + "\\Songs\\";
-
-            int GetAmountOfFolder = osu.Framework.Utils.RNG.Next(0, Directory.GetDirectories(path).Length);
-            string GetFolder = Directory.GetDirectories(path)[GetAmountOfFolder];
-
-            string[] GetAudioFile = Directory.GetFiles(GetFolder, "**.mp3");
-            string GetAudio = GetAudioFile[0];
-
-            track = Audio.GetTrackStore(new StorageBackedResourceStore(Host.Storage)).Get(GetAudio);
-            track.Volume.Value = 0.1d;
+            track = Audio.GetTrackStore(new StorageBackedResourceStore(Host.Storage)).Get(CurrentSongsAvailable.GetRandomAudio());
+            
+            if (track != null)
+                track.Volume.Value = 0.1d;
 
             InternalChildren = new Drawable[]
             {
@@ -202,7 +196,7 @@ namespace RhythmBox.Window.Screens
                 },
             };
 
-            track.Start();
+            track?.Start();
 
             new DefaultFolder();
 

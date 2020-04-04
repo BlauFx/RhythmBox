@@ -72,10 +72,11 @@ namespace RhythmBox.Window.pending_files
             {
                 for (int i = 0; i < license.Length; i++)
                 {
-                    if (!(license_in_folder[i].Contains(license[i])))
-                    {
-                        missing_licenses[i] = license[i];
-                    }
+                    if (license_in_folder[i] != null)
+                        if (!(license_in_folder[i].Contains(license[i])))
+                        {
+                            missing_licenses[i] = license[i];
+                        }
                 }
             }
             catch (Exception e)
