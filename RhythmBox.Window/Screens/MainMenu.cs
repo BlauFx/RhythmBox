@@ -50,6 +50,8 @@ namespace RhythmBox.Window.Screens
 
         private Track track = null;
 
+        private Volume volume;
+
         private const float Font_Size = 40f;
 
         public virtual Action GetAction(int pos)
@@ -85,12 +87,12 @@ namespace RhythmBox.Window.Screens
         }
 
         [BackgroundDependencyLoader]
-        private async void Load(LargeTextureStore store)
+        private async void Load(LargeTextureStore store, Gameini gameini)
         {
             track = Audio.GetTrackStore(new StorageBackedResourceStore(Host.Storage)).Get(CurrentSongsAvailable.GetRandomAudio());
-            
+
             if (track != null)
-                track.Volume.Value = 0.1d;
+                track.Volume.Value = gameini.Get<double>(SettingsConfig.Volume);
 
             InternalChildren = new Drawable[]
             {
@@ -194,6 +196,17 @@ namespace RhythmBox.Window.Screens
                     Y = 0.1f,
                     //Text = new LocalisedString($"Currently playing: {currentMap?.Map.Title}"),
                 },
+                volume = new Volume(new Bindable<Track>(track))
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    RelativePositionAxes = Axes.Both,
+                    Size = new Vector2(1f, 0.3f),
+                    X = 0.4f,
+                    Y = 0.2f,
+                    Alpha = 0f,
+                },
             };
 
             track?.Start();
@@ -285,6 +298,14 @@ namespace RhythmBox.Window.Screens
             }
 
             return base.OnMouseMove(e);
+        }
+
+        protected override bool OnScroll(ScrollEvent e)
+        {
+            volume.ChangeVolume(true, e);
+            volume.FadeIn(100).OnComplete(x => x.Delay(1000).FadeOut(100));
+
+            return base.OnScroll(e);
         }
 
         protected override void OnHoverLost(HoverLostEvent e) => Background.MoveTo(new Vector2(0), 2000);

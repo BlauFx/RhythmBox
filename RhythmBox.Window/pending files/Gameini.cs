@@ -5,7 +5,6 @@ namespace RhythmBox.Window.pending_files
 {
     public class Gameini : IniConfigManager<SettingsConfig>
     {
-        //TODO:
         protected override string Filename => @"game.ini";
 
         protected override void InitialiseDefaults()
@@ -14,11 +13,13 @@ namespace RhythmBox.Window.pending_files
             Set(SettingsConfig.KeyBindingDown, "S");
             Set(SettingsConfig.KeyBindingLeft, "A");
             Set(SettingsConfig.KeyBindingRight, "D");
+            Set(SettingsConfig.Volume, 0.5d, 0d, 1d, 0.25d);
         }
 
         public Gameini(Storage storage)
             : base(storage)
         {
+            PerformSave();
         }
     }
 
@@ -28,5 +29,6 @@ namespace RhythmBox.Window.pending_files
         KeyBindingDown,
         KeyBindingLeft,
         KeyBindingRight,
+        Volume
     }
 }
