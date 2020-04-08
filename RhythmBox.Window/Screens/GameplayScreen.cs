@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using RhythmBox.Window.Screens.SongSelection;
+using RhythmBox.Window.Maps;
 
 namespace RhythmBox.Window.Screens
 {
@@ -60,7 +61,7 @@ namespace RhythmBox.Window.Screens
         private AudioManager audio { get; set; }
 
         [Resolved]
-        private GameHost gameHost { get; set; }
+        private GameHost GameHost { get; set; }
 
         private ITrackStore trackStore;
 
@@ -93,9 +94,9 @@ namespace RhythmBox.Window.Screens
         }
 
         [BackgroundDependencyLoader]
-        private void Load(TextureStore textureStore)
+        private void Load(TextureStore textureStore, CachedMap cachedMap)
         {
-            store = new StorageBackedResourceStore(gameHost.Storage);
+            store = new StorageBackedResourceStore(GameHost.Storage);
             trackStore = audio.GetTrackStore(store);
 
             int num = _map.Path.LastIndexOf("\\");
@@ -242,9 +243,16 @@ namespace RhythmBox.Window.Screens
                 if (e.NewValue == false) return;
 
                 rhythmBoxClockContainer.Stop();
+
+                var CurrentTime = track?.CurrentTime;
                 track?.Stop();
 
                 _RbPlayfield.HasFinished.UnbindEvents();
+
+
+                cachedMap.Map = _map;
+                cachedMap.LoadTrackFile();
+                cachedMap.Seek(CurrentTime.Value);
 
                 Scheduler.AddDelayed(() => this.Expire(), 1000);
                 LoadComponentAsync(new SongSelcetion(), this.Push);
@@ -252,7 +260,10 @@ namespace RhythmBox.Window.Screens
 
             ReturntoSongSelectionAfterFail.ValueChanged += (e) =>
             {
-                rhythmBoxClockContainer.Stop();
+                cachedMap.Map = _map;
+                cachedMap.LoadTrackFile();
+                cachedMap.Seek(track.CurrentTime);
+
                 SongSelcetion songSelction;
                 LoadComponent(songSelction = new SongSelcetion());
                 Schedule(() => this.Push(songSelction));
@@ -384,7 +395,7 @@ namespace RhythmBox.Window.Screens
                 }
 
                 if (HasFailed)
-                    this.Exit();
+                    ReturntoSongSelectionAfterFail.TriggerChange();
 
                 _RbPlayfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
             }

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using RhythmBox.Mode.Std.Interfaces;
+using System;
 using System.Collections;
-using System.IO;
 using System.Linq;
-using RhythmBox.Mode.Std.Interfaces;
+using System.Reflection;
 
 namespace RhythmBox.Mode.Std.Maps
 {
@@ -10,70 +10,9 @@ namespace RhythmBox.Mode.Std.Maps
     {
         public string AFileName { get; set; } = string.Empty;
 
-        public string BGFile  { get; set; } = string.Empty;
-
-        public int MapId  { get; set; } = 0; //TODO side note: MapId[]
-
-        public int MapSetId  { get; set; } = 0; 
-
-        public int BPM  { get; set; } = 0;
-
-        public GameMode Mode  { get; set; } = GameMode.STD;
-
-        public string Title  { get; set; } = string.Empty;
-
-        public string Artist  { get; set; } = string.Empty;
-
-        public string Creator  { get; set; } = string.Empty;
-
-        public string DifficultyName  { get; set; } = string.Empty;
-
-        public HitObjects[] HitObjects { get; set; }
-
-        public int StartTime { get; set; }
-
-        public int EndTime { get; set; }
-
-        public string Path { get; set; }
-
-        public IEnumerator GetEnumerator()
-        {
-            return HitObjects.GetEnumerator();
-        }
-
-        public Map(string path, string? title = null)
-        {
-            if (path == null) return;
-
-            MapReader2 MapReader = new MapReader2(path);
-            
-            AFileName = MapReader.AFileName;
-            BGFile = MapReader.BGFile;
-            MapId = MapReader.MapId;
-            MapSetId = MapReader.MapSetId;
-            BPM = MapReader.BPM;
-            Mode = MapReader.Mode;
-            if (title != null)
-                Title = title;
-            else
-                Title = MapReader.Title;
-            Artist = MapReader.Artist;
-            Creator = MapReader.Creator;
-            DifficultyName = MapReader.DifficultyName;
-            StartTime = MapReader.StartTime;
-            EndTime = MapReader.EndTime;
-            HitObjects = MapReader.HitObjects;
-            Path = MapReader.Path;
-        }
-    }
-
-    internal class MapReader2 : IMap
-    {
-        public string AFileName { get; set; } = string.Empty;
-
         public string BGFile { get; set; } = string.Empty;
 
-        public int MapId { get; set; } = 0;
+        public int MapId { get; set; } = 0; //TODO side note: MapId[]
 
         public int MapSetId { get; set; } = 0;
 
@@ -97,146 +36,36 @@ namespace RhythmBox.Mode.Std.Maps
 
         public string Path { get; set; }
 
-        private int startHitObjects = 0;
+        public IEnumerator GetEnumerator() => HitObjects.GetEnumerator();
 
-        private string[] storageTemp;
+        private object instantiatedType;
 
-        public MapReader2(string path)
+        public Map(string path, string title = null)
         {
-            this.Path = path;
+            if (path == null) return;
 
-            int lineCount = File.ReadLines(path).Count();
+            var assembly = Assembly.LoadFrom("RhythmBox.Window.dll");
+            var classes = assembly.GetTypes().Where(p => p.Namespace == "RhythmBox.Window.Maps" && p.Name.Contains("MapReader"));
 
-            storageTemp = new string[lineCount];
+            BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;
+            instantiatedType = Activator.CreateInstance(classes.FirstOrDefault(), flags, null, new[] { $"{path}" }, null);
 
-            using (StreamReader strm = new StreamReader(path))
-            {
-                for (int i = 0; i < lineCount; i++)
-                {
-                    string input = strm.ReadLine();
-                    storageTemp[i] = input;
-
-                    if (input != null && input.Contains("HitObjects"))
-                    {
-                        startHitObjects = i + 1;
-                    }
-                }
-            }
-
-            if (SearchThis(storageTemp, "v1") == "v1")
-            {
-                AFileName = SearchThis(storageTemp, "AFileName");
-                BGFile = SearchThis(storageTemp, "BGFile");
-                MapId = int.Parse(SearchThis(storageTemp, "MapId"));
-                MapSetId = int.Parse(SearchThis(storageTemp, "MapSetId"));
-                BPM = int.Parse(SearchThis(storageTemp, "BPM"));
-                Mode = GameModeParser(SearchThis(storageTemp, "Mode"));
-                Title = SearchThis(storageTemp, "Title");
-                Artist = SearchThis(storageTemp, "Artist");
-                Creator = SearchThis(storageTemp, "Creator");
-                DifficultyName = SearchThis(storageTemp, "DifficultyName");
-                StartTime = TimeCutter(true);
-                EndTime = TimeCutter(false);
-                HitObjects = HitObjectsParser(HitObjects, path);
-            }
+            AFileName = GetValue(0).ToString();
+            BGFile = GetValue(1).ToString();
+            MapId = (int)GetValue(2);
+            MapSetId = (int)GetValue(3);
+            BPM = (int)GetValue(4);
+            Mode = (GameMode)GetValue(5);
+            Title = Title != null ? title : GetValue(6).ToString();
+            Artist = GetValue(7).ToString();
+            Creator = GetValue(8).ToString();
+            DifficultyName = GetValue(9).ToString();
+            StartTime = (int)GetValue(10);
+            EndTime = (int)GetValue(11);
+            HitObjects = (HitObjects[])GetValue(12);
+            Path = GetValue(13).ToString();
         }
 
-        private string SearchThis(string[] storage, string searchStr)
-        {
-            int num = 0;
-
-            for (int i = 0; i < storage.Length; i++)
-            {
-                if (storage[i].Contains(searchStr))
-                {
-                    num = i;
-                    break;
-                }
-            }
-
-            return Cutter(storage[num]);
-        }
-
-        private string Cutter(string cutThis)
-        {
-            if (!cutThis.Contains(":"))
-            {
-                return cutThis;
-            }
-            int x = cutThis.IndexOf(":", StringComparison.Ordinal) + 2;
-            return cutThis.Substring(x, cutThis.Length - x);
-        }
-
-        private GameMode GameModeParser(string parse)
-        {
-            if (parse != null)
-                return (GameMode)Enum.Parse(typeof(GameMode), parse, true);
-            throw new NullReferenceException("GameMode can not be null");
-        }
-
-        private int TimeCutter(bool Start = false)
-        {
-            string x = SearchThis(storageTemp, "Timings");
-
-            if (Start)
-            {
-                int num = x.IndexOf(",");
-                return int.Parse(x.Substring(0, num));
-            }
-            else
-            {
-                int num = x.IndexOf(",") + 1;
-                return int.Parse(x.Substring(num, x.Length - num));
-            }
-        }
-
-        private HitObjects[] HitObjectsParser(HitObjects[] obj, string path)
-        {
-            int lineCount = File.ReadLines(path).Count();
-
-            int counter = 0;
-
-            string[] storageTmp = new string[lineCount - startHitObjects];
-
-            obj = new HitObjects[storageTmp.Length];
-
-            for (int i = startHitObjects; i < lineCount; i++)
-            {
-                storageTmp[counter] = storageTemp[i];
-                counter++;
-            }
-
-            for (int i = 0; i < storageTmp.Length; i++)
-            {
-                obj[i] = new HitObjects();
-
-                var dir1_1 = storageTmp[i].IndexOf(",", StringComparison.Ordinal);
-                var dir1_2_Dir = storageTmp[i].Substring(0, dir1_1);
-
-                var dir2_1 = storageTmp[i].IndexOf(",", StringComparison.Ordinal) + 2;
-                var dir2_2 = storageTmp[i].LastIndexOf(",", StringComparison.Ordinal) + 0;
-                var dir2_3_Time = storageTmp[i].Substring(dir2_1, dir2_2 - dir2_1);
-
-                var dir3_1 = storageTmp[i].LastIndexOf(",", StringComparison.Ordinal) + 2;
-                var dir3_2_Speed = storageTmp[i].Substring(dir3_1, storageTmp[i].Length - (dir3_1 + 1));
-
-                obj[i]._direction = parseDirection(dir1_2_Dir.Substring(dir1_2_Dir.IndexOf(".") + 1, dir1_2_Dir.Length - dir1_2_Dir.IndexOf(".") - 1));
-                obj[i].Time = double.Parse(dir2_3_Time);
-                obj[i].Speed = float.Parse(dir3_2_Speed);
-            }
-
-            return obj;
-
-        }
-
-        private HitObjects.Direction parseDirection(string direction)
-        {
-            if (string.IsNullOrEmpty(direction))
-            {
-                throw new NullReferenceException("Direction can not be null");
-            }
-
-            return (HitObjects.Direction)Enum.Parse(typeof(HitObjects.Direction), direction, true); ;
-        }
+        private object GetValue(int i) => instantiatedType.GetType().GetProperties()[i].GetValue(instantiatedType, null);
     }
 }

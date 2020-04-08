@@ -1,7 +1,4 @@
 ﻿using osu.Framework.Allocation;
-using osu.Framework.Audio;
-using osu.Framework.Audio.Track;
-using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -9,7 +6,6 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Events;
-using osu.Framework.IO.Stores;
 using osu.Framework.Localisation;
 using osu.Framework.Platform;
 using osu.Framework.Screens;
@@ -40,15 +36,10 @@ namespace RhythmBox.Window.Screens
         private SpriteText CurrentPlaying;
 
         [Resolved]
-        private CurrentMap currentMap { get; set; }
-
-        [Resolved]
-        private AudioManager Audio { get; set; }
+        private CachedMap cachedMap { get; set; }
 
         [Resolved]
         private GameHost Host { get; set; }
-
-        private Track track = null;
 
         private Volume volume;
 
@@ -66,7 +57,7 @@ namespace RhythmBox.Window.Screens
 
             clickAction[1] = () =>
             {
-                currentMap.Stop();
+                cachedMap.Stop();
                 this.Push(new Settings());
             };
 
@@ -77,7 +68,7 @@ namespace RhythmBox.Window.Screens
                 if (!File.Exists(path))
                     _ = new DefaultFolder();
 
-                currentMap.Stop();
+                cachedMap.Stop();
                 this.Push(new EditorDefault(path));
             };
 
@@ -87,12 +78,10 @@ namespace RhythmBox.Window.Screens
         }
 
         [BackgroundDependencyLoader]
-        private async void Load(LargeTextureStore store, Gameini gameini)
+        private async void Load(LargeTextureStore store)
         {
-            track = Audio.GetTrackStore(new StorageBackedResourceStore(Host.Storage)).Get(CurrentSongsAvailable.GetRandomAudio());
-
-            if (track != null)
-                track.Volume.Value = gameini.Get<double>(SettingsConfig.Volume);
+            cachedMap.Map = CurrentSongsAvailable.GetRandomMap();
+            cachedMap.LoadTrackFile();
 
             InternalChildren = new Drawable[]
             {
@@ -118,7 +107,7 @@ namespace RhythmBox.Window.Screens
                     Shear = new Vector2(.15f, 0f),
                     EdgeSmoothness = new Vector2(2f)
                 },
-                new MusicVisualizationLinear(3f, 120, 0f, new Bindable<Track>(track))
+                new MusicVisualizationLinear(3f, 120, 0f, cachedMap.BindableTrack)
                 {
                     Depth = Background.Depth - 0.2f,
                     Anchor = Anchor.Centre,
@@ -194,9 +183,8 @@ namespace RhythmBox.Window.Screens
                     Alpha = 1f,
                     RelativePositionAxes = Axes.Both,
                     Y = 0.1f,
-                    //Text = new LocalisedString($"Currently playing: {currentMap?.Map.Title}"),
                 },
-                volume = new Volume(new Bindable<Track>(track))
+                volume = new Volume(cachedMap.BindableTrack)
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
@@ -208,8 +196,6 @@ namespace RhythmBox.Window.Screens
                     Alpha = 0f,
                 },
             };
-
-            track?.Start();
 
             new DefaultFolder();
 
@@ -271,6 +257,13 @@ namespace RhythmBox.Window.Screens
                 });
         }
 
+        protected override void LoadAsyncComplete()
+        {
+            cachedMap.Play(0);
+
+            base.LoadAsyncComplete();
+        }
+
         protected override bool OnMouseMove(MouseMoveEvent e)
         {
             var Durationn = 100;
@@ -310,7 +303,7 @@ namespace RhythmBox.Window.Screens
 
         protected override void OnHoverLost(HoverLostEvent e) => Background.MoveTo(new Vector2(0), 2000);
 
-        protected override void UpdateAfterChildren() => CurrentPlaying.Text = new LocalisedString($"Currently playing: {currentMap?.Map?.Title}");
+        protected override void UpdateAfterChildren() => CurrentPlaying.Text = new LocalisedString($"Currently playing: {cachedMap?.Map?.Title}");
 
         private void LimitFPS()
         {
@@ -337,15 +330,11 @@ namespace RhythmBox.Window.Screens
         public override void OnResuming(IScreen last)
         {
             Schedule(async () => await LoadComponentAsync(songSelction = new SongSelcetion()));
-            track?.Start();
-
             LimitFPS();
 
             this.FadeInFromZero<MainMenu>(175, Easing.In);
 
-            currentMap?.Play(Audio, 0);
-
-            base.OnResuming(last);
+            cachedMap.Play();
 
             Discord.DiscordRichPresence.UpdateRPC(
                 new DiscordRPC.RichPresence()
@@ -357,11 +346,13 @@ namespace RhythmBox.Window.Screens
                         LargeImageKey = "three",
                     }
                 });
+
+            base.OnResuming(last);
         }
 
         public override void OnSuspending(IScreen next)
         {
-            track?.Stop();
+            cachedMap.Stop();
 
             UnlockFPS();
 
@@ -371,7 +362,7 @@ namespace RhythmBox.Window.Screens
 
         protected override void Dispose(bool isDisposing)
         {
-            track?.Stop();
+            cachedMap.Stop();
 
             base.Dispose(isDisposing);
         }

@@ -27,11 +27,11 @@ namespace RhythmBox.Window.Maps
 
         public string DifficultyName { get; set; } = string.Empty;
 
-        public HitObjects[] HitObjects { get; set; }
-
         public int StartTime { get; set; }
 
         public int EndTime { get; set; }
+
+        public HitObjects[] HitObjects { get; set; }
 
         public string Path { get; set; }
 

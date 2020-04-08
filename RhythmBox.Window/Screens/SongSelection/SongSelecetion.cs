@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using osu.Framework.Allocation;
+using osu.Framework.Audio;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -39,7 +40,7 @@ namespace RhythmBox.Window.Screens.SongSelection
         private bool AllowToPlay = true;
 
         [Resolved]
-        private CurrentMap currentMap { get; set; }
+        private CachedMap CachedMap { get; set; }
 
         public SongSelcetion(bool test = false)
         {
@@ -113,13 +114,12 @@ namespace RhythmBox.Window.Screens.SongSelection
                     Size = new Vector2(0.5f,1f),
                     ClickOnMap = () =>
                     {
-                        currentMap.Map = new Map(bindablePath.Value);
-
                         if (!AllowToPlay) return;
 
                         if (!WaitUntilLoaded)
                         {
-                            currentMap.Stop();
+                            CachedMap.Map = new Map(bindablePath.Value);
+                            CachedMap.Stop();
 
                             GameplayScreen gameplayScreen;
                             LoadComponent(gameplayScreen = new GameplayScreen(bindablePath.Value, ModOverlay.modBox.ToApplyMods));
@@ -148,10 +148,20 @@ namespace RhythmBox.Window.Screens.SongSelection
         {
             this.FadeInFromZero<SongSelcetion>(250, Easing.In);
             Scheduler.AddDelayed(() => WaitUntilLoaded = false, 250);
+
+            CachedMap.Play();
+
             base.OnEntering(last);
         }
 
         public override void OnSuspending(IScreen next) => Schedule(() => this.Exit());
+
+        public override bool OnExiting(IScreen next)
+        {
+            CachedMap.Stop();
+
+            return base.OnExiting(next);
+        }
     }
 
     public class ThisScrollContainer : FocusedOverlayContainer
@@ -311,9 +321,7 @@ namespace RhythmBox.Window.Screens.SongSelection
 
         protected override bool OnMouseMove(MouseMoveEvent e)
         {
-            bool Button = e.IsPressed(MouseButton.Right);
-
-            if (Button)
+            if (e.IsPressed(MouseButton.Right))
             {
                 var current = e.ScreenSpaceMousePosition.Y;
                 float max = this.ScreenSpaceDrawQuad.AABB.Y + this.ScreenSpaceDrawQuad.AABB.Height;
@@ -323,6 +331,7 @@ namespace RhythmBox.Window.Screens.SongSelection
 
                 FFContainerM.ScrollTo(FFContainer.Height / x);
             }
+
             return base.OnMouseMove(e);
         }
     }

@@ -15,7 +15,7 @@ namespace RhythmBox.Window
     {
         protected new DependencyContainer Dependencies;
 
-        private LargeTextureStore largeStore;
+        private CachedMap cachedMap;
 
         public RhythmBoxResources()
         {
@@ -43,11 +43,9 @@ namespace RhythmBox.Window
         {
             Resources.AddStore(new DllResourceStore("RhythmBox.Window.Resources.dll"));
 
-            largeStore = new LargeTextureStore(Host.CreateTextureLoaderStore(new NamespacedResourceStore<byte[]>(Resources, @"Textures")));
-
-            Dependencies.Cache(largeStore);
+            Dependencies.Cache(new LargeTextureStore(Host.CreateTextureLoaderStore(new NamespacedResourceStore<byte[]>(Resources, @"Textures"))));
             Dependencies.Cache(new Gameini(Host.Storage));
-            Dependencies.Cache(new CurrentMap(Host.Storage));
+            Dependencies.Cache(cachedMap = new CachedMap(Host.Storage));
             Dependencies.Cache(this);
 
             Fonts.AddStore(new GlyphStore(Resources, @"Fonts/Roboto-Medium"));
@@ -57,6 +55,8 @@ namespace RhythmBox.Window
 
             if (!Directory.Exists("Songs"))
                 Directory.CreateDirectory("Songs");
+
+            Add(cachedMap);
         }
     }
 }

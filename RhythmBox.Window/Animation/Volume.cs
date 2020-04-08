@@ -54,6 +54,8 @@ namespace RhythmBox.Window.Animation
 
         public void ChangeVolume(bool CalledFromOnScroll, ScrollEvent e = null)
         {
+            if (ITrack.Value == null) return;
+
             if (CalledFromOnScroll)
             {
                 if (e.ScrollDelta.Y > 0f)
