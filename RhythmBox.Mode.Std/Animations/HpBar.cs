@@ -25,7 +25,7 @@ namespace RhythmBox.Mode.Std.Animations
 
         private const float HP_X = 0.1f;
 
-        private readonly float HP_Drain = - 0.001f;
+        private readonly float HP_Drain = -0.001f;
 
         public float HP_Update = 80f;
 

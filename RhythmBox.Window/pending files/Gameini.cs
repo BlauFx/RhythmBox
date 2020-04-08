@@ -26,8 +26,8 @@ namespace RhythmBox.Window.pending_files
     public enum SettingsConfig
     {
         KeyBindingUp,
-        KeyBindingDown,
         KeyBindingLeft,
+        KeyBindingDown,
         KeyBindingRight,
         Volume
     }

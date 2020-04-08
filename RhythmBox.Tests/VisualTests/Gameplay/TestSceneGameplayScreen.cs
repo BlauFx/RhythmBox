@@ -57,7 +57,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
 
             AddStep("Remove TestSceneGameplayScreen", () =>
             {
-                _gameplayScreen?.StopTrack();
+                _gameplayScreen?.track?.Stop();
                 this._stack?.Expire();
 
                 _newScreen = true;

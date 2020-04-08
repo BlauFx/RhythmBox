@@ -18,14 +18,14 @@ using RhythmBox.Mode.Std.Animations;
 using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Mode.Std.Mods;
 using RhythmBox.Window.Clocks;
+using RhythmBox.Window.Maps;
 using RhythmBox.Window.Overlays;
 using RhythmBox.Window.pending_files;
 using RhythmBox.Window.Playfield;
+using RhythmBox.Window.Screens.SongSelection;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using RhythmBox.Window.Screens.SongSelection;
-using RhythmBox.Window.Maps;
 
 namespace RhythmBox.Window.Screens
 {
@@ -51,7 +51,7 @@ namespace RhythmBox.Window.Screens
 
         private BindableBool Resuming = new BindableBool(true);
 
-        private bool HasFinished { get; set; } = true;
+        private bool HasFinished { get; set; } = false;
 
         public bool HasFailed { get; set; } = false;
 
@@ -67,7 +67,7 @@ namespace RhythmBox.Window.Screens
 
         private IResourceStore<byte[]> store;
 
-        private Track track;
+        public Track track;
 
         private bool Resizing { get; set; } = false;
 
@@ -104,7 +104,6 @@ namespace RhythmBox.Window.Screens
 
             string AudioFile = $"{tmp}\\{_map.AFileName}";
             track = trackStore.Get(AudioFile);
-
             track.Volume.Value = 0.1d;
 
             InternalChildren = new Drawable[]
@@ -395,7 +394,7 @@ namespace RhythmBox.Window.Screens
                 }
 
                 if (HasFailed)
-                    ReturntoSongSelectionAfterFail.TriggerChange();
+                    ReturntoSongSelectionAfterFail.Value = true;
 
                 _RbPlayfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
             }
@@ -442,10 +441,9 @@ namespace RhythmBox.Window.Screens
                 await Task.Delay(500);
             }
 
+            //TODO:
             //ReturntoSongSelectionAfterFail.Value = true;
         }
-
-        public void StopTrack() => track?.Stop();
 
         public override void OnEntering(IScreen last)
         {
@@ -455,7 +453,7 @@ namespace RhythmBox.Window.Screens
 
         public override void OnSuspending(IScreen next)
         {
-            StopTrack();
+            track?.Stop();
             Schedule(this.Exit);
 
             base.OnSuspending(next);
@@ -463,7 +461,7 @@ namespace RhythmBox.Window.Screens
 
         public override bool OnExiting(IScreen next)
         {
-            StopTrack();
+            track?.Stop();
             return base.OnExiting(next);
         }
     }
