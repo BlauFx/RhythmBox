@@ -149,6 +149,12 @@ namespace RhythmBox.Window.Screens.SongSelection
             this.FadeInFromZero<SongSelcetion>(250, Easing.In);
             Scheduler.AddDelayed(() => WaitUntilLoaded = false, 250);
 
+            if (CachedMap.track == null)
+            {
+                CachedMap.Map = CurrentSongsAvailable.GetRandomMap();
+                CachedMap.LoadTrackFile();
+            }
+
             CachedMap.Play();
 
             base.OnEntering(last);
@@ -161,6 +167,13 @@ namespace RhythmBox.Window.Screens.SongSelection
             CachedMap.Stop();
 
             return base.OnExiting(next);
+        }
+
+        protected override void Dispose(bool isDisposing)
+        {
+            CachedMap.Stop();
+
+            base.Dispose(isDisposing);
         }
     }
 

@@ -1,15 +1,8 @@
 ﻿using NUnit.Framework;
 using osu.Framework.Allocation;
-using osu.Framework.Audio;
-using osu.Framework.Audio.Track;
-using osu.Framework.Bindables;
-using osu.Framework.IO.Stores;
-using osu.Framework.Platform;
 using osu.Framework.Testing;
 using RhythmBox.Window.Animation;
 using RhythmBox.Window.Maps;
-using System.IO;
-using System.Reflection;
 
 namespace RhythmBox.Tests.VisualTests.Animations
 {
@@ -17,14 +10,9 @@ namespace RhythmBox.Tests.VisualTests.Animations
     public class TestSceneMusicCircular : TestScene
     {
         [Resolved]
-        private AudioManager Audio { get; set; }
+        private CachedMap cachedMap { get; set; }
 
-        [Resolved]
-        private GameHost Host { get; set; }
-
-        private Track track;
-
-        private const float barWidth = 3f;
+        private const int barWidth = 3;
 
         private const int Degree = 360;
 
@@ -35,10 +23,10 @@ namespace RhythmBox.Tests.VisualTests.Animations
         [BackgroundDependencyLoader]
         private void Load()
         {
-            track = Audio.GetTrackStore(new StorageBackedResourceStore(Host.Storage)).Get(CurrentSongsAvailable.GetRandomAudio());
-            track.Volume.Value = 0.1d;
+            cachedMap.Map = CurrentSongsAvailable.GetRandomMap();
+            cachedMap.LoadTrackFile();
 
-            Child = new MusicVisualizationCircular(Degree, barWidth, AmountOfBars, DefaultRadius, new Bindable<Track>(track));
+            Child = new MusicVisualizationCircular(Degree, barWidth, AmountOfBars, DefaultRadius, cachedMap.BindableTrack);
 
             AddAssert("Check if audio has been loaded", () => { return (this.Child as MusicVisualizationCircular).AudioHasLoaded; });
 
@@ -48,11 +36,11 @@ namespace RhythmBox.Tests.VisualTests.Animations
             AddSliderStep("Adjust BarWidth", 0, 15f, 4f, (x) => (this.Child as MusicVisualizationCircular).BarWidth = x);
             AddSliderStep("Adjust Intensivity", 0, 1000, 400, (x) => (this.Child as MusicVisualizationCircular).Intensivity = x);
 
-            AddStep("Start", () => track.Start());
+            AddStep("Start", () => cachedMap.Play());
             AddStep("Reverse", () => (this.Child as MusicVisualizationCircular).IsReversed = !(this.Child as MusicVisualizationCircular).IsReversed);
-            AddStep("Stop", () => track.Stop());
+            AddStep("Stop", () => cachedMap.Stop());
         }
 
-        protected override void Dispose(bool isDisposing) => track?.Stop();
+        protected override void Dispose(bool isDisposing) => cachedMap.Stop();
     }
 }

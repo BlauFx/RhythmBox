@@ -78,8 +78,6 @@ namespace RhythmBox.Window.Animation
 
             this.bindableTrack = bindableTrack;
             this.Duration = Duration;
-
-            this.bindableTrack.BindTo(bindableTrack);
         }
 
         public void RestoreBars()

@@ -46,22 +46,5 @@ namespace RhythmBox.Window.Maps
 
             return Maps[GetRandomMap, 0];
         }
-
-        public static string GetRandomAudio()
-        {
-            if (GetDirectoriesLength == 0)
-                return null;
-
-            int GetRandomNumber = osu.Framework.Utils.RNG.Next(0, GetDirectoriesLength);
-
-            string GetFolder = Directory.GetDirectories(SongPath)[GetRandomNumber];
-
-            string[] GetAudioFile = Directory.GetFiles(GetFolder, "**.mp3");
-
-            if (GetAudioFile.Length == 0)
-                return null;
-
-            return GetAudioFile[0];
-        }
     }
 }

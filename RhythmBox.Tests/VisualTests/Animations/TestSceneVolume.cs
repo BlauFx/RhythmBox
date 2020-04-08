@@ -1,12 +1,7 @@
 ﻿using NUnit.Framework;
 using osu.Framework.Allocation;
-using osu.Framework.Audio;
-using osu.Framework.Audio.Track;
-using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Input.Events;
-using osu.Framework.IO.Stores;
-using osu.Framework.Platform;
 using osu.Framework.Testing;
 using RhythmBox.Window.Animation;
 using RhythmBox.Window.Maps;
@@ -22,28 +17,23 @@ namespace RhythmBox.Tests.VisualTests.Animations
             { typeof(Volume) };
 
         [Resolved]
-        private AudioManager Audio { get; set; }
-
-        [Resolved]
-        private GameHost Host { get; set; }
-
-        private Track track;
+        private CachedMap cachedMap { get; set; }
 
         [BackgroundDependencyLoader]
         private void Load()
         {
-            track = Audio.GetTrackStore(new StorageBackedResourceStore(Host.Storage)).Get(CurrentSongsAvailable.GetRandomAudio());
-            track.Volume.Value = 1d;
+            cachedMap.Map = CurrentSongsAvailable.GetRandomMap();
+            cachedMap.LoadTrackFile();
 
-            Child = new Volume(new Bindable<Track>(track))
+            Child = new Volume(cachedMap.BindableTrack)
             {
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
                 RelativeSizeAxes = Axes.Both,
             };
 
-            AddStep("Start", () => track.Start());
-            AddStep("Stop", () => track.Stop());
+            AddStep("Start", () => cachedMap.Play());
+            AddStep("Stop", () => cachedMap.Stop());
         }
 
         protected override bool OnScroll(ScrollEvent e)
@@ -55,7 +45,7 @@ namespace RhythmBox.Tests.VisualTests.Animations
 
         protected override void Dispose(bool isDisposing)
         {
-            track?.Stop();
+            cachedMap.Stop();
 
             base.Dispose(isDisposing);
         }
