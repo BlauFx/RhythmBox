@@ -291,15 +291,11 @@ namespace RhythmBox.Window.Screens
 
         protected override void LoadComplete()
         {
-            Enum.TryParse(Gameini.Get<string>(SettingsConfig.KeyBindingUp), out Key KeyUp);
-            Enum.TryParse(Gameini.Get<string>(SettingsConfig.KeyBindingLeft), out Key KeyLeft);
-            Enum.TryParse(Gameini.Get<string>(SettingsConfig.KeyBindingDown), out Key KeyDown);
-            Enum.TryParse(Gameini.Get<string>(SettingsConfig.KeyBindingRight), out Key KeyRight);
-
-            keys[0] = KeyUp;
-            keys[1] = KeyLeft;
-            keys[2] = KeyDown;
-            keys[3] = KeyRight;
+            for (int i = 0; i < 4; i++)
+            {
+                Enum.TryParse(Gameini.Get<string>((SettingsConfig)i), out Key key);
+                keys[i] = key;
+            }
 
             Startable.Value = true;
 

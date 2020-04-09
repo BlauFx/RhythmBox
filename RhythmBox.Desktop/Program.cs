@@ -8,13 +8,9 @@ namespace RhythmBox.Desktop
     {
         static void Main(string[] args)
         {
-            using (GameHost host = Host.GetSuitableHost(@"RhythmBox", false, true, false))
-            {
-                using (Game game = new RhythmBoxWindow())
-                {
-                    host.Run(game);
-                }
-            }
+            using GameHost host = Host.GetSuitableHost(@"RhythmBox", false, true, false);
+            using Game game = new RhythmBoxWindow();
+            host.Run(game);
         }
     }
 }
