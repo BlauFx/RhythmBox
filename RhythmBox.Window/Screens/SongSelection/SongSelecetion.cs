@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using osu.Framework.Allocation;
-using osu.Framework.Audio;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -165,12 +164,12 @@ namespace RhythmBox.Window.Screens.SongSelection
         public override bool OnExiting(IScreen next)
         {
             CachedMap.Stop();
-
             return base.OnExiting(next);
         }
 
         protected override void Dispose(bool isDisposing)
         {
+            if (isDisposing) return;
             CachedMap.Stop();
 
             base.Dispose(isDisposing);

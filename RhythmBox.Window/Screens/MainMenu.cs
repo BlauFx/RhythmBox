@@ -20,6 +20,7 @@ using RhythmBox.Window.Updater;
 using System;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace RhythmBox.Window.Screens
 {
@@ -224,8 +225,15 @@ namespace RhythmBox.Window.Screens
                 typeOfOverlay = NotificationOverlay.TypeOfOverlay.YesNo,
                 ActionYes = () =>
                 {
-                    updater.DownloadUpdate();
-                    updater.ApplyUpdate();
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    {
+                        updater.DownloadUpdate();
+                        updater.ApplyUpdate();
+                    }
+                    else
+                    {
+                        //TODO:
+                    }
                 }
             });
 
@@ -362,6 +370,7 @@ namespace RhythmBox.Window.Screens
 
         protected override void Dispose(bool isDisposing)
         {
+            if (isDisposing) return;
             cachedMap.Stop();
 
             base.Dispose(isDisposing);
