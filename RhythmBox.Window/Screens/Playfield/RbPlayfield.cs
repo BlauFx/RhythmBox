@@ -3,6 +3,7 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Events;
+using osu.Framework.Logging;
 using osu.Framework.Threading;
 using osuTK;
 using osuTK.Input;
@@ -123,8 +124,8 @@ namespace RhythmBox.Window.Playfield
             if (dir != null)
             {
                 list[pos].OnClickKeyDown(key);
+                //list.RemoveAt(pos);
             }
-            //list.RemoveAt(pos);
         }
 
         private HitObjects.Direction? GetNextObjDir(Key key)
@@ -135,7 +136,7 @@ namespace RhythmBox.Window.Playfield
             {
                 var x = list[i].direction;
 
-                if (list[i].AlphaA > 0)
+                if (list[i].obj != null && list[i].AlphaA > 0 && list[i].obj.IsAlive)
                 {
                     if ((key == keys[0] && x == HitObjects.Direction.Up) || key == keys[1] && x == HitObjects.Direction.Left || key == keys[2] && x == HitObjects.Direction.Down || key == keys[3] && x == HitObjects.Direction.Right)
                     {
