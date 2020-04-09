@@ -56,7 +56,7 @@ namespace RhythmBox.Mode.Std.Maps
             MapSetId = (int)GetValue(3);
             BPM = (int)GetValue(4);
             Mode = (GameMode)GetValue(5);
-            Title = Title != null ? title : GetValue(6).ToString();
+            Title = title != null ? title : GetValue(6).ToString();
             Artist = GetValue(7).ToString();
             Creator = GetValue(8).ToString();
             DifficultyName = GetValue(9).ToString();
