@@ -9,6 +9,7 @@ using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Events;
 using osuTK;
 using osuTK.Graphics;
+using RhythmBox.Window.pending_files;
 using System.Linq;
 
 namespace RhythmBox.Window.Animation
@@ -16,6 +17,9 @@ namespace RhythmBox.Window.Animation
     public class Volume : Container
     {
         private IBindable<Track> ITrack;
+
+        [Resolved]
+        private Gameini gameini { get;  set; }
 
         public Volume(IBindable<Track> bindableTrack)
         {
@@ -70,6 +74,9 @@ namespace RhythmBox.Window.Animation
 
                     ITrack.Value.Volume.Value -= 0.25d;
                 }
+
+                gameini.Set(SettingsConfig.Volume, ITrack.Value.Volume.Value);
+                gameini.Save();
             }
 
             Children.Where(x => x.GetType() == typeof(Box)).FirstOrDefault().MoveTo(new Vector2(0f, ITrack.Value.Volume.Value switch

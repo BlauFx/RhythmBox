@@ -104,7 +104,7 @@ namespace RhythmBox.Window.Screens
 
             string AudioFile = $"{tmp}\\{_map.AFileName}";
             track = trackStore.Get(AudioFile);
-            track.Volume.Value = 0.1d;
+            track.Volume.Value = Gameini.Get<double>(SettingsConfig.Volume);
 
             InternalChildren = new Drawable[]
             {
