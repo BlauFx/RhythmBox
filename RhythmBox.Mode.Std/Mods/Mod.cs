@@ -8,7 +8,7 @@ namespace RhythmBox.Mode.Std.Mods
 
         public abstract string SkinElement { get; }
 
-        public virtual void AppyToHitObj(RBox obj)
+        public virtual void ApplyToHitObj(RBox obj)
         {
         }
     }

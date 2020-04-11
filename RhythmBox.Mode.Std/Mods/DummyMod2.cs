@@ -10,11 +10,11 @@ namespace RhythmBox.Mode.Std.Mods
 
         public override string SkinElement => "DummyMod2";
 
-        public override void AppyToHitObj(RBox obj)
+        public override void ApplyToHitObj(RBox obj)
         {
             obj.obj.bx.Colour = Color4.Gray.Opacity(0.7f);
 
-            base.AppyToHitObj(obj);
+            base.ApplyToHitObj(obj);
         }
     }
 }

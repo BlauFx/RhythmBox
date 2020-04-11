@@ -77,7 +77,7 @@ namespace RhythmBox.Mode.Std.Objects
 
             for (int i = 0; i < mod.Count; i++)
             {
-                mod[i]?.AppyToHitObj(this);
+                mod[i]?.ApplyToHitObj(this);
             }
         }
     }
