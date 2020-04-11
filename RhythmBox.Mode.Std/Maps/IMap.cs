@@ -1,4 +1,4 @@
-namespace RhythmBox.Mode.Std.Interfaces
+namespace RhythmBox.Mode.Std.Maps
 {
     public interface IMap
     {

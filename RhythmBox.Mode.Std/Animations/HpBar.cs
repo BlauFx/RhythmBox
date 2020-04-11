@@ -4,6 +4,9 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osuTK;
 using osuTK.Graphics;
+using RhythmBox.Mode.Std.Mods;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace RhythmBox.Mode.Std.Animations
 {
@@ -29,10 +32,22 @@ namespace RhythmBox.Mode.Std.Animations
 
         public float HP_Update = 80f;
 
-        public HpBar(float BoxMaxValue)
+        public bool HPBarEnabled = true;
+
+        public HpBar(float BoxMaxValue, List<Mod> mods = null)
         {
             this.BoxMaxValue = BoxMaxValue;
             this.CurrentValue = BoxMaxValue;
+
+            if (mods != null)
+            {
+                var ModsToApply = mods.Where(x => x is IApplyToHP).ToList();
+
+                for (int i = 0; i < ModsToApply.Count; i++)
+                {
+                    (ModsToApply[i] as IApplyToHP).ApplyToHP(this);
+                }
+            }
         }
 
         [BackgroundDependencyLoader]
@@ -54,7 +69,7 @@ namespace RhythmBox.Mode.Std.Animations
 
         public void ResizeBox(float value, double duration, Easing easing)
         {
-            if (value > BoxMaxValue || value < -0.0001f)
+            if ((value > BoxMaxValue || value < -0.0001f) || !HPBarEnabled)
             {
                 return;
             }

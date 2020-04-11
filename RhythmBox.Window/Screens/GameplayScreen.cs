@@ -189,7 +189,7 @@ namespace RhythmBox.Window.Screens
                     Size = new Vector2(0.6f, 1f),
                     Map = _map,
                 },
-                 HpBar = new HpBar(.1f)
+                HpBar = new HpBar(.1f, ToApplyMods)
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
@@ -325,7 +325,7 @@ namespace RhythmBox.Window.Screens
 
         protected override void Update()
         {
-            if (HpBar.CurrentValue <= 0)
+            if (HpBar.HPBarEnabled && HpBar.CurrentValue <= 0)
             {
                 if (!HasFailed)
                 {

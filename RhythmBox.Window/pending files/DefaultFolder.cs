@@ -1,7 +1,8 @@
-﻿using RhythmBox.Mode.Std.Interfaces;
+﻿using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Window.Maps;
 using System.IO;
 using System.Reflection;
+using HitObjects = RhythmBox.Mode.Std.Maps.HitObjects;
 
 namespace RhythmBox.Window.pending_files
 {
@@ -35,27 +36,27 @@ namespace RhythmBox.Window.pending_files
 
         private void TempMap(string path)
         {
-            var HitObjects = new HitObjects[4];
+            var hitObjects = new HitObjects[4];
 
-            HitObjects[0] = new HitObjects();
-            HitObjects[1] = new HitObjects();
-            HitObjects[2] = new HitObjects();
-            HitObjects[3] = new HitObjects();
+            hitObjects[0] = new HitObjects();
+            hitObjects[1] = new HitObjects();
+            hitObjects[2] = new HitObjects();
+            hitObjects[3] = new HitObjects();
 
-            HitObjects[0]._direction = Mode.Std.Interfaces.HitObjects.Direction.Up;
-            HitObjects[1]._direction = Mode.Std.Interfaces.HitObjects.Direction.Right;
-            HitObjects[2]._direction = Mode.Std.Interfaces.HitObjects.Direction.Left;
-            HitObjects[3]._direction = Mode.Std.Interfaces.HitObjects.Direction.Down;
+            hitObjects[0]._direction = HitObjects.Direction.Up;
+            hitObjects[1]._direction = HitObjects.Direction.Right;
+            hitObjects[2]._direction = HitObjects.Direction.Left;
+            hitObjects[3]._direction = HitObjects.Direction.Down;
 
-            HitObjects[0].Speed = 1f;
-            HitObjects[1].Speed = 1f;
-            HitObjects[2].Speed = 1f;
-            HitObjects[3].Speed = 1f;
+            hitObjects[0].Speed = 1f;
+            hitObjects[1].Speed = 1f;
+            hitObjects[2].Speed = 1f;
+            hitObjects[3].Speed = 1f;
 
-            HitObjects[0].Time = 200;
-            HitObjects[1].Time = 400;
-            HitObjects[2].Time = 700;
-            HitObjects[3].Time = 780;
+            hitObjects[0].Time = 200;
+            hitObjects[1].Time = 400;
+            hitObjects[2].Time = 700;
+            hitObjects[3].Time = 780;
 
             var _map = new MapWriter
             {
@@ -71,7 +72,7 @@ namespace RhythmBox.Window.pending_files
                 DifficultyName = "BlauFx's diff",
                 StartTime = 100,
                 EndTime = 5000,
-                HitObjects = HitObjects,
+                HitObjects = hitObjects,
             };
 
             if (File.Exists(path))

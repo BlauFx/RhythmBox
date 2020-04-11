@@ -8,7 +8,6 @@ using osu.Framework.Threading;
 using osuTK;
 using osuTK.Input;
 using RhythmBox.Mode.Std.Animations;
-using RhythmBox.Mode.Std.Interfaces;
 using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Mode.Std.Mods;
 using RhythmBox.Mode.Std.Objects;

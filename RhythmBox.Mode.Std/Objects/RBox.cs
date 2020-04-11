@@ -7,10 +7,11 @@ using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
 using RhythmBox.Mode.Std.Animations;
-using RhythmBox.Mode.Std.Interfaces;
+using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Mode.Std.Mods;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -77,7 +78,10 @@ namespace RhythmBox.Mode.Std.Objects
 
             for (int i = 0; i < mod.Count; i++)
             {
-                mod[i]?.ApplyToHitObj(this);
+                if (!(mod[i] is IApplyToHitobject))
+                    continue;
+
+                (mod[i] as IApplyToHitobject).ApplyToHitObj(this);
             }
         }
     }

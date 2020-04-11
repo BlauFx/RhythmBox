@@ -1,4 +1,4 @@
-﻿using RhythmBox.Mode.Std.Interfaces;
+﻿using RhythmBox.Mode.Std.Maps;
 using System.IO;
 using System.Reflection;
 

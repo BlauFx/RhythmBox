@@ -4,7 +4,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osuTK;
 using osuTK.Graphics;
-using RhythmBox.Mode.Std.Interfaces;
+using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Window.Objects;
 using System;
 

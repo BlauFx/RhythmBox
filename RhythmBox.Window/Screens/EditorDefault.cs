@@ -276,10 +276,10 @@ namespace RhythmBox.Window.Screens
                         {
                             int i = playfield.dir.Value switch
                             {
-                                Mode.Std.Interfaces.HitObjects.Direction.Left => 0,
-                                Mode.Std.Interfaces.HitObjects.Direction.Down => 1,
-                                Mode.Std.Interfaces.HitObjects.Direction.Up => 2,
-                                Mode.Std.Interfaces.HitObjects.Direction.Right => 3,
+                                HitObjects.Direction.Left => 0,
+                                HitObjects.Direction.Down => 1,
+                                HitObjects.Direction.Up => 2,
+                                HitObjects.Direction.Right => 3,
                                 _ => 4,
                             };
 

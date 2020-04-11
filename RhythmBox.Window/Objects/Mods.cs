@@ -20,6 +20,7 @@ namespace RhythmBox.Window.Objects
         {
             new DummyMod(),
             new DummyMod2(),
+            new DummyMod3()
         };
 
         public new Color4 Colour { get; set; }
