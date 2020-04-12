@@ -50,8 +50,6 @@ namespace RhythmBox.Window.Screens.SongSelection
         [BackgroundDependencyLoader]
         private void Load(TextureStore store)
         {
-            SpriteButton Back;
-
             InternalChildren = new Drawable[]
             {
                 ModOverlay = new ModOverlay
@@ -71,7 +69,7 @@ namespace RhythmBox.Window.Screens.SongSelection
                     Size = new Vector2(1f),
                     Texture = store.Get("Skin/menu-background"), //TOOD: Maybe Map => Background?
                 },
-                Back = new SpriteButton
+                new SpriteButton
                 {
                     Anchor = Anchor.BottomLeft,
                     Origin = Anchor.BottomLeft,
