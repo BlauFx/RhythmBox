@@ -1,16 +1,17 @@
 ﻿using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
+using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
-using osu.Framework.Input.Events;
+using osu.Framework.Graphics.Sprites;
+using osu.Framework.Graphics.Textures;
 using osuTK;
 using osuTK.Graphics;
 using RhythmBox.Mode.Std.Mods;
-using System.Linq;
+using System;
 using System.Collections.Generic;
-using osu.Framework.Graphics.Sprites;
-using osu.Framework.Graphics.Textures;
+using System.Linq;
 
 namespace RhythmBox.Window.Objects
 {
@@ -23,6 +24,9 @@ namespace RhythmBox.Window.Objects
             new DummyMod3()
         };
 
+        /// <summary>
+        /// Background color
+        /// </summary>
         public new Color4 Colour { get; set; }
 
         private FillFlowContainer flowContainer;
@@ -59,7 +63,7 @@ namespace RhythmBox.Window.Objects
 
             for (int i = 0; i < Modlist.Count(); i++)
             {
-                flowContainer.Add(new DrawMod
+                flowContainer.Add(new DrawMod(Modlist.ToList()[i], ToApplyMods, color)
                 {
                     Depth = -2f,
                     Anchor = Anchor.TopLeft,
@@ -67,9 +71,6 @@ namespace RhythmBox.Window.Objects
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(0.1f, 0.3f),
                     Alpha = 1f,
-                    Colour = color,
-                    ToApplyMods = ToApplyMods,
-                    Mod = Modlist.ToList()[i],
                 });
 
                 color = color == Color4.Blue ? Color4.Red : Color4.Blue;
@@ -77,20 +78,35 @@ namespace RhythmBox.Window.Objects
         }
     }
 
-    class DrawMod : Container
+    internal class DrawMod : Container
     {
-        public List<Mod> ToApplyMods { get; set; }
+        private Mod Mod;
 
-        public Mod Mod { get; set; }
+        private ClickBox CckBx;
 
-        public new Color4 Colour { get; set; }
+        private Action action;
+
+        public DrawMod(Mod mod, List<Mod> mods, Color4 Colour)
+        {
+            this.Mod = mod;
+
+            action = () =>
+            {
+                if (CckBx.Rotation == 0f)
+                    mods.Add(Mod);
+                else
+                    mods.Remove(Mod);
+
+                CckBx.Colour = CckBx.Colour == Colour ? Color4.Yellow.Opacity(0.7f) : Colour;
+            };
+        }
 
         [BackgroundDependencyLoader]
-        private void Load()
+        private void Load(TextureStore store)
         {
             Children = new Drawable[]
             {
-                new ThisBox(Mod)
+                CckBx = new ClickBox
                 {
                     Depth = 1,
                     Anchor = Anchor.Centre,
@@ -99,9 +115,11 @@ namespace RhythmBox.Window.Objects
                     Size = new Vector2(1f),
                     Alpha = 1f,
                     Colour = Colour,
-                    ToApplyMods = ToApplyMods,
+                    EdgeSmoothness = new Vector2(2f),
+                    EditorMode2 = true,
+                    ClickAction = action,
                 },
-                new OwnSprite(Mod)
+                new Sprite
                 {
                     Depth = 0,
                     Anchor = Anchor.Centre,
@@ -109,81 +127,17 @@ namespace RhythmBox.Window.Objects
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f),
                     Alpha = 1f,
+                    EdgeSmoothness = new Vector2(2f),
+                    Texture = store.Get($"Skin/{this.Mod.SkinElement}"),
                 },
             };
-        }
-    }
 
-    internal class OwnSprite : Sprite
-    {
-        public Mod Mod { get; set; }
-
-        private bool Applied = false;
-
-        public OwnSprite(Mod mod)
-        {
-            this.Mod = mod;
-        }
-
-        [BackgroundDependencyLoader]
-        private void Load(TextureStore store)
-        {
-            this.Texture = store.Get($"Skin/{this.Mod.SkinElement}");
-        }
-
-        protected override bool OnMouseDown(MouseDownEvent e)
-        {
-            if (!Applied)
+            CckBx.OnMouseClick += () =>
             {
-                Applied = true;
-                this.Rotation += 20f;
-            }
-            else
-            {
-                Applied = false;
-                this.Rotation -= 20f;
-            }
+                Children.ForEach(drawable => drawable.RotateTo(drawable.Rotation == 0f ? 20f : 0f));
+            };
 
-            return base.OnMouseDown(e);
-        }
-    }
-
-    internal class ThisBox : Box
-    {
-        public List<Mod> ToApplyMods { get; set; }
-
-        private bool Applied = false;
-
-        private Color4 orgColor;
-
-        public Mod Mod { get; set; }
-
-        public ThisBox(Mod mod)
-        {
-            this.Mod = mod;
-        }
-
-        protected override bool OnMouseDown(MouseDownEvent e)
-        {
-            if (!Applied)
-            {
-                Applied = true;
-                ToApplyMods.Add(Mod);
-
-                orgColor = this.Colour;
-                this.Colour = Color4.Yellow.Opacity(0.7f);
-                this.Rotation += 20f;
-            }
-            else
-            {
-                Applied = false;
-                ToApplyMods.Remove(Mod);
-
-                this.Colour = orgColor;
-                this.Rotation -= 20f;
-            }
-
-            return base.OnMouseDown(e);
+            action.Invoke();
         }
     }
 }

@@ -15,8 +15,6 @@ namespace RhythmBox.Window.Overlays
     {
         public TextFlowContainer _text;
 
-        private Box box;
-
         public Mods modBox;
 
         [BackgroundDependencyLoader]
@@ -24,7 +22,7 @@ namespace RhythmBox.Window.Overlays
         {
             Children = new Drawable[]
             {
-                box = new Box
+                new Box
                 {
                     Depth = 0,
                     RelativePositionAxes = Axes.Both,
@@ -33,7 +31,16 @@ namespace RhythmBox.Window.Overlays
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f),
                     Colour = Color4.Black.Opacity(0.3f),
-                    Alpha = 0f,
+                },
+                modBox = new Mods
+                {
+                    Depth = -2,
+                    RelativePositionAxes = Axes.Both,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(0.6f, 0.3f),
+                    Colour = Color4.Green.Opacity(0.8f),
                 },
                 _text = new TextFlowContainer
                 {
@@ -44,18 +51,6 @@ namespace RhythmBox.Window.Overlays
                     TextAnchor = Anchor.Centre,
                     Spacing = new Vector2(2f),
                     AutoSizeAxes = Axes.Both,
-                    Alpha = 1f,
-                },
-                modBox = new Mods
-                {
-                    Depth = -1,
-                    RelativePositionAxes = Axes.Both,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(0.8f, 0.3f),
-                    Colour = Color4.Green.Opacity(0.8f),
-                    Alpha = 0f,
                 }
             };
         }
@@ -72,42 +67,27 @@ namespace RhythmBox.Window.Overlays
 
         protected override void PopIn()
         {
-            AnimationIn();
+            _text.Scale = new Vector2(0f);
+            _text.MoveTo(new Vector2(0f));
+            _text.Text = string.Empty;
+            _text.AddText("Here are some mods!", x => x.Font = new FontUsage("Roboto", 100));
+
+            this.FadeInFromZero(1000, Easing.In);
+
+            _text.FadeInFromZero(1000, Easing.InBack);
+            _text.ScaleTo(1f, 1250, Easing.OutElastic);
+            _text.MoveToOffset(new Vector2(0f, -0.25f), 1000, Easing.OutElastic); 
+            
             base.PopIn();
         }
 
         protected override void PopOut()
         {
-            AnimationOut();
-            base.PopOut();
-        }
-
-        public void Reset()
-        {
-            _text.Text = string.Empty;
-            _text.MoveTo(new Vector2(0f));
-        }
-
-        public void AnimationIn()
-        {
-            Reset();
-            this.FadeInFromZero(100, Easing.In);
-            box.FadeInFromZero(100, Easing.In);
-            _text.AddText("Here are some mods!", x => x.Font = new FontUsage("Roboto", 100));
-            _text.Scale = new Vector2(0f);
-            _text.FadeInFromZero(500, Easing.InBack);
-            _text.ScaleTo(1f, 2000, Easing.OutElastic);
-            Scheduler.AddDelayed(() => _text.MoveToOffset(new Vector2(0f, -0.25f), 500, Easing.In), 700);
-
-            Scheduler.AddDelayed(() => modBox.FadeInFromZero(100, Easing.In), 1200);
-        }
-
-        public void AnimationOut()
-        {
-            this.FadeOutFromOne(1000, Easing.In);
-            box.FadeInFromZero(0, Easing.In);
-            _text.FadeOutFromOne(500, Easing.OutBack);
+            this.FadeOutFromOne(400, Easing.In);
+            _text.FadeOutFromOne(400, Easing.OutBack);
             _text.MoveToOffset(new Vector2(0f, -0.25f), 500, Easing.In);
+            
+            base.PopOut();
         }
     }
 }
