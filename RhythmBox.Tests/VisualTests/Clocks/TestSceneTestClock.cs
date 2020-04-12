@@ -42,7 +42,7 @@ namespace RhythmBox.Tests.VisualTests.Clock
                 MapId = 0,
                 MapSetId = 0,
                 BPM = 150,
-                Mode = Mode.Std.Interfaces.GameMode.STD,
+                Mode = GameMode.STD,
                 Title = "Test Title",
                 Artist = "Test Artist",
                 Creator = "Test Creator",
@@ -51,9 +51,9 @@ namespace RhythmBox.Tests.VisualTests.Clock
                 EndTime = 1000
             };
 
-            map.HitObjects = new Mode.Std.Interfaces.HitObjects[1];
-            map.HitObjects[0] = new Mode.Std.Interfaces.HitObjects();
-            map.HitObjects[0]._direction = Mode.Std.Interfaces.HitObjects.Direction.Up;
+            map.HitObjects = new HitObjects[1];
+            map.HitObjects[0] = new HitObjects();
+            map.HitObjects[0]._direction = HitObjects.Direction.Up;
             map.HitObjects[0].Speed = 2f;
             map.HitObjects[0].Time = 200;
 
