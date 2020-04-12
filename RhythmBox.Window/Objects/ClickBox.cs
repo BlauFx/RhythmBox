@@ -24,6 +24,11 @@ namespace RhythmBox.Window.Objects
 
         public Action BoxAction2 { get; set; }
 
+        public delegate void MouseClick();
+
+        public event MouseClick OnMouseClick;
+
+
         [BackgroundDependencyLoader]
         private void Load()
         {
@@ -40,6 +45,7 @@ namespace RhythmBox.Window.Objects
                 if (EditorMode2)
                 {
                     ClickAction?.Invoke();
+                    OnMouseClick();
                 }
             }
             return base.OnMouseDown(e);
