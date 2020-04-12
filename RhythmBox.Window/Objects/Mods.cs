@@ -84,18 +84,21 @@ namespace RhythmBox.Window.Objects
 
         private ClickBox CckBx;
 
-        private Action action;
+        private Action<bool> action;
 
         public DrawMod(Mod mod, List<Mod> mods, Color4 Colour)
         {
             this.Mod = mod;
 
-            action = () =>
+            action = (FirstRun) =>
             {
-                if (CckBx.Rotation == 0f)
-                    mods.Add(Mod);
-                else
-                    mods.Remove(Mod);
+                if (!FirstRun)
+                {
+                    if (CckBx.Rotation == 0f)
+                        mods.Add(Mod);
+                    else
+                        mods.Remove(Mod);
+                }
 
                 CckBx.Colour = CckBx.Colour == Colour ? Color4.Yellow.Opacity(0.7f) : Colour;
             };
@@ -117,7 +120,7 @@ namespace RhythmBox.Window.Objects
                     Colour = Colour,
                     EdgeSmoothness = new Vector2(2f),
                     EditorMode2 = true,
-                    ClickAction = action,
+                    ClickAction = () => action(false),
                 },
                 new Sprite
                 {
@@ -137,7 +140,7 @@ namespace RhythmBox.Window.Objects
                 Children.ForEach(drawable => drawable.RotateTo(drawable.Rotation == 0f ? 20f : 0f));
             };
 
-            action.Invoke();
+            action.Invoke(true);
         }
     }
 }
