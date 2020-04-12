@@ -317,6 +317,7 @@ namespace RhythmBox.Window.Screens
             rhythmBoxClockContainer.Start();
             track?.Start();
 
+            if (!HpBar.HPBarEnabled) return;
             Scheduler.AddDelayed(() =>
             {
                 HpBar.ResizeBox(HpBar.CalcHpBarValue(HpBar.CurrentValue, HpBar.BoxMaxValue, 0f, Hit.Hit100, true), HpBar.HP_Update, Easing.OutCirc);
