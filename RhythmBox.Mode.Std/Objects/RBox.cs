@@ -141,32 +141,40 @@ namespace RhythmBox.Mode.Std.Objects
             bx.MoveToY(0f, 0, Easing.InCirc);
             bx.FadeInFromZero(Duration * 0.2, Easing.None);
 
-            if (direction == HitObjects.Direction.Up)
+            var ResizeAmount = Vector2.Zero;
+
+            switch (direction)
             {
-                bx.MoveToY(-0.5f, Duration, Easing.InCirc);
-                bx.ResizeTo(new Vector2(1f, 0.05f), Duration, Easing.InCirc);
-            }
-            else if (direction == HitObjects.Direction.Down)
-            {
-                bx.Rotation = 180f;
-                bx.MoveToY(0.5f, Duration, Easing.InCirc);
-                bx.ResizeTo(new Vector2(1f, 0.05f), Duration, Easing.InCirc);
-            }
-            else if (direction == HitObjects.Direction.Left)
-            {
-                bx.Origin = Anchor.CentreLeft;
-                bx.Size = new Vector2(0.01f, 0.1f);
-                bx.ResizeTo(new Vector2(0.056f, 1f), Duration, Easing.InCirc);
-                bx.MoveToX(-0.5f, Duration, Easing.InCirc);
-            }
-            else if (direction == HitObjects.Direction.Right)
-            {
-                bx.Origin = Anchor.CentreRight;
-                bx.Size = new Vector2(0.01f, 0.1f);
-                bx.ResizeTo(new Vector2(0.056f, 1f), Duration, Easing.InCirc);
-                bx.MoveToX(0.5f, Duration, Easing.InCirc);
+                case HitObjects.Direction.Up:
+                    bx.MoveToY(-0.5f, Duration, Easing.InCirc);
+
+                    ResizeAmount = new Vector2(1f, 0.05f);
+                    break;
+                case HitObjects.Direction.Down:
+                    bx.Rotation = 180f;
+                    bx.MoveToY(0.5f, Duration, Easing.InCirc);
+
+                    ResizeAmount = new Vector2(1f, 0.05f);
+                    break;
+                case HitObjects.Direction.Left:
+                    bx.Origin = Anchor.CentreLeft;
+                    bx.Size = new Vector2(0.01f, 0.1f);
+                    bx.MoveToX(-0.5f, Duration, Easing.InCirc);
+
+                    ResizeAmount = new Vector2(0.056f, 1f);
+                    break;
+                case HitObjects.Direction.Right:
+                    bx.Origin = Anchor.CentreRight;
+                    bx.Size = new Vector2(0.01f, 0.1f);
+                    bx.MoveToX(0.5f, Duration, Easing.InCirc);
+
+                    ResizeAmount = new Vector2(0.056f, 1f);
+                    break;
+                default:
+                    throw new Exception();
             }
 
+            bx.ResizeTo(ResizeAmount, Duration, Easing.InCirc);
             Scheduler.AddDelayed(() => Remove(), Duration + Expire);
         }
 
@@ -342,15 +350,15 @@ namespace RhythmBox.Mode.Std.Objects
             }
         }
 
-        private HitAnimation HitAnimation(Hit hit, float Y = int.MaxValue, float X = int.MaxValue) =>
-            new HitAnimation(hit)
+        private HitAnimation HitAnimation(Hit hit, float Y = int.MaxValue, float X = int.MaxValue) 
+            => new HitAnimation(hit)
             {
                 Depth = float.MinValue,
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
                 RelativePositionAxes = Axes.Both,
                 X = X == int.MaxValue ? bx.X : X,
-                Y = Y == int.MaxValue ? bx.Y : Y,
+                Y = Y == int.MaxValue ? bx.Y : Y
             };
 
         //https://stackoverflow.com/a/48728076
