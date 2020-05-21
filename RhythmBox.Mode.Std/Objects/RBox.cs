@@ -362,7 +362,11 @@ namespace RhythmBox.Mode.Std.Objects
                 {
                     try
                     {
-                        if ((_t.Namespace == namespaceName) && _t.IsClass) _t.GetMethod(methodName, (BindingFlags.Static | BindingFlags.Public))?.Invoke(null, parameters);
+                        if ((_t.Namespace == namespaceName) && _t.IsClass)
+                        {
+                            _t.GetMethod(methodName, BindingFlags.Static | BindingFlags.Public)?.Invoke(null, parameters);
+                            return;
+                        }
                     }
                     catch { }
                 }
