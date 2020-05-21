@@ -60,13 +60,15 @@ namespace RhythmBox.Window.Maps
 
         public void LoadTrackFile()
         {
+            if (Map is null)
+                return;
+
             track = trackStore?.Get($"{Map.Path.Substring(0, Map.Path.LastIndexOf(@"\"))}\\{Map.AFileName}");
 
             if (track != null)
                 track.Volume.Value = gameini.Get<double>(SettingsConfig.Volume);
         }
 
-        
         public void Stop() => track?.Stop();
     }
 }

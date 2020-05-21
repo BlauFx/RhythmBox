@@ -1,6 +1,7 @@
 ﻿using RhythmBox.Mode.Std.Maps;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace RhythmBox.Window.Maps
@@ -22,6 +23,9 @@ namespace RhythmBox.Window.Maps
                 if (count > 0)
                     MapsAvailable.Add(dirs);
             }
+
+            if (MapsAvailable.Count() == 0)
+                return null;
 
             int[] MapsCount2 = new int[MapsAvailable.Count];
             Map[,] Maps = new Map[MapsCount2.Length, 5]; //TODO: For now let's allow only 5 maps per pack
