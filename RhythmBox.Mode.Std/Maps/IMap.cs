@@ -33,7 +33,7 @@ namespace RhythmBox.Mode.Std.Maps
     
     public enum GameMode
     {
-        STD,
+        STD
     }
     
     public class HitObjects
