@@ -14,13 +14,13 @@ namespace RhythmBox.Window.Maps
     {
         private ITrackStore trackStore;
 
-        public Track track { get; set; }
+        public Track Track { get; set; }
 
         public Bindable<Track> BindableTrack { get; } = new Bindable<Track>();
 
         public Map Map { get; set; } = null;
 
-        private Storage storage;
+        private readonly Storage storage;
 
         public CachedMap(Storage storage) => this.storage = storage;
 
@@ -37,38 +37,38 @@ namespace RhythmBox.Window.Maps
         {
             if (Map == null) return;
 
-            var IsRunning = track.IsRunning;
+            var IsRunning = Track.IsRunning;
 
-            track?.Stop();
-            track?.Seek(time);
+            Track?.Stop();
+            Track?.Seek(time);
 
             if (IsRunning)
-                track?.Start();
+                Track?.Start();
             else
-                track?.Stop();
+                Track?.Stop();
 
-            BindableTrack.Value = track;
+            BindableTrack.Value = Track;
         }
 
         public void Play(double time)
         {
             Seek(time);
-            track?.Start();
+            Track?.Start();
         }
 
-        public void Play() => Play(track.CurrentTime);
+        public void Play() => Play(Track.CurrentTime);
 
         public void LoadTrackFile()
         {
             if (Map is null)
                 return;
 
-            track = trackStore?.Get($"{Map.Path.Substring(0, Map.Path.LastIndexOf(@"\"))}\\{Map.AFileName}");
+            Track = trackStore?.Get($"{Map.Path.Substring(0, Map.Path.LastIndexOf(@"\"))}\\{Map.AFileName}");
 
-            if (track != null)
-                track.Volume.Value = gameini.Get<double>(SettingsConfig.Volume);
+            if (Track != null)
+                Track.Volume.Value = gameini.Get<double>(SettingsConfig.Volume);
         }
 
-        public void Stop() => track?.Stop();
+        public void Stop() => Track?.Stop();
     }
 }

@@ -146,7 +146,7 @@ namespace RhythmBox.Window.Screens.SongSelection
             this.FadeInFromZero<SongSelcetion>(250, Easing.In);
             Scheduler.AddDelayed(() => WaitUntilLoaded = false, 250);
 
-            if (CachedMap.track == null)
+            if (CachedMap.Track == null)
             {
                 CachedMap.Map = CurrentSongsAvailable.GetRandomMap();
                 CachedMap.LoadTrackFile();
