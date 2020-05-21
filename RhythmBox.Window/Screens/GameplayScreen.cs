@@ -17,6 +17,7 @@ using osuTK.Input;
 using RhythmBox.Mode.Std.Animations;
 using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Mode.Std.Mods;
+using RhythmBox.Window.Animation;
 using RhythmBox.Window.Clocks;
 using RhythmBox.Window.Maps;
 using RhythmBox.Window.Overlays;
@@ -85,6 +86,8 @@ namespace RhythmBox.Window.Screens
 
         [Resolved]
         private Gameini Gameini { get; set; }
+
+        private Volume volume;
 
         public GameplayScreen(string path, List<Mod> ToApplyMods)
         {
@@ -160,6 +163,17 @@ namespace RhythmBox.Window.Screens
                     Origin = Anchor.CentreRight,
                     Texture = textureStore.Get("Skin/K4"),
                     Y = 0.6f,
+                },
+                volume = new Volume(new Bindable<Track>(track))
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    RelativePositionAxes = Axes.Both,
+                    Size = new Vector2(1f, 0.3f),
+                    X = 0.4f,
+                    Y = 0.2f,
+                    Alpha = 0f,
                 },
             };
 
@@ -423,6 +437,14 @@ namespace RhythmBox.Window.Screens
         }
 
         protected override void OnKeyUp(KeyUpEvent e) => CheckKey(e.Key, false);
+
+        protected override bool OnScroll(ScrollEvent e)
+        {
+            volume.ChangeVolume(true, e);
+            volume.FadeIn(100).OnComplete(x => x.Delay(1000).FadeOut(100));
+
+            return base.OnScroll(e);
+        }
 
         private async Task AddJustTrack()
         {
