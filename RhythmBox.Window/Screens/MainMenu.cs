@@ -276,26 +276,27 @@ namespace RhythmBox.Window.Screens
         {
             var Durationn = 100;
             var easing = Easing.OutQuart;
+            var sentivity = 0.1f;
 
             //TODO: I currently don't like the way how it's done
             if (e.LastMousePosition.Y >= e.MousePosition.Y)
             {
-                Background.MoveToOffset(new Vector2(0f, -0.05f), Durationn, easing);
+                Background.MoveToOffset(new Vector2(0f, -sentivity), Durationn, easing);
             }
 
             if (e.LastMousePosition.Y <= e.MousePosition.Y)
             {
-                Background.MoveToOffset(new Vector2(0f, 0.05f), Durationn, easing);
+                Background.MoveToOffset(new Vector2(0f, sentivity), Durationn, easing);
             }
 
             if (e.LastMousePosition.X >= e.MousePosition.X)
             {
-                Background.MoveToOffset(new Vector2(-0.05f, 0), Durationn, easing);
+                Background.MoveToOffset(new Vector2(-sentivity, 0), Durationn, easing);
             }
 
             if (e.LastMousePosition.X <= e.MousePosition.X)
             {
-                Background.MoveToOffset(new Vector2(0.05f, 0), Durationn, easing);
+                Background.MoveToOffset(new Vector2(sentivity, 0), Durationn, easing);
             }
 
             return base.OnMouseMove(e);
