@@ -14,12 +14,12 @@ namespace RhythmBox.Tests.VisualTests.Animations
     {
         private HpBar hpBar;
 
-        private const float Duration = 1000f;
+        private const float Duration = 100f;
 
-        private const Easing easing = Easing.InOutSine;
+        private const Easing easing = Easing.None;
 
         private bool CanContinue = false;
-
+        
         [BackgroundDependencyLoader]
         private void Load()
         {
@@ -33,7 +33,6 @@ namespace RhythmBox.Tests.VisualTests.Animations
                 Size = new Vector2(1f),
                 colour = Color4.AliceBlue,
             };
-
 
             AddStep("Set HP to 100%", () => ResizeHPBar(hpBar.BoxMaxValue, Duration, easing));
 
