@@ -75,6 +75,8 @@ namespace RhythmBox.Window.Screens
         public BindableBool ReturntoSongSelectionAfterFail { get; set; } = new BindableBool();
 
         private BindableBool Startable = new BindableBool();
+        
+        public BindableBool GameStarted = new BindableBool();
 
         private GameplayScreenLoader GameplayScreenLoader;
 
@@ -319,7 +321,6 @@ namespace RhythmBox.Window.Screens
         private async void Load(int time)
         {
             GameplayScreenLoader.StartRoating();
-
             await Task.Delay(time);
 
             GameplayScreenLoader.StopRotaing();
@@ -331,6 +332,8 @@ namespace RhythmBox.Window.Screens
             rhythmBoxClockContainer.Start();
             track?.Start();
 
+            GameStarted.Value = true;
+            
             if (!HpBar.HPBarEnabled) return;
             Scheduler.AddDelayed(() =>
             {
