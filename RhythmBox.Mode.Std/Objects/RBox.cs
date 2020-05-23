@@ -197,11 +197,9 @@ namespace RhythmBox.Mode.Std.Objects
             }
 
             bx.Colour = Color4.Red;
-
             Scheduler.AddDelayed(() => bx.Colour = Color4.White, this.Clear / 2);
 
             bx.FadeOut(this.Clear);
-
             bx.ScaleTo(1.1f, this.Clear, Easing.OutCirc);
 
             async void WaitAndInvoke()
@@ -224,7 +222,6 @@ namespace RhythmBox.Mode.Std.Objects
             Schedule(() =>
             {
                 Add(hitAnimation = HitAnimation(Hit.Hitx));
-
                 WaitAndInvoke();
             });
         }
