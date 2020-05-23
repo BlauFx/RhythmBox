@@ -43,7 +43,7 @@ namespace RhythmBox.Mode.Std.Maps
         {
             if (path == null) return;
 
-            var assembly = Assembly.LoadFrom("RhythmBox.Window.dll");
+            var assembly = Assembly.LoadFrom(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\RhythmBox.Window.dll");
             var classes = assembly.GetTypes().Where(p => p.Namespace == "RhythmBox.Window.Maps" && p.Name.Contains("MapReader"));
 
             BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;
