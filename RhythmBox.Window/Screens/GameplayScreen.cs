@@ -109,7 +109,9 @@ namespace RhythmBox.Window.Screens
 
             string AudioFile = $"{tmp}\\{_map.AFileName}";
             track = trackStore.Get(AudioFile);
-            track.Volume.Value = Gameini.Get<double>(SettingsConfig.Volume);
+            
+            if (track != null)
+                track.Volume.Value = Gameini.Get<double>(SettingsConfig.Volume);
 
             InternalChildren = new Drawable[]
             {
@@ -250,7 +252,7 @@ namespace RhythmBox.Window.Screens
             Score.Combo.PrivateComboBindable.ValueChanged += (e) =>
             {
                 //TODO:
-                HpBar.ResizeBox(HpBar.CalcHpBarValue(HpBar.CurrentValue, HpBar.BoxMaxValue, 0f, Score.Combo.currentHit), (HpBar.HP_Update / 1.5f), Easing.OutCirc);
+                HpBar.ResizeBox(HpBar.CalcHpBarValue(HpBar.CurrentValue.Value, HpBar.BoxMaxValue, 0f, Score.Combo.currentHit), (80f / 1.5f), Easing.OutCirc);
             };
 
             _RbPlayfield.HasFinished.ValueChanged += (e) =>
@@ -267,7 +269,7 @@ namespace RhythmBox.Window.Screens
 
                 cachedMap.Map = _map;
                 cachedMap.LoadTrackFile();
-                cachedMap.Seek(CurrentTime.Value);
+                cachedMap.Seek(CurrentTime.GetValueOrDefault());
 
                 Scheduler.AddDelayed(() => this.Expire(), 1000);
                 LoadComponentAsync(new SongSelcetion(), this.Push);
@@ -337,13 +339,13 @@ namespace RhythmBox.Window.Screens
             if (!HpBar.HPBarEnabled) return;
             Scheduler.AddDelayed(() =>
             {
-                HpBar.ResizeBox(HpBar.CalcHpBarValue(HpBar.CurrentValue, HpBar.BoxMaxValue, 0f, Hit.Hit100, true), HpBar.HP_Update, Easing.OutCirc);
-            }, HpBar.HP_Update, true);
+                HpBar.ResizeBox(HpBar.CalcHpBarValue(HpBar.CurrentValue.Value, HpBar.BoxMaxValue, 0f, Hit.Hit100, true), 80f, Easing.OutCirc);
+            }, 80f, true);
         }
 
         protected override void Update()
         {
-            if (HpBar.HPBarEnabled && HpBar.CurrentValue <= 0)
+            if (HpBar.HPBarEnabled && HpBar.CurrentValue.Value<= 0)
             {
                 if (!HasFailed)
                 {

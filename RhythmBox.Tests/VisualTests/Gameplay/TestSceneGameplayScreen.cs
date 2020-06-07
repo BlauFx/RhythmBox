@@ -113,7 +113,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
         {
             if (_gameplayScreen is null) return;
             
-            this._gameplayScreen.HpBar.CurrentValue = 0;
+            this._gameplayScreen.HpBar.CurrentValue.Value = 0;
         }
 
         [Test]

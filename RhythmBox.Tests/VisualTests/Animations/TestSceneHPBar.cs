@@ -43,21 +43,18 @@ namespace RhythmBox.Tests.VisualTests.Animations
             AddStep("Set HP to 0%", () => ResizeHPBar(0f, 1000, Easing.InOutSine));
 
             AddUntilStep("Wait until HP reduced by 10%", () => CanContinue);
-            AddStep("Increase Hp by 10%", () => ResizeHPBar(hpBar.CurrentValue + (hpBar.BoxMaxValue / 10), Duration, easing));
+            AddStep("Increase Hp by 10%", () => ResizeHPBar(hpBar.CurrentValue.Value + (hpBar.BoxMaxValue / 10), Duration, easing));
 
             AddUntilStep("Wait until HP is 0%", () => CanContinue);
-            AddStep("Reduce Hp by 10%", () => ResizeHPBar(hpBar.CurrentValue - (hpBar.BoxMaxValue / 10), Duration, easing));
+            AddStep("Reduce Hp by 10%", () => ResizeHPBar(hpBar.CurrentValue.Value - (hpBar.BoxMaxValue / 10), Duration, easing));
 
             AddUntilStep("Wait until HP increased by 10%", () => CanContinue);
             AddStep("Set HP to 100%", () => ResizeHPBar(hpBar.BoxMaxValue, Duration, easing));
 
             AddUntilStep("Wait until HP is 100%", () => CanContinue);
-            AddStep("Start to drain HP", () => DrainHP(hpBar.HP_Update, Easing.OutCirc));
+            AddStep("Start to drain HP", () => hpBar.DrainHP());
 
-            AddSliderStep("Adjust the value of the HPBar", 0f, 1f, 1f, (x) =>
-            {
-                hpBar.ResizeBox(x, Duration, easing);
-            });
+            AddSliderStep("Adjust the value of the HPBar", 0f, 1f, 1f, (x) => hpBar.ResizeBox(x, Duration, easing));
         }
 
         private async void ResizeHPBar(float value, float duration, Easing easing)
@@ -68,14 +65,6 @@ namespace RhythmBox.Tests.VisualTests.Animations
 
             await Task.Delay((int)duration);
             CanContinue = true;
-        }
-
-        private void DrainHP(float duration, Easing easing)
-        {
-            Scheduler.AddDelayed(() =>
-            {
-                ResizeHPBar(hpBar.CalcHpBarValue(hpBar.CurrentValue, hpBar.BoxMaxValue, 0f, Hit.Hit100, true), duration, easing);
-            }, duration, true);
         }
     }
 }

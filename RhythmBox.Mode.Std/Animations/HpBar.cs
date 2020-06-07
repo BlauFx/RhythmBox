@@ -1,3 +1,4 @@
+using System;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -7,6 +8,8 @@ using osuTK.Graphics;
 using RhythmBox.Mode.Std.Mods;
 using System.Collections.Generic;
 using System.Linq;
+using osu.Framework.Bindables;
+using osu.Framework.Utils;
 
 namespace RhythmBox.Mode.Std.Animations
 {
@@ -16,7 +19,7 @@ namespace RhythmBox.Mode.Std.Animations
 
         public readonly float BoxMaxValue;
 
-        public float CurrentValue { get; set; } = 0f;
+        public BindableFloat CurrentValue { get; set; } = new BindableFloat(0f);
 
         public Color4 colour;
 
@@ -28,16 +31,12 @@ namespace RhythmBox.Mode.Std.Animations
 
         private const float HP_X = 0.1f;
 
-        private readonly float HP_Drain = -0.001f;
-
-        public float HP_Update = 80f;
-
         public bool HPBarEnabled = true;
 
         public HpBar(float BoxMaxValue, List<Mod> mods = null)
         {
             this.BoxMaxValue = BoxMaxValue;
-            this.CurrentValue = BoxMaxValue;
+            this.CurrentValue.Value = BoxMaxValue;
 
             if (mods != null)
             {
@@ -61,7 +60,7 @@ namespace RhythmBox.Mode.Std.Animations
                 Alpha = 1f,
                 Colour = colour,
                 RelativeSizeAxes = Axes.Both,
-                Size = new Vector2(BoxMaxValue, 0.04f),
+                Size = new Vector2(BoxMaxValue, 0.05f),
                 X = 0f,
                 Y = 0f,
             };
@@ -70,17 +69,22 @@ namespace RhythmBox.Mode.Std.Animations
         public void ResizeBox(float value, double duration, Easing easing)
         {
             if ((value > BoxMaxValue || value < -0.0001f) || !HPBarEnabled)
-            {
                 return;
+
+            lock (CurrentValue)
+            {
+                lock (_box)
+                {
+                    CurrentValue.Value = value;
+                    _box.ResizeWidthTo(value, duration, easing);
+                }
             }
-
-            CurrentValue = value;
-
-            _box.ResizeWidthTo(value, duration, easing);
         }
 
         public float CalcHpBarValue(float currentvalue, float maxvalue, float minvalue, Hit hit, bool auto = false)
         {
+            DrainHP();
+            return 1f;
             if (!auto)
             {
                 float result = hit switch
@@ -103,7 +107,26 @@ namespace RhythmBox.Mode.Std.Animations
             //TODO: HP_Drain has a different value if BoxMaxValue has as well a different value
             //TODO: There is a huge diffrence between BoxMaxValue .1f and 1f.
             //TODO: This is definitly a huge game breaker
+            float HP_Drain = -0.0001f;
+            
             return currentvalue - HP_Drain;
+        }
+        
+        public void DrainHP()
+        {
+            Scheduler.AddDelayed(() =>
+            {
+                var calc = BoxMaxValue * 1 / 500;
+
+                lock (_box)
+                {
+                    lock (CurrentValue)
+                    {
+                        _box.ResizeWidthTo(CurrentValue.Value - calc, 50, Easing.InExpo); 
+                        CurrentValue.Value = _box.Width;
+                    }
+                }
+            }, 200, true);
         }
     }
 }

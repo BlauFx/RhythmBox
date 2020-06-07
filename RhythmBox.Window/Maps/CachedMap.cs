@@ -37,12 +37,12 @@ namespace RhythmBox.Window.Maps
         {
             if (Map == null) return;
 
-            var IsRunning = Track.IsRunning;
+            var IsRunning = Track?.IsRunning;
 
             Track?.Stop();
             Track?.Seek(time);
 
-            if (IsRunning)
+            if (IsRunning.GetValueOrDefault())
                 Track?.Start();
             else
                 Track?.Stop();
@@ -50,13 +50,13 @@ namespace RhythmBox.Window.Maps
             BindableTrack.Value = Track;
         }
 
-        public void Play(double time)
+        public void Play(double? time)
         {
-            Seek(time);
+            Seek(time.GetValueOrDefault());
             Track?.Start();
         }
 
-        public void Play() => Play(Track.CurrentTime);
+        public void Play() => Play(Track?.CurrentTime);
 
         public void LoadTrackFile()
         {
