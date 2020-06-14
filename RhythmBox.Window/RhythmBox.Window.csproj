@@ -7,7 +7,7 @@
   <ItemGroup>
     <PackageReference Include="DiscordRichPresence" Version="1.0.150" />
     <PackageReference Include="Humanizer" Version="2.8.11" />
-    <PackageReference Include="ppy.osu.Framework" Version="2020.528.0" />
+    <PackageReference Include="ppy.osu.Framework" Version="2020.609.0" />
   </ItemGroup>
 
   <ItemGroup>
