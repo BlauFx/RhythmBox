@@ -274,30 +274,11 @@ namespace RhythmBox.Window.Screens
 
         protected override bool OnMouseMove(MouseMoveEvent e)
         {
-            var Durationn = 100;
-            var easing = Easing.OutQuart;
-            var sentivity = 0.1f;
+            Background.MoveTo(new Vector2(0f));
+            float Intensity = .1f;
 
-            //TODO: I currently don't like the way how it's done
-            if (e.LastMousePosition.Y >= e.MousePosition.Y)
-            {
-                Background.MoveToOffset(new Vector2(0f, -sentivity), Durationn, easing);
-            }
-
-            if (e.LastMousePosition.Y <= e.MousePosition.Y)
-            {
-                Background.MoveToOffset(new Vector2(0f, sentivity), Durationn, easing);
-            }
-
-            if (e.LastMousePosition.X >= e.MousePosition.X)
-            {
-                Background.MoveToOffset(new Vector2(-sentivity, 0), Durationn, easing);
-            }
-
-            if (e.LastMousePosition.X <= e.MousePosition.X)
-            {
-                Background.MoveToOffset(new Vector2(sentivity, 0), Durationn, easing);
-            }
+            Vector2 offset = ToLocalSpace(e.ScreenSpaceMousePosition) - Background.DrawSize / (Background.Size.X * 2);
+            Background.MoveToOffset(offset * Intensity);
 
             return base.OnMouseMove(e);
         }
@@ -310,7 +291,7 @@ namespace RhythmBox.Window.Screens
             return base.OnScroll(e);
         }
 
-        protected override void OnHoverLost(HoverLostEvent e) => Background.MoveTo(new Vector2(0), 2000);
+        protected override void OnHoverLost(HoverLostEvent e) => Background.MoveTo(new Vector2(0f), 500);
 
         protected override void UpdateAfterChildren() => CurrentPlaying.Text = new LocalisedString($"Currently playing: {cachedMap?.Map?.Title}");
 
