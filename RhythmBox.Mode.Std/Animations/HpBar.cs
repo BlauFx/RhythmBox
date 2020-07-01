@@ -1,5 +1,5 @@
-using System;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
@@ -8,8 +8,8 @@ using osuTK.Graphics;
 using RhythmBox.Mode.Std.Mods;
 using System.Collections.Generic;
 using System.Linq;
-using osu.Framework.Bindables;
-using osu.Framework.Utils;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace RhythmBox.Mode.Std.Animations
 {
@@ -32,6 +32,8 @@ namespace RhythmBox.Mode.Std.Animations
         private const float HP_X = 0.1f;
 
         public bool HPBarEnabled = true;
+        private bool IsDraining = false;
+        private bool isSuspended = false;
 
         public HpBar(float BoxMaxValue, List<Mod> mods = null)
         {
@@ -71,13 +73,11 @@ namespace RhythmBox.Mode.Std.Animations
             if ((value > BoxMaxValue || value < -0.0001f) || !HPBarEnabled)
                 return;
 
-            lock (CurrentValue)
+            if (IsDraining)
             {
-                lock (_box)
-                {
-                    CurrentValue.Value = value;
-                    _box.ResizeWidthTo(value, duration, easing);
-                }
+                SuspendDraining(110);
+                CurrentValue.Value = value;
+                _box.ResizeWidthTo(value, duration, easing);
             }
         }
 
@@ -108,25 +108,36 @@ namespace RhythmBox.Mode.Std.Animations
             //TODO: There is a huge diffrence between BoxMaxValue .1f and 1f.
             //TODO: This is definitly a huge game breaker
             float HP_Drain = -0.0001f;
-            
+
             return currentvalue - HP_Drain;
         }
-        
+
         public void DrainHP()
         {
+            if (!IsDraining)
+                IsDraining = true;
+
             Scheduler.AddDelayed(() =>
             {
+                if (isSuspended)
+                    return;
+
                 var calc = BoxMaxValue * 1 / 500;
 
-                lock (_box)
-                {
-                    lock (CurrentValue)
-                    {
-                        _box.ResizeWidthTo(CurrentValue.Value - calc, 50, Easing.InExpo); 
-                        CurrentValue.Value = _box.Width;
-                    }
-                }
+                _box.ResizeWidthTo(CurrentValue.Value - calc, 50, Easing.InExpo);
+                CurrentValue.Value = _box.Width;
             }, 200, true);
+        }
+
+        private void SuspendDraining(int duratiom)
+        {
+            isSuspended = true;
+
+            Task.Run(() =>
+            {
+                Thread.Sleep(duratiom);
+                isSuspended = false;
+            });
         }
     }
 }
