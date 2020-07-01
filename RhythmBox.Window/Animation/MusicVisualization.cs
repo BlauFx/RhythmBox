@@ -107,7 +107,7 @@ namespace RhythmBox.Window.Animation
                     return;
                 }
 
-                float[] amplitudes = bindableTrack?.Value?.CurrentAmplitudes.FrequencyAmplitudes;
+                float[] amplitudes = bindableTrack?.Value?.CurrentAmplitudes.FrequencyAmplitudes.ToArray();
 
                 if (!(bindableTrack?.Value?.IsRunning).Value || amplitudes == null || Bars == null) return;
 
