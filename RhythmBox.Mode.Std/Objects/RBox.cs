@@ -246,22 +246,25 @@ namespace RhythmBox.Mode.Std.Objects
 
             if (key == keys[0] && direction == HitObjects.Direction.Up)
             {
-                if (bx.Y <= -0.5 + 0.05f && bx.Y >= -0.50001f)
+                Hit? ConditionUp = bx.Y switch
+                {
+                    <= -0.5f + 0.05f and >= -0.50001f => Hit.Hit300,
+                    <= -0.35f and >= -0.5f + 0.05f => Hit.Hit100,
+                    <= -0.25f and >= -0.35f => Hit.Hitx,
+                    _ => null
+                };
+
+                if (ConditionUp == Hit.Hit300)
                 {
                     Click(Hit.Hit300);
                     Add(hitAnimation = HitAnimation(Hit.Hit300, bx.Y + 0.025f));
                 }
-                else if (bx.Y <= -0.35f && bx.Y >= -0.5f + 0.05f)
+                else if (ConditionUp == Hit.Hit100)
                 {
                     Click(Hit.Hit100);
                     Add(hitAnimation = HitAnimation(Hit.Hit100));
                 }
-                else if (bx.Y <= -0.25f && bx.Y >= -0.35f)
-                {
-                    Click(Hit.Hit50);
-                    Add(hitAnimation = HitAnimation(Hit.Hit50));
-                }
-                else if (bx.Y <= 0f && bx.Y >= -0.25f)
+                else if (ConditionUp == Hit.Hitx)
                 {
                     Click(Hit.Hitx);
                     Add(hitAnimation = HitAnimation(Hit.Hitx));
@@ -271,7 +274,13 @@ namespace RhythmBox.Mode.Std.Objects
             }
             else if (key == keys[1] && direction == HitObjects.Direction.Left)
             {
-                if (bx.X <= -0.5 + 0.05f && bx.X >= -0.50001f)
+                Hit? ConditionLeft = bx.X switch
+                {
+                    <= -0.5f + 0.05f and >= -0.50001f => Hit.Hit300,
+                    _ => null
+                };
+
+                if (ConditionLeft == Hit.Hit300)
                 {
                     Click(Hit.Hit300);
                     Add(hitAnimation = HitAnimation(Hit.Hit300, bx.Y, bx.X + 0.025f));
@@ -283,11 +292,6 @@ namespace RhythmBox.Mode.Std.Objects
                 }
                 else if (bx.X <= -0.25f && bx.Y >= -0.35f)
                 {
-                    Click(Hit.Hit50);
-                    Add(hitAnimation = HitAnimation(Hit.Hit50, bx.Y, bx.X + 0.025f));
-                }
-                else if (bx.X <= 0f && bx.Y >= -0.25f)
-                {
                     Click(Hit.Hitx);
                     Add(hitAnimation = HitAnimation(Hit.Hitx));
                 }
@@ -296,22 +300,25 @@ namespace RhythmBox.Mode.Std.Objects
             }
             else if (key == keys[2] && direction == HitObjects.Direction.Down)
             {
-                if (bx.Y >= 0.5f - 0.05f && bx.Y <= 0.50001f)
+                Hit? ConditionDown = bx.Y switch
+                {
+                    >= 0.5f - 0.05f and <= 0.50001f => Hit.Hit300,
+                    >= 0.35f and <= 0.5f - 0.05f => Hit.Hit100,
+                    >= 0.25f and <= 0.35f => Hit.Hitx,
+                    _ => null
+                };
+
+                if (ConditionDown == Hit.Hit300)
                 {
                     Click(Hit.Hit300);
                     Add(hitAnimation = HitAnimation(Hit.Hit300, bx.Y - 0.025f));
                 }
-                else if (bx.Y >= 0.35f && bx.Y <= 0.5f - 0.05f)
+                else if (ConditionDown == Hit.Hit100)
                 {
                     Click(Hit.Hit100);
                     Add(hitAnimation = HitAnimation(Hit.Hit100));
                 }
-                else if (bx.Y >= 0.25f && bx.Y <= 0.35f)
-                {
-                    Click(Hit.Hit50);
-                    Add(hitAnimation = HitAnimation(Hit.Hit50));
-                }
-                else if (bx.Y >= 0f && bx.Y <= 0.25f)
+                else if (ConditionDown == Hit.Hitx)
                 {
                     Click(Hit.Hitx);
                     Add(hitAnimation = HitAnimation(Hit.Hitx));
@@ -321,7 +328,13 @@ namespace RhythmBox.Mode.Std.Objects
             }
             else if (key == keys[3] && direction == HitObjects.Direction.Right)
             {
-                if (bx.X >= 0.5 - 0.05f && bx.X <= 0.50001f)
+                Hit? ConditionRight = bx.X switch
+                {
+                    >= 0.5f - 0.05f and <= 0.50001f => Hit.Hit300,
+                    _ => null
+                };
+
+                if (ConditionRight == Hit.Hit300)
                 {
                     Click(Hit.Hit300);
                     Add(hitAnimation = HitAnimation(Hit.Hit300, bx.Y, bx.X - 0.025f));
@@ -333,17 +346,11 @@ namespace RhythmBox.Mode.Std.Objects
                 }
                 else if (bx.X >= 0.25f && bx.Y <= 0.35f)
                 {
-                    Click(Hit.Hit50);
-                    Add(hitAnimation = HitAnimation(Hit.Hit50));
-                }
-                else if (bx.X >= 0f && bx.Y <= 0.25f)
-                {
                     Click(Hit.Hitx);
                     Add(hitAnimation = HitAnimation(Hit.Hitx));
                 }
 
                 Remove();
-
             }
         }
 

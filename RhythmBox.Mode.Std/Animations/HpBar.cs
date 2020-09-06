@@ -27,8 +27,6 @@ namespace RhythmBox.Mode.Std.Animations
 
         private const float HP_100 = 0.005f;
 
-        private const float HP_50 = 0.0025f;
-
         private const float HP_X = 0.1f;
 
         public bool HPBarEnabled = true;
@@ -85,13 +83,13 @@ namespace RhythmBox.Mode.Std.Animations
         {
             DrainHP();
             return 1f;
+
             if (!auto)
             {
                 float result = hit switch
                 {
                     Hit.Hit300 => currentvalue + HP_300,
                     Hit.Hit100 => currentvalue + HP_100,
-                    Hit.Hit50 => currentvalue + HP_50,
                     Hit.Hitx => currentvalue - HP_X * 10,
                     _ => 0
                 };

@@ -31,9 +31,6 @@ namespace RhythmBox.Tests.VisualTests.Animations
             AddStep("Start hit100", () => Wait(Hit.Hit100));
 
             AddUntilStep("Wait until hit100 finished", () => CanContinue);
-            AddStep("Start hit50", () => Wait(Hit.Hit50));
-
-            AddUntilStep("Wait until hit50 finished", () => CanContinue);
             AddStep("Start hitx", () => Wait(Hit.Hitx));
         }
 

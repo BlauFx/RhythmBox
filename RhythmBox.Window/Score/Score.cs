@@ -17,7 +17,6 @@ namespace RhythmBox.Window.Score
             {
                 Hit.Hit300 => 300,
                 Hit.Hit100 => 100,
-                Hit.Hit50 => 50,
                 Hit.Hitx => 0,
                 _ => 0,
             };

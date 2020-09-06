@@ -56,8 +56,6 @@ namespace RhythmBox.Mode.Std.Animations
                 hitSprite.Texture = store.Get("Skin/hit300.png");
             else if (Hit == Hit.Hit100)
                 hitSprite.Texture = store.Get("Skin/hit100.png");
-            else if (Hit == Hit.Hit50)
-                hitSprite.Texture = store.Get("Skin/hit50.png");
             else if (Hit == Hit.Hitx)
             {
                 hitSprite.Texture = store.Get("Skin/hitx.png");
@@ -76,7 +74,6 @@ namespace RhythmBox.Mode.Std.Animations
     public enum Hit
     {
         Hitx,
-        Hit50,
         Hit100,
         Hit300
     }
