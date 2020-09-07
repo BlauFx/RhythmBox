@@ -11,7 +11,6 @@ using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Events;
 using osuTK;
 using osuTK.Graphics;
-using RhythmBox.Window.pending_files;
 
 namespace RhythmBox.Window.Animation
 {

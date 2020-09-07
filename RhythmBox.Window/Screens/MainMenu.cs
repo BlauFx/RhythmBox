@@ -14,7 +14,6 @@ using osuTK.Graphics;
 using RhythmBox.Window.Animation;
 using RhythmBox.Window.Maps;
 using RhythmBox.Window.Overlays;
-using RhythmBox.Window.pending_files;
 using RhythmBox.Window.Screens.SongSelection;
 using RhythmBox.Window.Updater;
 using System;

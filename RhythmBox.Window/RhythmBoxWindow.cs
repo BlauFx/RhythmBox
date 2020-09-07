@@ -3,7 +3,6 @@ using osu.Framework.Graphics;
 using osu.Framework.Platform;
 using osu.Framework.Screens;
 using osuTK;
-using RhythmBox.Window.pending_files;
 using RhythmBox.Window.Screens;
 
 namespace RhythmBox.Window

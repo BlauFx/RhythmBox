@@ -11,7 +11,6 @@ using RhythmBox.Mode.Std.Animations;
 using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Mode.Std.Mods;
 using RhythmBox.Mode.Std.Objects;
-using RhythmBox.Window.pending_files;
 using System;
 using System.Collections.Generic;
 

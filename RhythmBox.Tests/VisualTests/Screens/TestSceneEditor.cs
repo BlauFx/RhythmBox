@@ -8,7 +8,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Screens;
 using osu.Framework.Testing;
 using osuTK;
-using RhythmBox.Window.pending_files;
+using RhythmBox.Window;
 using RhythmBox.Window.Screens;
 
 namespace RhythmBox.Tests.VisualTests.Screens

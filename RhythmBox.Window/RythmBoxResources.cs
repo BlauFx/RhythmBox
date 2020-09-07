@@ -4,7 +4,6 @@ using osu.Framework.Configuration;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.IO.Stores;
 using RhythmBox.Window.Maps;
-using RhythmBox.Window.pending_files;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;

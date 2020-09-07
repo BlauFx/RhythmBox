@@ -20,7 +20,6 @@ using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Window.Maps;
 using RhythmBox.Window.Objects;
 using RhythmBox.Window.Overlays;
-using RhythmBox.Window.pending_files;
 
 namespace RhythmBox.Window.Screens.SongSelection
 {

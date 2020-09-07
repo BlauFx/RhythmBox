@@ -21,7 +21,6 @@ using RhythmBox.Window.Animation;
 using RhythmBox.Window.Clocks;
 using RhythmBox.Window.Maps;
 using RhythmBox.Window.Overlays;
-using RhythmBox.Window.pending_files;
 using RhythmBox.Window.Playfield;
 using RhythmBox.Window.Screens.SongSelection;
 using System;

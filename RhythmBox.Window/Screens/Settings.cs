@@ -10,7 +10,6 @@ using osuTK.Graphics;
 using osuTK.Input;
 using RhythmBox.Window.Objects;
 using RhythmBox.Window.Overlays;
-using RhythmBox.Window.pending_files;
 using System;
 
 namespace RhythmBox.Window.Screens

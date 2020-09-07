@@ -3,7 +3,7 @@ using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Testing;
 using osuTK;
-using RhythmBox.Window.pending_files;
+using RhythmBox.Window;
 
 namespace RhythmBox.Tests.VisualTests.Animations
 {
