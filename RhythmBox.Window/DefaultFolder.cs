@@ -4,7 +4,7 @@ using System.IO;
 using System.Reflection;
 using HitObjects = RhythmBox.Mode.Std.Maps.HitObjects;
 
-namespace RhythmBox.Window.pending_files
+namespace RhythmBox.Window
 {
     public class DefaultFolder
     {

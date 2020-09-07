@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using osu.Framework.Logging;
 
-namespace RhythmBox.Window.pending_files
+namespace RhythmBox.Window
 {
     public class Check_Licenses
     {

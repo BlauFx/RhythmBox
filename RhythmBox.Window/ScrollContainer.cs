@@ -6,7 +6,7 @@ using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
 
-namespace RhythmBox.Window.pending_files
+namespace RhythmBox.Window
 {
     public class ScrollContainer : ScrollContainer<Drawable>
     {

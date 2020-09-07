@@ -1,7 +1,7 @@
 ﻿using osu.Framework.Configuration;
 using osu.Framework.Platform;
 
-namespace RhythmBox.Window.pending_files
+namespace RhythmBox.Window
 {
     public class Gameini : IniConfigManager<SettingsConfig>
     {

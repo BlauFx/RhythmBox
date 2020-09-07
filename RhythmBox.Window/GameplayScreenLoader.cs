@@ -6,7 +6,7 @@ using osu.Framework.Graphics.Textures;
 using osuTK;
 using System;
 
-namespace RhythmBox.Window.pending_files
+namespace RhythmBox.Window
 {
     public class GameplayScreenLoader : CompositeDrawable
     {
