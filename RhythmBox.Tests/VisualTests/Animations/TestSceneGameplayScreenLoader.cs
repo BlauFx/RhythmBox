@@ -23,17 +23,10 @@ namespace RhythmBox.Tests.VisualTests.Animations
                 Origin = Anchor.Centre,
             };
 
-            AddStep("Start loading", () =>
-            {
-                gameplayScreenLoader.StartRoating();
-            });
-
+            AddStep("Start loading", () => gameplayScreenLoader.StartRotating());
             AddWaitStep("Wait", 20);
 
-            AddStep("Stop loading", () =>
-            {
-                gameplayScreenLoader.StopRotaing();
-            });
+            AddStep("Stop loading", () => gameplayScreenLoader.StopRotating());
         }
     }
 }

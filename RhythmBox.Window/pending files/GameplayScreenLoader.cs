@@ -5,7 +5,6 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osuTK;
 using System;
-using System.Threading.Tasks;
 
 namespace RhythmBox.Window.pending_files
 {
@@ -16,17 +15,17 @@ namespace RhythmBox.Window.pending_files
         public double Duration { get; set; } = 1000;
 
         [BackgroundDependencyLoader]
-        private void Load(TextureStore store) 
+        private void Load(TextureStore store)
             => InternalChild = boxLoading = new Sprite
-        {
-            Anchor = Anchor.Centre,
-            Origin = Anchor.Centre,
-            Size = new Vector2(100f),
-            Texture = store.Get("Skin/LoadingCircle"),
-        };
+            {
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+                Size = new Vector2(100f),
+                Texture = store.Get("Skin/LoadingCircle"),
+            };
 
-        public void StartRoating() => boxLoading.Spin(Duration, RotationDirection.Clockwise, 0, Int16.MaxValue);
+        public void StartRotating() => boxLoading.Spin(Duration, RotationDirection.Clockwise, 0, Int16.MaxValue);
 
-        public async void StopRotaing() => await Task.Run(() => boxLoading.ClearTransforms());
+        public void StopRotating() => boxLoading.ClearTransforms();
     }
 }

@@ -322,10 +322,10 @@ namespace RhythmBox.Window.Screens
 
         private async void Load(int time)
         {
-            GameplayScreenLoader.StartRoating();
+            GameplayScreenLoader.StartRotating();
             await Task.Delay(time);
 
-            GameplayScreenLoader.StopRotaing();
+            GameplayScreenLoader.StopRotating();
             GameplayScreenLoader.FadeOut(time, Easing.In).Delay(time).Finally((Action) => GameplayScreenLoader.Expire());
 
             rhythmBoxClockContainer.Seek(_map.StartTime);
