@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Screens;
@@ -10,33 +6,32 @@ using osu.Framework.Testing;
 using osuTK;
 using RhythmBox.Window;
 using RhythmBox.Window.Screens;
+using System.IO;
+using System.Reflection;
 
 namespace RhythmBox.Tests.VisualTests.Screens
 {
     [TestFixture]
     public class TestSceneEditor : TestScene
     {
-        public override IReadOnlyList<Type> RequiredTypes => new[]
-            { typeof(ScreenStack), typeof(EditorDefault) };
-        
         private ScreenStack _stack = null;
 
         private EditorDefault _editorDefault;
-        
+
         [BackgroundDependencyLoader]
         private void Load()
         {
             AddStep("Add TestEditorDefault", () =>
             {
                 if (_stack?.IsAlive ?? false) return;
-                
+
                 Add(_stack = new ScreenStack
                 {
                     RelativeSizeAxes = Axes.Both
                 });
 
                 string path = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) + "\\Songs\\TestMap\\Difficulty1.ini";
-                
+
                 if (!File.Exists(path))
                     _ = new DefaultFolder();
 

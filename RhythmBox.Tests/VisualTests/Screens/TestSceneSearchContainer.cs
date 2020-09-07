@@ -13,9 +13,6 @@ namespace RhythmBox.Tests.VisualTests.Screens
     [TestFixture]
     public class TestSceneSearchContainer : TestScene
     {
-        public override IReadOnlyList<Type> RequiredTypes => new[]
-            { typeof(ScreenStack), typeof(HandleSearch) };
-
         private HandleSearch hsearch;
         
         [BackgroundDependencyLoader]

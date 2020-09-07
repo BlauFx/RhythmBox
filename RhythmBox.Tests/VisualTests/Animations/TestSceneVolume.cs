@@ -5,17 +5,12 @@ using osu.Framework.Input.Events;
 using osu.Framework.Testing;
 using RhythmBox.Window.Animation;
 using RhythmBox.Window.Maps;
-using System;
-using System.Collections.Generic;
 
 namespace RhythmBox.Tests.VisualTests.Animations
 {
     [TestFixture]
     public class TestSceneVolume : TestScene
     {
-        public override IReadOnlyList<Type> RequiredTypes => new[]
-            { typeof(Volume) };
-
         [Resolved]
         private CachedMap cachedMap { get; set; }
 

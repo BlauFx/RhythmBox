@@ -13,9 +13,6 @@ namespace RhythmBox.Tests.VisualTests.Screens
     [TestFixture]
     public class TestSceneSongSelection : TestScene
     {
-        public override IReadOnlyList<Type> RequiredTypes => new[]
-            { typeof(ScreenStack), typeof(SongSelcetion) };
-        
         private ScreenStack _stack = null;
 
         [BackgroundDependencyLoader]

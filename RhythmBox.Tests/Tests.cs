@@ -17,7 +17,7 @@ namespace RhythmBox.Tests
             {
                 Children = new Drawable[]
                 {
-                    new TestBrowser("RhythmBox"),
+                    new TestBrowser(base.Name),
                     new CursorContainer(),
                 },
             };
