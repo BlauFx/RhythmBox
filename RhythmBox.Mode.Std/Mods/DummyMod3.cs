@@ -8,7 +8,7 @@ namespace RhythmBox.Mode.Std.Mods
 
         public override string SkinElement => "DummyMod3";
 
-        public void ApplyToHP(HpBar hp)
+        public void ApplyToHP(HPBar hp)
         {
             hp.HPBarEnabled = false;
         }

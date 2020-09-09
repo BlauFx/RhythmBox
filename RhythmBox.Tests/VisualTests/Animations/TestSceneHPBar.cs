@@ -12,7 +12,7 @@ namespace RhythmBox.Tests.VisualTests.Animations
     [TestFixture]
     public class TestSceneHpBar : TestScene
     {
-        private HpBar hpBar;
+        private HPBar hpbar;
 
         private const float Duration = 100f;
 
@@ -25,7 +25,7 @@ namespace RhythmBox.Tests.VisualTests.Animations
         {
             SetupGameHost();
 
-            Child = hpBar = new HpBar(1f)
+            Child = hpbar = new HPBar(1f)
             {
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
@@ -34,34 +34,34 @@ namespace RhythmBox.Tests.VisualTests.Animations
                 colour = Color4.AliceBlue,
             };
 
-            AddStep("Set HP to 100%", () => ResizeHPBar(hpBar.BoxMaxValue, Duration, easing));
+            AddStep("Set HP to 100%", () => ResizeHPBar(hpbar.BoxMaxValue, Duration, easing));
 
             AddUntilStep("Wait until HP is 100%", () => CanContinue);
-            AddStep("Set HP to 50%", () => ResizeHPBar(hpBar.BoxMaxValue / 2, Duration, easing));
+            AddStep("Set HP to 50%", () => ResizeHPBar(hpbar.BoxMaxValue / 2, Duration, easing));
 
             AddUntilStep("Wait until HP is 50%", () => CanContinue);
             AddStep("Set HP to 0%", () => ResizeHPBar(0f, 1000, Easing.InOutSine));
 
             AddUntilStep("Wait until HP reduced by 10%", () => CanContinue);
-            AddStep("Increase Hp by 10%", () => ResizeHPBar(hpBar.CurrentValue.Value + (hpBar.BoxMaxValue / 10), Duration, easing));
+            AddStep("Increase Hp by 10%", () => ResizeHPBar(hpbar.CurrentValue.Value + (hpbar.BoxMaxValue / 10), Duration, easing));
 
             AddUntilStep("Wait until HP is 0%", () => CanContinue);
-            AddStep("Reduce Hp by 10%", () => ResizeHPBar(hpBar.CurrentValue.Value - (hpBar.BoxMaxValue / 10), Duration, easing));
+            AddStep("Reduce Hp by 10%", () => ResizeHPBar(hpbar.CurrentValue.Value - (hpbar.BoxMaxValue / 10), Duration, easing));
 
             AddUntilStep("Wait until HP increased by 10%", () => CanContinue);
-            AddStep("Set HP to 100%", () => ResizeHPBar(hpBar.BoxMaxValue, Duration, easing));
+            AddStep("Set HP to 100%", () => ResizeHPBar(hpbar.BoxMaxValue, Duration, easing));
 
             AddUntilStep("Wait until HP is 100%", () => CanContinue);
-            AddStep("Start to drain HP", () => hpBar.DrainHP());
+            AddStep("Start to drain HP", () => hpbar.DrainHP());
 
-            AddSliderStep("Adjust the value of the HPBar", 0f, 1f, 1f, (x) => hpBar.ResizeBox(x, Duration, easing));
+            AddSliderStep("Adjust the value of the HPBar", 0f, 1f, 1f, (x) => hpbar.ResizeBox(x, Duration, easing));
         }
 
         private async void ResizeHPBar(float value, float duration, Easing easing)
         {
             CanContinue = false;
 
-            hpBar.ResizeBox(value, duration, easing);
+            hpbar.ResizeBox(value, duration, easing);
 
             await Task.Delay((int)duration);
             CanContinue = true;

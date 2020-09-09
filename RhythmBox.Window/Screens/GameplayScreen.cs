@@ -41,7 +41,7 @@ namespace RhythmBox.Window.Screens
 
         private Playfield.Playfield _RbPlayfield;
 
-        public HpBar HpBar { get; set; }
+        public HPBar hpbar { get; set; }
 
         private RhythmBoxClockContainer rhythmBoxClockContainer;
 
@@ -206,7 +206,7 @@ namespace RhythmBox.Window.Screens
                     Size = new Vector2(0.6f, 1f),
                     Map = _map,
                 },
-                HpBar = new HpBar(.1f, ToApplyMods)
+                hpbar = new HPBar(.1f, ToApplyMods)
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
@@ -241,7 +241,7 @@ namespace RhythmBox.Window.Screens
             _RbPlayfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
             DispayScore.Clock = rhythmBoxClockContainer.RhythmBoxClock;
             DispayCombo.Clock = rhythmBoxClockContainer.RhythmBoxClock;
-            HpBar.Clock = rhythmBoxClockContainer.RhythmBoxClock;
+            hpbar.Clock = rhythmBoxClockContainer.RhythmBoxClock;
 
             _RbPlayfield.Resuming.BindTo(Resuming);
 
@@ -251,7 +251,7 @@ namespace RhythmBox.Window.Screens
             Score.Combo.PrivateComboBindable.ValueChanged += (e) =>
             {
                 //TODO:
-                HpBar.ResizeBox(HpBar.CalcHpBarValue(HpBar.CurrentValue.Value, HpBar.BoxMaxValue, 0f, Score.Combo.currentHit), (80f / 1.5f), Easing.OutCirc);
+                hpbar.ResizeBox(hpbar.CalcHpBarValue(hpbar.CurrentValue.Value, hpbar.BoxMaxValue, 0f, Score.Combo.currentHit), (80f / 1.5f), Easing.OutCirc);
             };
 
             _RbPlayfield.HasFinished.ValueChanged += (e) =>
@@ -335,16 +335,16 @@ namespace RhythmBox.Window.Screens
 
             GameStarted.Value = true;
             
-            if (!HpBar.HPBarEnabled) return;
+            if (!hpbar.HPBarEnabled) return;
             Scheduler.AddDelayed(() =>
             {
-                HpBar.ResizeBox(HpBar.CalcHpBarValue(HpBar.CurrentValue.Value, HpBar.BoxMaxValue, 0f, Hit.Hit100, true), 80f, Easing.OutCirc);
+                hpbar.ResizeBox(hpbar.CalcHpBarValue(hpbar.CurrentValue.Value, hpbar.BoxMaxValue, 0f, Hit.Hit100, true), 80f, Easing.OutCirc);
             }, 80f, true);
         }
 
         protected override void Update()
         {
-            if (HpBar.HPBarEnabled && HpBar.CurrentValue.Value<= 0)
+            if (hpbar.HPBarEnabled && hpbar.CurrentValue.Value<= 0)
             {
                 if (!HasFailed)
                 {

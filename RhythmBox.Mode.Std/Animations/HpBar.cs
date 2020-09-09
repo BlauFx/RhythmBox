@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace RhythmBox.Mode.Std.Animations
 {
-    public class HpBar : Container
+    public class HPBar : Container
     {
         private Box _box;
 
@@ -24,16 +24,14 @@ namespace RhythmBox.Mode.Std.Animations
         public Color4 colour;
 
         private const float HP_300 = 0.01f;
-
-        private const float HP_100 = 0.005f;
-
+        private const float HP_100 = HP_300 / 2;
         private const float HP_X = 0.1f;
 
         public bool HPBarEnabled = true;
         private bool IsDraining = false;
         private bool isSuspended = false;
 
-        public HpBar(float BoxMaxValue, List<Mod> mods = null)
+        public HPBar(float BoxMaxValue, List<Mod> mods = null)
         {
             this.BoxMaxValue = BoxMaxValue;
             this.CurrentValue.Value = BoxMaxValue;
