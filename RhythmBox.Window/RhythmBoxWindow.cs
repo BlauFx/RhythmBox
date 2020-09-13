@@ -23,7 +23,13 @@ namespace RhythmBox.Window
                 Scale = new Vector2(0f)
             }, _stack.Push);
 
-            Check_Licenses.License();
+            License.Licenses("https://raw.githubusercontent.com/BlauFx/RhythmBox/master/Licenses",
+                new[]
+                {
+                    "RhythmBox",
+                    "osu-framework",
+                    "Roboto-Font"
+                });
 
             base.LoadComplete();
         }
