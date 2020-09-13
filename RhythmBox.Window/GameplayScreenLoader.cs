@@ -5,6 +5,7 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osuTK;
 using System;
+using System.Threading.Tasks;
 
 namespace RhythmBox.Window
 {
@@ -26,6 +27,6 @@ namespace RhythmBox.Window
 
         public void StartRotating() => boxLoading.Spin(Duration, RotationDirection.Clockwise, 0, Int16.MaxValue);
 
-        public void StopRotating() => boxLoading.ClearTransforms();
+        public void StopRotating() => Task.Run(() => boxLoading.FinishTransforms(false, "Rotation"));
     }
 }
