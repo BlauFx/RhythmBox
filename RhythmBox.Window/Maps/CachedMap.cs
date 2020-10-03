@@ -1,4 +1,5 @@
-﻿using osu.Framework.Allocation;
+﻿using System;
+using osu.Framework.Allocation;
 using osu.Framework.Audio;
 using osu.Framework.Audio.Track;
 using osu.Framework.Bindables;
@@ -62,7 +63,7 @@ namespace RhythmBox.Window.Maps
             if (Map is null)
                 return;
 
-            Track = trackStore?.Get($"{Map.Path.Substring(0, Map.Path.LastIndexOf(@"\"))}\\{Map.AFileName}");
+            Track = trackStore?.Get($"{Map.Path[..Map.Path.LastIndexOf(@"\", StringComparison.Ordinal)]}\\{Map.AFileName}");
 
             if (Track != null)
                 Track.Volume.Value = gameini.Get<double>(SettingsConfig.Volume);

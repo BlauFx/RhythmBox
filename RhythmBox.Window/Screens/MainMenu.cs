@@ -1,4 +1,4 @@
-﻿using osu.Framework.Allocation;
+using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -294,23 +294,17 @@ namespace RhythmBox.Window.Screens
 
         protected override void UpdateAfterChildren() => CurrentPlaying.Text = new LocalisedString($"Currently playing: {cachedMap?.Map?.Title}");
 
-        private void LimitFPS()
+        private void LimitFPS(bool Limit)
         {
-            Host.MaximumDrawHz = 200;
-            Host.MaximumUpdateHz = 200;
-        }
-
-        private void UnlockFPS()
-        {
-            Host.MaximumDrawHz = int.MaxValue;
-            Host.MaximumUpdateHz = int.MaxValue;
+            Host.MaximumDrawHz = Limit ? 200 : int.MaxValue;
+            Host.MaximumUpdateHz = Limit ? 200 : int.MaxValue;;
         }
 
         public override void OnEntering(IScreen last)
         {
             Schedule(async () => await LoadComponentAsync(songSelction = new SongSelcetion()));
 
-            LimitFPS();
+            LimitFPS(Limit: true);
 
             this.TransformTo(nameof(Scale), new Vector2(1f), 1000, Easing.OutExpo);
             this.FadeInFromZero<MainMenu>(250, Easing.In);
@@ -319,7 +313,7 @@ namespace RhythmBox.Window.Screens
         public override void OnResuming(IScreen last)
         {
             Schedule(async () => await LoadComponentAsync(songSelction = new SongSelcetion()));
-            LimitFPS();
+            LimitFPS(Limit: true);
 
             this.FadeInFromZero<MainMenu>(175, Easing.In);
 
@@ -343,7 +337,7 @@ namespace RhythmBox.Window.Screens
         {
             cachedMap.Stop();
 
-            UnlockFPS();
+            LimitFPS(Limit: false);
 
             this.FadeOutFromOne<MainMenu>(0, Easing.In);
             base.OnSuspending(next);
