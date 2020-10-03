@@ -46,9 +46,7 @@ namespace RhythmBox.Window.Maps
                 }
             }
 
-            int GetRandomMap = osu.Framework.Utils.RNG.Next(0, new DirectoryInfo(MapsAvailable[osu.Framework.Utils.RNG.Next(0, MapsAvailable.Count)]).GetFiles("*.ini").Length);
-
-            return Maps[GetRandomMap, 0];
+            return Maps[osu.Framework.Utils.RNG.Next(0, MapsAvailable.Count), 0];
         }
     }
 }
