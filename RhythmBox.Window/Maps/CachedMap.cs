@@ -63,7 +63,7 @@ namespace RhythmBox.Window.Maps
             if (Map is null)
                 return;
 
-            Track = trackStore?.Get($"{Map.Path[..Map.Path.LastIndexOf(@"\", StringComparison.Ordinal)]}\\{Map.AFileName}");
+            Track = trackStore?.Get($"{Map?.Path[..Map.Path.LastIndexOf(@"\", StringComparison.Ordinal)]}\\{Map.AFileName}");
 
             if (Track != null)
                 Track.Volume.Value = gameini.Get<double>(SettingsConfig.Volume);
