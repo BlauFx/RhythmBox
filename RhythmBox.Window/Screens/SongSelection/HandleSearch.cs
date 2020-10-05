@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Reflection;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
@@ -43,43 +45,43 @@ namespace RhythmBox.Window.Screens.SongSelection
 
                     AutoSizeAxes = Axes.Y,
 
-                    Children = new Drawable[]
+                    Child = head = new HeaderContainer
                     {
-                        head = new HeaderContainer
-                        {
-                            RelativeSizeAxes = Axes.X,
-                            Size = new Vector2(1f),
-                            AutoSizeAxes = Axes.Y,
-                        },
-                    }
+                        RelativeSizeAxes = Axes.X,
+                        Size = new Vector2(1f),
+                        AutoSizeAxes = Axes.Y,
+                    },
                 }
             };
 
-            int MapsCount = 2;
-
-            Map[,] Map = new Map[MapsCount, short.MaxValue];
-
-            Map[0, 0] = new Map(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) + "\\Songs\\TestMap\\Difficulty1.ini", "random text");
-            Map[1, 0] = new Map(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) + "\\Songs\\TestMap\\Difficulty1.ini", "title of this test map");
-
-            MapPack[] mapPackTests = new MapPack[MapsCount];
-
-            for (int i = 0; i < mapPackTests.Length; i++)
+            var path = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) +"\\Songs\\TestMap\\Difficulty1.ini";
+            
+            MapPack mapPack = new MapPack(new []
             {
-                mapPackTests[i] = new MapPack
-                {
-                    Maps = 1,
-                    RelativeSizeAxes = Axes.Both,
-                    Anchor = Anchor.CentreRight,
-                    Origin = Anchor.CentreRight,
-                    Colour = Color4.LightYellow,
-                    Map = Map,
-                    MapPos = i,
-                    Search = Map[i, 0].Title,
-                };
-            }
+                new Map(path, "random text"),
+                new Map(path, "title of this test map")
+            });
 
-            head.AddRange(mapPackTests);
+            var mapPackReversed = mapPack.Maps.Reverse().ToArray();
+            
+            List<MapPackDrawer> mapPackDrawer = new List<MapPackDrawer>();
+            List<MapPack> mapPacksGot = new List<MapPack>()
+            {
+                mapPack, new MapPack(mapPackReversed)
+            };
+            
+            mapPacksGot.ForEach((x) =>
+            {
+                mapPackDrawer.Add(new MapPackDrawer(x.Maps, x.Maps[0].Title)
+                {
+                    RelativeSizeAxes = Axes.X,
+                    Anchor = Anchor.TopRight,
+                    Origin = Anchor.TopRight,
+                    Colour = Color4.Blue,
+                });
+            });
+
+            head.AddRange(mapPackDrawer);
 
             textBox.Current.ValueChanged += e => search.SearchTerm = e.NewValue;
         }

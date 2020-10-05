@@ -2,6 +2,7 @@
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Testing;
+using RhythmBox.Window;
 using RhythmBox.Window.Animation;
 using RhythmBox.Window.Maps;
 
@@ -22,7 +23,7 @@ namespace RhythmBox.Tests.VisualTests.Animations
         [BackgroundDependencyLoader]
         private void Load()
         {
-            cachedMap.Map = CurrentSongsAvailable.GetRandomMap();
+            cachedMap.Map = Songs.GetRandomMap();
             cachedMap.LoadTrackFile();
 
             Child = new MusicVisualizationLinear(barWidth, AmountOfBars, Spacing, cachedMap.BindableTrack)

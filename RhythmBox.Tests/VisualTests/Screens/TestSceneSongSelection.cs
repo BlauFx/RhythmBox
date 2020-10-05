@@ -27,7 +27,7 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     RelativeSizeAxes = Axes.Both,
                 });
 
-                LoadComponentAsync(new SongSelcetion(true), _stack.Push);
+                LoadComponentAsync(new Selection(true), _stack.Push);
             });
 
             AddStep("Remove TestSceneSongSelection", () => _stack?.Expire());

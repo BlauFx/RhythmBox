@@ -271,7 +271,7 @@ namespace RhythmBox.Window.Screens
                 cachedMap.Seek(CurrentTime.GetValueOrDefault());
 
                 Scheduler.AddDelayed(() => this.Expire(), 1000);
-                LoadComponentAsync(new SongSelcetion(), this.Push);
+                LoadComponentAsync(new Selection(), this.Push);
             };
 
             ReturntoSongSelectionAfterFail.ValueChanged += (e) =>
@@ -280,8 +280,8 @@ namespace RhythmBox.Window.Screens
                 cachedMap.LoadTrackFile();
                 cachedMap.Seek(track.CurrentTime);
 
-                SongSelcetion songSelction;
-                LoadComponent(songSelction = new SongSelcetion());
+                Selection songSelction;
+                LoadComponent(songSelction = new Selection());
                 Schedule(() => this.Push(songSelction));
             };
 

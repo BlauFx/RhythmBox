@@ -11,7 +11,7 @@ namespace RhythmBox.Mode.Std.Maps
 
         public string BGFile { get; set; } = string.Empty;
 
-        public int MapId { get; set; } = 0; //TODO side note: MapId[]
+        public int MapId { get; set; } = 0;
 
         public int MapSetId { get; set; } = 0;
 
@@ -37,34 +37,32 @@ namespace RhythmBox.Mode.Std.Maps
 
         public IEnumerator GetEnumerator() => HitObjects.GetEnumerator();
 
-        private object instantiatedType;
-
         public Map(string path, string title = null)
         {
             if (path == null) return;
 
-            var assembly = Assembly.LoadFrom(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\RhythmBox.Window.dll");
-            var classes = assembly.GetTypes().Where(p => p.Namespace == "RhythmBox.Window.Maps" && p.Name.Contains("MapReader"));
-
+            var assembly = Assembly.LoadFrom(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) + "\\RhythmBox.Window.dll");
             BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;
-            instantiatedType = Activator.CreateInstance(classes.FirstOrDefault(), flags, null, new[] { $"{path}" }, null);
 
-            AFileName = GetValue(0).ToString();
-            BGFile = GetValue(1).ToString();
-            MapId = (int)GetValue(2);
-            MapSetId = (int)GetValue(3);
-            BPM = (int)GetValue(4);
-            Mode = (GameMode)GetValue(5);
-            Title = title != null ? title : GetValue(6).ToString();
-            Artist = GetValue(7).ToString();
-            Creator = GetValue(8).ToString();
-            DifficultyName = GetValue(9).ToString();
-            StartTime = (int)GetValue(10);
-            EndTime = (int)GetValue(11);
-            HitObjects = (HitObjects[])GetValue(12);
-            Path = GetValue(13).ToString();
+            var instantiatedType = Activator.CreateInstance(assembly.GetTypes().FirstOrDefault(p => p.Name == "MapReader") ?? throw new Exception($"{assembly} cannot be null"), flags, null, new[] { $"{path}" }, null);
+            ext.CopyAllTo<IMap>(instantiatedType as IMap, this);
+
+            if (title != null) 
+                this.Title = title;
         }
+    }
 
-        private object GetValue(int i) => instantiatedType.GetType().GetProperties()[i].GetValue(instantiatedType, null);
+    //https://stackoverflow.com/a/36713403
+    public static class ext
+    {
+        public static void CopyAllTo<T>(this T source, T target)
+        {
+            var type = typeof(T);
+            foreach (var sourceProperty in type.GetProperties())
+            {
+                var targetProperty = type.GetProperty(sourceProperty.Name);
+                targetProperty?.SetValue(target, sourceProperty.GetValue(source, null), null);
+            }
+        }
     }
 }

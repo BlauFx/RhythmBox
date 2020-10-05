@@ -1,5 +1,6 @@
-﻿using RhythmBox.Mode.Std.Maps;
+using RhythmBox.Mode.Std.Maps;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -35,146 +36,89 @@ namespace RhythmBox.Window.Maps
 
         public string Path { get; set; }
 
-        private int startHitObjects = 0;
-
-        private string[] storageTemp;
-
         public MapReader(string path)
         {
             this.Path = path;
 
-            int lineCount = File.ReadLines(path).Count();
-
-            storageTemp = new string[lineCount];
+            List<string> x = new List<string>();
 
             using (StreamReader strm = new StreamReader(path))
-            {
-                for (int i = 0; i < lineCount; i++)
-                {
-                    string input = strm.ReadLine();
-                    storageTemp[i] = input;
+                for (string str; (str = strm.ReadLine()) != null; )
+                    x.Add(str);
 
-                    if (input != null && input.Contains("HitObjects"))
-                    {
-                        startHitObjects = i + 1;
-                    }
-                }
-            }
+            string version = x.FirstOrDefault(y => y.Contains("v1", StringComparison.OrdinalIgnoreCase));
+            
+            if (string.IsNullOrWhiteSpace(version) || string.IsNullOrEmpty(version))
+                throw new Exception("Could not find version");
 
-            if (SearchThis(storageTemp, "v1") == "v1")
+            if (version.Equals("v1", StringComparison.OrdinalIgnoreCase))
             {
-                AFileName = SearchThis(storageTemp, "AFileName");
-                BGFile = SearchThis(storageTemp, "BGFile");
-                MapId = int.Parse(SearchThis(storageTemp, "MapId"));
-                MapSetId = int.Parse(SearchThis(storageTemp, "MapSetId"));
-                BPM = int.Parse(SearchThis(storageTemp, "BPM"));
-                Mode = GameModeParser(SearchThis(storageTemp, "Mode"));
-                Title = SearchThis(storageTemp, "Title");
-                Artist = SearchThis(storageTemp, "Artist");
-                Creator = SearchThis(storageTemp, "Creator");
-                DifficultyName = SearchThis(storageTemp, "DifficultyName");
-                StartTime = TimeCutter(true);
-                EndTime = TimeCutter(false);
-                HitObjects = HitObjectsParser(HitObjects, path);
+                AFileName = Cutter(x.FirstOrDefault(x => x.Contains("AFileName", StringComparison.OrdinalIgnoreCase)));
+                BGFile = Cutter(x.FirstOrDefault(x => x.Contains("BGFile", StringComparison.OrdinalIgnoreCase)));
+                MapId =  int.Parse(Cutter(x.FirstOrDefault(x => x.Contains("MapId", StringComparison.OrdinalIgnoreCase))));
+                MapSetId = int.Parse(Cutter(x.FirstOrDefault(x => x.Contains("MapSetId", StringComparison.OrdinalIgnoreCase))));
+            
+                BPM = int.Parse(Cutter(x.FirstOrDefault(x => x.Contains("BPM", StringComparison.OrdinalIgnoreCase))));
+                Mode = EnumParser<GameMode>(Cutter(x.FirstOrDefault(x => x.Contains("Mode", StringComparison.OrdinalIgnoreCase))));
+                Title = Cutter(x.FirstOrDefault(x => x.Contains("Title", StringComparison.OrdinalIgnoreCase)));
+                Artist = Cutter(x.FirstOrDefault(x => x.Contains("Artist", StringComparison.OrdinalIgnoreCase)));
+                Creator = Cutter(x.FirstOrDefault(x => x.Contains("Creator", StringComparison.OrdinalIgnoreCase)));
+                DifficultyName = Cutter(x.FirstOrDefault(x => x.Contains("DifficultyName", StringComparison.OrdinalIgnoreCase)));
+            
+                string Timings = Cutter(x.FirstOrDefault(x => x.Contains("Timings", StringComparison.OrdinalIgnoreCase)));
+                int num = Timings.IndexOf(",", StringComparison.Ordinal);
+            
+                StartTime = int.Parse(Timings[0..num]);
+                num++;
+                EndTime =  int.Parse(Timings[num..]);
+            
+                int index = x.FindIndex(str => str.Contains("HitObjects:", StringComparison.OrdinalIgnoreCase)) + 1;
+                HitObjects = HitObjectsParser(x.GetRange(index, x.Count - index));
             }
         }
-
-        private string SearchThis(string[] storage, string searchStr)
+        
+        private HitObjects[] HitObjectsParser(List<string> list)
         {
-            int num = 0;
+            List<HitObjects> objs = new List<HitObjects>();
 
-            for (int i = 0; i < storage.Length; i++)
+            for (int i = 0; i < list.Count; i++)
             {
-                if (storage[i].Contains(searchStr))
-                {
-                    num = i;
-                    break;
-                }
+                var index = list[i].IndexOf(",", StringComparison.Ordinal);
+                var lastindex = list[i].LastIndexOf(",", StringComparison.Ordinal);
+
+                var time = double.Parse(list[i][(index + 2)..lastindex]);
+                var speed = float.Parse(list[i][(lastindex + 2)..^1]);
+
+                var dirStr = list[i][..index];
+                var dir = EnumParser<HitObjects.Direction>(dirStr[(dirStr.IndexOf(".", StringComparison.Ordinal) + 1)..]);
+
+                objs.Add(new HitObjects
+                    {
+                        Time = time,
+                        Speed = speed,
+                        _direction = dir
+                    }
+                );
             }
 
-            return Cutter(storage[num]);
+            return objs.ToArray();
         }
-
+        
         private string Cutter(string cutThis)
         {
             if (!cutThis.Contains(":"))
-            {
                 return cutThis;
-            }
+
             int x = cutThis.IndexOf(":", StringComparison.Ordinal) + 2;
-            return cutThis.Substring(x, cutThis.Length - x);
+            return cutThis[x..];
         }
 
-        private GameMode GameModeParser(string parse)
+        private T EnumParser<T>(string obj)
         {
-            if (parse != null)
-                return (GameMode)Enum.Parse(typeof(GameMode), parse, true);
-            throw new NullReferenceException("GameMode can not be null");
-        }
-
-        private int TimeCutter(bool Start = false)
-        {
-            string x = SearchThis(storageTemp, "Timings");
-
-            if (Start)
-            {
-                int num = x.IndexOf(",");
-                return int.Parse(x.Substring(0, num));
-            }
-            else
-            {
-                int num = x.IndexOf(",") + 1;
-                return int.Parse(x.Substring(num, x.Length - num));
-            }
-        }
-
-        private HitObjects[] HitObjectsParser(HitObjects[] obj, string path)
-        {
-            int lineCount = File.ReadLines(path).Count();
-
-            int counter = 0;
-
-            string[] storageTmp = new string[lineCount - startHitObjects];
-
-            obj = new HitObjects[storageTmp.Length];
-
-            for (int i = startHitObjects; i < lineCount; i++)
-            {
-                storageTmp[counter] = storageTemp[i];
-                counter++;
-            }
-
-            for (int i = 0; i < storageTmp.Length; i++)
-            {
-                obj[i] = new HitObjects();
-
-                var dir1_1 = storageTmp[i].IndexOf(",", StringComparison.Ordinal);
-                var dir1_2_Dir = storageTmp[i].Substring(0, dir1_1);
-
-                var dir2_1 = storageTmp[i].IndexOf(",", StringComparison.Ordinal) + 2;
-                var dir2_2 = storageTmp[i].LastIndexOf(",", StringComparison.Ordinal) + 0;
-                var dir2_3_Time = storageTmp[i].Substring(dir2_1, dir2_2 - dir2_1);
-
-                var dir3_1 = storageTmp[i].LastIndexOf(",", StringComparison.Ordinal) + 2;
-                var dir3_2_Speed = storageTmp[i].Substring(dir3_1, storageTmp[i].Length - (dir3_1 + 1));
-
-                obj[i]._direction = parseDirection(dir1_2_Dir.Substring(dir1_2_Dir.IndexOf(".")+1, dir1_2_Dir.Length - dir1_2_Dir.IndexOf(".")-1));
-                obj[i].Time = double.Parse(dir2_3_Time);
-                obj[i].Speed = float.Parse(dir3_2_Speed);
-            }
-
-            return obj;
-
-        }
-
-        private HitObjects.Direction parseDirection(string direction)
-        {
-            if (string.IsNullOrEmpty(direction))
-            {
-                throw new NullReferenceException("Direction can not be null");
-            }
+            if (!string.IsNullOrEmpty(obj))
+                return (T)Enum.Parse(typeof(T), obj, true);
             
-            return (HitObjects.Direction)Enum.Parse(typeof(HitObjects.Direction), direction, true); ;
+            throw new NullReferenceException($"{obj} can not be null");
         }
     }
 }

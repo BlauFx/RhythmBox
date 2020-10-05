@@ -29,7 +29,7 @@ namespace RhythmBox.Window.Screens
 
         private NotificationOverlay _overlay;
 
-        private SongSelcetion songSelction;
+        private Selection songSelection;
 
         private Box box;
 
@@ -51,8 +51,8 @@ namespace RhythmBox.Window.Screens
 
             clickAction[0] = () =>
             {
-                if (songSelction.ValidForPush)
-                    this.Push(songSelction);
+                if (songSelection.ValidForPush)
+                    this.Push(songSelection);
             };
 
             clickAction[1] = () =>
@@ -80,7 +80,7 @@ namespace RhythmBox.Window.Screens
         [BackgroundDependencyLoader]
         private async void Load(LargeTextureStore store)
         {
-            cachedMap.Map = CurrentSongsAvailable.GetRandomMap();
+            cachedMap.Map = Songs.GetRandomMap();
             cachedMap.LoadTrackFile();
 
             InternalChildren = new Drawable[]
@@ -302,7 +302,7 @@ namespace RhythmBox.Window.Screens
 
         public override void OnEntering(IScreen last)
         {
-            Schedule(async () => await LoadComponentAsync(songSelction = new SongSelcetion()));
+            Schedule(async () => await LoadComponentAsync(songSelection = new Selection()));
 
             LimitFPS(Limit: true);
 
@@ -312,7 +312,7 @@ namespace RhythmBox.Window.Screens
 
         public override void OnResuming(IScreen last)
         {
-            Schedule(async () => await LoadComponentAsync(songSelction = new SongSelcetion()));
+            Schedule(async () => await LoadComponentAsync(songSelection = new Selection()));
             LimitFPS(Limit: true);
 
             this.FadeInFromZero<MainMenu>(175, Easing.In);

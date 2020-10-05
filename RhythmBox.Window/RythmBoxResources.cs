@@ -1,4 +1,4 @@
-﻿using osu.Framework;
+using osu.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Configuration;
 using osu.Framework.Graphics.Textures;
@@ -44,8 +44,8 @@ namespace RhythmBox.Window
 
             Dependencies.Cache(new LargeTextureStore(Host.CreateTextureLoaderStore(new NamespacedResourceStore<byte[]>(Resources, @"Textures"))));
             Dependencies.Cache(new Gameini(Host.Storage));
+
             Dependencies.Cache(cachedMap = new CachedMap(Host.Storage));
-            Dependencies.Cache(this);
 
             Fonts.AddStore(new GlyphStore(Resources, @"Fonts/Roboto-Medium"));
             Fonts.AddStore(new GlyphStore(Resources, @"Fonts/Roboto"));
