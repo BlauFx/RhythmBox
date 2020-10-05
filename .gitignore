@@ -350,5 +350,4 @@ MigrationBackup/
 *.cache
 
 # JetBrains Rider
-.idea/.idea.RhythmBox/.idea/*.xml
-.idea/.idea.RhythmBox/riderModule.iml
+.idea/*
