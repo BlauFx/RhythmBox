@@ -4,6 +4,6 @@ namespace RhythmBox.Mode.Std.Mods
 {
     public interface IApplyToHitobject
     {
-        public abstract void ApplyToHitObj(RBox obj);
+        void ApplyToHitObj(RBox obj);
     }
 }
