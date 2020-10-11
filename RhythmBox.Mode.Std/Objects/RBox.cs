@@ -11,9 +11,9 @@ using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Mode.Std.Mods;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using RhythmBox.Mode.Std.Mods.Interfaces;
 
 namespace RhythmBox.Mode.Std.Objects
 {
@@ -39,7 +39,7 @@ namespace RhythmBox.Mode.Std.Objects
 
         public double Duration { get; set; }
 
-        private Key[] keys = new Key[4];
+        private readonly Key[] keys;
 
         public RBox(float speed, HitObjects.Direction direction, double Duration, Key[] keys)
         {
@@ -81,7 +81,7 @@ namespace RhythmBox.Mode.Std.Objects
                 if (!(mod[i] is IApplyToHitobject))
                     continue;
 
-                (mod[i] as IApplyToHitobject).ApplyToHitObj(this);
+                (mod[i] as IApplyToHitobject)?.ApplyToHitObj(this);
             }
         }
     }
@@ -122,7 +122,7 @@ namespace RhythmBox.Mode.Std.Objects
 
         private HitAnimation hitAnimation { get; set; } = null;
 
-        private Key[] keys = new Key[4];
+        private readonly Key[] keys;
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -141,7 +141,7 @@ namespace RhythmBox.Mode.Std.Objects
             bx.MoveToY(0f, 0, Easing.InCirc);
             bx.FadeInFromZero(Duration * 0.2, Easing.None);
 
-            var ResizeAmount = Vector2.Zero;
+            Vector2 ResizeAmount;
 
             switch (direction)
             {
@@ -175,7 +175,7 @@ namespace RhythmBox.Mode.Std.Objects
             }
 
             bx.ResizeTo(ResizeAmount, Duration, Easing.InCirc);
-            Scheduler.AddDelayed(() => Remove(), Duration + Expire);
+            Scheduler.AddDelayed(Remove, Duration + Expire);
         }
 
         private async void Remove()
@@ -354,15 +354,15 @@ namespace RhythmBox.Mode.Std.Objects
             }
         }
 
-        private HitAnimation HitAnimation(Hit hit, float Y = int.MaxValue, float X = int.MaxValue) 
+        private HitAnimation HitAnimation(Hit hit, float Y = float.NaN, float X = float.NaN) 
             => new HitAnimation(hit)
             {
                 Depth = float.MinValue,
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
                 RelativePositionAxes = Axes.Both,
-                X = X == int.MaxValue ? bx.X : X,
-                Y = Y == int.MaxValue ? bx.Y : Y
+                X = float.IsNaN(X) ? bx.X : X,
+                Y = float.IsNaN(Y) ? bx.Y : Y
             };
 
         //https://stackoverflow.com/a/48728076

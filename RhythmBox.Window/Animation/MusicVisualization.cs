@@ -25,14 +25,12 @@ namespace RhythmBox.Window.Animation
             set
             {
                 barWidth = value;
-
+        
                 if (!IsLoaded)
                     return;
-
+        
                 foreach (var Bar in Bars)
-                {
                     Bar.Width = value;
-                }
             }
         }
 

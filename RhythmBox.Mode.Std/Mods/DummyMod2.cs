@@ -1,5 +1,6 @@
 ﻿using osu.Framework.Extensions.Color4Extensions;
 using osuTK.Graphics;
+using RhythmBox.Mode.Std.Mods.Interfaces;
 using RhythmBox.Mode.Std.Objects;
 
 namespace RhythmBox.Mode.Std.Mods

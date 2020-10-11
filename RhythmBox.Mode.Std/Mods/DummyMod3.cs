@@ -1,4 +1,5 @@
 ﻿using RhythmBox.Mode.Std.Animations;
+using RhythmBox.Mode.Std.Mods.Interfaces;
 
 namespace RhythmBox.Mode.Std.Mods
 {
