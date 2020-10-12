@@ -38,7 +38,9 @@ namespace RhythmBox.Window
                 MapPack.Add(new MapPack(Maps));
             }
 
-            didRun = true;
+            if (MapPack.Count > 0)
+                didRun = true;
+            
             return MapPack;
         }
         
