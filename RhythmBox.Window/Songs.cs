@@ -45,7 +45,10 @@ namespace RhythmBox.Window
         public static Map GetRandomMap()
         {
             var mapPacks = GetMapPacks();
-            
+
+            if (mapPacks.Count == 0)
+                return null;
+
             var getRandomMapPack = mapPacks[osu.Framework.Utils.RNG.Next(0, mapPacks.Count)];
             return getRandomMapPack.Maps[osu.Framework.Utils.RNG.Next(0, getRandomMapPack.Maps.Length)];
         }
