@@ -1,22 +1,24 @@
-﻿using RhythmBox.Mode.Std.Maps;
+﻿using System;
+using System.Collections.Generic;
+using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Window.Maps;
 using System.IO;
+using System.Linq;
 using System.Reflection;
-using HitObjects = RhythmBox.Mode.Std.Maps.HitObjects;
+using System.Text;
 
 namespace RhythmBox.Window
 {
     public class DefaultFolder
     {
-        public DefaultFolder(bool CreateSongs = true, bool CreateSkins = false)
+        public DefaultFolder(bool createSongs = true, bool CreateSkins = false)
         {
             string CurrentFolder = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-            if (CreateSongs)
+            
+            if (createSongs)
             {
-                if (!Directory.Exists(CurrentFolder + "\\Songs"))
-                {
-                    Directory.CreateDirectory(CurrentFolder + "\\Songs");
-                }
+                if (!Directory.Exists(Songs.SongPath))
+                    Directory.CreateDirectory(Songs.SongPath);
             }
             else if (CreateSkins)
             {
@@ -26,62 +28,45 @@ namespace RhythmBox.Window
                 }
             }
 
+            var file = Songs.SongPath + "\\TestMap\\Difficulty1.ini";
+            
             //TODO: This is only temporary
             //Side note: maybe add our own fileformat? 
-            if (!File.Exists(CurrentFolder + "\\Songs\\TestMap\\Difficulty1.ini"))
+            if (!File.Exists(file))
             {
-                TempMap(CurrentFolder + "\\Songs\\TestMap\\Difficulty1.ini");
+                Directory.CreateDirectory(Songs.SongPath + "\\TestMap");
+                ImprovedTemp(file);
             }
         }
 
-        private void TempMap(string path)
+        private void ImprovedTemp(string file)
         {
-            var hitObjects = new HitObjects[4];
+            Assembly assembly = Assembly.LoadFrom("RhythmBox.Window.Resources.dll");
+            
+            if (assembly == null)
+                throw new Exception($"{nameof(assembly)} can not be null!");
 
-            hitObjects[0] = new HitObjects();
-            hitObjects[1] = new HitObjects();
-            hitObjects[2] = new HitObjects();
-            hitObjects[3] = new HitObjects();
+            var lines = ReadLines(() => assembly.GetManifestResourceStream("RhythmBox.Window.Resources.Difficulty1.ini")!, Encoding.UTF8).ToList();
+            
+            var reader = new MapReader(lines);
+            var map = new MapWriter();
+            
+            ext.CopyAllTo(reader as IMap, map as IMap); 
+            map.WriteToNewMap(file);
+        }
 
-            hitObjects[0]._direction = HitObjects.Direction.Up;
-            hitObjects[1]._direction = HitObjects.Direction.Right;
-            hitObjects[2]._direction = HitObjects.Direction.Left;
-            hitObjects[3]._direction = HitObjects.Direction.Down;
-
-            hitObjects[0].Speed = 1f;
-            hitObjects[1].Speed = 1f;
-            hitObjects[2].Speed = 1f;
-            hitObjects[3].Speed = 1f;
-
-            hitObjects[0].Time = 200;
-            hitObjects[1].Time = 400;
-            hitObjects[2].Time = 700;
-            hitObjects[3].Time = 780;
-
-            var _map = new MapWriter
+        //https://stackoverflow.com/a/13312954
+        private IEnumerable<string> ReadLines(Func<Stream> streamProvider,
+            Encoding encoding)
+        {
+            using (var stream = streamProvider())
+            using (var reader = new StreamReader(stream, encoding))
             {
-                AFileName = "null.mp3",
-                BGFile = "bg.png",
-                MapId = 0,
-                MapSetId = 0,
-                BPM = 150,
-                Mode = GameMode.STD,
-                Title = "TEST Title",
-                Artist = "test",
-                Creator = "BlauFx",
-                DifficultyName = "BlauFx's diff",
-                StartTime = 100,
-                EndTime = 5000,
-                HitObjects = hitObjects,
-            };
-
-            if (File.Exists(path))
-            {
-                _map.WriteToExistingMap(path);
-            }
-            else
-            {
-                _map.WriteToNewMap(path);
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    yield return line;
+                }
             }
         }
     }

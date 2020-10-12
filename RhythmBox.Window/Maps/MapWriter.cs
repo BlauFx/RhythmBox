@@ -1,4 +1,5 @@
-﻿using RhythmBox.Mode.Std.Maps;
+using System;
+using RhythmBox.Mode.Std.Maps;
 using System.IO;
 using System.Reflection;
 
@@ -38,10 +39,11 @@ namespace RhythmBox.Window.Maps
         {
             this.Path = path;
 
-            int num = path.LastIndexOf("\\");
-            string temp = path.Substring(0, num);
-            int num2 = temp.LastIndexOf("\\") + 1;
-            string str = temp.Substring(num2, temp.Length - num2);
+            int num = path.LastIndexOf("\\", StringComparison.Ordinal);
+            string temp = path[..num];
+            
+            num += 1;
+            string str = temp[num..^num];
 
             if (!Directory.Exists(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + $"\\Songs\\{str}"))
             {
