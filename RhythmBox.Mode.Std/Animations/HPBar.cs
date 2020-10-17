@@ -4,12 +4,10 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osuTK;
-using osuTK.Graphics;
 using RhythmBox.Mode.Std.Mods;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using RhythmBox.Mode.Std.Mods.Interfaces;
 
 namespace RhythmBox.Mode.Std.Animations
@@ -18,32 +16,27 @@ namespace RhythmBox.Mode.Std.Animations
     {
         private Box _box;
 
-        public readonly float BoxMaxValue;
+        public float Duration = 100f;
 
-        public BindableFloat CurrentValue { get; set; } = new BindableFloat(0f);
+        public Easing easing = Easing.None;
 
-        public Color4 colour;
-
-        private const float HP_300 = 0.01f;
-        private const float HP_100 = HP_300 / 2;
-        private const float HP_X = 0.1f;
-
-        public bool HPBarEnabled = true;
-        private bool IsDraining = false;
-        private bool isSuspended = false;
-
-        public HPBar(float BoxMaxValue, List<Mod> mods = null)
+        public BindableFloat CurrentValue { get; set; } = new BindableFloat(1f)
         {
-            this.BoxMaxValue = BoxMaxValue;
-            this.CurrentValue.Value = BoxMaxValue;
+            MinValue = 0,
+            MaxValue = 1
+        };
 
+        public BindableBool Enabled { get; set; } = new BindableBool(true);
+
+        public HPBar(List<Mod> mods = null)
+        {
             if (mods != null)
             {
                 var ModsToApply = mods.Where(x => x is IApplyToHP).ToList();
 
                 for (int i = 0; i < ModsToApply.Count; i++)
                 {
-                    (ModsToApply[i] as IApplyToHP).ApplyToHP(this);
+                    (ModsToApply[i] as IApplyToHP)?.ApplyToHP(this);
                 }
             }
         }
@@ -57,84 +50,38 @@ namespace RhythmBox.Mode.Std.Animations
                 Origin = Anchor.TopLeft,
                 RelativePositionAxes = Axes.Both,
                 Alpha = 1f,
-                Colour = colour,
                 RelativeSizeAxes = Axes.Both,
-                Size = new Vector2(BoxMaxValue, 0.05f),
+                Size = new Vector2(1f, 0.05f),
                 X = 0f,
                 Y = 0f,
             };
+            
+            CurrentValue.ValueChanged += (e) => _box.ResizeWidthTo(e.NewValue, Duration, easing);
         }
 
-        public void ResizeBox(float value, double duration, Easing easing)
+        public void Drain(bool Stop)
         {
-            if ((value > BoxMaxValue || value < -0.0001f) || !HPBarEnabled)
+            if (Stop)
+            {
+                Scheduler.CancelDelayedTasks();
                 return;
-
-            if (IsDraining)
-            {
-                SuspendDraining(110);
-                CurrentValue.Value = value;
-                _box.ResizeWidthTo(value, duration, easing);
             }
-        }
-
-        public float CalcHpBarValue(float currentvalue, float maxvalue, float minvalue, Hit hit, bool auto = false)
-        {
-            DrainHP();
-            return 1f;
-
-            if (!auto)
-            {
-                float result = hit switch
-                {
-                    Hit.Hit300 => currentvalue + HP_300,
-                    Hit.Hit100 => currentvalue + HP_100,
-                    Hit.Hitx => currentvalue - HP_X * 10,
-                    _ => 0
-                };
-
-                if (result < maxvalue && result > minvalue)
-                    return result;
-                else if (result > maxvalue)
-                    return maxvalue;
-                else if (result < minvalue)
-                    return minvalue;
-            }
-
-            //TODO: HP_Drain has a different value if BoxMaxValue has as well a different value
-            //TODO: There is a huge diffrence between BoxMaxValue .1f and 1f.
-            //TODO: This is definitly a huge game breaker
-            float HP_Drain = -0.0001f;
-
-            return currentvalue - HP_Drain;
-        }
-
-        public void DrainHP()
-        {
-            if (!IsDraining)
-                IsDraining = true;
-
+            
             Scheduler.AddDelayed(() =>
             {
-                if (isSuspended)
-                    return;
-
-                var calc = BoxMaxValue * 1 / 500;
-
-                _box.ResizeWidthTo(CurrentValue.Value - calc, 50, Easing.InExpo);
-                CurrentValue.Value = _box.Width;
-            }, 200, true);
+                CurrentValue.Value -= 0.01f;
+            }, Duration, true);
         }
-
-        private void SuspendDraining(int duratiom)
+        
+        public float CalcValue(Hit currenthit)
         {
-            isSuspended = true;
-
-            Task.Run(() =>
+            return currenthit switch
             {
-                Thread.Sleep(duratiom);
-                isSuspended = false;
-            });
+                Hit.Hit300 => 0.1f,
+                Hit.Hit100 => 0.03f,
+                Hit.Hitx => -0.1f,
+                _ => throw new NoNullAllowedException(),
+            };
         }
     }
 }

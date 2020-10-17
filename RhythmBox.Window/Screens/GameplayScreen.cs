@@ -25,6 +25,9 @@ using RhythmBox.Window.Playfield;
 using RhythmBox.Window.Screens.SongSelection;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Reflection.Metadata;
+using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 
 namespace RhythmBox.Window.Screens
@@ -206,13 +209,13 @@ namespace RhythmBox.Window.Screens
                     Size = new Vector2(0.6f, 1f),
                     Map = _map,
                 },
-                hpbar = new HPBar(.1f, ToApplyMods)
+                hpbar = new HPBar(ToApplyMods)
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
+                    Anchor = Anchor.TopLeft,
+                    Origin = Anchor.TopLeft,
                     RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(1f),
-                    colour = Color4.AliceBlue,
+                    Size = new Vector2(0.7f, 1f),
+                    Colour = Color4.AliceBlue
                 },
                 DispayCombo = new TextFlowContainer
                 {
@@ -247,16 +250,13 @@ namespace RhythmBox.Window.Screens
 
             DispayCombo.AddText("0x", x => x.Font = new FontUsage("Roboto", 40));
             DispayScore.AddText("000000", x => x.Font = new FontUsage("Roboto", 40));
-
-            Score.Combo.PrivateComboBindable.ValueChanged += (e) =>
-            {
-                //TODO:
-                hpbar.ResizeBox(hpbar.CalcHpBarValue(hpbar.CurrentValue.Value, hpbar.BoxMaxValue, 0f, Score.Combo.currentHit), (80f / 1.5f), Easing.OutCirc);
-            };
+            
+            Score.Combo.PrivateComboBindable.ValueChanged += (e) => hpbar.CurrentValue.Value += hpbar.CalcValue(Score.Combo.currentHit);
 
             _RbPlayfield.HasFinished.ValueChanged += (e) =>
             {
-                if (e.NewValue == false) return;
+                if (e.NewValue == false) 
+                    return;
 
                 rhythmBoxClockContainer.Stop();
 
@@ -335,16 +335,13 @@ namespace RhythmBox.Window.Screens
 
             GameStarted.Value = true;
             
-            if (!hpbar.HPBarEnabled) return;
-            Scheduler.AddDelayed(() =>
-            {
-                hpbar.ResizeBox(hpbar.CalcHpBarValue(hpbar.CurrentValue.Value, hpbar.BoxMaxValue, 0f, Hit.Hit100, true), 80f, Easing.OutCirc);
-            }, 80f, true);
+            if (!hpbar.Enabled.Value) return;
+            hpbar.Drain(false);
         }
 
         protected override void Update()
         {
-            if (hpbar.HPBarEnabled && hpbar.CurrentValue.Value<= 0)
+            if (hpbar.Enabled.Value && hpbar.CurrentValue.Value<= 0)
             {
                 if (!HasFailed)
                 {

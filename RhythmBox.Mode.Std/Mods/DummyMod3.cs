@@ -11,7 +11,7 @@ namespace RhythmBox.Mode.Std.Mods
 
         public void ApplyToHP(HPBar hp)
         {
-            hp.HPBarEnabled = false;
+            hp.Enabled.Value = false;
         }
     }
 }
