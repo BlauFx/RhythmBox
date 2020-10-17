@@ -1,10 +1,8 @@
-﻿using osu.Framework.Allocation;
+using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Events;
-using osu.Framework.Logging;
-using osu.Framework.Threading;
 using osuTK;
 using osuTK.Input;
 using RhythmBox.Mode.Std.Animations;
@@ -19,10 +17,6 @@ namespace RhythmBox.Window.Playfield
     public class Playfield : Container
     {
         public Map Map;
-
-        public RBox[] objBoxArray;
-
-        public int _previousCombo = 0;
 
         public Hit currentHit { get; set; }
 
@@ -43,9 +37,9 @@ namespace RhythmBox.Window.Playfield
 
         public Action BoxAction2 { get; set; }
 
-        public Bindable<HitObjects.Direction> dir { get; set; } = new Bindable<HitObjects.Direction>(HitObjects.Direction.Up);
+        public Bindable<HitObjects.Direction> dir { get; } = new Bindable<HitObjects.Direction>(HitObjects.Direction.Up);
 
-        private List<RBox> list { get; set; }
+        private List<Tuple<RBox, float>> list { get; } = new List<Tuple<RBox, float>>();
 
         private int pos = 0;
 
@@ -64,8 +58,6 @@ namespace RhythmBox.Window.Playfield
         [BackgroundDependencyLoader]
         private void Load()
         {
-            objBoxArray = new RBox[Map.HitObjects.Length];
-
             Children = new Drawable[]
             {
                 new RbDrawPlayfield
@@ -89,11 +81,8 @@ namespace RhythmBox.Window.Playfield
                 Enum.TryParse(gameini.Get<string>((SettingsConfig)i ), out Key key);
                 keys[i] = key;
             }
-
+            
             LoadMap();
-            list = new List<RBox>();
-            list.AddRange(objBoxArray);
-
             CanStart.Value = true;
 
             base.LoadComplete();
@@ -111,41 +100,41 @@ namespace RhythmBox.Window.Playfield
 
         private void CheckClick(Key key)
         {
-            HitObjects.Direction? dir = null;
+            HitObjects.Direction? direction = null;
 
             try
             {
-                dir = GetNextObjDir(key);
+                direction = GetNextObjDir(key);
             }
             catch { }
 
-            if (dir != null)
+            if (direction != null)
             {
-                list[pos].OnClickKeyDown(key);
+                list[pos].Item1.OnClickKeyDown(key);
                 //list.RemoveAt(pos);
             }
         }
 
         private HitObjects.Direction? GetNextObjDir(Key key)
         {
-            HitObjects.Direction? dir = null;
+            HitObjects.Direction? direction = null;
 
             for (int i = 0; i < list.Count; i++)
             {
-                var x = list[i].direction;
+                var x = list[i].Item1.direction;
 
-                if (list[i].obj != null && list[i].AlphaA > 0 && list[i].obj.IsAlive)
+                if (list[i].Item1.obj != null && list[i].Item1.AlphaA > 0 && list[i].Item1.obj.IsAlive)
                 {
                     if ((key == keys[0] && x == HitObjects.Direction.Up) || key == keys[1] && x == HitObjects.Direction.Left || key == keys[2] && x == HitObjects.Direction.Down || key == keys[3] && x == HitObjects.Direction.Right)
                     {
-                        dir = x;
+                        direction = x;
                         pos = i;
                         break;
                     }
                 }
             }
 
-            return dir;
+            return direction;
         }
 
         protected override void Update()
@@ -160,9 +149,6 @@ namespace RhythmBox.Window.Playfield
         {
             Score.Score.ResetScore();
             Score.Combo.ResetCombo();
-
-            int i = 0;
-            int j = 0;
 
             foreach (var objBox in Map)
             {
@@ -182,7 +168,7 @@ namespace RhythmBox.Window.Playfield
                     MaxStartSpeed = x.Time;
                 }
 
-                objBoxArray[i] = new RBox(x.Speed, x._direction, MaxStartSpeed, keys)
+                list.Add(new Tuple<RBox, float>(new RBox(x.Speed, x._direction, MaxStartSpeed, keys)
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
@@ -190,16 +176,10 @@ namespace RhythmBox.Window.Playfield
                     Size = new Vector2(1f),
                     Resuming = Resuming,
                     mods = mods,
-                };
-
-                Scheduler.AddDelayed(() =>
-                {
-                    Add(objBoxArray[j]);
-                    j++;
-                }, time);
-
-                i++;
+                }, (float)time));
             }
+
+            list.ForEach(x => Scheduler.AddDelayed(() => Add(x.Item1), x.Item2));
         }
     }
 }

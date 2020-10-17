@@ -22,13 +22,9 @@ namespace RhythmBox.Window.Score
             currentHit = hit;
 
             if (hit == Hit.Hitx)
-            {
                 ComboInt = 0;
-            }
             else
-            {
                 ComboInt++;
-            }
 
             PrivateComboBindable.Value = ComboInt;
             Score.CalculateScore(ComboInt, hit);

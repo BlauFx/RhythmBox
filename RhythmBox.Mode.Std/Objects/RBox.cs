@@ -178,21 +178,18 @@ namespace RhythmBox.Mode.Std.Objects
             Scheduler.AddDelayed(Remove, Duration + Expire);
         }
 
-        private async void Remove()
+        async void Click(Hit hit)
+        {
+            await Task.Run(() => _InvokeNamespaceClassesStaticMethod("RhythmBox.Window.Score", "UpdateCombo", hit));
+        }
+        
+        private void Remove()
         {
             Scheduler.CancelDelayedTasks();
 
             if (!Clicked)
             {
-                object[] param = new object[1];
-
-                param[0] = Hit.Hitx;
-
-                await Task.Run(() =>
-                {
-                    _InvokeNamespaceClassesStaticMethod("RhythmBox.Window.Score", "UpdateCombo", param);
-                });
-
+                Click(Hit.Hitx);
                 Schedule(() => Add(hitAnimation = HitAnimation(Hit.Hitx)));
             }
 
@@ -229,24 +226,11 @@ namespace RhythmBox.Mode.Std.Objects
         public void ClickKeyDown(Key key)
         {
             Clicked = true;
-
-            async void Click(Hit currentHit)
-            {
-                object[] param = new object[1];
-
-                param[0] = currentHit;
-
-                await Task.Run(() =>
-                {
-                    _InvokeNamespaceClassesStaticMethod("RhythmBox.Window.Score", "UpdateCombo", param);
-                });
-            }
-
             if (!Resuming.Value) return;
 
             if (key == keys[0] && direction == HitObjects.Direction.Up)
             {
-                Hit? ConditionUp = bx.Y switch
+                Hit? Condition = bx.Y switch
                 {
                     <= -0.5f + 0.05f and >= -0.50001f => Hit.Hit300,
                     <= -0.35f and >= -0.5f + 0.05f => Hit.Hit100,
@@ -254,20 +238,11 @@ namespace RhythmBox.Mode.Std.Objects
                     _ => null
                 };
 
-                if (ConditionUp == Hit.Hit300)
+                var now = Condition;
+                if (now != null)
                 {
-                    Click(Hit.Hit300);
-                    Add(hitAnimation = HitAnimation(Hit.Hit300, bx.Y + 0.025f));
-                }
-                else if (ConditionUp == Hit.Hit100)
-                {
-                    Click(Hit.Hit100);
-                    Add(hitAnimation = HitAnimation(Hit.Hit100));
-                }
-                else if (ConditionUp == Hit.Hitx)
-                {
-                    Click(Hit.Hitx);
-                    Add(hitAnimation = HitAnimation(Hit.Hitx));
+                    Click(now.GetValueOrDefault());
+                    Add(hitAnimation = HitAnimation(now.GetValueOrDefault(), now == Hit.Hit300 ? bx.Y + 0.025f : float.NaN));
                 }
 
                 Remove();
@@ -300,7 +275,7 @@ namespace RhythmBox.Mode.Std.Objects
             }
             else if (key == keys[2] && direction == HitObjects.Direction.Down)
             {
-                Hit? ConditionDown = bx.Y switch
+                Hit? Condition = bx.Y switch
                 {
                     >= 0.5f - 0.05f and <= 0.50001f => Hit.Hit300,
                     >= 0.35f and <= 0.5f - 0.05f => Hit.Hit100,
@@ -308,20 +283,11 @@ namespace RhythmBox.Mode.Std.Objects
                     _ => null
                 };
 
-                if (ConditionDown == Hit.Hit300)
+                var now = Condition;
+                if (now != null)
                 {
-                    Click(Hit.Hit300);
-                    Add(hitAnimation = HitAnimation(Hit.Hit300, bx.Y - 0.025f));
-                }
-                else if (ConditionDown == Hit.Hit100)
-                {
-                    Click(Hit.Hit100);
-                    Add(hitAnimation = HitAnimation(Hit.Hit100));
-                }
-                else if (ConditionDown == Hit.Hitx)
-                {
-                    Click(Hit.Hitx);
-                    Add(hitAnimation = HitAnimation(Hit.Hitx));
+                    Click(now.GetValueOrDefault());
+                    Add(hitAnimation = HitAnimation(now.GetValueOrDefault(), now == Hit.Hit300 ? bx.Y - 0.025f : float.NaN));
                 }
 
                 Remove();
