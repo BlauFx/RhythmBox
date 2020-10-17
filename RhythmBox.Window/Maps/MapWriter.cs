@@ -1,4 +1,3 @@
-using System;
 using RhythmBox.Mode.Std.Maps;
 using System.IO;
 using System.Reflection;
@@ -38,17 +37,12 @@ namespace RhythmBox.Window.Maps
         public void WriteToNewMap(string path)
         {
             this.Path = path;
-
-            int num = path.LastIndexOf("\\", StringComparison.Ordinal);
-            string temp = path[..num];
             
-            num += 1;
-            string str = temp[num..^num];
+            string Folder = System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(path));
+            var FolderPath = Songs.SongPath + Folder;
 
-            if (!Directory.Exists(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + $"\\Songs\\{str}"))
-            {
-                Directory.CreateDirectory(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + $"\\Songs\\{str}");
-            }
+            if (!Directory.Exists(FolderPath))
+                Directory.CreateDirectory(FolderPath);
 
             WriteToFile(path, "v1", true);
             WriteToFile(path, "AFileName", AFileName);
@@ -70,13 +64,10 @@ namespace RhythmBox.Window.Maps
         public void WriteToExistingMap(string path)
         {
             if (!File.Exists(path))
-            {
                 throw new FileNotFoundException("File does not exist!", path);
-            }
+
             if (!Directory.Exists(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"\SongsOLD"))
-            {
                 Directory.CreateDirectory(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"\SongsOLD");
-            }
 
             int num = path.LastIndexOf("\\") + 1;
             string tmp = path.Substring(num, path.Length - num);
@@ -106,13 +97,12 @@ namespace RhythmBox.Window.Maps
             {
                 int num = 1;
                 string tmp = string.Empty;
+                
                 for (int i = 0; i < num; i++)
                 {
                     tmp = orignalPath + num;
                     if (File.Exists(tmp))
-                    {
                         num++;
-                    }
                 }
                 return tmp;
             }
@@ -121,37 +111,25 @@ namespace RhythmBox.Window.Maps
 
         private void WriteToFile(string path, HitObjects[] hitObjects)
         {
+            using StreamWriter streamWriter = new StreamWriter(path, true);
+
             for (int i = 0; i < hitObjects.Length; i++)
-            {
-                using (StreamWriter streamWriter = new StreamWriter(path, true))
-                {
-                    streamWriter.WriteLine($"{hitObjects[i]._direction}, {hitObjects[i].Time}, {hitObjects[i].Speed}f");
-                }
-            }
+                streamWriter.WriteLine($"{hitObjects[i]._direction}, {hitObjects[i].Time}, {hitObjects[i].Speed}f");
         }
 
-        private void WriteToFile(string path, string leftside, string value, bool extraEmptyLine = false)
-        {
-            using (StreamWriter strm = new StreamWriter(path, true))
-            {
-                strm.WriteLine($"{leftside}: {value}");
-                if (extraEmptyLine)
-                {
-                    strm.WriteLine(string.Empty);
-                }
-            }
-        }
+        private void WriteToFile(string path, string leftside, string value, bool extraEmptyLine = false) 
+            => Write(path, $"{leftside}: {value}", extraEmptyLine);
 
-        private void WriteToFile(string path, string value, bool extraEmptyLine = false)
+        private void WriteToFile(string path, string value, bool extraEmptyLine = false) 
+            => Write(path, value, extraEmptyLine);
+
+        private void Write(string path, string value, bool extraEmptyLine = false)
         {
-            using (StreamWriter strm = new StreamWriter(path, true))
-            {
-                strm.WriteLine(value);
-                if (extraEmptyLine)
-                {
-                    strm.WriteLine(string.Empty);
-                }
-            }
+            using var strm = new StreamWriter(path, true);
+            strm.WriteLine(value);
+
+            if (extraEmptyLine)
+                strm.WriteLine(string.Empty);
         }
     }
 }
