@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
@@ -9,10 +11,9 @@ using RhythmBox.Mode.Std.Animations;
 using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Mode.Std.Mods;
 using RhythmBox.Mode.Std.Objects;
-using System;
-using System.Collections.Generic;
+using RhythmBox.Window.Playfield;
 
-namespace RhythmBox.Window.Playfield
+namespace RhythmBox.Window.Screens.Playfield
 {
     public class Playfield : Container
     {
@@ -39,7 +40,7 @@ namespace RhythmBox.Window.Playfield
 
         public Bindable<HitObjects.Direction> dir { get; } = new Bindable<HitObjects.Direction>(HitObjects.Direction.Up);
 
-        private List<Tuple<RBox, float>> list { get; } = new List<Tuple<RBox, float>>();
+        public List<Tuple<RBox, float>> objectList { get; } = new List<Tuple<RBox, float>>();
 
         private int pos = 0;
 
@@ -110,8 +111,8 @@ namespace RhythmBox.Window.Playfield
 
             if (direction != null)
             {
-                list[pos].Item1.OnClickKeyDown(key);
-                //list.RemoveAt(pos);
+                objectList[pos].Item1.OnClickKeyDown(key);
+                //objectList.RemoveAt(pos);
             }
         }
 
@@ -119,11 +120,11 @@ namespace RhythmBox.Window.Playfield
         {
             HitObjects.Direction? direction = null;
 
-            for (int i = 0; i < list.Count; i++)
+            for (int i = 0; i < objectList.Count; i++)
             {
-                var x = list[i].Item1.direction;
+                var x = objectList[i].Item1.direction;
 
-                if (list[i].Item1.obj != null && list[i].Item1.AlphaA > 0 && list[i].Item1.obj.IsAlive)
+                if (objectList[i].Item1.obj != null && objectList[i].Item1.AlphaA > 0 && objectList[i].Item1.obj.IsAlive)
                 {
                     if ((key == keys[0] && x == HitObjects.Direction.Up) || key == keys[1] && x == HitObjects.Direction.Left || key == keys[2] && x == HitObjects.Direction.Down || key == keys[3] && x == HitObjects.Direction.Right)
                     {
@@ -156,7 +157,7 @@ namespace RhythmBox.Window.Playfield
 
                 int MinStartSpeed = 200;
                 double MaxStartSpeed = x.Speed * 1000;
-
+                
                 if (MaxStartSpeed < MinStartSpeed)
                     MaxStartSpeed = MinStartSpeed;
 
@@ -168,7 +169,7 @@ namespace RhythmBox.Window.Playfield
                     MaxStartSpeed = x.Time;
                 }
 
-                list.Add(new Tuple<RBox, float>(new RBox(x.Speed, x._direction, MaxStartSpeed, keys)
+                objectList.Add(new Tuple<RBox, float>(new RBox(x.Speed, x._direction, MaxStartSpeed, keys)
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
@@ -179,7 +180,7 @@ namespace RhythmBox.Window.Playfield
                 }, (float)time));
             }
 
-            list.ForEach(x => Scheduler.AddDelayed(() => Add(x.Item1), x.Item2));
+            objectList.ForEach(x => Scheduler.AddDelayed(() => Add(x.Item1), x.Item2));
         }
     }
 }

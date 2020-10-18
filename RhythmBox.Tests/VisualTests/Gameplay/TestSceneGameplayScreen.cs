@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;

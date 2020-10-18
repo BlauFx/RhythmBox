@@ -1,4 +1,4 @@
-﻿using osu.Framework.Allocation;
+using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -185,12 +185,21 @@ namespace RhythmBox.Mode.Std.Objects
         
         private void Remove()
         {
+            async void WaitAndInvoke()
+            {
+                await Task.Run(async () =>
+                {
+                    await Task.Delay(hitAnimation.WaitTime);
+                    DisposableBx?.Invoke(new EventArgs());
+                });
+            }
+            
             Scheduler.CancelDelayedTasks();
 
             if (!Clicked)
             {
                 Click(Hit.Hitx);
-                Schedule(() => Add(hitAnimation = HitAnimation(Hit.Hitx)));
+                Add(hitAnimation = HitAnimation(Hit.Hitx));
             }
 
             bx.Colour = Color4.Red;
@@ -199,34 +208,19 @@ namespace RhythmBox.Mode.Std.Objects
             bx.FadeOut(this.Clear);
             bx.ScaleTo(1.1f, this.Clear, Easing.OutCirc);
 
-            async void WaitAndInvoke()
+            if (hitAnimation == null)
             {
-                //We need to wait so the HitAnimation class can finish it's animation.
-                await Task.Run(async () =>
-                {
-                    //TODO:
-                    await Task.Delay(hitAnimation.WaitTime);
-                    DisposableBx?.Invoke(new EventArgs());
-                });
-            }
-
-            if (hitAnimation != null)
-            {
-                WaitAndInvoke();
-                return;
-            }
-
-            Schedule(() =>
-            {
+                Click(Hit.Hitx);
                 Add(hitAnimation = HitAnimation(Hit.Hitx));
-                WaitAndInvoke();
-            });
+            }
+
+            WaitAndInvoke();
         }
 
         public void ClickKeyDown(Key key)
         {
-            Clicked = true;
             if (!Resuming.Value) return;
+            Clicked = true;
 
             if (key == keys[0] && direction == HitObjects.Direction.Up)
             {
