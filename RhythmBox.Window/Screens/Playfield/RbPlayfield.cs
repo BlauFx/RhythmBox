@@ -11,7 +11,6 @@ using RhythmBox.Mode.Std.Animations;
 using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Mode.Std.Mods;
 using RhythmBox.Mode.Std.Objects;
-using RhythmBox.Window.Playfield;
 
 namespace RhythmBox.Window.Screens.Playfield
 {
@@ -24,11 +23,11 @@ namespace RhythmBox.Window.Screens.Playfield
         //TODO:
         public bool HasStarted { get; set; } = false;
 
-        public BindableBool Resuming = new BindableBool();
+        public readonly BindableBool Resuming = new BindableBool();
 
         public BindableBool CanStart { get; set; } = new BindableBool();
 
-        public BindableBool HasFinished = new BindableBool();
+        public readonly BindableBool HasFinished = new BindableBool();
 
         private List<Mod> mods { get; set; }
 
@@ -42,14 +41,12 @@ namespace RhythmBox.Window.Screens.Playfield
 
         public List<Tuple<RBox, float>> objectList { get; } = new List<Tuple<RBox, float>>();
 
-        private int pos = 0;
-
-        public bool Failed { get; set; } = false;
+        public bool Failed { get; set; }
 
         [Resolved]
         private Gameini gameini { get; set; }
 
-        private Key[] keys = new Key[4];
+        private readonly Key[] keys = new Key[4];
 
         public Playfield(List<Mod> mods)
         {
@@ -59,19 +56,16 @@ namespace RhythmBox.Window.Screens.Playfield
         [BackgroundDependencyLoader]
         private void Load()
         {
-            Children = new Drawable[]
+            Child = new RbDrawPlayfield
             {
-                new RbDrawPlayfield
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(1f),
-                    action = action,
-                    dir = dir,
-                    BoxAction = BoxAction,
-                    BoxAction2 = BoxAction2,
-                },
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+                RelativeSizeAxes = Axes.Both,
+                Size = new Vector2(1f),
+                action = action,
+                dir = dir,
+                BoxAction = BoxAction,
+                BoxAction2 = BoxAction2,
             };
         }
 
@@ -92,16 +86,14 @@ namespace RhythmBox.Window.Screens.Playfield
         protected override bool OnKeyDown(KeyDownEvent e)
         {
             if (e.Key == keys[0] || e.Key == keys[1] || e.Key == keys[2] || e.Key == keys[3])
-            {
                 CheckClick(e.Key);
-            }
 
             return base.OnKeyDown(e);
         }
 
         private void CheckClick(Key key)
         {
-            HitObjects.Direction? direction = null;
+            Tuple<HitObjects.Direction?, int> direction = null;
 
             try
             {
@@ -111,14 +103,14 @@ namespace RhythmBox.Window.Screens.Playfield
 
             if (direction != null)
             {
-                objectList[pos].Item1.OnClickKeyDown(key);
+                objectList[direction.Item2].Item1.OnClickKeyDown(key);
                 //objectList.RemoveAt(pos);
             }
         }
 
-        private HitObjects.Direction? GetNextObjDir(Key key)
+        private Tuple<HitObjects.Direction?, int> GetNextObjDir(Key key)
         {
-            HitObjects.Direction? direction = null;
+            Tuple<HitObjects.Direction?, int> direction = null;
 
             for (int i = 0; i < objectList.Count; i++)
             {
@@ -128,8 +120,7 @@ namespace RhythmBox.Window.Screens.Playfield
                 {
                     if ((key == keys[0] && x == HitObjects.Direction.Up) || key == keys[1] && x == HitObjects.Direction.Left || key == keys[2] && x == HitObjects.Direction.Down || key == keys[3] && x == HitObjects.Direction.Right)
                     {
-                        direction = x;
-                        pos = i;
+                        direction = new Tuple<HitObjects.Direction?, int>(x, i);
                         break;
                     }
                 }

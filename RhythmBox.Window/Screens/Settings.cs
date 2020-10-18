@@ -24,8 +24,7 @@ namespace RhythmBox.Window.Screens
 
         private int CurrentKey;
 
-        [Resolved]
-        private Gameini gameini { get; set; }
+        [Resolved] private Gameini gameini { get; set; }
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -71,137 +70,26 @@ namespace RhythmBox.Window.Screens
                     X = 10f,
                     Font = new FontUsage("Roboto", 40f)
                 },
-                key[0] = new SpriteText
-                {
-                    Depth = -1,
-                    Anchor = Anchor.CentreLeft,
-                    Origin = Anchor.Centre,
-                    RelativePositionAxes = Axes.Both,
-                    X = 0.05f,
-                    Y = 0.03f,
-                    Text = $"{gameini.GetBindable<string>(SettingsConfig.KeyBindingUp).Value}",
-                    Font = new FontUsage("Roboto", 40f)
-                },
-                key[1] = new SpriteText
-                {
-                    Depth = -1,
-                    Anchor = Anchor.CentreLeft,
-                    Origin = Anchor.Centre,
-                    RelativePositionAxes = Axes.Both,
-                    X = 0.14f,
-                    Y = 0.03f,
-                    Text = $"{gameini.GetBindable<string>(SettingsConfig.KeyBindingLeft).Value}",
-                    Font = new FontUsage("Roboto", 40f)
-                },
-                key[2] = new SpriteText
-                {
-                    Depth = -1,
-                    Anchor = Anchor.CentreLeft,
-                    Origin = Anchor.Centre,
-                    RelativePositionAxes = Axes.Both,
-                    X = 0.23f,
-                    Y = 0.03f,
-                    Text = $"{gameini.GetBindable<string>(SettingsConfig.KeyBindingDown).Value}",
-                    Font = new FontUsage("Roboto", 40f)
-                },
-                key[3] = new SpriteText
-                {
-                    Depth = -1,
-                    Anchor = Anchor.CentreLeft,
-                    Origin = Anchor.Centre,
-                    RelativePositionAxes = Axes.Both,
-                    X = 0.32f,
-                    Y = 0.03f,
-                    Text = $"{gameini.GetBindable<string>(SettingsConfig.KeyBindingRight).Value}",
-                    Font = new FontUsage("Roboto", 40f)
-                },
-                new ClickBox
-                {
-                    Anchor = Anchor.CentreLeft,
-                    Origin = Anchor.CentreLeft,
-                    RelativeSizeAxes = Axes.Both,
-                    RelativePositionAxes = Axes.Both,
-                    Size = new Vector2(0.08f),
-                    X = 0.01f,
-                    Y = 0.03f,
-                    Colour = Color4.Gray.Opacity(0.9f),
-                    EditorMode2 = true,
-                    ClickAction = () =>
-                    {
-                        focusedOverlayContainer.State.Value = osu.Framework.Graphics.Containers.Visibility.Visible;
-                        OverlayActive = true;
-                        CurrentKey = 0;
-                    },
-                },
-                new ClickBox
-                {
-                    Anchor = Anchor.CentreLeft,
-                    Origin = Anchor.CentreLeft,
-                    RelativeSizeAxes = Axes.Both,
-                    RelativePositionAxes = Axes.Both,
-                    Size = new Vector2(0.08f),
-                    X = 0.1f,
-                    Y = 0.03f,
-                    Colour = Color4.Gray.Opacity(0.9f),
-                    EditorMode2 = true,
-                    ClickAction = () =>
-                    {
-                        focusedOverlayContainer.State.Value = osu.Framework.Graphics.Containers.Visibility.Visible;
-                        OverlayActive = true;
-                        CurrentKey = 1;
-                    },
-                },
-                new ClickBox
-                {
-                    Anchor = Anchor.CentreLeft,
-                    Origin = Anchor.CentreLeft,
-                    RelativeSizeAxes = Axes.Both,
-                    RelativePositionAxes = Axes.Both,
-                    Size = new Vector2(0.08f),
-                    X = 0.19f,
-                    Y = 0.03f,
-                    Colour = Color4.Gray.Opacity(0.9f),
-                    EditorMode2 = true,
-                    ClickAction = () =>
-                    {
-                        focusedOverlayContainer.State.Value = osu.Framework.Graphics.Containers.Visibility.Visible;
-                        OverlayActive = true;
-                        CurrentKey = 2;
-                    },
-                },
-                new ClickBox
-                {
-                    Anchor = Anchor.CentreLeft,
-                    Origin = Anchor.CentreLeft,
-                    RelativeSizeAxes = Axes.Both,
-                    RelativePositionAxes = Axes.Both,
-                    Size = new Vector2(0.08f),
-                    X = 0.28f,
-                    Y = 0.03f,
-                    Colour = Color4.Gray.Opacity(0.9f),
-                    EditorMode2 = true,
-                    ClickAction = () =>
-                    {
-                        focusedOverlayContainer.State.Value = osu.Framework.Graphics.Containers.Visibility.Visible;
-                        OverlayActive = true;
-                        CurrentKey = 3;
-                    },
-                }
+                key[0] = GetSprite(0.05f, 0.03f, $"{gameini.GetBindable<string>(SettingsConfig.KeyBindingUp).Value}"),
+                key[1] = GetSprite(0.14f, 0.03f, $"{gameini.GetBindable<string>(SettingsConfig.KeyBindingLeft).Value}"),
+                key[2] = GetSprite(0.23f, 0.03f, $"{gameini.GetBindable<string>(SettingsConfig.KeyBindingDown).Value}"),
+                key[3] = GetSprite(0.32f, 0.03f, $"{gameini.GetBindable<string>(SettingsConfig.KeyBindingRight).Value}"),
+                GetClickBox(0.01f, 0.03f, 0),
+                GetClickBox(0.1f, 0.03f, 1),
+                GetClickBox(0.19f, 0.03f, 2),
+                GetClickBox(0.28f, 0.03f, 3),
             };
         }
+
 
         protected override bool OnKeyDown(KeyDownEvent e)
         {
             if (e.Key == Key.Escape)
             {
                 if (focusedOverlayContainer.State.Value == osu.Framework.Graphics.Containers.Visibility.Visible)
-                {
                     focusedOverlayContainer.State.Value = osu.Framework.Graphics.Containers.Visibility.Hidden;
-                }
                 else
-                {
                     this.Exit();
-                }
             }
             else if (OverlayActive)
             {
@@ -250,5 +138,38 @@ namespace RhythmBox.Window.Screens
             this.FadeInFromZero(300, Easing.In);
             base.OnEntering(last);
         }
+
+        private SpriteText GetSprite(float XPos, float YPos, string text) =>
+            new SpriteText
+            {
+                Depth = -1,
+                Anchor = Anchor.CentreLeft,
+                Origin = Anchor.Centre,
+                RelativePositionAxes = Axes.Both,
+                X = XPos,
+                Y = YPos,
+                Text = text,
+                Font = new FontUsage("Roboto", 40f)
+            };
+
+        private ClickBox GetClickBox(float XPos, float YPos, int currentKey) =>
+            new ClickBox
+            {
+                Anchor = Anchor.CentreLeft,
+                Origin = Anchor.CentreLeft,
+                RelativeSizeAxes = Axes.Both,
+                RelativePositionAxes = Axes.Both,
+                Size = new Vector2(0.08f),
+                X = XPos,
+                Y = YPos,
+                Colour = Color4.Gray.Opacity(0.9f),
+                EditorMode2 = true,
+                ClickAction = () =>
+                {
+                    focusedOverlayContainer.State.Value = osu.Framework.Graphics.Containers.Visibility.Visible;
+                    OverlayActive = true;
+                    CurrentKey = currentKey;
+                },
+            };
     }
 }

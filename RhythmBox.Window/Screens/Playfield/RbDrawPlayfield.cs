@@ -1,3 +1,4 @@
+using System;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
@@ -6,9 +7,8 @@ using osuTK;
 using osuTK.Graphics;
 using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Window.Objects;
-using System;
 
-namespace RhythmBox.Window.Playfield
+namespace RhythmBox.Window.Screens.Playfield
 {
     public class RbDrawPlayfield : Container<ClickBox>
     {

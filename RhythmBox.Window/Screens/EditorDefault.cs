@@ -446,28 +446,12 @@ namespace RhythmBox.Window.Screens
             this.Origin = Anchor.Centre;
             this.Scale = new Vector2(1.5f);
 
-            this.FadeInFromZero<EditorDefault>(1500, Easing.OutExpo);
+            this.FadeInFromZero(1500, Easing.OutExpo);
             this.TransformTo(nameof(Scale), new Vector2(1f), 1500, Easing.InOutCirc).OnComplete((e) =>
             {
                 rhythmBoxClockContainer.Start();
                 track?.Start();
             });
-
-            if (!Discord.DiscordRichPresence.Initialized)
-            {
-                Discord.DiscordRichPresence.ctor();
-            }
-
-            Discord.DiscordRichPresence.UpdateRPC(
-                new DiscordRPC.RichPresence()
-                {
-                    Details = "Editing a map",
-                    State = " ",
-                    Assets = new DiscordRPC.Assets()
-                    {
-                        LargeImageKey = "three",
-                    }
-                });
 
             base.OnEntering(last);
         }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
@@ -13,20 +12,17 @@ namespace RhythmBox.Tests.VisualTests.Screens
     [TestFixture]
     public class TestSceneMainMenu : TestScene
     {
-        private ScreenStack _stack = null;
+        private ScreenStack _stack;
 
         [BackgroundDependencyLoader]
         private void Load()
         {
             AddStep("Add TestMainMenu", () =>
             {
-                if (_stack?.IsAlive ?? false) return;
+                if (_stack?.IsAlive ?? false) 
+                    return;
                 
-                Add(_stack = new ScreenStack
-                {
-                    RelativeSizeAxes = Axes.Both
-                });
-
+                Add(_stack = new ScreenStack { RelativeSizeAxes = Axes.Both });
                 LoadComponentAsync(new TestMainMenu
                 {
                     Anchor = Anchor.Centre,
@@ -35,12 +31,9 @@ namespace RhythmBox.Tests.VisualTests.Screens
                 }, _stack.Push);
             });
 
-            AddStep("Remove TestMainMenu", () =>
-            {
-                this._stack?.Expire();
-            });
+            AddStep("Remove TestMainMenu", () => this._stack?.Expire());
         }
     }
     
-    public class TestMainMenu : MainMenu { public override Action GetAction(int pos) => null; }
+    public class TestMainMenu : MainMenu { protected override Action GetAction(int pos) => null; }
 }
