@@ -112,8 +112,6 @@ namespace RhythmBox.Mode.Std.Objects
 
         private double Duration { get; set; }
 
-        public Hit currentHit { get; protected set; }
-
         public BindableBool Resuming = new BindableBool();
 
         private bool Clicked = false;
@@ -127,7 +125,7 @@ namespace RhythmBox.Mode.Std.Objects
         [BackgroundDependencyLoader]
         private void Load()
         {
-            Add(bx = new Box
+            Child = bx = new Box
             {
                 Anchor = Anchor.Centre,
                 Origin = Anchor.TopCentre,
@@ -136,39 +134,40 @@ namespace RhythmBox.Mode.Std.Objects
                 RelativePositionAxes = Axes.Both,
                 Alpha = 0,
                 Depth = int.MinValue
-            });
+            };
 
             bx.MoveToY(0f, 0, Easing.InCirc);
             bx.FadeInFromZero(Duration * 0.2, Easing.None);
 
-            Vector2 ResizeAmount;
+            Vector2 ResizeAmount = direction switch
+            {
+                HitObjects.Direction.Up => new Vector2(1f, 0.05f),
+                HitObjects.Direction.Down => new Vector2(1f, 0.05f),
+                HitObjects.Direction.Left => new Vector2(0.056f, 1f),
+                HitObjects.Direction.Right => new Vector2(0.056f, 1f),
+                _ => throw new Exception()
+            };
 
             switch (direction)
             {
                 case HitObjects.Direction.Up:
                     bx.MoveToY(-0.5f, Duration, Easing.InCirc);
-
-                    ResizeAmount = new Vector2(1f, 0.05f);
                     break;
                 case HitObjects.Direction.Down:
                     bx.Rotation = 180f;
                     bx.MoveToY(0.5f, Duration, Easing.InCirc);
-
-                    ResizeAmount = new Vector2(1f, 0.05f);
+                    
                     break;
                 case HitObjects.Direction.Left:
                     bx.Origin = Anchor.CentreLeft;
                     bx.Size = new Vector2(0.01f, 0.1f);
+                        
                     bx.MoveToX(-0.5f, Duration, Easing.InCirc);
-
-                    ResizeAmount = new Vector2(0.056f, 1f);
                     break;
                 case HitObjects.Direction.Right:
                     bx.Origin = Anchor.CentreRight;
                     bx.Size = new Vector2(0.01f, 0.1f);
                     bx.MoveToX(0.5f, Duration, Easing.InCirc);
-
-                    ResizeAmount = new Vector2(0.056f, 1f);
                     break;
                 default:
                     throw new Exception();
@@ -178,10 +177,7 @@ namespace RhythmBox.Mode.Std.Objects
             Scheduler.AddDelayed(Remove, Duration + Expire);
         }
 
-        async void Click(Hit hit)
-        {
-            await Task.Run(() => _InvokeNamespaceClassesStaticMethod("RhythmBox.Window.Score", "UpdateCombo", hit));
-        }
+        async void Click(Hit hit) => await Task.Run(() => _InvokeNamespaceClassesStaticMethod("RhythmBox.Window.Score", "UpdateCombo", hit));
         
         private void Remove()
         {
@@ -219,8 +215,8 @@ namespace RhythmBox.Mode.Std.Objects
 
         public void ClickKeyDown(Key key)
         {
-            if (!Resuming.Value) return;
             Clicked = true;
+            if (!Resuming.Value) return;
 
             if (key == keys[0] && direction == HitObjects.Direction.Up)
             {
