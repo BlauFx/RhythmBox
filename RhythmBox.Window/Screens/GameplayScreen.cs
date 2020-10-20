@@ -41,8 +41,8 @@ namespace RhythmBox.Window.Screens
 
         private readonly Map _map;
 
-        private Playfield.Playfield _RbPlayfield;
-
+        public Playfield.Playfield _RbPlayfield;
+        
         public HPBar hpbar { get; private set; }
 
         private RhythmBoxClockContainer rhythmBoxClockContainer;
@@ -52,20 +52,11 @@ namespace RhythmBox.Window.Screens
         private readonly BindableBool IsPaused = new BindableBool();
 
         private readonly BindableBool Resuming = new BindableBool(true);
-
         private bool HasFailed { get; set; }
 
         private BreakOverlay BreakOverlay;
 
-        [Resolved]
-        private AudioManager audio { get; set; }
-        
-        private ITrackStore trackStore;
-
-        private IResourceStore<byte[]> store;
-
         public Track track;
-
         private BindableBool ReturntoSongSelectionAfterFail { get; } = new BindableBool();
 
         private readonly BindableBool Startable = new BindableBool();
@@ -80,6 +71,9 @@ namespace RhythmBox.Window.Screens
 
         private readonly Key[] keys = new Key[4];
 
+        [Resolved]
+        private AudioManager audio { get; set; }
+        
         [Resolved]
         private Gameini Gameini { get; set; }
         
@@ -99,8 +93,8 @@ namespace RhythmBox.Window.Screens
         [BackgroundDependencyLoader]
         private void Load(GameHost GameHost, CachedMap cachedMap)
         {
-            store = new StorageBackedResourceStore(GameHost.Storage);
-            trackStore = audio.GetTrackStore(store);
+            IResourceStore<byte[]> store = new StorageBackedResourceStore(GameHost.Storage);
+            ITrackStore trackStore = audio.GetTrackStore(store);
 
             string AudioFile = $"{Path.GetDirectoryName(_map.Path)}\\{_map.AFileName}";
             track = trackStore.Get(AudioFile);

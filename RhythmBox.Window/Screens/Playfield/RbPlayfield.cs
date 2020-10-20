@@ -39,7 +39,7 @@ namespace RhythmBox.Window.Screens.Playfield
 
         public Bindable<HitObjects.Direction> dir { get; } = new Bindable<HitObjects.Direction>(HitObjects.Direction.Up);
 
-        public List<Tuple<RBox, float>> objectList { get; } = new List<Tuple<RBox, float>>();
+        public List<Tuple<RBox, double>> objectList { get; } = new List<Tuple<RBox, double>>();
 
         public bool Failed { get; set; }
 
@@ -146,21 +146,12 @@ namespace RhythmBox.Window.Screens.Playfield
             {
                 var x = (HitObjects)objBox;
 
-                int MinStartSpeed = 200;
-                double MaxStartSpeed = x.Speed * 1000;
-                
-                if (MaxStartSpeed < MinStartSpeed)
-                    MaxStartSpeed = MinStartSpeed;
+                if (x.Time < Map.StartTime)
+                    continue;
 
-                var time = x.Time - MaxStartSpeed - Map.StartTime;
+                var duration = x.Speed * 1000f;
 
-                if (x.Time - MaxStartSpeed < 0)
-                {
-                    time = 0;
-                    MaxStartSpeed = x.Time;
-                }
-
-                objectList.Add(new Tuple<RBox, float>(new RBox(x.Speed, x._direction, MaxStartSpeed, keys)
+                objectList.Add(new Tuple<RBox, double>(new RBox(x.Speed, x._direction, duration, keys)
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
@@ -168,10 +159,10 @@ namespace RhythmBox.Window.Screens.Playfield
                     Size = new Vector2(1f),
                     Resuming = Resuming,
                     mods = mods,
-                }, (float)time));
+                }, x.Time));
             }
 
-            objectList.ForEach(x => Scheduler.AddDelayed(() => Add(x.Item1), x.Item2));
+            Schedule(() => objectList.ForEach(x => Scheduler.AddDelayed(() => Add(x.Item1), x.Item2)));
         }
     }
 }

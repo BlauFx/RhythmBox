@@ -22,11 +22,11 @@ namespace RhythmBox.Mode.Std.Objects
         /// <summary>
         /// if speed is higher then the animation / animation of the drawble get's slower
         /// </summary>
-        public float speed { get; set; } = 1f;
+        public float speed { get; }
 
-        public HitObjects.Direction direction { get; set; }
+        public HitObjects.Direction direction { get; }
 
-        public RBoxObj obj { get; set; }
+        public RBoxObj obj { get; private set; }
 
         /// <summary>
         /// AlphaA is the alpha of the drawable
@@ -37,7 +37,7 @@ namespace RhythmBox.Mode.Std.Objects
 
         public List<Mod> mods { get; set; }
 
-        public double Duration { get; set; }
+        public double Duration { get; }
 
         private readonly Key[] keys;
 
@@ -55,7 +55,7 @@ namespace RhythmBox.Mode.Std.Objects
         {
             Children = new Drawable[]
             {
-                obj = new RBoxObj(speed, direction, Duration, keys)
+                obj = new RBoxObj(direction, Duration, keys)
                 {
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f),
@@ -90,10 +90,10 @@ namespace RhythmBox.Mode.Std.Objects
 
     public class RBoxObj : Container
     {
-        public RBoxObj(float speed, HitObjects.Direction direction, double DurationTime, Key[] keys)
+        public RBoxObj(HitObjects.Direction direction, double Duration, Key[] keys)
         {
             this.direction = direction;
-            this.Duration = DurationTime * speed;
+            this.Duration = Duration;
 
             //TODO: Leave it 300 or muiltply it with speed?
             this.Expire = 300; // speed;
