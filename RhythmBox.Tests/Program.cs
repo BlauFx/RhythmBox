@@ -9,13 +9,9 @@ namespace RhythmBox.Tests
         [STAThread]
         static void Main(string[] args)
         {
-            using(GameHost host = Host.GetSuitableHost(@"RhythmBox", false, true))
-            {
-                using (Game game = new Tests())
-                {
-                    host.Run(game);
-                }
-            }
+            using GameHost host = Host.GetSuitableHost(@"RhythmBox", false, true);
+            using Game game = new Tests();
+            host.Run(game);
         }
     }
 }

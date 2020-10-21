@@ -13,7 +13,7 @@ namespace RhythmBox.Window
     {
         private Sprite boxLoading;
 
-        public double Duration { get; set; } = 1000;
+        private const double Duration = 1000;
 
         [BackgroundDependencyLoader]
         private void Load(TextureStore store)

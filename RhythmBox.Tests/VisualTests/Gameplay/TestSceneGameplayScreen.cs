@@ -71,6 +71,8 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                 
                 var timings = _gameplayScreen._RbPlayfield.objectList;
                 
+                Scheduler.UpdateClock(_gameplayScreen._RbPlayfield.Clock);
+                
                 for (int i = 0; i < timings.Count; i++)
                 {
                     Key? key = timings[i].Item1.direction switch
@@ -81,7 +83,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                         HitObjects.Direction.Right => keys[3],
                         _ => null
                     };
-
+                    
                     Scheduler.AddDelayed(() =>
                     {
                         Debug.Assert(key.HasValue, "key is null");

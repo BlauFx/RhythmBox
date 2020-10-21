@@ -24,10 +24,7 @@ using RhythmBox.Window.Overlays;
 using RhythmBox.Window.Screens.SongSelection;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
-using System.Reflection.Metadata;
-using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using RhythmBox.Window.Screens.Playfield;
 
@@ -272,13 +269,13 @@ namespace RhythmBox.Window.Screens
             GameplayScreenLoader.StopRotating();
             GameplayScreenLoader.FadeOut(time, Easing.In).Delay(time).Finally((Action) => GameplayScreenLoader.Expire());
 
-            rhythmBoxClockContainer.Seek(_map.StartTime);
-            track?.Seek(_map.StartTime);
+            GameStarted.Value = true;
 
             rhythmBoxClockContainer.Start();
             track?.Start();
-
-            GameStarted.Value = true;
+            
+            rhythmBoxClockContainer.Seek(_map.StartTime);
+            track?.Seek(_map.StartTime);
             
             if (!hpbar.Enabled.Value) return;
             hpbar.Drain(false);
@@ -434,6 +431,12 @@ namespace RhythmBox.Window.Screens
         {
             track?.Stop();
             return base.OnExiting(next);
+        }
+
+        protected override void Dispose(bool isDisposing)
+        {
+            track?.Stop();
+            base.Dispose(isDisposing);
         }
     }
 }

@@ -14,11 +14,11 @@ namespace RhythmBox.Window.Maps
     {
         private ITrackStore trackStore;
 
-        public Track Track { get; set; }
+        public Track Track { get; private set; }
 
         public Bindable<Track> BindableTrack { get; } = new Bindable<Track>();
 
-        public Map Map { get; set; } = null;
+        public Map Map { get; set; }
 
         private readonly Storage storage;
 
@@ -28,14 +28,12 @@ namespace RhythmBox.Window.Maps
         private Gameini gameini { get; set; }
 
         [BackgroundDependencyLoader]
-        private void Load(AudioManager Audio)
-        {
-            trackStore = Audio?.GetTrackStore(new StorageBackedResourceStore(storage));
-        }
+        private void Load(AudioManager Audio) => trackStore = Audio?.GetTrackStore(new StorageBackedResourceStore(storage));
 
         public void Seek(double time)
         {
-            if (Map == null) return;
+            if (Map == null) 
+                return;
 
             var IsRunning = Track?.IsRunning;
 
@@ -63,7 +61,8 @@ namespace RhythmBox.Window.Maps
             if (Map is null)
                 return;
 
-            Track = trackStore?.Get($"{Map?.Path[..Map.Path.LastIndexOf(@"\", StringComparison.Ordinal)]}\\{Map.AFileName}");
+            string Folder = System.IO.Path.GetDirectoryName(Map.Path);
+            Track = trackStore?.Get($"{Folder}\\{Map.AFileName}");
 
             if (Track != null)
                 Track.Volume.Value = gameini.Get<double>(SettingsConfig.Volume);

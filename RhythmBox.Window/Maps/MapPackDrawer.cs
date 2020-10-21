@@ -38,13 +38,13 @@ namespace RhythmBox.Window.Maps
 
         public Action InvokeBox;
 
-        private string filter;
+        private readonly string filter;
        
         private MapPackBox parentBox;
 
         private TextFlowContainer textFlowContainer, textFlowContainer2;
 
-        public  Map[] Maps { get; }
+        private Map[] Maps { get; }
 
         public new Color4 Colour;
 
