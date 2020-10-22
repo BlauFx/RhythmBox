@@ -314,7 +314,7 @@ namespace RhythmBox.Window.Screens
 
             foreach (var x in this._RbPlayfield)
             {
-                if (x is RbDrawPlayfield playfield)
+                if (x is DrawPlayfield playfield)
                 {
                     foreach (var y in playfield)
                     {

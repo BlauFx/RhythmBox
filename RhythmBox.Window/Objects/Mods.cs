@@ -90,9 +90,9 @@ namespace RhythmBox.Window.Objects
         {
             this.Mod = mod;
 
-            action = (FirstRun) =>
+            action = (firstRun) =>
             {
-                if (!FirstRun)
+                if (!firstRun)
                 {
                     if (CckBx.Rotation == 0f)
                         mods.Add(Mod);
@@ -135,11 +135,7 @@ namespace RhythmBox.Window.Objects
                 },
             };
 
-            CckBx.OnMouseClick += () =>
-            {
-                Children.ForEach(drawable => drawable.RotateTo(drawable.Rotation == 0f ? 20f : 0f));
-            };
-
+            CckBx.OnMouseClick += () => Children.ForEach(drawable => drawable.RotateTo(drawable.Rotation == 0f ? 20f : 0f));
             action.Invoke(true);
         }
     }

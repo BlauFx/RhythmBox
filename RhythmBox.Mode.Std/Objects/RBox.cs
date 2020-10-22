@@ -53,17 +53,14 @@ namespace RhythmBox.Mode.Std.Objects
         [BackgroundDependencyLoader]
         private void Load()
         {
-            Children = new Drawable[]
+            Child = obj = new RBoxObj(direction, Duration, keys)
             {
-                obj = new RBoxObj(direction, Duration, keys)
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(1f),
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Alpha = 1f,
-                    Resuming = Resuming,
-                },
+                RelativeSizeAxes = Axes.Both,
+                Size = new Vector2(1f),
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+                Alpha = 1f,
+                Resuming = Resuming,
             };
 
             obj.OnLoadComplete += (e) => ApplyMods(mods);
@@ -90,14 +87,13 @@ namespace RhythmBox.Mode.Std.Objects
 
     public class RBoxObj : Container
     {
-        public RBoxObj(HitObjects.Direction direction, double Duration, Key[] keys)
+        public RBoxObj(HitObjects.Direction direction, double duration, Key[] keys)
         {
             this.direction = direction;
-            this.Duration = Duration;
+            this.Duration = duration;
 
-            //TODO: Leave it 300 or muiltply it with speed?
-            this.Expire = 300; // speed;
-            this.Clear = this.Expire * 0.5;
+            this.Expire = duration * 0.3d;
+            this.Clear = Expire * 0.5;
 
             this.keys = keys;
         }
@@ -106,7 +102,7 @@ namespace RhythmBox.Mode.Std.Objects
 
         private HitObjects.Direction direction { get; set; }
 
-        private new int Expire { get; set; }
+        private new double Expire { get; set; }
 
         private new double Clear { get; set; }
 
@@ -177,7 +173,7 @@ namespace RhythmBox.Mode.Std.Objects
             Scheduler.AddDelayed(Remove, Duration + Expire);
         }
 
-        async void Click(Hit hit) => await Task.Run(() => _InvokeNamespaceClassesStaticMethod("RhythmBox.Window.Score", "UpdateCombo", hit));
+        private async void Click(Hit hit) => await Task.Run(() => _InvokeNamespaceClassesStaticMethod("RhythmBox.Window.Score", "UpdateCombo", hit));
         
         private void Remove()
         {

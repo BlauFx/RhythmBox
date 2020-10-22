@@ -41,17 +41,11 @@ namespace RhythmBox.Tests.VisualTests.Overlays
 
             modOverlay.State.Value = Visibility.Hidden;
 
-            AddStep("Animation 1 FadeIn", () =>
-            {
-                modOverlay.State.Value = Visibility.Visible;
-            });
+            AddStep("Animation 1 FadeIn", () => modOverlay.State.Value = Visibility.Visible);
 
             AddWaitStep("wait for complete", 10);
 
-            AddStep("Animation 1 FadeOut", () =>
-            {
-                modOverlay.State.Value = Visibility.Hidden;
-            });
+            AddStep("Animation 1 FadeOut", () => modOverlay.State.Value = Visibility.Hidden);
         }
     }
 }

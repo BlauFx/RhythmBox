@@ -10,7 +10,7 @@ using RhythmBox.Window.Objects;
 
 namespace RhythmBox.Window.Screens.Playfield
 {
-    public class RbDrawPlayfield : Container<ClickBox>
+    public class DrawPlayfield : Container<ClickBox>
     {
         public Color4 color = Color4.White;
 

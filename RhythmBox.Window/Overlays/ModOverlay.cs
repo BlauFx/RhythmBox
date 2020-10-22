@@ -7,6 +7,7 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
 using osuTK;
 using osuTK.Graphics;
+using osuTK.Input;
 using RhythmBox.Window.Objects;
 
 namespace RhythmBox.Window.Overlays
@@ -30,7 +31,7 @@ namespace RhythmBox.Window.Overlays
                     Origin = Anchor.Centre,
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f),
-                    Colour = Color4.Black.Opacity(0.3f),
+                    Colour = Color4.Black.Opacity(0.75f),
                 },
                 modBox = new Mods
                 {
@@ -57,12 +58,10 @@ namespace RhythmBox.Window.Overlays
 
         protected override bool OnKeyDown(KeyDownEvent e)
         {
-            if (e.Key == osuTK.Input.Key.G)
-            {
+            if (e.Key == Key.Escape)
                 this.State.Value = Visibility.Hidden;
-            }
 
-            return base.OnKeyDown(e);
+            return true;
         }
 
         protected override void PopIn()

@@ -56,7 +56,7 @@ namespace RhythmBox.Window.Screens.Playfield
         [BackgroundDependencyLoader]
         private void Load()
         {
-            Child = new RbDrawPlayfield
+            Child = new DrawPlayfield
             {
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
