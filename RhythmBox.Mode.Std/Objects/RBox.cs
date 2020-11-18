@@ -144,32 +144,34 @@ namespace RhythmBox.Mode.Std.Objects
                 _ => throw new Exception()
             };
 
+            Easing easing = Easing.InCirc; //TODO: Easing.InExpo;
+
             switch (direction)
             {
                 case HitObjects.Direction.Up:
-                    bx.MoveToY(-0.5f, Duration, Easing.InCirc);
+                    bx.MoveToY(-0.5f, Duration, easing);
                     break;
                 case HitObjects.Direction.Down:
                     bx.Rotation = 180f;
-                    bx.MoveToY(0.5f, Duration, Easing.InCirc);
+                    bx.MoveToY(0.5f, Duration, easing);
                     
                     break;
                 case HitObjects.Direction.Left:
                     bx.Origin = Anchor.CentreLeft;
                     bx.Size = new Vector2(0.01f, 0.1f);
                         
-                    bx.MoveToX(-0.5f, Duration, Easing.InCirc);
+                    bx.MoveToX(-0.5f, Duration, easing);
                     break;
                 case HitObjects.Direction.Right:
                     bx.Origin = Anchor.CentreRight;
                     bx.Size = new Vector2(0.01f, 0.1f);
-                    bx.MoveToX(0.5f, Duration, Easing.InCirc);
+                    bx.MoveToX(0.5f, Duration, easing);
                     break;
                 default:
                     throw new Exception();
             }
 
-            bx.ResizeTo(ResizeAmount, Duration, Easing.InCirc);
+            bx.ResizeTo(ResizeAmount, Duration, easing);
             Scheduler.AddDelayed(Remove, Duration + Expire);
         }
 
@@ -194,11 +196,11 @@ namespace RhythmBox.Mode.Std.Objects
                 Add(hitAnimation = HitAnimation(Hit.Hitx));
             }
 
-            bx.Colour = Color4.Red;
+            bx.Colour = Color4.Red; //TODO: Green
             Scheduler.AddDelayed(() => bx.Colour = Color4.White, this.Clear / 2);
 
             bx.FadeOut(this.Clear);
-            bx.ScaleTo(1.1f, this.Clear, Easing.OutCirc);
+            bx.ScaleTo(1.1f, this.Clear, Easing.OutCirc); //TODO: InSine
 
             if (hitAnimation == null)
             {

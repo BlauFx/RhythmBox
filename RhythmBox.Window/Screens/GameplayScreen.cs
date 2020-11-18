@@ -113,7 +113,7 @@ namespace RhythmBox.Window.Screens
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f)
                 },
-                BreakOverlay = new BreakOverlay
+                BreakOverlay = new BreakOverlay(new Action[] { () => BreakOverlay.State.Value = Visibility.Hidden, () => ReturntoSongSelectionAfterFail.Value = true })
                 {
                     RelativePositionAxes = Axes.Both,
                     Anchor = Anchor.Centre,
@@ -159,17 +159,18 @@ namespace RhythmBox.Window.Screens
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Both,
+                    RelativeSizeAxes = Axes.Both, 
                     RelativePositionAxes = Axes.Both,
-                    Size = new Vector2(0.6f, 1f),
+                    Size = new Vector2(0.6f, 0.9f),
                     Map = _map,
+                    Y = 0.02f
                 },
                 hpbar = new HPBar(ToApplyMods)
                 {
                     Anchor = Anchor.TopLeft,
-                    Origin = Anchor.TopLeft,
-                    RelativeSizeAxes = Axes.Both,
-                    Size = new Vector2(0.7f, 1f),
+                    Origin = Anchor.TopLeft, 
+                    RelativeSizeAxes = Axes.Both, 
+                    Size = new Vector2(0.8f, 1f),
                     Colour = Color4.AliceBlue
                 },
                 DispayCombo = new TextFlowContainer

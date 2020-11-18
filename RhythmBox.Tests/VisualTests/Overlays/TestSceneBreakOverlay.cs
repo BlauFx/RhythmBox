@@ -1,3 +1,4 @@
+using System;
 using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
@@ -19,7 +20,7 @@ namespace RhythmBox.Tests.VisualTests.Overlays
         {
             Children = new Drawable[]
             {
-                breakOverlay = new BreakOverlay
+                breakOverlay = new BreakOverlay(new Action[] { null, null })
                 {
                     Depth = -1,
                     RelativePositionAxes = Axes.Both,

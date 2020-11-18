@@ -29,8 +29,11 @@ namespace RhythmBox.Window.Screens.Playfield
         [BackgroundDependencyLoader]
         private void Load()
         {
-            Add(drawable(new Vector2(0.89f, 2f), 0.949f, 0f, Anchor.TopCentre, Anchor.Centre, Axes.X)); //Down
+            Add(drawable(new Vector2(1f, 2f), 0f, 0f, Anchor.TopCentre, Anchor.Centre, Axes.X)); //Up Outside
             Add(drawable(new Vector2(0.89f, 2f), 0.051f, 0f, Anchor.TopCentre, Anchor.Centre, Axes.X)); //Up
+            
+            Add(drawable(new Vector2(1f, 2f), 1f, 0f, Anchor.TopCentre, Anchor.Centre, Axes.X)); //Down Outside
+            Add(drawable(new Vector2(0.89f, 2f), 0.949f, 0f, Anchor.TopCentre, Anchor.Centre, Axes.X)); //Down
 
             Add(drawable(new Vector2(2f, 1f), 0.5f, 0f)); //Left Outside
             Add(drawable(new Vector2(2f, 0.9f), 0.5f, 0.057f)); //Left

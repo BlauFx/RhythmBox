@@ -91,7 +91,7 @@ namespace RhythmBox.Tests.VisualTests.Clocks
                     Origin = Anchor.Centre,
                     RelativeSizeAxes = Axes.Both,
                     RelativePositionAxes = Axes.Both,
-                    Size = new Vector2(0.6f, 1f),
+                    Size = new Vector2(0.6f, 0.9f),
                     Map = map,
                 },
             };
