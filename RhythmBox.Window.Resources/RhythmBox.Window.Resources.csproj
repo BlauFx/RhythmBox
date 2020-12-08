@@ -15,8 +15,4 @@
     <EmbeddedResource Include="Fonts\**\*" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="ppy.osu.Framework" Version="2020.1203.0" />
-  </ItemGroup>
-
 </Project>
