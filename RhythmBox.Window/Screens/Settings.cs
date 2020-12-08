@@ -1,8 +1,10 @@
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
 using osu.Framework.Screens;
 using osuTK;
@@ -29,6 +31,17 @@ namespace RhythmBox.Window.Screens
         [BackgroundDependencyLoader]
         private void Load()
         {
+            var sliderBarValue = new BindableDouble
+            {
+                MinValue = -10,
+                MaxValue = 10
+            };
+
+            sliderBarValue.ValueChanged += (e) =>
+            {
+                //TODO: Change audio volume
+            };
+
             InternalChildren = new Drawable[]
             {
                 focusedOverlayContainer = new RBfocusedOverlayContainer(Color4.Black.Opacity(0.9f), true)
@@ -58,7 +71,6 @@ namespace RhythmBox.Window.Screens
                     Text = "Settings",
                     Font = new FontUsage("Roboto", 40f)
                 },
-                //TODO:
                 new SpriteText
                 {
                     Depth = 0,
@@ -70,6 +82,19 @@ namespace RhythmBox.Window.Screens
                     X = 10f,
                     Font = new FontUsage("Roboto", 40f)
                 },
+                new SpriteText
+                {
+                    Depth = 0,
+                    Anchor = Anchor.CentreLeft,
+                    Origin = Anchor.CentreLeft,
+                    Size = new Vector2(160f, 100f),
+                    RelativePositionAxes = Axes.Y,
+                    Colour = Color4.Gray.Opacity(0.9f),
+                    Text = "Audio:",
+                    X = 10f,
+                    Y = -0.3f,
+                    Font = new FontUsage("Roboto", 40f)
+                },
                 key[0] = GetSprite(0.05f, 0.03f, $"{gameini.GetBindable<string>(SettingsConfig.KeyBindingUp).Value}"),
                 key[1] = GetSprite(0.14f, 0.03f, $"{gameini.GetBindable<string>(SettingsConfig.KeyBindingLeft).Value}"),
                 key[2] = GetSprite(0.23f, 0.03f, $"{gameini.GetBindable<string>(SettingsConfig.KeyBindingDown).Value}"),
@@ -78,6 +103,20 @@ namespace RhythmBox.Window.Screens
                 GetClickBox(0.1f, 0.03f, 1),
                 GetClickBox(0.19f, 0.03f, 2),
                 GetClickBox(0.28f, 0.03f, 3),
+                new BasicSliderBar<double>
+                {
+                    Anchor = Anchor.CentreLeft,
+                    Origin = Anchor.CentreLeft,
+                    RelativeSizeAxes = Axes.Both,
+                    RelativePositionAxes = Axes.Both,
+                    Size = new Vector2(0.2f, 0.02f),
+                    Y = -0.2f,
+                    BackgroundColour = Color4.White,
+                    SelectionColour = Color4.Pink,
+                    KeyboardStep = 1,
+                    TransferValueOnCommit = true,
+                    Current = sliderBarValue
+                }
             };
         }
 
