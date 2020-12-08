@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Window.Maps;
 
@@ -8,7 +9,7 @@ namespace RhythmBox.Window
 {
     public static class Songs
     {
-        public static string SongPath => Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) + "\\Songs\\";
+        public static string SongPath => Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) + $"{Path.DirectorySeparatorChar}Songs{Path.DirectorySeparatorChar}";
 
         private static bool didRun;
 

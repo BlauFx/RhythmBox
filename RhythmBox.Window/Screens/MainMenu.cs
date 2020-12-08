@@ -110,8 +110,6 @@ namespace RhythmBox.Window.Screens
                 },
             };
 
-            new DefaultFolder();
-
             AddInternal(box = new Box
             {
                 Depth = float.MinValue + 1,

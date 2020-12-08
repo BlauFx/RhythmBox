@@ -16,6 +16,8 @@ namespace RhythmBox.Window
 
         protected override void LoadComplete()
         {
+            _ = new DefaultFolder();
+            
             LoadComponentAsync(new MainMenu
             {
                 Anchor = Anchor.Centre,

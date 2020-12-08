@@ -11,30 +11,28 @@ namespace RhythmBox.Window
 {
     public class DefaultFolder
     {
-        public DefaultFolder(bool createSongs = true, bool CreateSkins = false)
+        public DefaultFolder(bool createSongs = true, bool createSkins = false)
         {
-            string CurrentFolder = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            string currentFolder = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
             
             if (createSongs)
             {
                 if (!Directory.Exists(Songs.SongPath))
                     Directory.CreateDirectory(Songs.SongPath);
             }
-            else if (CreateSkins)
+            else if (createSkins)
             {
-                if (!Directory.Exists(CurrentFolder + "\\Skins"))
-                {
-                    Directory.CreateDirectory(CurrentFolder + "\\Skins");
-                }
+                if (!Directory.Exists(currentFolder + $"{Path.DirectorySeparatorChar}Skins"))
+                    Directory.CreateDirectory(currentFolder + $"{Path.DirectorySeparatorChar}Skins");
             }
 
-            var file = Songs.SongPath + "\\TestMap\\Difficulty1.ini";
+            var file = Songs.SongPath + $"{Path.DirectorySeparatorChar}TestMap{Path.DirectorySeparatorChar}Difficulty1.ini";
             
             //TODO: This is only temporary
             //Side note: maybe add our own fileformat? 
             if (!File.Exists(file))
             {
-                Directory.CreateDirectory(Songs.SongPath + "\\TestMap");
+                Directory.CreateDirectory(Songs.SongPath + $"{Path.DirectorySeparatorChar}TestMap");
                 ImprovedTemp(file);
             }
         }
