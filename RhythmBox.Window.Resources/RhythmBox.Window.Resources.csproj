@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ppy.osu.Framework" Version="2020.1013.0" />
+    <PackageReference Include="ppy.osu.Framework" Version="2020.1129.0" />
   </ItemGroup>
 
 </Project>
