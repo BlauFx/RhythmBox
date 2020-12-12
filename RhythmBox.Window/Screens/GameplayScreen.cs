@@ -88,13 +88,13 @@ namespace RhythmBox.Window.Screens
         }
 
         [BackgroundDependencyLoader]
-        private void Load(GameHost GameHost, CachedMap cachedMap)
+        private void Load(GameHost gameHost, CachedMap cachedMap)
         {
-            IResourceStore<byte[]> store = new StorageBackedResourceStore(GameHost.Storage);
+            IResourceStore<byte[]> store = new StorageBackedResourceStore(gameHost.Storage);
             ITrackStore trackStore = audio.GetTrackStore(store);
 
-            string AudioFile = $"{Path.GetDirectoryName(_map.Path)}\\{_map.AFileName}";
-            track = trackStore.Get(AudioFile);
+            var audioFile = $"{Path.GetDirectoryName(_map.Path)}{Path.DirectorySeparatorChar}{_map.AFileName}";
+            track = trackStore.Get(audioFile);
             
             if (track != null)
                 track.Volume.Value = Gameini.Get<double>(SettingsConfig.Volume);

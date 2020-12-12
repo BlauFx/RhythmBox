@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Runtime.InteropServices;
 using osu.Framework.Allocation;
 using osu.Framework.Audio;
 using osu.Framework.Audio.Track;
@@ -61,8 +63,8 @@ namespace RhythmBox.Window.Maps
             if (Map is null)
                 return;
 
-            string Folder = System.IO.Path.GetDirectoryName(Map.Path);
-            Track = trackStore?.Get($"{Folder}\\{Map.AFileName}");
+            string folder = Path.GetDirectoryName(Map.Path);
+            Track = trackStore?.Get($"{folder}{Path.DirectorySeparatorChar}{Map.AFileName}");
 
             if (Track != null)
                 Track.Volume.Value = gameini.Get<double>(SettingsConfig.Volume);
