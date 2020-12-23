@@ -59,7 +59,7 @@ namespace RhythmBox.Window.Screens
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                     Alpha = 1f,
-                    Texture = store.Get("Skin/menu-background.png"),
+                    Texture = await store.GetAsync("Skin/menu-background.png"),
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1.1f),
                 },
@@ -147,9 +147,9 @@ namespace RhythmBox.Window.Screens
                 }
             });
 
-            bool NewUpdate = await updater.SearchAsyncForUpdates();
+            bool newUpdate = await updater.SearchAsyncForUpdates();
 
-            if (NewUpdate)
+            if (newUpdate)
             {
                 //TODO:
                 _overlay._text.Text = "A new update is available!                                      " +
@@ -194,8 +194,8 @@ namespace RhythmBox.Window.Screens
 
         private void LimitFPS(bool Limit)
         {
-            Host.MaximumDrawHz = Limit ? 200 : int.MaxValue;
-            Host.MaximumUpdateHz = Limit ? 200 : int.MaxValue;;
+            Host.MaximumDrawHz = Limit ? 200 : short.MaxValue;
+            Host.MaximumUpdateHz = Limit ? 200 : short.MaxValue;;
         }
 
         public override void OnEntering(IScreen last)

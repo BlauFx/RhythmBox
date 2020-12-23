@@ -84,7 +84,7 @@ namespace RhythmBox.Window.Maps
             }
         }
         
-        private HitObjects[] HitObjectsParser(List<string> list)
+        private HitObjects[] HitObjectsParser(IReadOnlyList<string> list)
         {
             List<HitObjects> objs = new List<HitObjects>();
 

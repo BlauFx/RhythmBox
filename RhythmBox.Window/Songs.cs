@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Window.Maps;
 
@@ -13,27 +12,25 @@ namespace RhythmBox.Window
 
         private static bool didRun;
 
-        private static List<MapPack> MapPack = new List<MapPack>();
+        private static readonly List<MapPack> MapPack = new List<MapPack>();
         
         public static List<MapPack> GetMapPacks()
         {
             if (didRun)
                 return MapPack;
             
-            var dirs = Directory.GetDirectories(SongPath);
-            var dirlength = dirs.Length;
+            var directories = Directory.GetDirectories(SongPath);
             
-            for (int i = 0; i < dirlength; i++)
+            for (int i = 0; i < directories.Length; i++)
             {
-                var Files  = Directory.GetFiles(dirs[i], "*.ini", SearchOption.TopDirectoryOnly);
-                var FLength = Files.Length;
+                var Files  = Directory.GetFiles(directories[i], "*.ini", SearchOption.TopDirectoryOnly);
                
-                if (FLength == 0)
+                if (Files.Length == 0)
                     continue;
 
-                Map[] Maps = new Map[FLength];
+                Map[] Maps = new Map[Files.Length];
 
-                for (int j = 0; j < FLength; j++)
+                for (int j = 0; j < Files.Length; j++)
                     Maps[j] = new Map(Files[j]);
 
                 MapPack.Add(new MapPack(Maps));
