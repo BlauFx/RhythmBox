@@ -39,7 +39,7 @@ namespace RhythmBox.Window.Screens.Playfield
 
         public Bindable<HitObjects.Direction> dir { get; } = new Bindable<HitObjects.Direction>(HitObjects.Direction.Up);
 
-        public List<Tuple<RBox, double>> objectList { get; } = new List<Tuple<RBox, double>>();
+        public List<Tuple<HitBox, double>> objectList { get; } = new List<Tuple<HitBox, double>>();
 
         public bool Failed { get; set; }
 
@@ -85,6 +85,7 @@ namespace RhythmBox.Window.Screens.Playfield
 
         protected override bool OnKeyDown(KeyDownEvent e)
         {
+            //TODO: Add check if key was previously up so the cannot be pressed always
             if (e.Key == keys[0] || e.Key == keys[1] || e.Key == keys[2] || e.Key == keys[3])
                 CheckClick(e.Key);
 
@@ -103,8 +104,8 @@ namespace RhythmBox.Window.Screens.Playfield
 
             if (direction != null)
             {
-                objectList[direction.Item2].Item1.OnClickKeyDown(key);
-                //objectList.RemoveAt(pos);
+                objectList[direction.Item2].Item1.ClickKeyDown(key);
+                objectList.RemoveAt(direction.Item2);
             }
         }
 
@@ -116,7 +117,7 @@ namespace RhythmBox.Window.Screens.Playfield
             {
                 var x = objectList[i].Item1.direction;
 
-                if (objectList[i].Item1.obj != null && objectList[i].Item1.AlphaA > 0 && objectList[i].Item1.obj.IsAlive)
+                if (objectList[i].Item1 != null && objectList[i].Item1.Alpha > 0 && objectList[i].Item1.IsAlive)
                 {
                     if ((key == keys[0] && x == HitObjects.Direction.Up) || key == keys[1] && x == HitObjects.Direction.Left || key == keys[2] && x == HitObjects.Direction.Down || key == keys[3] && x == HitObjects.Direction.Right)
                     {
@@ -151,7 +152,7 @@ namespace RhythmBox.Window.Screens.Playfield
 
                 var duration = x.Speed * 1000f;
 
-                objectList.Add(new Tuple<RBox, double>(new RBox(x.Speed, x._direction, duration, keys)
+                objectList.Add(new Tuple<HitBox, double>(new HitBox(x._direction, duration, keys)
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
@@ -162,7 +163,12 @@ namespace RhythmBox.Window.Screens.Playfield
                 }, x.Time));
             }
 
-            Schedule(() => objectList.ForEach(x => Scheduler.AddDelayed(() => Add(x.Item1), x.Item2)));
+            //TODO: If objectList is very large then it may crash due to Scheduler because it can not handle that many tasks 
+            for (var index = 0; index < objectList.Count; index++)
+            {
+                var (item1, item2) = objectList[index];
+                Scheduler.AddDelayed(() => AddInternal(item1), item2);
+            }
         }
     }
 }

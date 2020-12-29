@@ -17,22 +17,12 @@ using RhythmBox.Mode.Std.Mods.Interfaces;
 
 namespace RhythmBox.Mode.Std.Objects
 {
-    public class RBox : Container
+    public class HitBox : Container
     {
-        /// <summary>
-        /// if speed is higher then the animation / animation of the drawble get's slower
-        /// </summary>
-        public float speed { get; }
-
         public HitObjects.Direction direction { get; }
 
-        public RBoxObj obj { get; private set; }
-
-        /// <summary>
-        /// AlphaA is the alpha of the drawable
-        /// </summary>
-        public float AlphaA => obj.bx.Alpha;
-
+        public Box bx;
+        
         public BindableBool Resuming { get; set; } = new BindableBool();
 
         public List<Mod> mods { get; set; }
@@ -40,54 +30,16 @@ namespace RhythmBox.Mode.Std.Objects
         public double Duration { get; }
 
         private readonly Key[] keys;
+        
+        private double Expire { get; }
 
-        public RBox(float speed, HitObjects.Direction direction, double Duration, Key[] keys)
-        {
-            this.speed = speed;
-            this.direction = direction;
-            this.Duration = Duration;
+        private new double Clear { get; }
+        
+        private HitAnimation hitAnimation { get; set; } = null;
 
-            this.keys = keys;
-        }
-
-        [BackgroundDependencyLoader]
-        private void Load()
-        {
-            Child = obj = new RBoxObj(direction, Duration, keys)
-            {
-                RelativeSizeAxes = Axes.Both,
-                Size = new Vector2(1f),
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Alpha = 1f,
-                Resuming = Resuming,
-            };
-
-            obj.OnLoadComplete += (e) => ApplyMods(mods);
-            obj.DisposableBx += (e) => this.Expire(true);
-        }
-
-        public void OnClickKeyDown(Key e) => obj.ClickKeyDown(e);
-
-        private void ApplyMods(List<Mod> mod)
-        {
-            if (mod is null) return;
-
-            for (int i = 0; i < mod.Count; i++)
-            {
-                if (!(mod[i] is IApplyToHitobject))
-                    continue;
-
-                (mod[i] as IApplyToHitobject)?.ApplyToHitObj(this);
-            }
-        }
-    }
-
-    public delegate void DisposableBxHandler(EventArgs e);
-
-    public class RBoxObj : Container
-    {
-        public RBoxObj(HitObjects.Direction direction, double duration, Key[] keys)
+        private bool Clicked = false;
+        
+        public HitBox(HitObjects.Direction direction, double duration, Key[] keys)
         {
             this.direction = direction;
             this.Duration = duration;
@@ -98,26 +50,6 @@ namespace RhythmBox.Mode.Std.Objects
             this.keys = keys;
         }
 
-        public Box bx;
-
-        private HitObjects.Direction direction { get; set; }
-
-        private new double Expire { get; set; }
-
-        private new double Clear { get; set; }
-
-        private double Duration { get; set; }
-
-        public BindableBool Resuming = new BindableBool();
-
-        private bool Clicked = false;
-
-        public event DisposableBxHandler DisposableBx;
-
-        private HitAnimation hitAnimation { get; set; } = null;
-
-        private readonly Key[] keys;
-
         [BackgroundDependencyLoader]
         private void Load()
         {
@@ -126,8 +58,8 @@ namespace RhythmBox.Mode.Std.Objects
                 Anchor = Anchor.Centre,
                 Origin = Anchor.TopCentre,
                 RelativeSizeAxes = Axes.Both,
-                Size = new Vector2(0.1f, 0.01f),
                 RelativePositionAxes = Axes.Both,
+                Size = new Vector2(0.1f, 0.01f),
                 Alpha = 0,
                 Depth = int.MinValue
             };
@@ -135,7 +67,7 @@ namespace RhythmBox.Mode.Std.Objects
             bx.MoveToY(0f, 0, Easing.InCirc);
             bx.FadeInFromZero(Duration * 0.2, Easing.None);
 
-            Vector2 ResizeAmount = direction switch
+            Vector2 resizeAmount = direction switch
             {
                 HitObjects.Direction.Up => new Vector2(1f, 0.05f),
                 HitObjects.Direction.Down => new Vector2(1f, 0.05f),
@@ -159,7 +91,7 @@ namespace RhythmBox.Mode.Std.Objects
                 case HitObjects.Direction.Left:
                     bx.Origin = Anchor.CentreLeft;
                     bx.Size = new Vector2(0.01f, 0.1f);
-                        
+
                     bx.MoveToX(-0.5f, Duration, easing);
                     break;
                 case HitObjects.Direction.Right:
@@ -171,11 +103,28 @@ namespace RhythmBox.Mode.Std.Objects
                     throw new Exception();
             }
 
-            bx.ResizeTo(ResizeAmount, Duration, easing);
+            bx.ResizeTo(resizeAmount, Duration, easing);
             Scheduler.AddDelayed(Remove, Duration + Expire);
         }
 
-        private async void Click(Hit hit) => await Task.Run(() => _InvokeNamespaceClassesStaticMethod("RhythmBox.Window.Score", "UpdateCombo", hit));
+        protected override void LoadComplete()
+        {
+            ApplyMods(mods);
+            base.LoadComplete();
+        }
+
+        private void ApplyMods(List<Mod> mods)
+        {
+            if (mods is null) return;
+
+            for (int i = 0; i < mods.Count; i++)
+            {
+                if (!(mods[i] is IApplyToHitobject))
+                    continue;
+
+                (mods[i] as IApplyToHitobject)?.ApplyToHitObj(this);
+            }
+        }
         
         private void Remove()
         {
@@ -184,17 +133,11 @@ namespace RhythmBox.Mode.Std.Objects
                 await Task.Run(async () =>
                 {
                     await Task.Delay(hitAnimation.WaitTime);
-                    DisposableBx?.Invoke(new EventArgs());
+                    this.Expire(true);
                 });
             }
             
             Scheduler.CancelDelayedTasks();
-
-            if (!Clicked)
-            {
-                Click(Hit.Hitx);
-                Add(hitAnimation = HitAnimation(Hit.Hitx));
-            }
 
             bx.Colour = Color4.Red; //TODO: Green
             Scheduler.AddDelayed(() => bx.Colour = Color4.White, this.Clear / 2);
@@ -202,7 +145,7 @@ namespace RhythmBox.Mode.Std.Objects
             bx.FadeOut(this.Clear);
             bx.ScaleTo(1.1f, this.Clear, Easing.OutCirc); //TODO: InSine
 
-            if (hitAnimation == null)
+            if (hitAnimation == null || !Clicked)
             {
                 Click(Hit.Hitx);
                 Add(hitAnimation = HitAnimation(Hit.Hitx));
@@ -213,20 +156,20 @@ namespace RhythmBox.Mode.Std.Objects
 
         public void ClickKeyDown(Key key)
         {
-            Clicked = true;
             if (!Resuming.Value) return;
+            Clicked = true;
 
             if (key == keys[0] && direction == HitObjects.Direction.Up)
             {
-                Hit? Condition = bx.Y switch
+                Hit? condition = bx.Y switch
                 {
-                    <= -0.5f + 0.05f and >= -0.50001f => Hit.Hit300,
-                    <= -0.35f and >= -0.5f + 0.05f => Hit.Hit100,
+                    <= -0.45f and >= -0.50001f => Hit.Hit300,
+                    <= -0.35f and >= -0.45f => Hit.Hit100,
                     <= -0.25f and >= -0.35f => Hit.Hitx,
                     _ => null
                 };
 
-                var now = Condition;
+                var now = condition;
                 if (now != null)
                 {
                     Click(now.GetValueOrDefault());
@@ -237,76 +180,64 @@ namespace RhythmBox.Mode.Std.Objects
             }
             else if (key == keys[1] && direction == HitObjects.Direction.Left)
             {
-                Hit? ConditionLeft = bx.X switch
+                Hit? condition = bx.X switch
                 {
-                    <= -0.5f + 0.05f and >= -0.50001f => Hit.Hit300,
+                    <= -0.45f and >= -0.50001f => Hit.Hit300,
+                    <= -0.35f when bx.Y >= -0.45f => Hit.Hit100,
+                    <= -0.25f when bx.Y >= -0.35f => Hit.Hitx,
                     _ => null
                 };
 
-                if (ConditionLeft == Hit.Hit300)
+                var now = condition;
+                if (now != null)
                 {
-                    Click(Hit.Hit300);
-                    Add(hitAnimation = HitAnimation(Hit.Hit300, bx.Y, bx.X + 0.025f));
-                }
-                else if (bx.X <= -0.35f && bx.Y >= -0.5f + 0.05f)
-                {
-                    Click(Hit.Hit100);
-                    Add(hitAnimation = HitAnimation(Hit.Hit100, bx.Y, bx.X + 0.025f));
-                }
-                else if (bx.X <= -0.25f && bx.Y >= -0.35f)
-                {
-                    Click(Hit.Hitx);
-                    Add(hitAnimation = HitAnimation(Hit.Hitx));
+                    Click(now.GetValueOrDefault());
+                    Add(hitAnimation = HitAnimation(now.GetValueOrDefault(), now == Hit.Hitx ? float.NaN : bx.Y, now == Hit.Hitx ? float.NaN : bx.X + 0.025f));
                 }
 
                 Remove();
             }
             else if (key == keys[2] && direction == HitObjects.Direction.Down)
             {
-                Hit? Condition = bx.Y switch
+                Hit? condition = bx.Y switch
                 {
-                    >= 0.5f - 0.05f and <= 0.50001f => Hit.Hit300,
-                    >= 0.35f and <= 0.5f - 0.05f => Hit.Hit100,
+                    >= 0.45f and <= 0.50001f => Hit.Hit300,
+                    >= 0.35f and <= 0.45f => Hit.Hit100,
                     >= 0.25f and <= 0.35f => Hit.Hitx,
                     _ => null
                 };
-
-                var now = Condition;
+            
+                var now = condition;
                 if (now != null)
                 {
                     Click(now.GetValueOrDefault());
                     Add(hitAnimation = HitAnimation(now.GetValueOrDefault(), now == Hit.Hit300 ? bx.Y - 0.025f : float.NaN));
                 }
-
+            
                 Remove();
             }
             else if (key == keys[3] && direction == HitObjects.Direction.Right)
             {
-                Hit? ConditionRight = bx.X switch
+                Hit? condition = bx.X switch
                 {
-                    >= 0.5f - 0.05f and <= 0.50001f => Hit.Hit300,
+                    >= 0.45f and <= 0.50001f => Hit.Hit300,
+                    >= 0.35f when bx.Y <= 0.45f => Hit.Hit100,
+                    >= 0.25f when bx.Y <= 0.35f => Hit.Hitx,
                     _ => null
                 };
-
-                if (ConditionRight == Hit.Hit300)
+                
+                var now = condition;
+                if (now != null)
                 {
-                    Click(Hit.Hit300);
-                    Add(hitAnimation = HitAnimation(Hit.Hit300, bx.Y, bx.X - 0.025f));
+                    Click(now.GetValueOrDefault());
+                    Add(hitAnimation = HitAnimation(now.GetValueOrDefault(), now == Hit.Hit300 ? bx.Y : float.NaN, now == Hit.Hit300 ? bx.X - 0.025f : float.NaN));
                 }
-                else if (bx.X >= 0.35f && bx.Y <= 0.5f + 0.05f)
-                {
-                    Click(Hit.Hit100);
-                    Add(hitAnimation = HitAnimation(Hit.Hit100));
-                }
-                else if (bx.X >= 0.25f && bx.Y <= 0.35f)
-                {
-                    Click(Hit.Hitx);
-                    Add(hitAnimation = HitAnimation(Hit.Hitx));
-                }
-
+            
                 Remove();
             }
         }
+        
+        private async void Click(Hit hit) => await Task.Run(() => _InvokeNamespaceClassesStaticMethod("RhythmBox.Window.Score", "UpdateCombo", hit));
 
         private HitAnimation HitAnimation(Hit hit, float Y = float.NaN, float X = float.NaN) 
             => new HitAnimation(hit)
