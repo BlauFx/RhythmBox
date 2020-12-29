@@ -46,7 +46,7 @@ namespace RhythmBox.Window.Screens
         private const float Font_Size = 40f;
 
         [BackgroundDependencyLoader]
-        private async void Load(LargeTextureStore store)
+        private void Load(LargeTextureStore store)
         {
             cachedMap.Map = Songs.GetRandomMap();
             cachedMap.LoadTrackFile();
@@ -59,7 +59,7 @@ namespace RhythmBox.Window.Screens
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                     Alpha = 1f,
-                    Texture = await store.GetAsync("Skin/menu-background.png"),
+                    Texture = store.Get("Skin/menu-background.png"),
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1.1f),
                 },
@@ -147,7 +147,7 @@ namespace RhythmBox.Window.Screens
                 }
             });
 
-            bool newUpdate = await updater.SearchAsyncForUpdates();
+            bool newUpdate = false; //await updater.SearchAsyncForUpdates();
 
             if (newUpdate)
             {
