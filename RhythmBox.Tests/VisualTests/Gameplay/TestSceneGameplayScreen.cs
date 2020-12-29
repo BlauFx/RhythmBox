@@ -37,7 +37,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                 Size = new Vector2(0.8f),
             });
 
-            string path = Songs.SongPath + "\\TestMap\\Difficulty1.ini";
+            string path = $"{Songs.SongPath}{Path.DirectorySeparatorChar}TestMap{Path.DirectorySeparatorChar}Difficulty1.ini";
 
             if (!File.Exists(path))
                 _ = new DefaultFolder();
