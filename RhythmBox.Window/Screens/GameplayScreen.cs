@@ -56,8 +56,6 @@ namespace RhythmBox.Window.Screens
         public Track track;
         private BindableBool ReturntoSongSelectionAfterFail { get; } = new BindableBool();
 
-        private readonly BindableBool Startable = new BindableBool();
-        
         public readonly BindableBool GameStarted = new BindableBool();
 
         private GameplayScreenLoader GameplayScreenLoader;
@@ -210,19 +208,19 @@ namespace RhythmBox.Window.Screens
             Score.Combo.PrivateComboBindable.ValueChanged += (e) => hpbar.CurrentValue.Value += hpbar.CalcValue(Score.Combo.currentHit);
             _RbPlayfield.HasFinished.ValueChanged += (e) =>
             {
-                if (e.NewValue == false) 
+                if (!e.NewValue) 
                     return;
 
                 rhythmBoxClockContainer.Stop();
 
-                var CurrentTime = track?.CurrentTime;
+                var currentTime = track?.CurrentTime;
                 track?.Stop();
 
                 _RbPlayfield.HasFinished.UnbindEvents();
 
                 cachedMap.Map = _map;
                 cachedMap.LoadTrackFile();
-                cachedMap.Seek(CurrentTime.GetValueOrDefault());
+                cachedMap.Seek(currentTime.GetValueOrDefault());
 
                 Scheduler.AddDelayed(() => this.Expire(), 1000);
                 LoadComponentAsync(new Selection(), this.Push);
@@ -239,13 +237,10 @@ namespace RhythmBox.Window.Screens
                 Schedule(() => this.Push(songSelction));
             };
 
-            Startable.ValueChanged += (e) =>
+            _RbPlayfield.CanStart.ValueChanged += (e) =>
             {
-                _RbPlayfield.CanStart.ValueChanged += (e2) =>
-                {
-                    if (e2.NewValue)
-                        Load(1000);
-                };
+                if (e.NewValue) 
+                    Load(1000);
             };
         }
 
@@ -257,8 +252,6 @@ namespace RhythmBox.Window.Screens
                 keys[i] = key;
             }
 
-            Startable.Value = true;
-
             base.LoadComplete();
         }
 
@@ -268,7 +261,7 @@ namespace RhythmBox.Window.Screens
             await Task.Delay(time);
 
             GameplayScreenLoader.StopRotating();
-            GameplayScreenLoader.FadeOut(time, Easing.In).Delay(time).Finally((Action) => GameplayScreenLoader.Expire());
+            GameplayScreenLoader.FadeOut(time, Easing.In).Delay(time).Finally((action) => GameplayScreenLoader.Expire());
 
             GameStarted.Value = true;
 
