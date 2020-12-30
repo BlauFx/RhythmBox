@@ -9,6 +9,7 @@ using System.IO;
 using RhythmBox.Window.Screens;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using osuTK;
 using osuTK.Input;
 using RhythmBox.Mode.Std.Maps;
@@ -26,8 +27,16 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
         [Resolved]
         private Gameini gameini { get; set; }
 
-        [Test]
-        public void Add() => AddStep("Gameplay", () =>
+        string path = $"{Songs.SongPath}{Path.DirectorySeparatorChar}TestMap{Path.DirectorySeparatorChar}Difficulty1.ini";
+
+        Key[] keys = new Key[4];
+
+        private const int Iterations = 1000;
+
+        List<Mod> mods = new List<Mod>();
+
+        [SetUp]
+        public void Setup()
         {
             Add(_stack = new ScreenStack
             {
@@ -37,13 +46,27 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                 Size = new Vector2(0.8f),
             });
 
-            string path = $"{Songs.SongPath}{Path.DirectorySeparatorChar}TestMap{Path.DirectorySeparatorChar}Difficulty1.ini";
-
             if (!File.Exists(path))
                 _ = new DefaultFolder();
 
-            List<Mod> mods = new List<Mod>();
+            for (int i = 0; i < 4; i++)
+            {
+                Enum.TryParse(gameini.Get<string>((SettingsConfig) i), out Key key);
+                keys[i] = key;
+            }
 
+            AddStep("GameplayScreen", AddGameplayScreen);
+            AddStep("AddRemoveGameplayScreen", AddRemoveGameplayScreen);
+            AddStep("Fail", Fail);
+            AddStep("Remove GameplayScreen", () =>
+            {
+                _gameplayScreen?.track?.Stop();
+                _gameplayScreen?.Expire();
+            });
+        }
+
+        private void AddGameplayScreen()
+        {
             LoadComponent(_gameplayScreen = new GameplayScreen(path, mods)
             {
                 Anchor = Anchor.Centre,
@@ -52,16 +75,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                 Size = new Vector2(1f),
             });
 
-            Key[] keys = new Key[4];
-                
-            for (int i = 0; i < 4; i++)
-            {
-                Enum.TryParse(gameini.Get<string>((SettingsConfig) i), out Key key);
-                keys[i] = key;
-            }
-            
-            if (_gameplayScreen == null)
-                Debug.Assert(_gameplayScreen != null, $"{nameof(_gameplayScreen)} is null!");
+            Debug.Assert(_gameplayScreen != null, $"{nameof(_gameplayScreen)} is null!");
             
             InputManager.MoveMouseTo(_gameplayScreen);
 
@@ -98,21 +112,35 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
             };
 
             _stack.Push(_gameplayScreen);
-        });
-
-        [Test]
-        public void Fail()
-        {
-            if (_gameplayScreen is null) return;
-            
-            this._gameplayScreen.hpbar.CurrentValue.Value = 0;
         }
 
-        [Test]
-        public void Remove() => AddStep("Remove Gameplay", () =>
+        private async void AddRemoveGameplayScreen()
         {
-            _gameplayScreen?.track?.Stop();
-            this._stack?.Expire();
-        });
+            for (var i = 0; i < Iterations; i++)
+            {
+                if (IsDisposed)
+                    break;
+
+                await LoadComponentAsync(_gameplayScreen = new GameplayScreen(path, mods)
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    Size = new Vector2(1f),
+                }, _stack.Push);
+
+                await Task.Delay(2500);
+
+                _gameplayScreen.Expire();
+            }
+        }
+
+        private void Fail()
+        {
+            if (_gameplayScreen is null)
+                return;
+
+            this._gameplayScreen.hpbar.CurrentValue.Value = 0;
+        }
     }
 }
