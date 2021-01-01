@@ -1,11 +1,11 @@
-﻿using osu.Framework.Allocation;
+﻿using System;
+using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
+using osu.Framework.Logging;
 using osuTK;
-using System;
-using System.Threading.Tasks;
 
 namespace RhythmBox.Window
 {
@@ -25,8 +25,19 @@ namespace RhythmBox.Window
                 Texture = store.Get("Skin/LoadingCircle"),
             };
 
-        public void StartRotating() => boxLoading.Spin(Duration, RotationDirection.Clockwise, 0, Int16.MaxValue);
+        public void StartRotating() => boxLoading.RotateTo(0f).RotateTo(360f, 1000).Loop();
 
-        public void StopRotating() => Task.Run(() => boxLoading.FinishTransforms(false, "Rotation"));
+        public void StopRotating()
+        {
+            try
+            {
+                boxLoading.ClearTransforms(false, "Rotation");
+            }
+            catch (Exception e)
+            {
+                boxLoading.Alpha = 0;
+                Logger.Log($"XD{e.Message}", LoggingTarget.Runtime, LogLevel.Important);
+            }
+        }
     }
 }

@@ -261,7 +261,10 @@ namespace RhythmBox.Window.Screens
             await Task.Delay(time);
 
             GameplayScreenLoader.StopRotating();
-            GameplayScreenLoader.FadeOut(time, Easing.In).Delay(time).Finally((action) => GameplayScreenLoader.Expire());
+            GameplayScreenLoader.FadeOut(time, Easing.In);
+            await Task.Delay(time);
+
+            GameplayScreenLoader.Expire(true);
 
             GameStarted.Value = true;
 
