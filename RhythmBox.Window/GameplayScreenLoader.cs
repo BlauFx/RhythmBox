@@ -36,7 +36,7 @@ namespace RhythmBox.Window
             catch (Exception e)
             {
                 boxLoading.Alpha = 0;
-                Logger.Log($"XD{e.Message}", LoggingTarget.Runtime, LogLevel.Important);
+                Logger.Log($"{e.Message}", LoggingTarget.Runtime, LogLevel.Important);
             }
         }
     }
