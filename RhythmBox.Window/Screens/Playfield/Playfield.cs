@@ -119,7 +119,7 @@ namespace RhythmBox.Window.Screens.Playfield
 
                 if (objectList[i].Item1 != null && objectList[i].Item1.Alpha > 0 && objectList[i].Item1.IsAlive)
                 {
-                    if ((key == keys[0] && x == HitObjects.Direction.Up) || key == keys[1] && x == HitObjects.Direction.Left || key == keys[2] && x == HitObjects.Direction.Down || key == keys[3] && x == HitObjects.Direction.Right)
+                    if (key == keys[0] && x == HitObjects.Direction.Up || key == keys[1] && x == HitObjects.Direction.Left || key == keys[2] && x == HitObjects.Direction.Down || key == keys[3] && x == HitObjects.Direction.Right)
                     {
                         direction = new Tuple<HitObjects.Direction?, int>(x, i);
                         break;
