@@ -71,7 +71,7 @@ namespace RhythmBox.Window.Clocks
             decoupleableClock.Start();
             IsPaused.Value = false;
 
-            this.TransformBindableTo(pauseFreqAdjust, 1, 1, Easing.In);
+            Schedule(() => this.TransformBindableTo(pauseFreqAdjust, 1, 1, Easing.In));
         }
 
         public void StartWithDelay()

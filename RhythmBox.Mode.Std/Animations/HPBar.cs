@@ -69,7 +69,7 @@ namespace RhythmBox.Mode.Std.Animations
             
             Scheduler.AddDelayed(() =>
             {
-                CurrentValue.Value -= 0.01f;
+                Schedule(() => CurrentValue.Value -= 0.01f);
             }, Duration, true);
         }
         

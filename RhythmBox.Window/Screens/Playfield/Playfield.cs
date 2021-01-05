@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
@@ -48,6 +49,8 @@ namespace RhythmBox.Window.Screens.Playfield
 
         private readonly Key[] keys = new Key[4];
 
+        private Tuple<HitBox, double> currentobj;
+
         public Playfield(List<Mod> mods)
         {
             this.mods = mods;
@@ -94,12 +97,14 @@ namespace RhythmBox.Window.Screens.Playfield
 
         private void CheckClick(Key key)
         {
-            var direction = GetNextObjDir(key);
+            var nextHit = GetNextHit(key);
 
-            if (direction != null)
+            if (nextHit?.Item1 != null)
             {
-                objectList[direction.Item2].Item1.ClickKeyDown(key);
-                objectList.RemoveAt(direction.Item2);
+                nextHit.Item1?.ClickKeyDown(key);
+
+                if (objectList.Count > 0)
+                    objectList.Remove(nextHit);
             }
         }
 
@@ -124,13 +129,40 @@ namespace RhythmBox.Window.Screens.Playfield
             return direction;
         }
 
+        private Tuple<HitBox, double> GetNextHit(Key key)
+        {
+            if (objectList.Count <= 0) 
+                return null;
+            
+            var obj = objectList.FirstOrDefault(x => x.Item1 != null && x.Item1.IsPresent && x.Item1.IsAlive && (key == keys[0] && x.Item1.direction == HitObjects.Direction.Up || key == keys[1] && x.Item1.direction == HitObjects.Direction.Left || key == keys[2] &&  x.Item1.direction == HitObjects.Direction.Down || key == keys[3] &&  x.Item1.direction == HitObjects.Direction.Right));
+            return obj;
+        }
+
         protected override void Update()
         {
             if (this.Clock.CurrentTime >= Map.EndTime && !this.Failed)
                 HasFinished.Value = true;
 
+            if (SpawnNextObj(this.Clock.CurrentTime))
+            {
+                if (!currentobj.Item1.IsAlive)
+                    AddInternal(currentobj.Item1); 
+            }
+
             base.Update();
         }
+
+        private bool SpawnNextObj(double time)
+        {
+            if (objectList.Count <= 0)
+                return false;
+            
+            currentobj = objectList.FirstOrDefault(x => x.Item2 >= time && (!x.Item1.IsAlive || !x.Item1.IsPresent));
+            return currentobj != null && CloseEnoughForMe(currentobj.Item2, time, 1000d);
+        }
+
+        //https://stackoverflow.com/a/3420834
+        private static bool CloseEnoughForMe(double value1, double value2, double acceptableDifference) => Math.Abs(value1 - value2) <= acceptableDifference;
 
         private void LoadMap()
         {
@@ -155,12 +187,11 @@ namespace RhythmBox.Window.Screens.Playfield
                 }, objBox.Time));
             }
 
-            //TODO: If objectList is very large then it may crash due to Scheduler because it can not handle that many tasks 
-            for (var index = 0; index < objectList.Count; index++)
-            {
-                var (item1, item2) = objectList[index];
-                Scheduler.AddDelayed(() => AddInternal(item1), item2);
-            }
+            // for (var index = 0; index < objectList.Count; index++)
+            // {
+            //     var (item1, item2) = objectList[index];
+            //     Scheduler.AddDelayed(() => AddInternal(item1), item2);
+            // }
         }
     }
 }
