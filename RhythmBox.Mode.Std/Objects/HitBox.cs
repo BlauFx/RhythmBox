@@ -39,6 +39,8 @@ namespace RhythmBox.Mode.Std.Objects
 
         private bool Clicked = false;
         
+        private bool alreadyRun = false;
+        
         public HitBox(HitObjects.Direction direction, double duration, Key[] keys)
         {
             this.direction = direction;
@@ -126,16 +128,10 @@ namespace RhythmBox.Mode.Std.Objects
             }
         }
         
-        private void Remove()
+        private async void Remove()
         {
-            async void WaitAndInvoke()
-            {
-                await Task.Run(async () =>
-                {
-                    await Task.Delay(hitAnimation.WaitTime);
-                    this.Expire(true);
-                });
-            }
+            if (!alreadyRun) 
+                alreadyRun = !alreadyRun;
             
             Scheduler.CancelDelayedTasks();
 
@@ -151,7 +147,8 @@ namespace RhythmBox.Mode.Std.Objects
                 Add(hitAnimation = HitAnimation(Hit.Hitx));
             }
 
-            WaitAndInvoke();
+            await Task.Delay(hitAnimation.WaitTime);
+            this.Expire(true);
         }
 
         public void ClickKeyDown(Key key)
