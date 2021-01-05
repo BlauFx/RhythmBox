@@ -143,16 +143,14 @@ namespace RhythmBox.Window.Screens.Playfield
             Score.Score.ResetScore();
             Score.Combo.ResetCombo();
 
-            foreach (var objBox in Map)
+            foreach (var objBox in Map.HitObjects)
             {
-                var x = (HitObjects)objBox;
-
-                if (x.Time < Map.StartTime)
+                if (objBox.Time < Map.StartTime)
                     continue;
 
-                var duration = x.Speed * 1000f;
+                var duration = objBox.Speed * 1000f;
 
-                objectList.Add(new Tuple<HitBox, double>(new HitBox(x._direction, duration, keys)
+                objectList.Add(new Tuple<HitBox, double>(new HitBox(objBox._direction, duration, keys)
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
@@ -160,7 +158,7 @@ namespace RhythmBox.Window.Screens.Playfield
                     Size = new Vector2(1f),
                     Resuming = Resuming,
                     mods = mods,
-                }, x.Time));
+                }, objBox.Time));
             }
 
             //TODO: If objectList is very large then it may crash due to Scheduler because it can not handle that many tasks 
