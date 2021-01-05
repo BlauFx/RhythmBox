@@ -94,13 +94,7 @@ namespace RhythmBox.Window.Screens.Playfield
 
         private void CheckClick(Key key)
         {
-            Tuple<HitObjects.Direction?, int> direction = null;
-
-            try
-            {
-                direction = GetNextObjDir(key);
-            }
-            catch { }
+            var direction = GetNextObjDir(key);
 
             if (direction != null)
             {
