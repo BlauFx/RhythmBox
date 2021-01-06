@@ -110,10 +110,15 @@ namespace RhythmBox.Window.Animation
 
             CurrentValue.Height = (float)VolValue * 1f + 0.01f;
 
-            if (VolValue == 1d)
-                CurrentValue.Height -= .01f;
-            else if (VolValue == 0d)
-                CurrentValue.Height = -.1f;
+            switch (VolValue)
+            {
+                case 1d:
+                    CurrentValue.Height -= .01f;
+                    break;
+                case 0d:
+                    CurrentValue.Height = -.1f;
+                    break;
+            }
         }
     }
 }
