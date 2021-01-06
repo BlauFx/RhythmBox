@@ -200,7 +200,6 @@ namespace RhythmBox.Window.Screens
 
         public override void OnEntering(IScreen last)
         {
-            Schedule(async () => await LoadComponentAsync(songSelection = new Selection()));
             LimitFPS(Limit: true);
 
             this.TransformTo(nameof(Scale), new Vector2(1f), 1000, Easing.OutExpo);
@@ -209,7 +208,6 @@ namespace RhythmBox.Window.Screens
 
         public override void OnResuming(IScreen last)
         {
-            Schedule(async () => await LoadComponentAsync(songSelection = new Selection()));
             LimitFPS(Limit: true);
 
             this.FadeInFromZero(175, Easing.In);
@@ -243,6 +241,8 @@ namespace RhythmBox.Window.Screens
             {
                 if (songSelection.ValidForPush)
                     this.Push(songSelection);
+                else
+                    LoadComponentAsync(songSelection = new Selection(), this.Push);
             };
 
             clickAction[1] = () =>
