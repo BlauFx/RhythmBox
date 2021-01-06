@@ -13,6 +13,7 @@ using osuTK.Input;
 using RhythmBox.Window.Objects;
 using RhythmBox.Window.Overlays;
 using System;
+using RhythmBox.Window.Maps;
 
 namespace RhythmBox.Window.Screens
 {
@@ -26,20 +27,24 @@ namespace RhythmBox.Window.Screens
 
         private int CurrentKey;
 
-        [Resolved] private Gameini gameini { get; set; }
+        [Resolved] 
+        private Gameini gameini { get; set; }
+
+        [Resolved]
+        private CachedMap cachedMap { get; set; }
 
         [BackgroundDependencyLoader]
         private void Load()
         {
-            var sliderBarValue = new BindableDouble
-            {
-                MinValue = -10,
-                MaxValue = 10
-            };
+            cachedMap.Play();
+            var sliderBarValue = new BindableDouble(cachedMap.BindableTrack.Value.Volume.Value) { MinValue = 0, MaxValue = 1, Precision = 0.25d };
 
             sliderBarValue.ValueChanged += (e) =>
             {
-                //TODO: Change audio volume
+                cachedMap.BindableTrack.Value.Volume.Value = e.NewValue;
+                
+                gameini.Set(SettingsConfig.Volume, e.NewValue);
+                gameini.Save();
             };
 
             InternalChildren = new Drawable[]
@@ -114,12 +119,11 @@ namespace RhythmBox.Window.Screens
                     BackgroundColour = Color4.White,
                     SelectionColour = Color4.Pink,
                     KeyboardStep = 1,
-                    TransferValueOnCommit = true,
+                    TransferValueOnCommit = false,
                     Current = sliderBarValue
                 }
             };
         }
-
 
         protected override bool OnKeyDown(KeyDownEvent e)
         {
