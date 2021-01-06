@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
+using osu.Framework.Logging;
 using RhythmBox.Mode.Std.Mods.Interfaces;
 
 namespace RhythmBox.Mode.Std.Objects
@@ -262,7 +263,11 @@ namespace RhythmBox.Mode.Std.Objects
                             return;
                         }
                     }
-                    catch { }
+                    catch (Exception e)
+                    {
+                        Logger.Log($"InvokeNamespaceClassesStaticMethod: {e.Message}", LoggingTarget.Runtime, LogLevel.Error);
+                        // throw new Exception(e.Message);
+                    }
                 }
             }
         }
