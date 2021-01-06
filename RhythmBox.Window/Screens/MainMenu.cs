@@ -239,7 +239,7 @@ namespace RhythmBox.Window.Screens
 
             clickAction[0] = () =>
             {
-                if (songSelection.ValidForPush)
+                if (songSelection != null && songSelection.ValidForPush)
                     this.Push(songSelection);
                 else
                     LoadComponentAsync(songSelection = new Selection(), this.Push);
