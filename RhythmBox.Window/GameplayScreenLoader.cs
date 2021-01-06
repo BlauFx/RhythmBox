@@ -31,12 +31,12 @@ namespace RhythmBox.Window
         {
             try
             {
-                boxLoading.ClearTransforms(false, "Rotation");
+                Schedule(() => boxLoading.ClearTransforms(false, "Rotation"));
             }
             catch (Exception e)
             {
                 boxLoading.Alpha = 0;
-                Logger.Log($"{e.Message}", LoggingTarget.Runtime, LogLevel.Important);
+                Logger.Log($"{e.Message}", LoggingTarget.Runtime, LogLevel.Error);
             }
         }
     }
