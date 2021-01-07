@@ -261,7 +261,13 @@ namespace RhythmBox.Window.Screens
             await Task.Delay(time);
 
             GameplayScreenLoader.StopRotating();
-            Schedule(() => GameplayScreenLoader.FadeOut(time, Easing.In).Delay(time).Finally((action) => action?.Expire()));
+            Schedule(() => GameplayScreenLoader.FadeOut(time, Easing.In).Delay(time).Finally((action) =>
+            { 
+                GameplayScreenLoader.Expire();
+                RemoveInternal(GameplayScreenLoader);
+                
+                GameplayScreenLoader = null;
+            }));
 
             await Task.Delay(time);
             GameStarted.Value = true;
@@ -350,11 +356,14 @@ namespace RhythmBox.Window.Screens
             {
                 if (Resuming.Value)
                 {
-                    Resuming.Value = false;
-                    rhythmBoxClockContainer.Stop();
-                    
-                    track?.Stop();
-                    BreakOverlay.ToggleVisibility();
+                    if (GameplayScreenLoader == null)
+                    {
+                        Resuming.Value = false;
+                        rhythmBoxClockContainer.Stop();
+                        
+                        track?.Stop(); 
+                        BreakOverlay.ToggleVisibility();
+                    }
                 }
 
                 if (HasFailed)
