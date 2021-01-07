@@ -33,7 +33,7 @@ namespace RhythmBox.Window.Screens.SongSelection
 
         private ModOverlay ModOverlay;
 
-        private bool AllowToPlay = true;
+        private readonly bool allowToPlay = true;
 
         [Resolved]
         private CachedMap CachedMap { get; set; }
@@ -41,7 +41,7 @@ namespace RhythmBox.Window.Screens.SongSelection
         public Selection(bool test = false)
         {
             if (test)
-                AllowToPlay = false;
+                allowToPlay = false;
         }
 
         [BackgroundDependencyLoader]
@@ -108,7 +108,7 @@ namespace RhythmBox.Window.Screens.SongSelection
                     Size = new Vector2(0.5f,1f),
                     ClickOnMap = () =>
                     {
-                        if (!AllowToPlay) return;
+                        if (!allowToPlay) return;
 
                         if (!WaitUntilLoaded)
                         {
