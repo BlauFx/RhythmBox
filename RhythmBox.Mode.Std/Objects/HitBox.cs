@@ -13,7 +13,6 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
-using osu.Framework.Logging;
 using RhythmBox.Mode.Std.Mods.Interfaces;
 
 namespace RhythmBox.Mode.Std.Objects
@@ -235,7 +234,7 @@ namespace RhythmBox.Mode.Std.Objects
             }
         }
         
-        private async void Click(Hit hit) => await Task.Run(() => _InvokeNamespaceClassesStaticMethod("RhythmBox.Window.Score", "UpdateCombo", hit));
+        private void Click(Hit hit) => _InvokeNamespaceClassesStaticMethod("RhythmBox.Window.Score", "UpdateCombo", hit);
 
         private HitAnimation HitAnimation(Hit hit, float Y = float.NaN, float X = float.NaN) 
             => new HitAnimation(hit)
@@ -255,18 +254,10 @@ namespace RhythmBox.Mode.Std.Objects
             {
                 foreach (var _t in _a.GetTypes())
                 {
-                    try
+                    if ((_t.Namespace == namespaceName) && _t.IsClass)
                     {
-                        if ((_t.Namespace == namespaceName) && _t.IsClass)
-                        {
-                            _t.GetMethod(methodName, BindingFlags.Static | BindingFlags.Public)?.Invoke(null, parameters);
-                            return;
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.Log($"InvokeNamespaceClassesStaticMethod: {e.Message}", LoggingTarget.Runtime, LogLevel.Error);
-                        // throw new Exception(e.Message);
+                        _t.GetMethod(methodName, BindingFlags.Static | BindingFlags.Public)?.Invoke(null, parameters);
+                        return;
                     }
                 }
             }
