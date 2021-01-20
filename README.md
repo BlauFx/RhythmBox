@@ -3,7 +3,7 @@
 # RhythmBox
 
 # Getting started
-- Install the [.NET Core 3.1 SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1)
+- Install the [.NET 5 SDK](https://dotnet.microsoft.com/download/dotnet/5.0)
 - Clone the repository
 ```
 git clone https://github.com/BlauFx/RhythmBox
