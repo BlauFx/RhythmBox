@@ -12,8 +12,8 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using osuTK;
 using osuTK.Input;
-using RhythmBox.Mode.Std.Maps;
-using RhythmBox.Mode.Std.Mods;
+using RhythmBox.Window.Mode.Standard.Maps;
+using RhythmBox.Window.Mode.Standard.Mods;
 
 namespace RhythmBox.Tests.VisualTests.Gameplay
 {

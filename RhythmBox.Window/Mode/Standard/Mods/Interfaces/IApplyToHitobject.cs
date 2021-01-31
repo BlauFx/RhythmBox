@@ -1,6 +1,6 @@
-﻿using RhythmBox.Mode.Std.Objects;
+﻿using RhythmBox.Window.Mode.Standard.Objects;
 
-namespace RhythmBox.Mode.Std.Mods.Interfaces
+namespace RhythmBox.Window.Mode.Standard.Mods.Interfaces
 {
     public interface IApplyToHitobject
     {

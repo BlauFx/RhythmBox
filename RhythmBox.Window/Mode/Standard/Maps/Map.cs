@@ -3,7 +3,7 @@ using System.Collections;
 using System.Linq;
 using System.Reflection;
 
-namespace RhythmBox.Mode.Std.Maps
+namespace RhythmBox.Window.Mode.Standard.Maps
 {
     public class Map : IMap, IEnumerable
     {

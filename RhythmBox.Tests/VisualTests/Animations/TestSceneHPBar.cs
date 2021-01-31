@@ -5,7 +5,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Testing;
 using osuTK;
 using osuTK.Graphics;
-using RhythmBox.Mode.Std.Animations;
+using RhythmBox.Window.Mode.Standard.Animations;
 
 namespace RhythmBox.Tests.VisualTests.Animations
 {

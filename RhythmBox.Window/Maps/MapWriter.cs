@@ -1,6 +1,6 @@
-using RhythmBox.Mode.Std.Maps;
 using System.IO;
 using System.Reflection;
+using RhythmBox.Window.Mode.Standard.Maps;
 
 namespace RhythmBox.Window.Maps
 {

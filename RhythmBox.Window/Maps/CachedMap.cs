@@ -8,7 +8,7 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.IO.Stores;
 using osu.Framework.Platform;
-using RhythmBox.Mode.Std.Maps;
+using RhythmBox.Window.Mode.Standard.Maps;
 
 namespace RhythmBox.Window.Maps
 {

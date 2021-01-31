@@ -1,4 +1,4 @@
-﻿using RhythmBox.Mode.Std.Maps;
+﻿using RhythmBox.Window.Mode.Standard.Maps;
 
 namespace RhythmBox.Window.Maps
 {

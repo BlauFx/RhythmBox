@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Threading.Tasks;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
@@ -6,16 +10,12 @@ using osu.Framework.Graphics.Shapes;
 using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
-using RhythmBox.Mode.Std.Animations;
-using RhythmBox.Mode.Std.Maps;
-using RhythmBox.Mode.Std.Mods;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Threading.Tasks;
-using RhythmBox.Mode.Std.Mods.Interfaces;
+using RhythmBox.Window.Mode.Standard.Animations;
+using RhythmBox.Window.Mode.Standard.Maps;
+using RhythmBox.Window.Mode.Standard.Mods;
+using RhythmBox.Window.Mode.Standard.Mods.Interfaces;
 
-namespace RhythmBox.Mode.Std.Objects
+namespace RhythmBox.Window.Mode.Standard.Objects
 {
     public class HitBox : Container
     {

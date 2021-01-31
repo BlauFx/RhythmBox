@@ -1,6 +1,6 @@
-﻿using RhythmBox.Mode.Std.Animations;
+﻿using RhythmBox.Window.Mode.Standard.Animations;
 
-namespace RhythmBox.Mode.Std.Mods.Interfaces
+namespace RhythmBox.Window.Mode.Standard.Mods.Interfaces
 {
     public interface IApplyToHP
     {

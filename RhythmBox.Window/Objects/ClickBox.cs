@@ -3,8 +3,8 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
 using osuTK.Input;
-using RhythmBox.Mode.Std.Maps;
 using System;
+using RhythmBox.Window.Mode.Standard.Maps;
 
 namespace RhythmBox.Window.Objects
 {

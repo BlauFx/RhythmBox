@@ -1,8 +1,8 @@
 ﻿using osuTK.Graphics;
-using RhythmBox.Mode.Std.Mods.Interfaces;
-using RhythmBox.Mode.Std.Objects;
+using RhythmBox.Window.Mode.Standard.Mods.Interfaces;
+using RhythmBox.Window.Mode.Standard.Objects;
 
-namespace RhythmBox.Mode.Std.Mods
+namespace RhythmBox.Window.Mode.Standard.Mods
 {
     public class DummyMod : Mod, IApplyToHitobject
     {

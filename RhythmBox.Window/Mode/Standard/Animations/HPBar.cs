@@ -1,16 +1,16 @@
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osuTK;
-using RhythmBox.Mode.Std.Mods;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using RhythmBox.Mode.Std.Mods.Interfaces;
+using RhythmBox.Window.Mode.Standard.Mods;
+using RhythmBox.Window.Mode.Standard.Mods.Interfaces;
 
-namespace RhythmBox.Mode.Std.Animations
+namespace RhythmBox.Window.Mode.Standard.Animations
 {
     public class HPBar : Container
     {

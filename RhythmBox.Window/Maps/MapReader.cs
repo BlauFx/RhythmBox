@@ -1,8 +1,8 @@
-using RhythmBox.Mode.Std.Maps;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using RhythmBox.Window.Mode.Standard.Maps;
 
 namespace RhythmBox.Window.Maps
 {

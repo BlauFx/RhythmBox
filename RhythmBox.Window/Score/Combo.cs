@@ -1,5 +1,5 @@
 ﻿using osu.Framework.Bindables;
-using RhythmBox.Mode.Std.Animations;
+using RhythmBox.Window.Mode.Standard.Animations;
 
 namespace RhythmBox.Window.Score
 {

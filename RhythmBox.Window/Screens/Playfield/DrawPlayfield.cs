@@ -5,7 +5,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osuTK;
 using osuTK.Graphics;
-using RhythmBox.Mode.Std.Maps;
+using RhythmBox.Window.Mode.Standard.Maps;
 using RhythmBox.Window.Objects;
 
 namespace RhythmBox.Window.Screens.Playfield

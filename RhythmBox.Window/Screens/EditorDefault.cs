@@ -11,10 +11,10 @@ using osu.Framework.Platform;
 using osu.Framework.Screens;
 using osuTK;
 using osuTK.Graphics;
-using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Window.Clocks;
 using RhythmBox.Window.Objects;
 using System;
+using RhythmBox.Window.Mode.Standard.Maps;
 
 namespace RhythmBox.Window.Screens
 {

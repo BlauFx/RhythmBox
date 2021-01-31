@@ -14,9 +14,6 @@ using osu.Framework.Screens;
 using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
-using RhythmBox.Mode.Std.Animations;
-using RhythmBox.Mode.Std.Maps;
-using RhythmBox.Mode.Std.Mods;
 using RhythmBox.Window.Animation;
 using RhythmBox.Window.Clocks;
 using RhythmBox.Window.Maps;
@@ -26,6 +23,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using RhythmBox.Window.Mode.Standard.Animations;
+using RhythmBox.Window.Mode.Standard.Maps;
+using RhythmBox.Window.Mode.Standard.Mods;
 using RhythmBox.Window.Screens.Playfield;
 
 namespace RhythmBox.Window.Screens

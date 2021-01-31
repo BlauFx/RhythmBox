@@ -2,8 +2,8 @@
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Testing;
-using RhythmBox.Mode.Std.Animations;
 using System.Threading.Tasks;
+using RhythmBox.Window.Mode.Standard.Animations;
 
 namespace RhythmBox.Tests.VisualTests.Animations
 {

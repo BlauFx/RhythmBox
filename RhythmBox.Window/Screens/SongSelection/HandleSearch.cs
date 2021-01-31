@@ -8,8 +8,8 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.UserInterface;
 using osuTK;
 using osuTK.Graphics;
-using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Window.Maps;
+using RhythmBox.Window.Mode.Standard.Maps;
 
 namespace RhythmBox.Window.Screens.SongSelection
 {

@@ -7,8 +7,8 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
 using osu.Framework.Testing;
 using osuTK;
-using RhythmBox.Mode.Std.Maps;
 using RhythmBox.Window.Clocks;
+using RhythmBox.Window.Mode.Standard.Maps;
 using RhythmBox.Window.Screens.Playfield;
 
 namespace RhythmBox.Tests.VisualTests.Clocks

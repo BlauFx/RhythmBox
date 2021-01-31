@@ -8,10 +8,10 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
 using osuTK;
 using osuTK.Graphics;
-using RhythmBox.Mode.Std.Maps;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using RhythmBox.Window.Mode.Standard.Maps;
 
 namespace RhythmBox.Window.Maps
 {

@@ -1,7 +1,7 @@
-﻿using RhythmBox.Mode.Std.Animations;
-using RhythmBox.Mode.Std.Mods.Interfaces;
+﻿using RhythmBox.Window.Mode.Standard.Animations;
+using RhythmBox.Window.Mode.Standard.Mods.Interfaces;
 
-namespace RhythmBox.Mode.Std.Mods
+namespace RhythmBox.Window.Mode.Standard.Mods
 {
     public class DummyMod3 : Mod, IApplyToHP
     {

@@ -1,4 +1,4 @@
-﻿namespace RhythmBox.Mode.Std.Mods
+﻿namespace RhythmBox.Window.Mode.Standard.Mods
 {
     public abstract class Mod
     {
