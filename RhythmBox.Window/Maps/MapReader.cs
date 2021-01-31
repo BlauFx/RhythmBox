@@ -51,9 +51,9 @@ namespace RhythmBox.Window.Maps
 
         public MapReader(List<string> list) => ReadFromList(list);
 
-        public void ReadFromList(List<string> list)
+        private void ReadFromList(List<string> list)
         {
-            string version = list.FirstOrDefault(y => y.Contains("v1", StringComparison.OrdinalIgnoreCase));
+            var version = list.FirstOrDefault(y => y.Contains("v1", StringComparison.OrdinalIgnoreCase));
             
             if (string.IsNullOrWhiteSpace(version) || string.IsNullOrEmpty(version))
                 throw new Exception("Could not find version");
@@ -72,12 +72,12 @@ namespace RhythmBox.Window.Maps
                 Creator = Cutter(list.FirstOrDefault(x => x.Contains("Creator", StringComparison.OrdinalIgnoreCase)));
                 DifficultyName = Cutter(list.FirstOrDefault(x => x.Contains("DifficultyName", StringComparison.OrdinalIgnoreCase)));
             
-                string Timings = Cutter(list.FirstOrDefault(x => x.Contains("Timings", StringComparison.OrdinalIgnoreCase)));
-                int num = Timings.IndexOf(",", StringComparison.Ordinal);
+                string timings = Cutter(list.FirstOrDefault(x => x.Contains("Timings", StringComparison.OrdinalIgnoreCase)));
+                int num = timings.IndexOf(",", StringComparison.Ordinal);
             
-                StartTime = int.Parse(Timings[0..num]);
+                StartTime = int.Parse(timings[0..num]);
                 num++;
-                EndTime =  int.Parse(Timings[num..]);
+                EndTime =  int.Parse(timings[num..]);
             
                 int index = list.FindIndex(str => str.Contains("HitObjects:", StringComparison.OrdinalIgnoreCase)) + 1;
                 HitObjects = HitObjectsParser(list.GetRange(index, list.Count - index));
@@ -86,7 +86,7 @@ namespace RhythmBox.Window.Maps
         
         private HitObjects[] HitObjectsParser(IReadOnlyList<string> list)
         {
-            List<HitObjects> objs = new List<HitObjects>();
+            var objs = new List<HitObjects>();
 
             for (int i = 0; i < list.Count; i++)
             {
@@ -99,13 +99,7 @@ namespace RhythmBox.Window.Maps
                 var dirStr = list[i][..index];
                 var dir = EnumParser<HitObjects.Direction>(dirStr[(dirStr.IndexOf(".", StringComparison.Ordinal) + 1)..]);
 
-                objs.Add(new HitObjects
-                    {
-                        Time = time,
-                        Speed = speed,
-                        _direction = dir
-                    }
-                );
+                objs.Add(new HitObjects { Time = time, Speed = speed, _direction = dir });
             }
 
             return objs.ToArray();
