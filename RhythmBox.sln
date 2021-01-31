@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RhythmBox.Window.Resources"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RhythmBox.Tests", "RhythmBox.Tests\RhythmBox.Tests.csproj", "{7F2AC130-C33C-4678-BB47-4FAEA13EFBC2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RhythmBox.Mode.Std", "RhythmBox.Mode.Std\RhythmBox.Mode.Std.csproj", "{002B124E-13ED-43B2-9552-20406F3F27E9}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6BCF6951-5B62-4F4F-8233-39939FE44CAB}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
@@ -40,10 +38,6 @@ Global
 		{7F2AC130-C33C-4678-BB47-4FAEA13EFBC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F2AC130-C33C-4678-BB47-4FAEA13EFBC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7F2AC130-C33C-4678-BB47-4FAEA13EFBC2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{002B124E-13ED-43B2-9552-20406F3F27E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{002B124E-13ED-43B2-9552-20406F3F27E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{002B124E-13ED-43B2-9552-20406F3F27E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{002B124E-13ED-43B2-9552-20406F3F27E9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

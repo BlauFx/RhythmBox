@@ -9,8 +9,4 @@
     <PackageReference Include="ppy.osu.Framework" Version="2021.128.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\RhythmBox.Mode.Std\RhythmBox.Mode.Std.csproj" />
-  </ItemGroup>
-
 </Project>
