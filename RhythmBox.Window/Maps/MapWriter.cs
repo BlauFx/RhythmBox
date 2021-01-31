@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Reflection;
 using RhythmBox.Window.Mode.Standard.Maps;
@@ -38,11 +39,11 @@ namespace RhythmBox.Window.Maps
         {
             this.Path = path;
             
-            string Folder = System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(path));
-            var FolderPath = Songs.SongPath + Folder;
+            string folder = System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(path));
+            var folderPath = $"{Songs.SongPath}{folder}";
 
-            if (!Directory.Exists(FolderPath))
-                Directory.CreateDirectory(FolderPath);
+            if (!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
 
             WriteToFile(path, "v1", true);
             WriteToFile(path, "AFileName", AFileName);
@@ -66,47 +67,47 @@ namespace RhythmBox.Window.Maps
             if (!File.Exists(path))
                 throw new FileNotFoundException("File does not exist!", path);
 
-            if (!Directory.Exists(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"\SongsOLD"))
-                Directory.CreateDirectory(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"\SongsOLD");
+            var assemblyLocation = $@"{System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location)}{System.IO.Path.DirectorySeparatorChar}";
 
-            int num = path.LastIndexOf("\\") + 1;
+            if (!Directory.Exists($@"{assemblyLocation}SongsOLD"))
+                Directory.CreateDirectory($"{assemblyLocation}SongsOLD");
+
+            int num = path.LastIndexOf("\\", StringComparison.Ordinal) + 1;
             string tmp = path.Substring(num, path.Length - num);
-            int num1 = tmp.LastIndexOf(".");
+            int num1 = tmp.LastIndexOf(".", StringComparison.Ordinal);
             string filename = tmp.Substring(0, num1);
 
-            int num2 = path.LastIndexOf("\\");
+            int num2 = path.LastIndexOf("\\", StringComparison.Ordinal);
             string temp = path.Substring(0, num2);
-            int num3 = temp.LastIndexOf("\\") + 1;
+            int num3 = temp.LastIndexOf("\\", StringComparison.Ordinal) + 1;
             string str = temp.Substring(num3, temp.Length - num3);
 
-            if (!Directory.Exists(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + $@"\SongsOLD\{str}"))
-            {
-                Directory.CreateDirectory(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + $@"\SongsOLD\{str}");
-            }
+            if (!Directory.Exists($@"{assemblyLocation}SongsOLD{System.IO.Path.DirectorySeparatorChar}{str}")) 
+                Directory.CreateDirectory($@"{assemblyLocation}SongsOLD{System.IO.Path.DirectorySeparatorChar}{str}");
 
-            File.Move(path, CheckIfFilenameIsAvailable(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + $"\\SongsOLD\\{str}\\{filename}.OLD"));
-
+            File.Move(path, CheckIfFilenameIsAvailable($"{assemblyLocation}SongsOLD\\{str}\\{filename}.OLD"));
             WriteToNewMap(path);
-            File.Delete(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + $"\\SongsOLD\\{str}\\{filename}.OLD");
-            Directory.Delete(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + $"\\SongsOLD\\{str}", true);
+            
+            File.Delete($"{assemblyLocation}SongsOLD{System.IO.Path.DirectorySeparatorChar}{str}{System.IO.Path.DirectorySeparatorChar}{filename}.OLD");
+            Directory.Delete($"{assemblyLocation}SongsOLD{System.IO.Path.DirectorySeparatorChar}{str}", true);
         }
 
-        private string CheckIfFilenameIsAvailable(string orignalPath)
+        private string CheckIfFilenameIsAvailable(string originalPath)
         {
-            if (File.Exists(orignalPath))
+            if (File.Exists(originalPath))
             {
                 int num = 1;
                 string tmp = string.Empty;
                 
                 for (int i = 0; i < num; i++)
                 {
-                    tmp = orignalPath + num;
+                    tmp = originalPath + num;
                     if (File.Exists(tmp))
                         num++;
                 }
                 return tmp;
             }
-            return orignalPath;
+            return originalPath;
         }
 
         private void WriteToFile(string path, HitObjects[] hitObjects)
