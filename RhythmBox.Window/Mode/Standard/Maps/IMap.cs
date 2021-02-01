@@ -36,19 +36,19 @@ namespace RhythmBox.Window.Mode.Standard.Maps
         STD
     }
     
-    public class HitObjects
+    public record HitObjects
     {
-        public Direction _direction { get; set; }
+        public Direction _direction { get; } = Direction.Down;
 
-        public double Time { get; set; }
+        public double Time { get; } = 1d;
 
-        public float Speed { get; set; }
+        public float Speed { get; } = 1f;
 
-        public HitObjects()
+        public HitObjects(Direction direction, double time, float speed)
         {
-            this._direction = Direction.Down;
-            this.Time = 1;
-            this.Speed = 1f;
+            _direction = direction;
+            Time = time;
+            Speed = speed;
         }
 
         public enum Direction

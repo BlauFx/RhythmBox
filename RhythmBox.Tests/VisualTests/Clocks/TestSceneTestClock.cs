@@ -48,14 +48,9 @@ namespace RhythmBox.Tests.VisualTests.Clocks
                 Creator = "Test Creator",
                 DifficultyName = "Test DifficultyName",
                 StartTime = 100,
-                EndTime = 1000
+                EndTime = 1000,
+                HitObjects = new HitObjects[1] { new HitObjects(HitObjects.Direction.Up, 200, 2f) }
             };
-
-            map.HitObjects = new HitObjects[1];
-            map.HitObjects[0] = new HitObjects();
-            map.HitObjects[0]._direction = HitObjects.Direction.Up;
-            map.HitObjects[0].Speed = 2f;
-            map.HitObjects[0].Time = 200;
 
             Children = new Drawable[]
             {

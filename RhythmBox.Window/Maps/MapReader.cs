@@ -99,7 +99,7 @@ namespace RhythmBox.Window.Maps
                 var dirStr = list[i][..index];
                 var dir = EnumParser<HitObjects.Direction>(dirStr[(dirStr.IndexOf(".", StringComparison.Ordinal) + 1)..]);
 
-                objs.Add(new HitObjects { Time = time, Speed = speed, _direction = dir });
+                objs.Add(new HitObjects(dir, time, speed));
             }
 
             return objs.ToArray();
