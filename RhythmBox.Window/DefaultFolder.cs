@@ -14,25 +14,20 @@ namespace RhythmBox.Window
         public DefaultFolder(bool createSongs = true, bool createSkins = false)
         {
             string currentFolder = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
+            string skinsFolder = $"{currentFolder}{Path.DirectorySeparatorChar}Skins";
             
-            if (createSongs)
-            {
-                if (!Directory.Exists(Songs.SongPath))
-                    Directory.CreateDirectory(Songs.SongPath);
-            }
-            else if (createSkins)
-            {
-                if (!Directory.Exists(currentFolder + $"{Path.DirectorySeparatorChar}Skins"))
-                    Directory.CreateDirectory(currentFolder + $"{Path.DirectorySeparatorChar}Skins");
-            }
+            if (createSongs && !Directory.Exists(Songs.SongPath))
+                Directory.CreateDirectory(Songs.SongPath);
+            else if (createSkins && !Directory.Exists(skinsFolder))
+                Directory.CreateDirectory(skinsFolder);
 
-            var file = Songs.SongPath + $"{Path.DirectorySeparatorChar}TestMap{Path.DirectorySeparatorChar}Difficulty1.ini";
+            var file = $"{Songs.SongPath}{Path.DirectorySeparatorChar}TestMap{Path.DirectorySeparatorChar}Difficulty1.ini";
             
             //TODO: This is only temporary
             //Side note: maybe add our own fileformat? 
             if (!File.Exists(file))
             {
-                Directory.CreateDirectory(Songs.SongPath + $"{Path.DirectorySeparatorChar}TestMap");
+                Directory.CreateDirectory($"{Songs.SongPath}{Path.DirectorySeparatorChar}TestMap");
                 ImprovedTemp(file);
             }
         }
@@ -46,26 +41,21 @@ namespace RhythmBox.Window
 
             var lines = ReadLines(() => assembly.GetManifestResourceStream("RhythmBox.Window.Resources.Difficulty1.ini")!, Encoding.UTF8).ToList();
             
-            var reader = new MapReader(lines);
             var map = new MapWriter();
             
-            ext.CopyAllTo(reader as IMap, map as IMap); 
+            new MapReader(lines).CopyAllTo<IMap>(map); 
             map.WriteToNewMap(file);
         }
 
         //https://stackoverflow.com/a/13312954
-        private IEnumerable<string> ReadLines(Func<Stream> streamProvider,
-            Encoding encoding)
+        private IEnumerable<string> ReadLines(Func<Stream> streamProvider, Encoding encoding)
         {
-            using (var stream = streamProvider())
-            using (var reader = new StreamReader(stream, encoding))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    yield return line;
-                }
-            }
+            using var stream = streamProvider();
+            using var reader = new StreamReader(stream, encoding);
+            
+            string line;
+            while ((line = reader.ReadLine()) != null)
+                yield return line;
         }
     }
 }

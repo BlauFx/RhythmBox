@@ -253,7 +253,7 @@ namespace RhythmBox.Window.Screens
 
             clickAction[2] = () =>
             {
-                string path = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) + "\\Songs\\TestMap\\Difficulty1.ini";
+                string path = $"{Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location)}{Path.DirectorySeparatorChar}Songs{Path.DirectorySeparatorChar}TestMap{Path.DirectorySeparatorChar}Difficulty1.ini";
 
                 if (!File.Exists(path))
                     _ = new DefaultFolder();
