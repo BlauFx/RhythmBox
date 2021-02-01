@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Linq;
-using System.Reflection;
+﻿using System.Collections;
+using RhythmBox.Window.Maps;
 
 namespace RhythmBox.Window.Mode.Standard.Maps
 {
@@ -41,11 +39,7 @@ namespace RhythmBox.Window.Mode.Standard.Maps
         {
             if (path == null) return;
 
-            var assembly = Assembly.LoadFrom(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) + "\\RhythmBox.Window.dll");
-            BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;
-
-            var instantiatedType = Activator.CreateInstance(assembly.GetTypes().FirstOrDefault(p => p.Name == "MapReader") ?? throw new Exception($"{assembly} cannot be null"), flags, null, new[] { $"{path}" }, null);
-            ext.CopyAllTo<IMap>(instantiatedType as IMap, this);
+            new MapReader(path).CopyAllTo<IMap>(this);
 
             if (title != null) 
                 this.Title = title;
