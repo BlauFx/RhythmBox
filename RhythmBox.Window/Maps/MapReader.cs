@@ -60,22 +60,22 @@ namespace RhythmBox.Window.Maps
 
             if (version.Equals("v1", StringComparison.OrdinalIgnoreCase))
             {
-                AFileName = Cutter(list.FirstOrDefault(x => x.Contains("AFileName", StringComparison.OrdinalIgnoreCase)));
-                BGFile = Cutter(list.FirstOrDefault(x => x.Contains("BGFile", StringComparison.OrdinalIgnoreCase)));
-                MapId =  int.Parse(Cutter(list.FirstOrDefault(x => x.Contains("MapId", StringComparison.OrdinalIgnoreCase))));
-                MapSetId = int.Parse(Cutter(list.FirstOrDefault(x => x.Contains("MapSetId", StringComparison.OrdinalIgnoreCase))));
+                AFileName = SearchAndCut<string>(list, "AFileName");
+                BGFile = SearchAndCut<string>(list, "BGFile");
+                MapId =  SearchAndCut<int>(list, "MapId");
+                MapSetId = SearchAndCut<int>(list, "MapSetId");
             
-                BPM = int.Parse(Cutter(list.FirstOrDefault(x => x.Contains("BPM", StringComparison.OrdinalIgnoreCase))));
-                Mode = EnumParser<GameMode>(Cutter(list.FirstOrDefault(x => x.Contains("Mode", StringComparison.OrdinalIgnoreCase))));
-                Title = Cutter(list.FirstOrDefault(x => x.Contains("Title", StringComparison.OrdinalIgnoreCase)));
-                Artist = Cutter(list.FirstOrDefault(x => x.Contains("Artist", StringComparison.OrdinalIgnoreCase)));
-                Creator = Cutter(list.FirstOrDefault(x => x.Contains("Creator", StringComparison.OrdinalIgnoreCase)));
-                DifficultyName = Cutter(list.FirstOrDefault(x => x.Contains("DifficultyName", StringComparison.OrdinalIgnoreCase)));
+                BPM = SearchAndCut<int>(list, "BPM");
+                Mode = EnumParser<GameMode>(SearchAndCut<string>(list, "Mode"));
+                Title = SearchAndCut<string>(list, "Title");
+                Artist = SearchAndCut<string>(list, "Artist");
+                Creator = SearchAndCut<string>(list, "Creator");
+                DifficultyName = SearchAndCut<string>(list, "DifficultyName");
             
-                string timings = Cutter(list.FirstOrDefault(x => x.Contains("Timings", StringComparison.OrdinalIgnoreCase)));
+                string timings = SearchAndCut<string>(list, "Timings");
                 int num = timings.IndexOf(",", StringComparison.Ordinal);
             
-                StartTime = int.Parse(timings[0..num]);
+                StartTime = int.Parse(timings[..num]);
                 num++;
                 EndTime =  int.Parse(timings[num..]);
             
@@ -96,13 +96,19 @@ namespace RhythmBox.Window.Maps
                 var time = double.Parse(list[i][(index + 2)..lastindex]);
                 var speed = float.Parse(list[i][(lastindex + 2)..^1]);
 
-                var dirStr = list[i][..index];
-                var dir = EnumParser<HitObject.Direction>(dirStr[(dirStr.IndexOf(".", StringComparison.Ordinal) + 1)..]);
+                var dirIndex = list[i].IndexOf(".", StringComparison.Ordinal) + 1;
+                var dirStr = list[i][dirIndex..index];
 
+                var dir = EnumParser<HitObject.Direction>(dirStr);
                 objs.Add(new HitObject(dir, time, speed));
             }
 
             return objs.ToArray();
+        }
+        
+        private T SearchAndCut<T>(List<string> list, string term)
+        {
+            return (T)Convert.ChangeType(Cutter(list.FirstOrDefault(x => x.Contains(term, StringComparison.OrdinalIgnoreCase))), typeof(T));
         }
         
         private string Cutter(string cutThis)
