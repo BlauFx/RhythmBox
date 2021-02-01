@@ -11,6 +11,7 @@ using osuTK.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using osuTK.Input;
 using RhythmBox.Window.Mode.Standard.Maps;
 
 namespace RhythmBox.Window.Maps
@@ -226,6 +227,9 @@ namespace RhythmBox.Window.Maps
 
         protected override bool OnMouseDown(MouseDownEvent e)
         {
+            if (e.Button != MouseButton.Left)        
+                return base.OnMouseDown(e);
+
             bindablePath.Value = this.map.Path;
             Invoke?.Invoke();
 
