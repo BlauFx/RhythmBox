@@ -19,7 +19,7 @@ namespace RhythmBox.Window.Mode.Standard.Objects
 {
     public class HitBox : Container
     {
-        public HitObjects.Direction direction { get; }
+        public HitObject.Direction direction { get; }
 
         public Box bx;
         
@@ -41,7 +41,7 @@ namespace RhythmBox.Window.Mode.Standard.Objects
         
         private bool alreadyRun = false;
         
-        public HitBox(HitObjects.Direction direction, double duration, Key[] keys)
+        public HitBox(HitObject.Direction direction, double duration, Key[] keys)
         {
             this.direction = direction;
             this.Duration = duration;
@@ -71,10 +71,10 @@ namespace RhythmBox.Window.Mode.Standard.Objects
 
             Vector2 resizeAmount = direction switch
             {
-                HitObjects.Direction.Up => new Vector2(1f, 0.05f),
-                HitObjects.Direction.Down => new Vector2(1f, 0.05f),
-                HitObjects.Direction.Left => new Vector2(0.056f, 1f),
-                HitObjects.Direction.Right => new Vector2(0.056f, 1f),
+                HitObject.Direction.Up => new Vector2(1f, 0.05f),
+                HitObject.Direction.Down => new Vector2(1f, 0.05f),
+                HitObject.Direction.Left => new Vector2(0.056f, 1f),
+                HitObject.Direction.Right => new Vector2(0.056f, 1f),
                 _ => throw new Exception()
             };
 
@@ -82,21 +82,21 @@ namespace RhythmBox.Window.Mode.Standard.Objects
 
             switch (direction)
             {
-                case HitObjects.Direction.Up:
+                case HitObject.Direction.Up:
                     bx.MoveToY(-0.5f, Duration, easing);
                     break;
-                case HitObjects.Direction.Down:
+                case HitObject.Direction.Down:
                     bx.Rotation = 180f;
                     bx.MoveToY(0.5f, Duration, easing);
                     
                     break;
-                case HitObjects.Direction.Left:
+                case HitObject.Direction.Left:
                     bx.Origin = Anchor.CentreLeft;
                     bx.Size = new Vector2(0.01f, 0.1f);
 
                     bx.MoveToX(-0.5f, Duration, easing);
                     break;
-                case HitObjects.Direction.Right:
+                case HitObject.Direction.Right:
                     bx.Origin = Anchor.CentreRight;
                     bx.Size = new Vector2(0.01f, 0.1f);
                     bx.MoveToX(0.5f, Duration, easing);
@@ -156,7 +156,7 @@ namespace RhythmBox.Window.Mode.Standard.Objects
             if (!Resuming.Value) return;
             Clicked = true;
 
-            if (key == keys[0] && direction == HitObjects.Direction.Up)
+            if (key == keys[0] && direction == HitObject.Direction.Up)
             {
                 Hit? condition = bx.Y switch
                 {
@@ -175,7 +175,7 @@ namespace RhythmBox.Window.Mode.Standard.Objects
 
                 Remove();
             }
-            else if (key == keys[1] && direction == HitObjects.Direction.Left)
+            else if (key == keys[1] && direction == HitObject.Direction.Left)
             {
                 Hit? condition = bx.X switch
                 {
@@ -194,7 +194,7 @@ namespace RhythmBox.Window.Mode.Standard.Objects
 
                 Remove();
             }
-            else if (key == keys[2] && direction == HitObjects.Direction.Down)
+            else if (key == keys[2] && direction == HitObject.Direction.Down)
             {
                 Hit? condition = bx.Y switch
                 {
@@ -213,7 +213,7 @@ namespace RhythmBox.Window.Mode.Standard.Objects
             
                 Remove();
             }
-            else if (key == keys[3] && direction == HitObjects.Direction.Right)
+            else if (key == keys[3] && direction == HitObject.Direction.Right)
             {
                 Hit? condition = bx.X switch
                 {

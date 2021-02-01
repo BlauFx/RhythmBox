@@ -91,10 +91,10 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
                 {
                     Key? key = timings[i].Item1.direction switch
                     {
-                        HitObjects.Direction.Up => keys[0],
-                        HitObjects.Direction.Left => keys[1],
-                        HitObjects.Direction.Down => keys[2],
-                        HitObjects.Direction.Right => keys[3],
+                        HitObject.Direction.Up => keys[0],
+                        HitObject.Direction.Left => keys[1],
+                        HitObject.Direction.Down => keys[2],
+                        HitObject.Direction.Right => keys[3],
                         _ => null
                     };
                     

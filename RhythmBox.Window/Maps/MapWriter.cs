@@ -27,7 +27,7 @@ namespace RhythmBox.Window.Maps
 
         public string DifficultyName { get; set; } = string.Empty;
 
-        public HitObjects[] HitObjects { get; set; }
+        public HitObject[] HitObjects { get; set; }
 
         public int StartTime { get; set; }
 
@@ -110,7 +110,7 @@ namespace RhythmBox.Window.Maps
             return originalPath;
         }
 
-        private void WriteToFile(string path, HitObjects[] hitObjects)
+        private void WriteToFile(string path, HitObject[] hitObjects)
         {
             using StreamWriter streamWriter = new StreamWriter(path, true);
 

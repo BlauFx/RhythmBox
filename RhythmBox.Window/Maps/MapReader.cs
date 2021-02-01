@@ -32,7 +32,7 @@ namespace RhythmBox.Window.Maps
 
         public int EndTime { get; set; }
 
-        public HitObjects[] HitObjects { get; set; }
+        public HitObject[] HitObjects { get; set; }
 
         public string Path { get; set; }
 
@@ -84,9 +84,9 @@ namespace RhythmBox.Window.Maps
             }
         }
         
-        private HitObjects[] HitObjectsParser(IReadOnlyList<string> list)
+        private HitObject[] HitObjectsParser(IReadOnlyList<string> list)
         {
-            var objs = new List<HitObjects>();
+            var objs = new List<HitObject>();
 
             for (int i = 0; i < list.Count; i++)
             {
@@ -97,9 +97,9 @@ namespace RhythmBox.Window.Maps
                 var speed = float.Parse(list[i][(lastindex + 2)..^1]);
 
                 var dirStr = list[i][..index];
-                var dir = EnumParser<HitObjects.Direction>(dirStr[(dirStr.IndexOf(".", StringComparison.Ordinal) + 1)..]);
+                var dir = EnumParser<HitObject.Direction>(dirStr[(dirStr.IndexOf(".", StringComparison.Ordinal) + 1)..]);
 
-                objs.Add(new HitObjects(dir, time, speed));
+                objs.Add(new HitObject(dir, time, speed));
             }
 
             return objs.ToArray();

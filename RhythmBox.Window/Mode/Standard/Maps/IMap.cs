@@ -22,7 +22,7 @@ namespace RhythmBox.Window.Mode.Standard.Maps
         
         string DifficultyName { get; set; }
         
-        HitObjects[] HitObjects { get; set; }
+        HitObject[] HitObjects { get; set; }
 
         int StartTime { get; set; }
 
@@ -36,7 +36,7 @@ namespace RhythmBox.Window.Mode.Standard.Maps
         STD
     }
     
-    public record HitObjects
+    public record HitObject
     {
         public Direction _direction { get; } = Direction.Down;
 
@@ -44,7 +44,7 @@ namespace RhythmBox.Window.Mode.Standard.Maps
 
         public float Speed { get; } = 1f;
 
-        public HitObjects(Direction direction, double time, float speed)
+        public HitObject(Direction direction, double time, float speed)
         {
             _direction = direction;
             Time = time;

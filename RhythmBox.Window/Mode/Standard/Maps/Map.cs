@@ -27,7 +27,7 @@ namespace RhythmBox.Window.Mode.Standard.Maps
 
         public string DifficultyName { get; set; } = string.Empty;
 
-        public HitObjects[] HitObjects { get; set; }
+        public HitObject[] HitObjects { get; set; }
 
         public int StartTime { get; set; }
 

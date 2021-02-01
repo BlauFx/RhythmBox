@@ -49,7 +49,7 @@ namespace RhythmBox.Tests.VisualTests.Clocks
                 DifficultyName = "Test DifficultyName",
                 StartTime = 100,
                 EndTime = 1000,
-                HitObjects = new HitObjects[1] { new HitObjects(HitObjects.Direction.Up, 200, 2f) }
+                HitObjects = new HitObject[1] { new HitObject(HitObject.Direction.Up, 200, 2f) }
             };
 
             Children = new Drawable[]

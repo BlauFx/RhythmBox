@@ -38,7 +38,7 @@ namespace RhythmBox.Window.Screens.Playfield
 
         public Action BoxAction2 { get; set; }
 
-        public Bindable<HitObjects.Direction> dir { get; } = new Bindable<HitObjects.Direction>(HitObjects.Direction.Up);
+        public Bindable<HitObject.Direction> dir { get; } = new Bindable<HitObject.Direction>(HitObject.Direction.Up);
 
         public List<Tuple<HitBox, double>> objectList { get; } = new List<Tuple<HitBox, double>>();
 
@@ -108,9 +108,9 @@ namespace RhythmBox.Window.Screens.Playfield
             }
         }
 
-        private Tuple<HitObjects.Direction?, int> GetNextObjDir(Key key)
+        private Tuple<HitObject.Direction?, int> GetNextObjDir(Key key)
         {
-            Tuple<HitObjects.Direction?, int> direction = null;
+            Tuple<HitObject.Direction?, int> direction = null;
 
             for (int i = 0; i < objectList.Count; i++)
             {
@@ -118,9 +118,9 @@ namespace RhythmBox.Window.Screens.Playfield
 
                 if (objectList[i].Item1 != null && objectList[i].Item1.Alpha > 0 && objectList[i].Item1.IsAlive)
                 {
-                    if (key == keys[0] && x == HitObjects.Direction.Up || key == keys[1] && x == HitObjects.Direction.Left || key == keys[2] && x == HitObjects.Direction.Down || key == keys[3] && x == HitObjects.Direction.Right)
+                    if (key == keys[0] && x == HitObject.Direction.Up || key == keys[1] && x == HitObject.Direction.Left || key == keys[2] && x == HitObject.Direction.Down || key == keys[3] && x == HitObject.Direction.Right)
                     {
-                        direction = new Tuple<HitObjects.Direction?, int>(x, i);
+                        direction = new Tuple<HitObject.Direction?, int>(x, i);
                         break;
                     }
                 }
@@ -134,7 +134,7 @@ namespace RhythmBox.Window.Screens.Playfield
             if (objectList.Count <= 0) 
                 return null;
             
-            var obj = objectList.FirstOrDefault(x => x.Item1 != null && x.Item1.IsPresent && x.Item1.IsAlive && (key == keys[0] && x.Item1.direction == HitObjects.Direction.Up || key == keys[1] && x.Item1.direction == HitObjects.Direction.Left || key == keys[2] &&  x.Item1.direction == HitObjects.Direction.Down || key == keys[3] &&  x.Item1.direction == HitObjects.Direction.Right));
+            var obj = objectList.FirstOrDefault(x => x.Item1 != null && x.Item1.IsPresent && x.Item1.IsAlive && (key == keys[0] && x.Item1.direction == HitObject.Direction.Up || key == keys[1] && x.Item1.direction == HitObject.Direction.Left || key == keys[2] &&  x.Item1.direction == HitObject.Direction.Down || key == keys[3] &&  x.Item1.direction == HitObject.Direction.Right));
             return obj;
         }
 

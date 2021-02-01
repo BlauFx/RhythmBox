@@ -16,9 +16,9 @@ namespace RhythmBox.Window.Objects
 
         public bool EditorMode2 { get; set; } = false;
 
-        public HitObjects.Direction dir { get; set; }
+        public HitObject.Direction dir { get; set; }
 
-        public Bindable<HitObjects.Direction> ChangeDir { get; set; }
+        public Bindable<HitObject.Direction> ChangeDir { get; set; }
 
         public Action BoxAction { get; set; }
 
