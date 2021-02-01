@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using RhythmBox.Window.Mode.Standard.Maps;
@@ -45,20 +46,24 @@ namespace RhythmBox.Window.Maps
             if (!Directory.Exists(folderPath))
                 Directory.CreateDirectory(folderPath);
 
-            WriteToFile(path, "v1", true);
-            WriteToFile(path, "AFileName", AFileName);
-            WriteToFile(path, "BGFile", BGFile, true);
-            WriteToFile(path, "MapId", MapId.ToString());
-            WriteToFile(path, "MapSetId", MapSetId.ToString(), true);
-            WriteToFile(path, "BPM", BPM.ToString(), true);
-            WriteToFile(path, "Mode", Mode.ToString());
-            WriteToFile(path, "Title", Title);
-            WriteToFile(path, "Artist", Artist);
-            WriteToFile(path, "Creator", Creator);
-            WriteToFile(path, "DifficultyName", DifficultyName, true);
-            WriteToFile(path, "Timings", $"{StartTime},{EndTime}", true);
+            var list = new List<string>
+            {
+                "v1\n",
+                $"AFileName: {AFileName}",
+                $"BGFile: {BGFile}\n",
+                $"MapId: {MapId.ToString()}",
+                $"MapSetId: {MapSetId.ToString()}\n",
+                $"BPM: {BPM.ToString()}\n",
+                $"Mode: {Mode.ToString()}",
+                $"Title: {Title}",
+                $"Artist: {Artist}",
+                $"Creator: {Creator}",
+                $"DifficultyName: {DifficultyName}\n",
+                $"Timings: {StartTime},{EndTime}\n",
+                "HitObjects:",
+            };
 
-            WriteToFile(path, "HitObjects:");
+            WriteToFile(path, list);
             WriteToFile(path, HitObjects);
         }
 
@@ -112,25 +117,18 @@ namespace RhythmBox.Window.Maps
 
         private void WriteToFile(string path, HitObject[] hitObjects)
         {
-            using StreamWriter streamWriter = new StreamWriter(path, true);
+            using var streamWriter = new StreamWriter(path, true);
 
-            for (int i = 0; i < hitObjects.Length; i++)
-                streamWriter.WriteLine($"{hitObjects[i]._direction}, {hitObjects[i].Time}, {hitObjects[i].Speed}f");
+            foreach (var obj in hitObjects)  
+                streamWriter.WriteLine($"{obj._direction}, {obj.Time}, {obj.Speed}f");
         }
 
-        private void WriteToFile(string path, string leftside, string value, bool extraEmptyLine = false) 
-            => Write(path, $"{leftside}: {value}", extraEmptyLine);
-
-        private void WriteToFile(string path, string value, bool extraEmptyLine = false) 
-            => Write(path, value, extraEmptyLine);
-
-        private void Write(string path, string value, bool extraEmptyLine = false)
+        private void WriteToFile(string path, IEnumerable<string> list)
         {
             using var strm = new StreamWriter(path, true);
-            strm.WriteLine(value);
 
-            if (extraEmptyLine)
-                strm.WriteLine(string.Empty);
+            foreach (var @object in list)
+                strm.WriteLine(@object);
         }
     }
 }
