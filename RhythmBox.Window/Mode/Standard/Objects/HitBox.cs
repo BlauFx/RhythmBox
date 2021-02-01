@@ -14,6 +14,7 @@ using RhythmBox.Window.Mode.Standard.Animations;
 using RhythmBox.Window.Mode.Standard.Maps;
 using RhythmBox.Window.Mode.Standard.Mods;
 using RhythmBox.Window.Mode.Standard.Mods.Interfaces;
+using RhythmBox.Window.Score;
 
 namespace RhythmBox.Window.Mode.Standard.Objects
 {
@@ -234,7 +235,7 @@ namespace RhythmBox.Window.Mode.Standard.Objects
             }
         }
         
-        private void Click(Hit hit) => _InvokeNamespaceClassesStaticMethod("RhythmBox.Window.Score", "UpdateCombo", hit);
+        private void Click(Hit hit) => Combo.UpdateCombo(hit);
 
         private HitAnimation HitAnimation(Hit hit, float Y = float.NaN, float X = float.NaN) 
             => new HitAnimation(hit)
@@ -246,21 +247,5 @@ namespace RhythmBox.Window.Mode.Standard.Objects
                 X = float.IsNaN(X) ? bx.X : X,
                 Y = float.IsNaN(Y) ? bx.Y : Y
             };
-
-        //https://stackoverflow.com/a/48728076
-        private void _InvokeNamespaceClassesStaticMethod(string namespaceName, string methodName, params object[] parameters)
-        {
-            foreach (var _a in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                foreach (var _t in _a.GetTypes())
-                {
-                    if ((_t.Namespace == namespaceName) && _t.IsClass)
-                    {
-                        _t.GetMethod(methodName, BindingFlags.Static | BindingFlags.Public)?.Invoke(null, parameters);
-                        return;
-                    }
-                }
-            }
-        }
     }
 }
