@@ -27,6 +27,7 @@ using RhythmBox.Window.Mode.Standard.Animations;
 using RhythmBox.Window.Mode.Standard.Maps;
 using RhythmBox.Window.Mode.Standard.Mods;
 using RhythmBox.Window.Screens.Playfield;
+using RhythmBox.Window.Screens.Result;
 
 namespace RhythmBox.Window.Screens
 {
@@ -223,7 +224,7 @@ namespace RhythmBox.Window.Screens
                 cachedMap.Seek(currentTime.GetValueOrDefault());
 
                 Scheduler.AddDelayed(() => this.Expire(), 1000);
-                LoadComponentAsync(new Selection(), this.Push);
+                LoadComponentAsync(new ResultScreen(), this.Push);
             };
 
             ReturntoSongSelectionAfterFail.ValueChanged += (e) =>
