@@ -2,10 +2,11 @@ using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
-using osu.Framework.Localisation;
+using osu.Framework.Input.Events;
 using osu.Framework.Screens;
 using osuTK;
 using osuTK.Graphics;
+using osuTK.Input;
 
 namespace RhythmBox.Window.Screens.Result
 {
@@ -35,6 +36,16 @@ namespace RhythmBox.Window.Screens.Result
                     Y = 0.5f,
                 }
             };
+        }
+
+        protected override bool OnKeyDown(KeyDownEvent e)
+        {
+            if (e.Key == Key.Escape)
+            {
+                this.Exit();
+            }
+            
+            return base.OnKeyDown(e);
         }
     }
 }
