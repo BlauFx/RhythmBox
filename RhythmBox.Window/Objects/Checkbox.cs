@@ -106,14 +106,11 @@ namespace RhythmBox.Window.Objects
                 sp.FadeOutFromOne(100, Easing.Out);
                 Scheduler.AddDelayed(() => sp.Texture = null, 101);
             }
-            else
+            else if (running == false)
             {
-                if (running == false)
-                {
                     running = true;
                     sp.Texture = sptex;
                     sp.FadeInFromZero(131, Easing.In);
-                }
             }
 
             if (ClickAction != null)
