@@ -190,7 +190,7 @@ namespace RhythmBox.Window.Screens
 
         protected override void OnHoverLost(HoverLostEvent e) => Background.MoveTo(new Vector2(0f), 500);
 
-        protected override void UpdateAfterChildren() => CurrentPlaying.Text = new LocalisedString($"Currently playing: {cachedMap?.Map?.Title}");
+        protected override void UpdateAfterChildren() => CurrentPlaying.Text = $"Currently playing: {cachedMap?.Map?.Title}";
 
         private void LimitFPS(bool Limit)
         {
