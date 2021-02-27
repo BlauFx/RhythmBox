@@ -1,4 +1,5 @@
-﻿using osu.Framework.Allocation;
+﻿using System;
+using osu.Framework.Allocation;
 using osu.Framework.Audio.Track;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
@@ -9,6 +10,7 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Events;
+using osu.Framework.Logging;
 using osuTK;
 using osuTK.Graphics;
 
@@ -91,26 +93,28 @@ namespace RhythmBox.Window.Animation
             ChangeVolume(false);
         }
 
-        public void ChangeVolume(bool CalledFromOnScroll, ScrollEvent e = null)
+        public void ChangeVolume(bool calledFromOnScroll, ScrollEvent e = null)
         {
-            if (ITrack.Value == null) return;
+            var volValue = ITrack?.Value?.Volume?.Value ?? gameini.Get<double>(SettingsConfig.Volume);
 
-            var VolValue = ITrack.Value.Volume.Value;
-
-            if (CalledFromOnScroll)
+            if (calledFromOnScroll)
             {
                 if (e.ScrollDelta.Y > 0f)
-                    VolValue = VolValue != 1d ? ITrack.Value.Volume.Value += 0.25d : VolValue;
+                    volValue = volValue != 1d ? volValue + 0.25d : volValue;
                 else
-                    VolValue = VolValue != 0d ? ITrack.Value.Volume.Value -= 0.25d : VolValue;
+                {
+                    volValue = volValue != 0d ? volValue - 0.25d : volValue;
+                }
 
-                gameini.Set(SettingsConfig.Volume, VolValue);
+                gameini.Set(SettingsConfig.Volume, volValue);
                 gameini.Save();
+
+                ITrack?.Value?.Volume?.Set(volValue);
             }
 
-            CurrentValue.Height = (float)VolValue * 1f + 0.01f;
+            CurrentValue.Height = (float)volValue * 1f + 0.01f;
 
-            switch (VolValue)
+            switch (volValue)
             {
                 case 1d:
                     CurrentValue.Height -= .01f;
