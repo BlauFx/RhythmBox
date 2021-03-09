@@ -4,46 +4,14 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
 using osuTK;
 using osuTK.Graphics;
-using osuTK.Input;
 
 namespace RhythmBox.Window
 {
     public class ScrollContainer : ScrollContainer<Drawable>
     {
-        private float Offset { get; set; }
-
         public ScrollContainer(Direction scrollDirection = Direction.Vertical)
             : base(scrollDirection)
         {
-        }
-
-        protected override void LoadComplete()
-        {
-            base.DistanceDecayScroll = 0.01d;
-            base.ScrollDistance = 80f;
-            base.ClampExtension = 0f;
-
-            base.LoadComplete();
-        }
-
-        protected override bool OnScroll(ScrollEvent e)
-        {
-            Vector2 scrollDelta = e.ScrollDelta;
-            float scrollDeltaFloat = scrollDelta.Y;
-
-            if (ScrollDirection == Direction.Horizontal && scrollDelta.X != 0)
-            {
-                scrollDeltaFloat = scrollDelta.X;
-            }
-
-            offset(base.ScrollDistance * -scrollDeltaFloat, true, base.DistanceDecayScroll);
-            return true;
-        }
-
-        private void offset(float value, bool animated, double distanceDecay)
-        {
-            Offset += value;
-            ScrollTo(Offset + value, animated, distanceDecay);
         }
 
         protected override ScrollbarContainer CreateScrollbar(Direction direction) => new MyScrollbar(direction);
