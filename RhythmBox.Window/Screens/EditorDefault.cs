@@ -14,6 +14,8 @@ using osuTK.Graphics;
 using RhythmBox.Window.Clocks;
 using RhythmBox.Window.Objects;
 using System;
+using System.IO;
+using System.Threading.Tasks;
 using RhythmBox.Window.Mode.Standard.Maps;
 
 namespace RhythmBox.Window.Screens
@@ -28,14 +30,14 @@ namespace RhythmBox.Window.Screens
 
         private RhythmBoxClockContainer rhythmBoxClockContainer;
 
-        private BindableBool IsPaused = new BindableBool();
+        private BindableBool IsPaused = new();
 
-        public BindableDouble UserPlaybackRate = new BindableDouble(1)
+        public BindableDouble UserPlaybackRate = new(1)
             {Default = 1, MinValue = 0.1, MaxValue = 3, Precision = 0.1};
 
-        private Map map { get; set; }
+        private Map map { get; }
 
-        private BindableBool Resuming = new BindableBool(false);
+        private BindableBool resuming = new();
 
         private Objects.Progress<float> progress;
 
@@ -43,15 +45,15 @@ namespace RhythmBox.Window.Screens
 
         private ClickBox[] box = new ClickBox[4];
 
-        BindableFloat bindable { get; set; } = new BindableFloat(0);
+        BindableFloat bindable { get; set; } = new(0);
 
         private double time = 0f;
 
-        private bool CursorCreated = false;
+        private bool CursorCreated;
 
-        private bool HitObjCursorActive = false;
+        private bool HitObjCursorActive;
 
-        private bool first_run = false;
+        private bool first_run;
 
         [Resolved] private AudioManager audio { get; set; }
 
@@ -66,9 +68,7 @@ namespace RhythmBox.Window.Screens
         public EditorDefault(string path = null)
         {
             if (path is null)
-            {
-                throw new NullReferenceException("Path/Map can not be null");
-            }
+                throw new NullReferenceException("Path cannot be null!");
 
             map = new Map(path);
         }
@@ -85,6 +85,7 @@ namespace RhythmBox.Window.Screens
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f),
                     Alpha = 0.7f,
+                    Texture = largeStore.Get("Skin/menu-background"),
                 },
                 rhythmBoxClockContainer = new RhythmBoxClockContainer(0)
                 {
@@ -240,13 +241,6 @@ namespace RhythmBox.Window.Screens
                 }
             };
 
-            Schedule(async () =>
-            {
-                Texture x = await largeStore.GetAsync("Skin/menu-background");
-                background.Texture = x;
-            });
-
-
             rhythmBoxClockContainer.Children = new Drawable[]
             {
                 playfield = new Playfield.Playfield(null)
@@ -301,24 +295,20 @@ namespace RhythmBox.Window.Screens
             rhythmBoxClockContainer.UserPlaybackRate.BindTo(UserPlaybackRate);
 
             playfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
-
-            playfield.Resuming.BindTo(Resuming);
+            playfield.Resuming.BindTo(resuming);
 
             rhythmBoxClockContainer.Stop();
 
             this.store = new StorageBackedResourceStore(GameHost.Storage);
             trackStore = audio.GetTrackStore(this.store);
 
-            int num = map.Path.LastIndexOf("\\");
-            string tmp = map.Path.Substring(0, num);
+            int num = map.Path.LastIndexOf(Path.DirectorySeparatorChar);
+            string tmp = map.Path[..num];
 
-            string AudioFile = $"{tmp}\\{map.AFileName}";
-            track = trackStore.Get(AudioFile);
+            string audioFile = $"{tmp}{Path.DirectorySeparatorChar}{map.AFileName}";
+            track = trackStore.Get(audioFile);
 
-            if (track != null)
-                track.Volume.Value = 0.2d;
-
-            track?.Stop();
+            track.Start();
         }
 
         protected override void LoadComplete()
