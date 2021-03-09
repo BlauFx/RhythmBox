@@ -23,7 +23,7 @@ namespace RhythmBox.Window.Screens.SongSelection
 {
     public class Selection : Screen
     {
-        Bindable<string> bindablePath = new Bindable<string>();
+        Bindable<string> bindablePath = new();
 
         private ThisScrollContainer scrollContainer;
 
@@ -123,9 +123,8 @@ namespace RhythmBox.Window.Screens.SongSelection
                 }
             };
 
-            bindablePath.BindTo(scrollContainer.bindablePath);
-
-            textBox.Current.ValueChanged += e => scrollContainer.search.SearchTerm = e.NewValue;
+            bindablePath.BindTo(scrollContainer.BindablePath);
+            textBox.Current.ValueChanged += e => scrollContainer.SearchContainer.SearchTerm = e.NewValue;
 
             scrollContainer.Show();
         }
@@ -173,17 +172,17 @@ namespace RhythmBox.Window.Screens.SongSelection
 
     public class ThisScrollContainer : FocusedOverlayContainer
     {
-        public Bindable<string> bindablePath = new Bindable<string>();
+        public readonly Bindable<string> BindablePath = new();
 
         public Action ClickOnMap;
 
-        private FillFlowContainer FFContainer;
+        private FillFlowContainer fillFlowContainer;
 
-        private ScrollContainer FFContainerM;
+        private ScrollContainer scrollContainer;
 
-        public SearchContainer search;
+        public SearchContainer SearchContainer;
 
-        private HeaderContainer head;
+        private HeaderContainer headContainer;
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -201,18 +200,20 @@ namespace RhythmBox.Window.Screens.SongSelection
                     Colour = Color4.DimGray,
                     Alpha = 0.9f,
                 },
-                FFContainerM = new ScrollContainer
+                scrollContainer = new ScrollContainer
                 {
                     ScrollbarVisible = true,
                     Depth = -1,
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f),
-                    DistanceDecayScroll = 0.1,
-                    ScrollDistance = 0.21415454f,
+                    DistanceDecayScroll = 0.005d,
+                    DistanceDecayDrag = 0.004d,
+                    ScrollDistance = 120f,
+                    ClampExtension = 30f,
 
                     Children = new Drawable[]
                     {
-                        FFContainer = new FillFlowContainer
+                        fillFlowContainer = new FillFlowContainer
                         {
                             RelativeSizeAxes = Axes.X,
                             Size = new Vector2(1f),
@@ -223,7 +224,7 @@ namespace RhythmBox.Window.Screens.SongSelection
 
                             Children = new Drawable[]
                             {
-                                search = new SearchContainer
+                                SearchContainer = new SearchContainer
                                 {
                                     Anchor = Anchor.TopRight,
                                     Origin = Anchor.TopRight,
@@ -235,7 +236,7 @@ namespace RhythmBox.Window.Screens.SongSelection
 
                                     Children = new Drawable[]
                                     {
-                                        head = new HeaderContainer
+                                        headContainer = new HeaderContainer
                                         {
                                             RelativeSizeAxes = Axes.X,
                                             Size = new Vector2(1f),
@@ -262,23 +263,11 @@ namespace RhythmBox.Window.Screens.SongSelection
                     Origin = Anchor.TopRight,
                     Colour = Color4.Blue,
                     InvokeBox = ClickOnMap,
-                    bindablePath = bindablePath,
+                    bindablePath = BindablePath,
                 });
             });
 
-           head.AddRange(mapPacks);
-        }
-
-        protected override bool OnMouseDown(MouseDownEvent e)
-        {
-            var current = e.ScreenSpaceMousePosition.Y;
-            float max = this.ScreenSpaceDrawQuad.AABB.Y + this.ScreenSpaceDrawQuad.AABB.Height;
-
-            var x = max / (current - (this.ScreenSpaceDrawQuad.AABB.Y + 1f));
-            x = (x / 1.07f);
-
-            FFContainerM.ScrollTo(FFContainer.Height / x);
-            return base.OnMouseDown(e);
+           headContainer.AddRange(mapPacks);
         }
 
         protected override bool OnMouseMove(MouseMoveEvent e)
@@ -288,10 +277,8 @@ namespace RhythmBox.Window.Screens.SongSelection
                 var current = e.ScreenSpaceMousePosition.Y;
                 float max = this.ScreenSpaceDrawQuad.AABB.Y + this.ScreenSpaceDrawQuad.AABB.Height;
 
-                var x = max / (current - (this.ScreenSpaceDrawQuad.AABB.Y + 1f));
-                x = (x / 1.07f);
-
-                FFContainerM.ScrollTo(FFContainer.Height / x);
+                var result = max / (current - (this.ScreenSpaceDrawQuad.AABB.Y + 1f));
+                scrollContainer.ScrollTo(fillFlowContainer.Height / result);
             }
 
             return base.OnMouseMove(e);
