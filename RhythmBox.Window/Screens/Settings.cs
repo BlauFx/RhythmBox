@@ -37,13 +37,14 @@ namespace RhythmBox.Window.Screens
         private void Load()
         {
             cachedMap.Play();
-            var sliderBarValue = new BindableDouble(cachedMap.BindableTrack.Value.Volume.Value) { MinValue = 0, MaxValue = 1, Precision = 0.25d };
 
+            var sliderBarValue = new BindableDouble(cachedMap.BindableTrack.Value?.Volume.Value ?? gameini.Get<double>(SettingsConfig.Volume)) { MinValue = 0, MaxValue = 1, Precision = 0.25d };
             sliderBarValue.ValueChanged += (e) =>
             {
-                cachedMap.BindableTrack.Value.Volume.Value = e.NewValue;
-                
-                gameini.Set(SettingsConfig.Volume, e.NewValue);
+                if (cachedMap.BindableTrack.Value != null)
+                    cachedMap.BindableTrack.Value.Volume.Value = e.NewValue;
+
+                gameini.GetBindable<double>(SettingsConfig.Volume).Value = e.NewValue;
                 gameini.Save();
             };
 
