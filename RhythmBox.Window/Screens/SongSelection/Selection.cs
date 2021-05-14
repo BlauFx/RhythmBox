@@ -100,6 +100,17 @@ namespace RhythmBox.Window.Screens.SongSelection
                     Origin = Anchor.TopLeft,
                     Size = new Vector2(200, 40),
                 },
+                new Leaderboard
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    RelativePositionAxes = Axes.Both,
+                    Anchor = Anchor.CentreRight,
+                    Origin = Anchor.CentreRight,
+                    Size = new Vector2(0.25f, 0.7f),
+                    Alpha = 0.5f,
+                    X = 0f,
+                    Y = 0f,
+                },
                 scrollContainer = new ThisScrollContainer
                 {
                     RelativeSizeAxes = Axes.Both,
