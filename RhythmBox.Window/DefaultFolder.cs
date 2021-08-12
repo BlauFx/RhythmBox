@@ -40,10 +40,8 @@ namespace RhythmBox.Window
                 throw new Exception($"{nameof(assembly)} can not be null!");
 
             var lines = ReadLines(() => assembly.GetManifestResourceStream("RhythmBox.Window.Resources.Difficulty1.ini")!, Encoding.UTF8).ToList();
-            
-            var map = new MapWriter();
-            
-            new MapReader(lines).CopyAllTo<IMap>(map); 
+
+            var map = new Map(lines);
             map.WriteToNewMap(file);
         }
 
