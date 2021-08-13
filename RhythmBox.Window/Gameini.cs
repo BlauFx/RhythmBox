@@ -13,7 +13,7 @@ namespace RhythmBox.Window
             SetDefault(SettingsConfig.KeyBindingDown, "S");
             SetDefault(SettingsConfig.KeyBindingLeft, "A");
             SetDefault(SettingsConfig.KeyBindingRight, "D");
-            SetDefault(SettingsConfig.Volume, 0.5d, 0d, 1d, 0.25d);
+            SetDefault(SettingsConfig.Volume, 0.5d, 0d, 1d, 0.1d);
         }
 
         public Gameini(Storage storage)

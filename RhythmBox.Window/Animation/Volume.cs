@@ -10,7 +10,6 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Events;
-using osu.Framework.Logging;
 using osuTK;
 using osuTK.Graphics;
 
@@ -18,16 +17,18 @@ namespace RhythmBox.Window.Animation
 {
     public class Volume : Container
     {
-        private IBindable<Track> ITrack;
+        private readonly IBindable<Track> track;
 
-        private Container CurrentValue;
+        private Box currentValue;
+
+        private TextFlowContainer volumeInPercent;
 
         [Resolved]
         private Gameini gameini { get; set; }
 
         public Volume(IBindable<Track> bindableTrack)
         {
-            ITrack = bindableTrack;
+            track = bindableTrack;
         }
 
         [BackgroundDependencyLoader]
@@ -35,19 +36,20 @@ namespace RhythmBox.Window.Animation
         {
             Children = new Drawable[]
             {
-                new Sprite
+                volumeInPercent = new TextFlowContainer
                 {
-                    Depth = float.MinValue,
+                    Depth = -1,
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                     RelativeSizeAxes = Axes.Both,
-                    RelativePositionAxes = Axes.Both,
                     Size = new Vector2(0.1f, 1f),
-                    Texture = store.Get("Game/Volume"),
+                    Text = "",
+                    TextAnchor = Anchor.Centre,
                 },
-                CurrentValue = new Container
+                new Container
                 {
-                    Depth = float.MinValue + 1,
+                    Alpha = 1f,
+                    Depth = 0,
                     Anchor = Anchor.BottomCentre,
                     Origin = Anchor.BottomCentre,
                     RelativeSizeAxes = Axes.Both,
@@ -55,39 +57,25 @@ namespace RhythmBox.Window.Animation
                     Masking = true,
                     EdgeEffect = new EdgeEffectParameters
                     {
-                        Hollow = false,
+                        Hollow = true,
                         Type = EdgeEffectType.Glow,
-                        Radius = 1,
-                        Colour = Color4.Red.Opacity(1f),
+                        Radius = 5,
+                        Colour = Color4.AliceBlue.Opacity(1f),
                     },
-
                     Children = new Drawable[]
                     {
-                        new Box
+                        currentValue = new Box
                         {
-                            Depth = float.MinValue,
                             Anchor = Anchor.BottomCentre,
                             Origin = Anchor.BottomCentre,
                             RelativeSizeAxes = Axes.Both,
                             RelativePositionAxes = Axes.Both,
                             Size = new Vector2(1f),
-                            Colour = Color4.Red.Opacity(0.7f),
-                            Alpha = 0.3f,
-                        },
-                        new Box
-                        {
-                            Depth = float.MinValue + 1,
-                            Anchor = Anchor.BottomCentre,
-                            Origin = Anchor.BottomCentre,
-                            RelativeSizeAxes = Axes.Both,
-                            RelativePositionAxes = Axes.Both,
-                            Size = new Vector2(1f),
-                            Colour = Color4.Gray.Opacity(.1f),
+                            Colour = Color4.Red.Opacity(100),
                             Alpha = 1f,
                         },
                     }
-                },
-
+                }
             };
 
             ChangeVolume(false);
@@ -95,34 +83,24 @@ namespace RhythmBox.Window.Animation
 
         public void ChangeVolume(bool calledFromOnScroll, ScrollEvent e = null)
         {
-            var volValue = ITrack?.Value?.Volume?.Value ?? gameini.Get<double>(SettingsConfig.Volume);
-
+            var volValue = track?.Value?.Volume?.Value ?? gameini.Get<double>(SettingsConfig.Volume);
             if (calledFromOnScroll)
             {
-                if (e.ScrollDelta.Y > 0f)
-                    volValue = volValue != 1d ? volValue + 0.25d : volValue;
+                var precision = ((BindableDouble)gameini.GetBindable<double>(SettingsConfig.Volume)).Precision;
+
+                if (e is { ScrollDelta: { Y: > 0f } })
+                    volValue = volValue <= 1d - precision ? volValue + precision : volValue;
                 else
-                {
-                    volValue = volValue != 0d ? volValue - 0.25d : volValue;
-                }
+                    volValue = volValue >= 0d + precision ? volValue - precision : volValue;
 
                 gameini.SetValue(SettingsConfig.Volume, volValue);
                 gameini.Save();
 
-                ITrack?.Value?.Volume?.Set(volValue);
+                track?.Value?.Volume?.Set(volValue);
             }
-
-            CurrentValue.Height = (float)volValue * 1f + 0.01f;
-
-            switch (volValue)
-            {
-                case 1d:
-                    CurrentValue.Height -= .01f;
-                    break;
-                case 0d:
-                    CurrentValue.Height = -.1f;
-                    break;
-            }
+            currentValue.Height = (float)volValue;
+            volumeInPercent.Text = "";
+            volumeInPercent.AddText($"{volValue * 100:0}%", x => x.Font = new FontUsage("Roboto", 50));
         }
     }
 }

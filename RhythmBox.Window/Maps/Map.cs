@@ -60,6 +60,9 @@ namespace RhythmBox.Window.Maps
 
         private void ReadFromList(List<string> list)
         {
+            if (list == null)
+                return;
+
             var version = list.FirstOrDefault(y => y.Contains("v1", StringComparison.OrdinalIgnoreCase));
 
             if (string.IsNullOrWhiteSpace(version) || string.IsNullOrEmpty(version))
