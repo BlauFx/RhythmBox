@@ -8,7 +8,8 @@ using osu.Framework.Input.Events;
 using osu.Framework.Testing;
 using osuTK;
 using RhythmBox.Window.Clocks;
-using RhythmBox.Window.Mode.Standard.Maps;
+using RhythmBox.Window.Interfaces;
+using RhythmBox.Window.Maps;
 using RhythmBox.Window.Screens.Playfield;
 
 namespace RhythmBox.Tests.VisualTests.Clocks
@@ -38,18 +39,17 @@ namespace RhythmBox.Tests.VisualTests.Clocks
             map = new Map(null)
             {
                 AFileName = "null",
-                BGFile = "none",
+                BgFile = "none",
                 MapId = 0,
                 MapSetId = 0,
                 BPM = 150,
-                Mode = GameMode.STD,
                 Title = "Test Title",
                 Artist = "Test Artist",
                 Creator = "Test Creator",
                 DifficultyName = "Test DifficultyName",
                 StartTime = 100,
                 EndTime = 1000,
-                HitObjects = new HitObject[1] { new HitObject(HitObject.Direction.Up, 200, 2f) }
+                HitObjects = new HitObject[1] { new HitObject(HitObject.DirectionEnum.Up, 200, 2f) }
             };
 
             Children = new Drawable[]

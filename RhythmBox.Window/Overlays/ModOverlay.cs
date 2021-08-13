@@ -8,7 +8,6 @@ using osu.Framework.Input.Events;
 using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
-using RhythmBox.Window.Objects;
 
 namespace RhythmBox.Window.Overlays
 {
@@ -16,7 +15,7 @@ namespace RhythmBox.Window.Overlays
     {
         public TextFlowContainer _text;
 
-        public Mods modBox;
+        public Objects.Mods modBox;
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -33,7 +32,7 @@ namespace RhythmBox.Window.Overlays
                     Size = new Vector2(1f),
                     Colour = Color4.Black.Opacity(0.75f),
                 },
-                modBox = new Mods
+                modBox = new Objects.Mods
                 {
                     Depth = -2,
                     RelativePositionAxes = Axes.Both,

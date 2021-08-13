@@ -15,7 +15,7 @@ namespace RhythmBox.Window.Overlays
 {
     public class BreakOverlay : FocusedOverlayContainer
     {
-        private TextFlowContainer _text;
+        private TextFlowContainer text;
 
         private Box box;
 
@@ -41,7 +41,7 @@ namespace RhythmBox.Window.Overlays
                     Colour = Color4.Black.Opacity(0.8f),
                     Alpha = 0f,
                 },
-                _text = new TextFlowContainer
+                text = new TextFlowContainer
                 {
                     Depth = -1,
                     RelativePositionAxes = Axes.Both,
@@ -104,21 +104,21 @@ namespace RhythmBox.Window.Overlays
 
         private void AnimationIn()
         {
-            _text.Text = string.Empty;
-            _text.MoveTo(new Vector2(0f));
+            text.Text = string.Empty;
+            text.MoveTo(new Vector2(0f));
 
             this.FadeInFromZero(100, Easing.In);
             box.FadeInFromZero(100, Easing.In);
 
-            _text.AddText("You've paused the game!", x => x.Font = new FontUsage("Roboto", 100));
-            _text.Scale = new Vector2(0f);
+            text.AddText("You've paused the game!", x => x.Font = new FontUsage("Roboto", 100));
+            text.Scale = new Vector2(0f);
 
-            _text.FadeInFromZero(500, Easing.InBack);
-            _text.ScaleTo(1f, 2000, Easing.OutElastic);
+            text.FadeInFromZero(500, Easing.InBack);
+            text.ScaleTo(1f, 2000, Easing.OutElastic);
 
             Scheduler.AddDelayed(() =>
             {
-                _text.MoveToOffset(new Vector2(0f, -0.25f), 500, Easing.In);
+                text.MoveToOffset(new Vector2(0f, -0.25f), 500, Easing.In);
 
                 @continue.FadeInFromZero(500, Easing.In);
                 @return.FadeInFromZero(500, Easing.In);
@@ -130,8 +130,8 @@ namespace RhythmBox.Window.Overlays
             this.FadeOutFromOne(1000, Easing.In);
             box.FadeInFromZero(0, Easing.In);
 
-            _text.FadeOutFromOne(500, Easing.OutBack);
-            _text.MoveToOffset(new Vector2(0f, -0.25f), 500, Easing.In);
+            text.FadeOutFromOne(500, Easing.OutBack);
+            text.MoveToOffset(new Vector2(0f, -0.25f), 500, Easing.In);
             
             @continue.FadeOutFromOne(500, Easing.In);
             @return.FadeOutFromOne(500, Easing.In);

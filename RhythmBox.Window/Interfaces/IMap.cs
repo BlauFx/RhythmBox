@@ -1,18 +1,18 @@
-namespace RhythmBox.Window.Mode.Standard.Maps
+using RhythmBox.Window.Maps;
+
+namespace RhythmBox.Window.Interfaces
 {
     public interface IMap
     {
         string AFileName { get; set; }
 
-        string BGFile { get; set; }
+        string BgFile { get; set; }
         
-        int MapId { get; set; } 
+        int MapId { get; set; }
         
         int MapSetId { get; set; }
 
         int BPM { get; set; }
-        
-        GameMode Mode { get; set; }
         
         string Title { get; set; }
         
@@ -31,27 +31,22 @@ namespace RhythmBox.Window.Mode.Standard.Maps
         string Path { get; set; }
     }
     
-    public enum GameMode
-    {
-        STD
-    }
-    
     public record HitObject
     {
-        public Direction _direction { get; } = Direction.Down;
+        public DirectionEnum Direction { get; } = DirectionEnum.Down;
 
         public double Time { get; } = 1d;
 
         public float Speed { get; } = 1f;
 
-        public HitObject(Direction direction, double time, float speed)
+        public HitObject(DirectionEnum direction, double time, float speed)
         {
-            _direction = direction;
+            Direction = direction;
             Time = time;
             Speed = speed;
         }
 
-        public enum Direction
+        public enum DirectionEnum
         {
             Up,
             Down,

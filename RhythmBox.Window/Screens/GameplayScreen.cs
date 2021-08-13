@@ -23,9 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using RhythmBox.Window.Mode.Standard.Animations;
-using RhythmBox.Window.Mode.Standard.Maps;
-using RhythmBox.Window.Mode.Standard.Mods;
+using RhythmBox.Window.Mods;
 using RhythmBox.Window.Screens.Playfield;
 using RhythmBox.Window.Screens.Result;
 
@@ -35,35 +33,35 @@ namespace RhythmBox.Window.Screens
     {
         private double Accuracy { get; set; } = 100; //TODO:
 
-        private TextFlowContainer DispayCombo, DispayScore;
+        private TextFlowContainer dispayCombo, dispayScore;
 
-        private readonly Map _map;
+        private readonly Map map;
 
-        public Playfield.Playfield _RbPlayfield;
+        public Playfield.Playfield RbPlayfield;
         
-        public HPBar hpbar { get; private set; }
+        public HPBar Hpbar { get; private set; }
 
         private RhythmBoxClockContainer rhythmBoxClockContainer;
 
-        private readonly BindableDouble UserPlaybackRate = new BindableDouble(1) { Default = 1, MinValue = 0.1, MaxValue = 3, Precision = 0.1 };
+        private readonly BindableDouble userPlaybackRate = new(1) { Default = 1, MinValue = 0.1, MaxValue = 3, Precision = 0.1 };
 
-        private readonly BindableBool IsPaused = new BindableBool();
+        private readonly BindableBool isPaused = new();
 
-        private readonly BindableBool Resuming = new BindableBool(true);
+        private readonly BindableBool resuming = new(true);
         private bool HasFailed { get; set; }
 
-        private BreakOverlay BreakOverlay;
+        private BreakOverlay breakOverlay;
 
-        public Track track;
+        public Track Track;
         private BindableBool ReturntoSongSelectionAfterFail { get; } = new BindableBool();
 
         public readonly BindableBool GameStarted = new BindableBool();
 
-        private GameplayScreenLoader GameplayScreenLoader;
+        private GameplayScreenLoader gameplayScreenLoader;
 
-        private readonly List<Mod> ToApplyMods;
+        private readonly List<Mod> toApplyMods;
 
-        private readonly Sprite[] KeyPress = new Sprite[4];
+        private readonly Sprite[] keyPress = new Sprite[4];
 
         private readonly Key[] keys = new Key[4];
 
@@ -82,8 +80,8 @@ namespace RhythmBox.Window.Screens
 
         public GameplayScreen(string path, List<Mod> ToApplyMods)
         {
-            this.ToApplyMods = ToApplyMods;
-            _map = new Map(path);
+            this.toApplyMods = ToApplyMods;
+            map = new Map(path);
         }
 
         [BackgroundDependencyLoader]
@@ -92,15 +90,15 @@ namespace RhythmBox.Window.Screens
             IResourceStore<byte[]> store = new StorageBackedResourceStore(gameHost.Storage);
             ITrackStore trackStore = audio.GetTrackStore(store);
 
-            var audioFile = $"{Path.GetDirectoryName(_map.Path)}{Path.DirectorySeparatorChar}{_map.AFileName}";
-            track = trackStore.Get(audioFile);
+            var audioFile = $"{Path.GetDirectoryName(map.Path)}{Path.DirectorySeparatorChar}{map.AFileName}";
+            Track = trackStore.Get(audioFile);
             
-            if (track != null)
-                track.Volume.Value = Gameini.Get<double>(SettingsConfig.Volume);
+            if (Track != null)
+                Track.Volume.Value = Gameini.Get<double>(SettingsConfig.Volume);
 
             InternalChildren = new Drawable[]
             {
-                GameplayScreenLoader = new GameplayScreenLoader
+                gameplayScreenLoader = new GameplayScreenLoader
                 {
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f),
@@ -112,7 +110,7 @@ namespace RhythmBox.Window.Screens
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f)
                 },
-                BreakOverlay = new BreakOverlay(new Action[] { () => BreakOverlay.State.Value = Visibility.Hidden, () => ReturntoSongSelectionAfterFail.Value = true })
+                breakOverlay = new BreakOverlay(new Action[] { () => breakOverlay.State.Value = Visibility.Hidden, () => ReturntoSongSelectionAfterFail.Value = true })
                 {
                     RelativePositionAxes = Axes.Both,
                     Anchor = Anchor.Centre,
@@ -121,11 +119,11 @@ namespace RhythmBox.Window.Screens
                     Size = new Vector2(1f),
                     Alpha = 0f,
                 },
-                KeyPress[0] = GetSprite("Skin/K1", 0.3f),
-                KeyPress[1] = GetSprite("Skin/K2", 0.4f),
-                KeyPress[2] = GetSprite("Skin/K3", 0.5f),
-                KeyPress[3] = GetSprite("Skin/K4", 0.6f),
-                volume = new Volume(new Bindable<Track>(track))
+                keyPress[0] = GetSprite("Skin/K1", 0.3f),
+                keyPress[1] = GetSprite("Skin/K2", 0.4f),
+                keyPress[2] = GetSprite("Skin/K3", 0.5f),
+                keyPress[3] = GetSprite("Skin/K4", 0.6f),
+                volume = new Volume(new Bindable<Track>(Track))
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
@@ -138,33 +136,39 @@ namespace RhythmBox.Window.Screens
                 },
             };
             
-            BreakOverlay.State.Value = Visibility.Hidden;
-            BreakOverlay.State.ValueChanged += async (e) =>
+            for (int i = 0; i < 4; i++)
+            {
+                Enum.TryParse(Gameini.Get<string>((SettingsConfig)i), out Key key);
+                keys[i] = key;
+            }
+            
+            breakOverlay.State.Value = Visibility.Hidden;
+            breakOverlay.State.ValueChanged += async (e) =>
             {
                 if (e.NewValue == Visibility.Hidden)
                 {
-                    BreakOverlay.AnimationOut();
+                    breakOverlay.AnimationOut();
                     await Task.Delay(1500);
-                    Resuming.Value = true;
+                    resuming.Value = true;
                     rhythmBoxClockContainer.Start();
-                    track.Start();
-                    _RbPlayfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
+                    Track.Start();
+                    RbPlayfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
                 }
             };
 
             rhythmBoxClockContainer.Children = new Drawable[]
             {
-                _RbPlayfield = new Playfield.Playfield(ToApplyMods)
+                RbPlayfield = new Playfield.Playfield(toApplyMods)
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                     RelativeSizeAxes = Axes.Both, 
                     RelativePositionAxes = Axes.Both,
                     Size = new Vector2(0.6f, 0.9f),
-                    Map = _map,
+                    Map = map,
                     Y = 0.02f
                 },
-                hpbar = new HPBar(ToApplyMods)
+                Hpbar = new HPBar(toApplyMods)
                 {
                     Anchor = Anchor.TopLeft,
                     Origin = Anchor.TopLeft, 
@@ -172,7 +176,7 @@ namespace RhythmBox.Window.Screens
                     Size = new Vector2(0.8f, 1f),
                     Colour = Color4.AliceBlue
                 },
-                DispayCombo = new TextFlowContainer
+                dispayCombo = new TextFlowContainer
                 {
                     Anchor = Anchor.BottomLeft,
                     Origin = Anchor.BottomLeft,
@@ -181,7 +185,7 @@ namespace RhythmBox.Window.Screens
                     Size = new Vector2(0.1f),
                     TextAnchor = Anchor.BottomLeft,
                 },
-                DispayScore = new TextFlowContainer
+                dispayScore = new TextFlowContainer
                 {
                     Anchor = Anchor.TopRight,
                     Origin = Anchor.TopRight,
@@ -193,33 +197,33 @@ namespace RhythmBox.Window.Screens
                 },
             };
 
-            rhythmBoxClockContainer.IsPaused.BindTo(IsPaused);
-            rhythmBoxClockContainer.UserPlaybackRate.BindTo(UserPlaybackRate);
+            rhythmBoxClockContainer.IsPaused.BindTo(isPaused);
+            rhythmBoxClockContainer.UserPlaybackRate.BindTo(userPlaybackRate);
 
-            _RbPlayfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
-            DispayScore.Clock = rhythmBoxClockContainer.RhythmBoxClock;
-            DispayCombo.Clock = rhythmBoxClockContainer.RhythmBoxClock;
-            hpbar.Clock = rhythmBoxClockContainer.RhythmBoxClock;
+            RbPlayfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
+            dispayScore.Clock = rhythmBoxClockContainer.RhythmBoxClock;
+            dispayCombo.Clock = rhythmBoxClockContainer.RhythmBoxClock;
+            Hpbar.Clock = rhythmBoxClockContainer.RhythmBoxClock;
 
-            _RbPlayfield.Resuming.BindTo(Resuming);
+            RbPlayfield.Resuming.BindTo(resuming);
 
-            DispayCombo.AddText("0x", x => x.Font = new FontUsage("Roboto", 40));
-            DispayScore.AddText("000000", x => x.Font = new FontUsage("Roboto", 40));
+            dispayCombo.AddText("0x", x => x.Font = new FontUsage("Roboto", 40));
+            dispayScore.AddText("000000", x => x.Font = new FontUsage("Roboto", 40));
             
-            Score.Combo.PrivateComboBindable.ValueChanged += (e) => hpbar.CurrentValue.Value += hpbar.CalcValue(Score.Combo.currentHit);
-            _RbPlayfield.HasFinished.ValueChanged += (e) =>
+            Score.Combo.ComboInt.ValueChanged += (e) => Hpbar.CurrentValue.Value += Hpbar.CalcValue(Score.Combo.CurrentHit);
+            RbPlayfield.HasFinished.ValueChanged += (e) =>
             {
                 if (!e.NewValue) 
                     return;
 
                 rhythmBoxClockContainer.Stop();
 
-                var currentTime = track?.CurrentTime;
-                track?.Stop();
+                var currentTime = Track?.CurrentTime;
+                Track?.Stop();
 
-                _RbPlayfield.HasFinished.UnbindEvents();
+                RbPlayfield.HasFinished.UnbindEvents();
 
-                cachedMap.Map = _map;
+                cachedMap.Map = map;
                 cachedMap.LoadTrackFile();
                 cachedMap.Seek(currentTime.GetValueOrDefault());
 
@@ -229,70 +233,56 @@ namespace RhythmBox.Window.Screens
 
             ReturntoSongSelectionAfterFail.ValueChanged += (e) =>
             {
-                cachedMap.Map = _map;
+                cachedMap.Map = map;
                 cachedMap.LoadTrackFile();
-                cachedMap.Seek(track.CurrentTime);
+                cachedMap.Seek(Track.CurrentTime);
 
                 Selection songSelction;
                 LoadComponent(songSelction = new Selection());
                 Schedule(() => this.Push(songSelction));
             };
 
-            _RbPlayfield.CanStart.ValueChanged += (e) =>
+            RbPlayfield.CanStart.ValueChanged += (e) =>
             {
                 if (e.NewValue) 
                     Load(1000);
             };
         }
 
-        protected override void LoadComplete()
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                Enum.TryParse(Gameini.Get<string>((SettingsConfig)i), out Key key);
-                keys[i] = key;
-            }
-
-            base.LoadComplete();
-        }
-
         private async void Load(int time)
         {
-            GameplayScreenLoader.StartRotating();
-            await Task.Delay(time);
-
-            GameplayScreenLoader.StopRotating();
-            Schedule(() => GameplayScreenLoader.FadeOut(time, Easing.In).Delay(time).Finally((action) =>
+            await gameplayScreenLoader.Rotate(time);
+            Schedule(() => gameplayScreenLoader.FadeOut(time, Easing.In).Delay(time).Finally((action) =>
             { 
-                GameplayScreenLoader.Expire();
-                RemoveInternal(GameplayScreenLoader);
+                gameplayScreenLoader.Expire();
+                RemoveInternal(gameplayScreenLoader);
                 
-                GameplayScreenLoader = null;
+                gameplayScreenLoader = null;
             }));
 
             await Task.Delay(time);
             GameStarted.Value = true;
 
             rhythmBoxClockContainer.Start();
-            track?.Start();
+            Track?.Start();
             
-            rhythmBoxClockContainer.Seek(_map.StartTime);
-            track?.Seek(_map.StartTime);
+            rhythmBoxClockContainer.Seek(map.StartTime);
+            Track?.Seek(map.StartTime);
             
-            if (!hpbar.Enabled.Value) return;
-            hpbar.Drain(false);
+            if (!Hpbar.Enabled.Value) return;
+            Hpbar.Drain(false);
         }
 
         protected override void Update()
         {
-            if (hpbar.Enabled.Value && hpbar.CurrentValue.Value <= 0)
+            if (Hpbar.Enabled.Value && Hpbar.CurrentValue.Value <= 0)
                 if (!HasFailed)
                     Fail();
 
-            DispayCombo.Text = DispayScore.Text = string.Empty;
+            dispayCombo.Text = dispayScore.Text = string.Empty;
 
-            DispayCombo.AddText($"{Score.Combo.ComboInt}x", x => x.Font = new FontUsage("Roboto", 40));
-            DispayScore.AddText(Score.Score.ScoreInt.ToString(), x => x.Font = new FontUsage("Roboto", 40));
+            dispayCombo.AddText($"{Score.Combo.ComboInt}x", x => x.Font = new FontUsage("Roboto", 40));
+            dispayScore.AddText(Score.Score.ScoreInt.ToString(), x => x.Font = new FontUsage("Roboto", 40));
 
             base.Update();
         }
@@ -300,7 +290,7 @@ namespace RhythmBox.Window.Screens
         private async void Fail()
         {
             HasFailed = true;
-            _RbPlayfield.Failed = true;
+            RbPlayfield.Failed = true;
 
             Box box;
 
@@ -314,7 +304,7 @@ namespace RhythmBox.Window.Screens
 
             box.FadeTo(0.7f, 500, Easing.In);
 
-            foreach (var x in this._RbPlayfield)
+            foreach (var x in this.RbPlayfield)
             {
                 if (x is DrawPlayfield playfield)
                 {
@@ -334,14 +324,14 @@ namespace RhythmBox.Window.Screens
 
             rhythmBoxClockContainer.StopWithDelay();
             
-            if (track == null)
+            if (Track == null)
                 return;
 
-            for (double i = track.Frequency.Value; i > 0; i -= 0.1d)
+            for (double i = Track.Frequency.Value; i > 0; i -= 0.1d)
             {
                 try
                 {
-                    track.Frequency.Value = i;
+                    Track.Frequency.Value = i;
                 }
                 catch { }
                 await Task.Delay(500);
@@ -355,22 +345,19 @@ namespace RhythmBox.Window.Screens
         {
             if (e.Key == Key.Escape)
             {
-                if (Resuming.Value)
+                if (resuming.Value && gameplayScreenLoader == null)
                 {
-                    if (GameplayScreenLoader == null)
-                    {
-                        Resuming.Value = false;
-                        rhythmBoxClockContainer.Stop();
+                    resuming.Value = false;
+                    rhythmBoxClockContainer.Stop();
                         
-                        track?.Stop(); 
-                        BreakOverlay.ToggleVisibility();
-                    }
+                    Track?.Stop(); 
+                    breakOverlay.ToggleVisibility();
                 }
 
                 if (HasFailed)
                     ReturntoSongSelectionAfterFail.Value = true;
 
-                _RbPlayfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
+                RbPlayfield.Clock = rhythmBoxClockContainer.RhythmBoxClock;
             }
 
             CheckKey(e.Key, true);
@@ -395,7 +382,7 @@ namespace RhythmBox.Window.Screens
             else
                 return;
 
-            KeyPress[i].FadeTo(Down ? 0.5f : 1f, 50);
+            keyPress[i].FadeTo(Down ? 0.5f : 1f, 50);
         }
         
         protected override bool OnScroll(ScrollEvent e)
@@ -426,7 +413,7 @@ namespace RhythmBox.Window.Screens
 
         public override void OnSuspending(IScreen next)
         {
-            track?.Stop();
+            Track?.Stop();
             Schedule(this.Exit);
 
             base.OnSuspending(next);
@@ -434,13 +421,13 @@ namespace RhythmBox.Window.Screens
 
         public override bool OnExiting(IScreen next)
         {
-            track?.Stop();
+            Track?.Stop();
             return base.OnExiting(next);
         }
 
         protected override void Dispose(bool isDisposing)
         {
-            track?.Stop();
+            Track?.Stop();
             base.Dispose(isDisposing);
         }
     }

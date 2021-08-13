@@ -6,7 +6,6 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Events;
-using osu.Framework.Localisation;
 using osu.Framework.Platform;
 using osu.Framework.Screens;
 using osuTK;
@@ -152,7 +151,7 @@ namespace RhythmBox.Window.Screens
             if (newUpdate)
             {
                 //TODO:
-                _overlay._text.Text = "A new update is available!                                      " +
+                _overlay.Text.Text = "A new update is available!                                      " +
                     "Do you want to install it now?";
 
                 box.Size = new Vector2(3f);

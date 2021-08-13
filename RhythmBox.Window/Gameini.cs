@@ -3,17 +3,17 @@ using osu.Framework.Platform;
 
 namespace RhythmBox.Window
 {
-    public class Gameini : IniConfigManager<SettingsConfig>
+    public sealed class Gameini : IniConfigManager<SettingsConfig>
     {
         protected override string Filename => @"game.ini";
 
         protected override void InitialiseDefaults()
         {
-            Set(SettingsConfig.KeyBindingUp, "W");
-            Set(SettingsConfig.KeyBindingDown, "S");
-            Set(SettingsConfig.KeyBindingLeft, "A");
-            Set(SettingsConfig.KeyBindingRight, "D");
-            Set(SettingsConfig.Volume, 0.5d, 0d, 1d, 0.25d);
+            SetDefault(SettingsConfig.KeyBindingUp, "W");
+            SetDefault(SettingsConfig.KeyBindingDown, "S");
+            SetDefault(SettingsConfig.KeyBindingLeft, "A");
+            SetDefault(SettingsConfig.KeyBindingRight, "D");
+            SetDefault(SettingsConfig.Volume, 0.5d, 0d, 1d, 0.25d);
         }
 
         public Gameini(Storage storage)

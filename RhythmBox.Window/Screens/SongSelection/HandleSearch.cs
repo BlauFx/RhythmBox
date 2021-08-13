@@ -9,7 +9,6 @@ using osu.Framework.Graphics.UserInterface;
 using osuTK;
 using osuTK.Graphics;
 using RhythmBox.Window.Maps;
-using RhythmBox.Window.Mode.Standard.Maps;
 
 namespace RhythmBox.Window.Screens.SongSelection
 {

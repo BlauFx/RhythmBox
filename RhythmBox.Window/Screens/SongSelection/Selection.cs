@@ -15,7 +15,6 @@ using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
 using RhythmBox.Window.Maps;
-using RhythmBox.Window.Mode.Standard.Maps;
 using RhythmBox.Window.Objects;
 using RhythmBox.Window.Overlays;
 

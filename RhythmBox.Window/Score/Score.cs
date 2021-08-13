@@ -1,4 +1,4 @@
-﻿using RhythmBox.Window.Mode.Standard.Animations;
+﻿using RhythmBox.Window.Animation;
 
 namespace RhythmBox.Window.Score
 {
@@ -6,14 +6,11 @@ namespace RhythmBox.Window.Score
     {
         public static int ScoreInt { get; private set; }
 
-        public static void ResetScore()
-        {
-            ScoreInt = 0;
-        }
+        public static void ResetScore() => ScoreInt = 0;
 
         public static void CalculateScore(int combo, Hit currentHit)
         {
-            int addAmout = currentHit switch
+            int addAmount = currentHit switch
             {
                 Hit.Hit300 => 300,
                 Hit.Hit100 => 100,
@@ -21,8 +18,8 @@ namespace RhythmBox.Window.Score
                 _ => 0,
             };
 
-            var CalcScore = (combo * addAmout);
-            ScoreInt += CalcScore;
+            var calcScore = (combo * addAmount);
+            ScoreInt += calcScore;
         }
     }
 }

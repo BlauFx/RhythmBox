@@ -4,22 +4,21 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using RhythmBox.Window.Interfaces;
 
-namespace RhythmBox.Window.Mode.Standard.Maps
+namespace RhythmBox.Window.Maps
 {
     public class Map : IMap, IEnumerable
     {
         public string AFileName { get; set; } = string.Empty;
 
-        public string BGFile { get; set; } = string.Empty;
+        public string BgFile { get; set; } = string.Empty;
 
         public int MapId { get; set; } = 0;
 
         public int MapSetId { get; set; } = 0;
 
         public int BPM { get; set; } = 0;
-
-        public GameMode Mode { get; set; } = GameMode.STD;
 
         public string Title { get; set; } = string.Empty;
 
@@ -69,11 +68,10 @@ namespace RhythmBox.Window.Mode.Standard.Maps
             if (version.Equals("v1", StringComparison.OrdinalIgnoreCase))
             {
                 AFileName = SearchAndCut<string>(list, "AFileName");
-                BGFile = SearchAndCut<string>(list, "BGFile");
+                BgFile = SearchAndCut<string>(list, "BGFile");
                 MapId =  SearchAndCut<int>(list, "MapId");
                 MapSetId = SearchAndCut<int>(list, "MapSetId");
                 BPM = SearchAndCut<int>(list, "BPM");
-                Mode = EnumParser<GameMode>(SearchAndCut<string>(list, "Mode"));
                 Title = SearchAndCut<string>(list, "Title");
                 Artist = SearchAndCut<string>(list, "Artist");
                 Creator = SearchAndCut<string>(list, "Creator");
@@ -103,7 +101,7 @@ namespace RhythmBox.Window.Mode.Standard.Maps
                 var dirIndex = list[i].IndexOf(".", StringComparison.Ordinal) + 1;
                 var dirStr = list[i][dirIndex..index];
 
-                var dir = EnumParser<HitObject.Direction>(dirStr);
+                var dir = EnumParser<HitObject.DirectionEnum>(dirStr);
                 objs.Add(new HitObject(dir, time, speed));
             }
 
@@ -144,11 +142,10 @@ namespace RhythmBox.Window.Mode.Standard.Maps
             {
                 "v1\n",
                 $"AFileName: {AFileName}",
-                $"BGFile: {BGFile}\n",
+                $"BGFile: {BgFile}\n",
                 $"MapId: {MapId.ToString()}",
                 $"MapSetId: {MapSetId.ToString()}\n",
                 $"BPM: {BPM.ToString()}\n",
-                $"Mode: {Mode.ToString()}",
                 $"Title: {Title}",
                 $"Artist: {Artist}",
                 $"Creator: {Creator}",
@@ -212,7 +209,7 @@ namespace RhythmBox.Window.Mode.Standard.Maps
             using var streamWriter = new StreamWriter(path, true);
 
             foreach (var obj in hitObjects)
-                streamWriter.WriteLine($"{obj._direction}, {obj.Time}, {obj.Speed}f");
+                streamWriter.WriteLine($"{obj.Direction}, {obj.Time}, {obj.Speed}f");
         }
 
         private void WriteToFile(string path, IEnumerable<string> list)
@@ -221,20 +218,6 @@ namespace RhythmBox.Window.Mode.Standard.Maps
 
             foreach (var @object in list)
                 strm.WriteLine(@object);
-        }
-    }
-
-    //https://stackoverflow.com/a/36713403
-    public static class ext
-    {
-        public static void CopyAllTo<T>(this T source, T target)
-        {
-            var type = typeof(T);
-            foreach (var sourceProperty in type.GetProperties())
-            {
-                var targetProperty = type.GetProperty(sourceProperty.Name);
-                targetProperty?.SetValue(target, sourceProperty.GetValue(source, null), null);
-            }
         }
     }
 }

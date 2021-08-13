@@ -12,8 +12,9 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using osuTK;
 using osuTK.Input;
-using RhythmBox.Window.Mode.Standard.Maps;
-using RhythmBox.Window.Mode.Standard.Mods;
+using RhythmBox.Window.Interfaces;
+using RhythmBox.Window.Maps;
+using RhythmBox.Window.Mods;
 
 namespace RhythmBox.Tests.VisualTests.Gameplay
 {
@@ -60,7 +61,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
             AddStep("Fail", Fail);
             AddStep("Remove GameplayScreen", () =>
             {
-                _gameplayScreen?.track?.Stop();
+                _gameplayScreen?.Track?.Stop();
                 _gameplayScreen?.Expire();
             });
         }
@@ -83,18 +84,18 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
             {
                 if (!e.NewValue) return;
                 
-                var timings = _gameplayScreen._RbPlayfield.objectList;
+                var timings = _gameplayScreen.RbPlayfield.objectList;
                 
-                Scheduler.UpdateClock(_gameplayScreen._RbPlayfield.Clock);
+                Scheduler.UpdateClock(_gameplayScreen.RbPlayfield.Clock);
                 
                 for (int i = 0; i < timings.Count; i++)
                 {
-                    Key? key = timings[i].Item1.direction switch
+                    Key? key = timings[i].Item1.Direction switch
                     {
-                        HitObject.Direction.Up => keys[0],
-                        HitObject.Direction.Left => keys[1],
-                        HitObject.Direction.Down => keys[2],
-                        HitObject.Direction.Right => keys[3],
+                        HitObject.DirectionEnum.Up => keys[0],
+                        HitObject.DirectionEnum.Left => keys[1],
+                        HitObject.DirectionEnum.Down => keys[2],
+                        HitObject.DirectionEnum.Right => keys[3],
                         _ => null
                     };
                     
@@ -140,7 +141,7 @@ namespace RhythmBox.Tests.VisualTests.Gameplay
             if (_gameplayScreen is null)
                 return;
 
-            this._gameplayScreen.hpbar.CurrentValue.Value = 0;
+            this._gameplayScreen.Hpbar.CurrentValue.Value = 0;
         }
     }
 }

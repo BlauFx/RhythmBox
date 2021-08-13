@@ -7,7 +7,7 @@ namespace RhythmBox.Tests
     class Program
     {
         [STAThread]
-        static void Main(string[] args)
+        static void Main()
         {
             using GameHost host = Host.GetSuitableHost(@"RhythmBox", false, true);
             using Game game = new Tests();

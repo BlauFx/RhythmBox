@@ -16,13 +16,13 @@ namespace RhythmBox.Window.Objects
         /// <summary>
         /// This is the growth factor of the value e.g => min 0, max 100, start 70 than bindableValue would be 0.7
         /// </summary>
-        public Bindable<T> bindableValue { get; private set; } = new Bindable<T>();
+        public Bindable<T> bindableValue { get; } = new();
 
-        protected const int Multiplier = 1;
+        private const int Multiplier = 1;
 
-        public BindableFloat BoxWidth { get; private set; } = new BindableFloat(1);
+        public BindableFloat BoxWidth { get; private set; } = new(1);
 
-        public bool CurrentlyDragging { get; set; } = false;
+        public bool CurrentlyDragging { get; private set; }
 
         public Progress(T MinValue, T MaxValue, T StartValue)
         {

@@ -3,7 +3,7 @@ using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Testing;
 using System.Threading.Tasks;
-using RhythmBox.Window.Mode.Standard.Animations;
+using RhythmBox.Window.Animation;
 
 namespace RhythmBox.Tests.VisualTests.Animations
 {

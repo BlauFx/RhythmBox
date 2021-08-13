@@ -11,7 +11,7 @@ namespace RhythmBox.Tests
     public class Tests : RhythmBoxResources
     {
         [BackgroundDependencyLoader]
-        private void load()
+        private void Load()
         {
             Child = new DrawSizePreservingFillContainer
             {

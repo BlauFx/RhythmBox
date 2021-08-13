@@ -14,9 +14,9 @@ namespace RhythmBox.Window.Overlays
 {
     public class NotificationOverlay : OverlayContainer
     {
-        private Box _box;
+        private Box box;
 
-        public SpriteText _text { get; set; }
+        public SpriteText Text { get; set; }
 
         private const float Duration = 1000;
 
@@ -44,7 +44,7 @@ namespace RhythmBox.Window.Overlays
                     Colour = Color4.Black.Opacity(1f),
                     Alpha = 1f,
                 },
-                _box = new Box
+                box = new Box
                 {
                     Depth = float.MaxValue - 1,
                     RelativePositionAxes = Axes.Both,
@@ -68,7 +68,7 @@ namespace RhythmBox.Window.Overlays
                         this.State.Value = Visibility.Hidden;
                     },
                 },
-                _text = new SpriteText
+                Text = new SpriteText
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
@@ -150,14 +150,14 @@ namespace RhythmBox.Window.Overlays
             this.MoveTo(new Vector2(0f, -0.1f), 0, Easing.None);
             this.MoveToOffset(new Vector2(0, 0.1f), Duration, Easing.InOutQuint);
             this.FadeInFromZero(Duration, Easing.InOutQuint);
-            _box.FadeInFromZero(Duration, Easing.InOutQuint);
+            box.FadeInFromZero(Duration, Easing.InOutQuint);
         }
 
         protected override void PopOut()
         {
             this.MoveToOffset(new Vector2(0, -0.1f), Duration, Easing.InOutQuint);
             this.FadeOutFromOne(Duration, Easing.InOutQuint);
-            _box.FadeOutFromOne(Duration, Easing.InOutQuint);
+            box.FadeOutFromOne(Duration, Easing.InOutQuint);
         }
 
         public enum TypeOfOverlay

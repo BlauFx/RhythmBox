@@ -14,19 +14,19 @@ namespace RhythmBox.Window.Objects
 {
     public class Checkbox : CircularContainer
     {
-        protected Box Flash;
-        public Action ClickAction;
-        public string Texture = string.Empty;
-        public Sprite sp;
+        private Box flash;
+        private Action clickAction;
+        private readonly string texture = string.Empty;
+        private Sprite sprite;
 
-        public Texture sptex;
-        private bool running = false;
+        private Texture spriteTexture;
+        private bool running ;
 
         [BackgroundDependencyLoader]
         private void Load(TextureStore store)
         {
             Masking = true;
-            Flash = new Box
+            flash = new Box
             {
                 Depth = -1,
                 RelativeSizeAxes = Axes.Both,
@@ -76,50 +76,46 @@ namespace RhythmBox.Window.Objects
                             Colour = Color4.Black,
                             Alpha = 0.925F
                         },
-                        sp = new Sprite
+                        sprite = new Sprite
                         {
                             Size = new Vector2(0.7F),
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
                             RelativeSizeAxes = Axes.Both,
                             Alpha = 1F,
-                            Texture = store.Get("Game/" + Texture),
+                            Texture = store.Get("Game/" + texture),
                            // Size = new Vector2(25),
                         }
                     }
                 },
-                Flash
+                flash
             };
-            sptex = store.Get("Game/" + Texture); //f optimize this
+            spriteTexture = store.Get("Game/" + texture); //f optimize this
         }
 
         protected override bool OnMouseDown(MouseDownEvent e)
         {
-            Logger.Log("MouseButton: " + e.Button.ToString(), LoggingTarget.Information, LogLevel.Debug);
+            Logger.Log("MouseButton: " + e.Button, LoggingTarget.Information, LogLevel.Debug);
             return base.OnMouseDown(e);
         }
         protected override bool OnClick(ClickEvent e)
         {
-            if (sp.Texture == sptex && running == false)
+            if (sprite.Texture == spriteTexture && running == false)
             {
                 running = true;
-                sp.FadeOutFromOne(100, Easing.Out);
-                Scheduler.AddDelayed(() => sp.Texture = null, 101);
+                sprite.FadeOutFromOne(100, Easing.Out);
+                Scheduler.AddDelayed(() => sprite.Texture = null, 101);
             }
             else if (running == false)
             {
                     running = true;
-                    sp.Texture = sptex;
-                    sp.FadeInFromZero(131, Easing.In);
+                    sprite.Texture = spriteTexture;
+                    sprite.FadeInFromZero(131, Easing.In);
             }
 
-            if (ClickAction != null)
-            {
-                ClickAction.Invoke();
-            }
+            clickAction?.Invoke();
 
             running = false;
-
             return base.OnClick(e);
         }
     }

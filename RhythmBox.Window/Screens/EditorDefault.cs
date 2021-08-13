@@ -16,7 +16,8 @@ using RhythmBox.Window.Objects;
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using RhythmBox.Window.Mode.Standard.Maps;
+using RhythmBox.Window.Interfaces;
+using RhythmBox.Window.Maps;
 
 namespace RhythmBox.Window.Screens
 {
@@ -270,10 +271,10 @@ namespace RhythmBox.Window.Screens
                         {
                             int i = playfield.dir.Value switch
                             {
-                                HitObject.Direction.Left => 0,
-                                HitObject.Direction.Down => 1,
-                                HitObject.Direction.Up => 2,
-                                HitObject.Direction.Right => 3,
+                                HitObject.DirectionEnum.Left => 0,
+                                HitObject.DirectionEnum.Down => 1,
+                                HitObject.DirectionEnum.Up => 2,
+                                HitObject.DirectionEnum.Right => 3,
                                 _ => 4,
                             };
 

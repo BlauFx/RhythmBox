@@ -13,16 +13,16 @@ namespace RhythmBox.Tests.VisualTests.Screens
     [TestFixture]
     public class TestSceneSettings : TestScene
     {
-        private ScreenStack _stack = null;
+        private ScreenStack stack = null;
 
         [BackgroundDependencyLoader]
         private void Load()
         {
             AddStep("Add Settings", () =>
             {
-                if (_stack?.IsAlive ?? false) return;
+                if (stack?.IsAlive ?? false) return;
 
-                Add(_stack = new ScreenStack
+                Add(stack = new ScreenStack
                 {
                     RelativeSizeAxes = Axes.Both,
                 });
@@ -34,12 +34,12 @@ namespace RhythmBox.Tests.VisualTests.Screens
                     RelativeSizeAxes = Axes.Both,
                     Scale = new Vector2(1f),
                     Alpha = 0f,
-                }, _stack.Push);
+                }, stack.Push);
             });
 
             AddStep("Remove Settings", () =>
             {
-                this._stack?.Expire();
+                this.stack?.Expire();
             });
         }
     }

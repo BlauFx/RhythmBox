@@ -9,41 +9,40 @@ using osu.Framework.Graphics.Shapes;
 using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
-using RhythmBox.Window.Mode.Standard.Animations;
-using RhythmBox.Window.Mode.Standard.Maps;
-using RhythmBox.Window.Mode.Standard.Mods;
-using RhythmBox.Window.Mode.Standard.Mods.Interfaces;
+using RhythmBox.Window.Animation;
+using RhythmBox.Window.Interfaces;
+using RhythmBox.Window.Mods;
 using RhythmBox.Window.Score;
 
-namespace RhythmBox.Window.Mode.Standard.Objects
+namespace RhythmBox.Window.Objects
 {
     public class HitBox : Container
     {
-        public HitObject.Direction direction { get; }
+        public HitObject.DirectionEnum Direction { get; }
 
         public Box bx;
         
-        public BindableBool Resuming { get; set; } = new BindableBool();
+        public BindableBool Resuming { get; set; } = new();
 
-        public List<Mod> mods { get; set; }
+        public List<Mod> Mods { get; init; }
 
         public double Duration { get; }
 
         private readonly Key[] keys;
         
-        private double Expire { get; }
+        private new double Expire { get; }
 
         private new double Clear { get; }
         
-        private HitAnimation hitAnimation { get; set; } = null;
+        private HitAnimation hitAnimation { get; set; }
 
-        private bool Clicked = false;
+        private bool clicked;
         
-        private bool alreadyRun = false;
+        private bool alreadyRun;
         
-        public HitBox(HitObject.Direction direction, double duration, Key[] keys)
+        public HitBox(HitObject.DirectionEnum direction, double duration, Key[] keys)
         {
-            this.direction = direction;
+            this.Direction = direction;
             this.Duration = duration;
 
             this.Expire = duration * 0.3d;
@@ -69,34 +68,34 @@ namespace RhythmBox.Window.Mode.Standard.Objects
             bx.MoveToY(0f, 0, Easing.InCirc);
             bx.FadeInFromZero(Duration * 0.2, Easing.None);
 
-            Vector2 resizeAmount = direction switch
+            Vector2 resizeAmount = Direction switch
             {
-                HitObject.Direction.Up => new Vector2(1f, 0.05f),
-                HitObject.Direction.Down => new Vector2(1f, 0.05f),
-                HitObject.Direction.Left => new Vector2(0.056f, 1f),
-                HitObject.Direction.Right => new Vector2(0.056f, 1f),
+                HitObject.DirectionEnum.Up => new Vector2(1f, 0.05f),
+                HitObject.DirectionEnum.Down => new Vector2(1f, 0.05f),
+                HitObject.DirectionEnum.Left => new Vector2(0.056f, 1f),
+                HitObject.DirectionEnum.Right => new Vector2(0.056f, 1f),
                 _ => throw new Exception()
             };
 
             Easing easing = Easing.InCirc; //TODO: Easing.InExpo;
 
-            switch (direction)
+            switch (Direction)
             {
-                case HitObject.Direction.Up:
+                case HitObject.DirectionEnum.Up:
                     bx.MoveToY(-0.5f, Duration, easing);
                     break;
-                case HitObject.Direction.Down:
+                case HitObject.DirectionEnum.Down:
                     bx.Rotation = 180f;
                     bx.MoveToY(0.5f, Duration, easing);
                     
                     break;
-                case HitObject.Direction.Left:
+                case HitObject.DirectionEnum.Left:
                     bx.Origin = Anchor.CentreLeft;
                     bx.Size = new Vector2(0.01f, 0.1f);
 
                     bx.MoveToX(-0.5f, Duration, easing);
                     break;
-                case HitObject.Direction.Right:
+                case HitObject.DirectionEnum.Right:
                     bx.Origin = Anchor.CentreRight;
                     bx.Size = new Vector2(0.01f, 0.1f);
                     bx.MoveToX(0.5f, Duration, easing);
@@ -111,7 +110,7 @@ namespace RhythmBox.Window.Mode.Standard.Objects
 
         protected override void LoadComplete()
         {
-            ApplyMods(mods);
+            ApplyMods(Mods);
             base.LoadComplete();
         }
 
@@ -141,7 +140,7 @@ namespace RhythmBox.Window.Mode.Standard.Objects
             bx.FadeOut(this.Clear);
             bx.ScaleTo(1.1f, this.Clear, Easing.OutCirc); //TODO: InSine
 
-            if (hitAnimation == null || !Clicked)
+            if (hitAnimation == null || !clicked)
             {
                 Click(Hit.Hitx);
                 Add(hitAnimation = HitAnimation(Hit.Hitx));
@@ -154,9 +153,9 @@ namespace RhythmBox.Window.Mode.Standard.Objects
         public void ClickKeyDown(Key key)
         {
             if (!Resuming.Value) return;
-            Clicked = true;
+            clicked = true;
 
-            if (key == keys[0] && direction == HitObject.Direction.Up)
+            if (key == keys[0] && Direction == HitObject.DirectionEnum.Up)
             {
                 Hit? condition = bx.Y switch
                 {
@@ -175,7 +174,7 @@ namespace RhythmBox.Window.Mode.Standard.Objects
 
                 Remove();
             }
-            else if (key == keys[1] && direction == HitObject.Direction.Left)
+            else if (key == keys[1] && Direction == HitObject.DirectionEnum.Left)
             {
                 Hit? condition = bx.X switch
                 {
@@ -194,7 +193,7 @@ namespace RhythmBox.Window.Mode.Standard.Objects
 
                 Remove();
             }
-            else if (key == keys[2] && direction == HitObject.Direction.Down)
+            else if (key == keys[2] && Direction == HitObject.DirectionEnum.Down)
             {
                 Hit? condition = bx.Y switch
                 {
@@ -213,7 +212,7 @@ namespace RhythmBox.Window.Mode.Standard.Objects
             
                 Remove();
             }
-            else if (key == keys[3] && direction == HitObject.Direction.Right)
+            else if (key == keys[3] && Direction == HitObject.DirectionEnum.Right)
             {
                 Hit? condition = bx.X switch
                 {
@@ -237,7 +236,7 @@ namespace RhythmBox.Window.Mode.Standard.Objects
         private void Click(Hit hit) => Combo.UpdateCombo(hit);
 
         private HitAnimation HitAnimation(Hit hit, float Y = float.NaN, float X = float.NaN) 
-            => new HitAnimation(hit)
+            => new(hit)
             {
                 Depth = float.MinValue,
                 Anchor = Anchor.Centre,

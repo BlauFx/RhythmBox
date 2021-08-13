@@ -8,10 +8,11 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Events;
 using osuTK;
 using osuTK.Input;
-using RhythmBox.Window.Mode.Standard.Animations;
-using RhythmBox.Window.Mode.Standard.Maps;
-using RhythmBox.Window.Mode.Standard.Mods;
-using RhythmBox.Window.Mode.Standard.Objects;
+using RhythmBox.Window.Animation;
+using RhythmBox.Window.Interfaces;
+using RhythmBox.Window.Maps;
+using RhythmBox.Window.Mods;
+using RhythmBox.Window.Objects;
 
 namespace RhythmBox.Window.Screens.Playfield
 {
@@ -38,7 +39,7 @@ namespace RhythmBox.Window.Screens.Playfield
 
         public Action BoxAction2 { get; set; }
 
-        public Bindable<HitObject.Direction> dir { get; } = new Bindable<HitObject.Direction>(HitObject.Direction.Up);
+        public Bindable<HitObject.DirectionEnum> dir { get; } = new Bindable<HitObject.DirectionEnum>(HitObject.DirectionEnum.Up);
 
         public List<Tuple<HitBox, double>> objectList { get; } = new List<Tuple<HitBox, double>>();
 
@@ -108,19 +109,19 @@ namespace RhythmBox.Window.Screens.Playfield
             }
         }
 
-        private Tuple<HitObject.Direction?, int> GetNextObjDir(Key key)
+        private Tuple<HitObject.DirectionEnum?, int> GetNextObjDir(Key key)
         {
-            Tuple<HitObject.Direction?, int> direction = null;
+            Tuple<HitObject.DirectionEnum?, int> direction = null;
 
             for (int i = 0; i < objectList.Count; i++)
             {
-                var x = objectList[i].Item1.direction;
+                var x = objectList[i].Item1.Direction;
 
                 if (objectList[i].Item1 != null && objectList[i].Item1.Alpha > 0 && objectList[i].Item1.IsAlive)
                 {
-                    if (key == keys[0] && x == HitObject.Direction.Up || key == keys[1] && x == HitObject.Direction.Left || key == keys[2] && x == HitObject.Direction.Down || key == keys[3] && x == HitObject.Direction.Right)
+                    if (key == keys[0] && x == HitObject.DirectionEnum.Up || key == keys[1] && x == HitObject.DirectionEnum.Left || key == keys[2] && x == HitObject.DirectionEnum.Down || key == keys[3] && x == HitObject.DirectionEnum.Right)
                     {
-                        direction = new Tuple<HitObject.Direction?, int>(x, i);
+                        direction = new Tuple<HitObject.DirectionEnum?, int>(x, i);
                         break;
                     }
                 }
@@ -134,7 +135,7 @@ namespace RhythmBox.Window.Screens.Playfield
             if (objectList.Count <= 0) 
                 return null;
             
-            var obj = objectList.FirstOrDefault(x => x.Item1 != null && x.Item1.IsPresent && x.Item1.IsAlive && (key == keys[0] && x.Item1.direction == HitObject.Direction.Up || key == keys[1] && x.Item1.direction == HitObject.Direction.Left || key == keys[2] &&  x.Item1.direction == HitObject.Direction.Down || key == keys[3] &&  x.Item1.direction == HitObject.Direction.Right));
+            var obj = objectList.FirstOrDefault(x => x.Item1 != null && x.Item1.IsPresent && x.Item1.IsAlive && (key == keys[0] && x.Item1.Direction == HitObject.DirectionEnum.Up || key == keys[1] && x.Item1.Direction == HitObject.DirectionEnum.Left || key == keys[2] &&  x.Item1.Direction == HitObject.DirectionEnum.Down || key == keys[3] &&  x.Item1.Direction == HitObject.DirectionEnum.Right));
             return obj;
         }
 
@@ -176,14 +177,14 @@ namespace RhythmBox.Window.Screens.Playfield
 
                 var duration = objBox.Speed * 1000f;
 
-                objectList.Add(new Tuple<HitBox, double>(new HitBox(objBox._direction, duration, keys)
+                objectList.Add(new Tuple<HitBox, double>(new HitBox(objBox.Direction, duration, keys)
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(1f),
                     Resuming = Resuming,
-                    mods = mods,
+                    Mods = mods,
                 }, objBox.Time));
             }
 

@@ -1,12 +1,12 @@
 ﻿using osuTK.Graphics;
-using RhythmBox.Window.Mode.Standard.Mods.Interfaces;
-using RhythmBox.Window.Mode.Standard.Objects;
+using RhythmBox.Window.Interfaces;
+using RhythmBox.Window.Objects;
 
-namespace RhythmBox.Window.Mode.Standard.Mods
+namespace RhythmBox.Window.Mods
 {
     public class DummyMod : Mod, IApplyToHitobject
     {
-        public override string NAME => "DummyMod";
+        public override string Name => "DummyMod";
 
         public override string SkinElement => "DummyMod";
 

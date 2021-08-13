@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using RhythmBox.Window.Maps;
-using RhythmBox.Window.Mode.Standard.Maps;
 
 namespace RhythmBox.Window
 {

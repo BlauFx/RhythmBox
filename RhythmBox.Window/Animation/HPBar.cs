@@ -7,10 +7,10 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osuTK;
-using RhythmBox.Window.Mode.Standard.Mods;
-using RhythmBox.Window.Mode.Standard.Mods.Interfaces;
+using RhythmBox.Window.Interfaces;
+using RhythmBox.Window.Mods;
 
-namespace RhythmBox.Window.Mode.Standard.Animations
+namespace RhythmBox.Window.Animation
 {
     public class HPBar : Container
     {

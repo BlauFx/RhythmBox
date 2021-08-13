@@ -6,7 +6,7 @@ namespace RhythmBox.Desktop
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             using GameHost host = Host.GetSuitableHost(@"RhythmBox", false, true);
             using Game game = new RhythmBoxWindow();

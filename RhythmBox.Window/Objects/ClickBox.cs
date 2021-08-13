@@ -4,7 +4,8 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
 using osuTK.Input;
 using System;
-using RhythmBox.Window.Mode.Standard.Maps;
+using RhythmBox.Window.Interfaces;
+using RhythmBox.Window.Maps;
 
 namespace RhythmBox.Window.Objects
 {
@@ -16,9 +17,9 @@ namespace RhythmBox.Window.Objects
 
         public bool EditorMode2 { get; set; } = false;
 
-        public HitObject.Direction dir { get; set; }
+        public HitObject.DirectionEnum dir { get; set; }
 
-        public Bindable<HitObject.Direction> ChangeDir { get; set; }
+        public Bindable<HitObject.DirectionEnum> ChangeDir { get; set; }
 
         public Action BoxAction { get; set; }
 

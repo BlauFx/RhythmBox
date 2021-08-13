@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -11,13 +12,9 @@ namespace RhythmBox.Window
 {
     public class GameplayScreenLoader : CompositeDrawable
     {
-        private Sprite boxLoading;
-
-        private const double Duration = 1000;
-
         [BackgroundDependencyLoader]
         private void Load(TextureStore store)
-            => InternalChild = boxLoading = new Sprite
+            => InternalChild = new Sprite
             {
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
@@ -25,17 +22,24 @@ namespace RhythmBox.Window
                 Texture = store.Get("Skin/LoadingCircle"),
             };
 
-        public void StartRotating() => boxLoading.RotateTo(0f).RotateTo(360f, 1000).Loop();
+        public async Task Rotate(int milliseconds)
+        {
+            StartRotating();
+            await Task.Delay(milliseconds);
+            StopRotating();
+        }
+        
+        public void StartRotating() => InternalChild.RotateTo(0f).RotateTo(360f, 1000).Loop();
 
         public void StopRotating()
         {
             try
             {
-                Schedule(() => boxLoading.ClearTransforms(false, "Rotation"));
+                Schedule(() => InternalChild.ClearTransforms(false, "Rotation"));
             }
             catch (Exception e)
             {
-                boxLoading.Alpha = 0;
+                InternalChild.Alpha = 0;
                 Logger.Log($"{e.Message}", LoggingTarget.Runtime, LogLevel.Error);
             }
         }

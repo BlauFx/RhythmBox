@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using RhythmBox.Window.Mode.Standard.Maps;
 
 namespace RhythmBox.Window
 {

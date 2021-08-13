@@ -5,7 +5,7 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osuTK;
 
-namespace RhythmBox.Window.Mode.Standard.Animations
+namespace RhythmBox.Window.Animation
 {
     public class HitAnimation : Container
     {

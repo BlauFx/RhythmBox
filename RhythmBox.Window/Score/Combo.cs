@@ -1,33 +1,26 @@
 ﻿using osu.Framework.Bindables;
-using RhythmBox.Window.Mode.Standard.Animations;
+using RhythmBox.Window.Animation;
 
 namespace RhythmBox.Window.Score
 {
     public static class Combo
     {
-        public static BindableInt PrivateComboBindable = new BindableInt(0);
+        public static Hit CurrentHit { get; private set; }
 
-        public static Hit currentHit { get; private set; }
+        public static BindableInt ComboInt { get; private set; } = new();
 
-        public static int ComboInt { get; private set; }
-
-        public static void ResetCombo()
-        {
-            ComboInt = 0;
-            PrivateComboBindable.Value = ComboInt;
-        }
+        public static void ResetCombo() => ComboInt.Value = 0;
 
         public static void UpdateCombo(Hit hit)
         {
-            currentHit = hit;
+            CurrentHit = hit;
 
             if (hit == Hit.Hitx)
-                ComboInt = 0;
+                ComboInt.Value = 0;
             else
-                ComboInt++;
+                ComboInt.Value++;
 
-            PrivateComboBindable.Value = ComboInt;
-            Score.CalculateScore(ComboInt, hit);
+            Score.CalculateScore(ComboInt.Value, hit);
         }
     }
 }

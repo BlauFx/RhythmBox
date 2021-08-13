@@ -11,7 +11,7 @@ using osuTK.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using RhythmBox.Window.Mode.Standard.Mods;
+using RhythmBox.Window.Mods;
 
 namespace RhythmBox.Window.Objects
 {

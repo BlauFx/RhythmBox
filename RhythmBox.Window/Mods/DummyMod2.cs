@@ -1,13 +1,13 @@
 ﻿using osu.Framework.Extensions.Color4Extensions;
 using osuTK.Graphics;
-using RhythmBox.Window.Mode.Standard.Mods.Interfaces;
-using RhythmBox.Window.Mode.Standard.Objects;
+using RhythmBox.Window.Interfaces;
+using RhythmBox.Window.Objects;
 
-namespace RhythmBox.Window.Mode.Standard.Mods
+namespace RhythmBox.Window.Mods
 {
     public class DummyMod2 : Mod, IApplyToHitobject
     {
-        public override string NAME => "DummyMod2";
+        public override string Name => "DummyMod2";
 
         public override string SkinElement => "DummyMod2";
 

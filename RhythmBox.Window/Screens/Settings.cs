@@ -145,22 +145,17 @@ namespace RhythmBox.Window.Screens
                     return base.OnKeyDown(e);
                 }
 
-                _ = CurrentKey switch
+                var settingsconfig = CurrentKey switch
                 {
-                    0 => gameini.Set<string>(SettingsConfig.KeyBindingUp, e.Key.ToString()),
-                    1 => gameini.Set<string>(SettingsConfig.KeyBindingLeft, e.Key.ToString()),
-                    2 => gameini.Set<string>(SettingsConfig.KeyBindingDown, e.Key.ToString()),
-                    3 => gameini.Set<string>(SettingsConfig.KeyBindingRight, e.Key.ToString()),
+                    0 => SettingsConfig.KeyBindingUp,
+                    1 => SettingsConfig.KeyBindingLeft,
+                    2 => SettingsConfig.KeyBindingDown,
+                    3 => SettingsConfig.KeyBindingRight,
                     _ => throw new Exception($"CurrentKey cannot be {CurrentKey}")
                 };
-
-                key[0].Text = $"{gameini.GetBindable<string>(SettingsConfig.KeyBindingUp).Value}";
-                key[1].Text = $"{gameini.GetBindable<string>(SettingsConfig.KeyBindingLeft).Value}";
-                key[2].Text = $"{gameini.GetBindable<string>(SettingsConfig.KeyBindingDown).Value}";
-                key[3].Text = $"{gameini.GetBindable<string>(SettingsConfig.KeyBindingRight).Value}";
-
+                
+                gameini.SetValue<string>(settingsconfig, e.Key.ToString());
                 focusedOverlayContainer.State.Value = osu.Framework.Graphics.Containers.Visibility.Hidden;
-
                 gameini.Save();
             }
 
@@ -184,7 +179,7 @@ namespace RhythmBox.Window.Screens
         }
 
         private SpriteText GetSprite(float XPos, float YPos, string text) =>
-            new SpriteText
+            new()
             {
                 Depth = -1,
                 Anchor = Anchor.CentreLeft,
@@ -197,7 +192,7 @@ namespace RhythmBox.Window.Screens
             };
 
         private ClickBox GetClickBox(float XPos, float YPos, int currentKey) =>
-            new ClickBox
+            new()
             {
                 Anchor = Anchor.CentreLeft,
                 Origin = Anchor.CentreLeft,

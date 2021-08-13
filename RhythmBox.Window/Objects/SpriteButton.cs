@@ -12,9 +12,7 @@ namespace RhythmBox.Window.Objects
         protected override bool OnMouseDown(MouseDownEvent e)
         {
             if (e.Button == MouseButton.Left)
-            {
                 ClickAction?.Invoke();
-            }
             
             return base.OnMouseDown(e);
         }

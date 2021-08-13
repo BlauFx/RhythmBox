@@ -106,7 +106,7 @@ namespace RhythmBox.Window.Animation
                     volValue = volValue != 0d ? volValue - 0.25d : volValue;
                 }
 
-                gameini.Set(SettingsConfig.Volume, volValue);
+                gameini.SetValue(SettingsConfig.Volume, volValue);
                 gameini.Save();
 
                 ITrack?.Value?.Volume?.Set(volValue);
