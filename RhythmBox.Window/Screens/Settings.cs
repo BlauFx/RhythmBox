@@ -13,19 +13,22 @@ using osuTK.Input;
 using RhythmBox.Window.Objects;
 using RhythmBox.Window.Overlays;
 using System;
+using RhythmBox.Window.Animation;
 using RhythmBox.Window.Maps;
 
 namespace RhythmBox.Window.Screens
 {
     public class Settings : Screen
     {
-        private SpriteText[] key = new SpriteText[4];
+        private readonly SpriteText[] key = new SpriteText[4];
 
         private RBfocusedOverlayContainer focusedOverlayContainer;
 
-        private bool OverlayActive = false;
+        private bool overlayActive;
 
-        private int CurrentKey;
+        private SettingsConfig lookupKey;
+
+        private Volume volume;
 
         [Resolved] 
         private Gameini gameini { get; set; }
@@ -38,18 +41,26 @@ namespace RhythmBox.Window.Screens
         {
             cachedMap.Play();
 
-            var sliderBarValue = new BindableDouble(cachedMap.BindableTrack.Value?.Volume.Value ?? gameini.Get<double>(SettingsConfig.Volume)) { MinValue = 0, MaxValue = 1, Precision = 0.25d };
-            sliderBarValue.ValueChanged += (e) =>
+            var sliderBarValue = (BindableDouble)gameini.GetBindable<double>(SettingsConfig.Volume);
+            sliderBarValue.ValueChanged += e =>
             {
                 if (cachedMap.BindableTrack.Value != null)
                     cachedMap.BindableTrack.Value.Volume.Value = e.NewValue;
-
-                gameini.GetBindable<double>(SettingsConfig.Volume).Value = e.NewValue;
-                gameini.Save();
             };
 
             InternalChildren = new Drawable[]
             {
+                volume = new Volume(cachedMap.BindableTrack)
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    RelativePositionAxes = Axes.Both,
+                    Size = new Vector2(1f, 0.3f),
+                    X = 0.4f,
+                    Y = 0.2f,
+                    Alpha = 0f,
+                },
                 focusedOverlayContainer = new RBfocusedOverlayContainer(Color4.Black.Opacity(0.9f), true)
                 {
                     Depth = float.MinValue,
@@ -105,10 +116,10 @@ namespace RhythmBox.Window.Screens
                 key[1] = GetSprite(0.14f, 0.03f, $"{gameini.GetBindable<string>(SettingsConfig.KeyBindingLeft).Value}"),
                 key[2] = GetSprite(0.23f, 0.03f, $"{gameini.GetBindable<string>(SettingsConfig.KeyBindingDown).Value}"),
                 key[3] = GetSprite(0.32f, 0.03f, $"{gameini.GetBindable<string>(SettingsConfig.KeyBindingRight).Value}"),
-                GetClickBox(0.01f, 0.03f, 0),
-                GetClickBox(0.1f, 0.03f, 1),
-                GetClickBox(0.19f, 0.03f, 2),
-                GetClickBox(0.28f, 0.03f, 3),
+                GetClickBox(0.01f, 0.03f, SettingsConfig.KeyBindingUp),
+                GetClickBox(0.1f, 0.03f, SettingsConfig.KeyBindingLeft),
+                GetClickBox(0.19f, 0.03f, SettingsConfig.KeyBindingDown),
+                GetClickBox(0.28f, 0.03f, SettingsConfig.KeyBindingRight),
                 new BasicSliderBar<double>
                 {
                     Anchor = Anchor.CentreLeft,
@@ -135,47 +146,41 @@ namespace RhythmBox.Window.Screens
                 else
                     this.Exit();
             }
-            else if (OverlayActive)
+            else if (overlayActive)
             {
-                OverlayActive = false;
+                overlayActive = false;
 
-                if (CheckIfAlreadyInUse(e.Key))
+                for (var i = 0; i < 3; i++)
                 {
+                    var x = gameini.Get<string>((SettingsConfig)i);
+                    if (!string.Equals(x, e.Key.ToString(), StringComparison.OrdinalIgnoreCase))
+                        continue;
                     focusedOverlayContainer.State.Value = osu.Framework.Graphics.Containers.Visibility.Hidden;
                     return base.OnKeyDown(e);
                 }
 
-                var settingsconfig = CurrentKey switch
-                {
-                    0 => SettingsConfig.KeyBindingUp,
-                    1 => SettingsConfig.KeyBindingLeft,
-                    2 => SettingsConfig.KeyBindingDown,
-                    3 => SettingsConfig.KeyBindingRight,
-                    _ => throw new Exception($"CurrentKey cannot be {CurrentKey}")
-                };
-                
-                gameini.SetValue<string>(settingsconfig, e.Key.ToString());
-                focusedOverlayContainer.State.Value = osu.Framework.Graphics.Containers.Visibility.Hidden;
+                gameini.SetValue<string>(lookupKey, e.Key.ToString());
                 gameini.Save();
+
+                focusedOverlayContainer.State.Value = osu.Framework.Graphics.Containers.Visibility.Hidden;
+                key[(int)lookupKey].Text = e.Key.ToString();
             }
 
             return base.OnKeyDown(e);
-        }
-
-        private bool CheckIfAlreadyInUse(Key e)
-        {
-            Enum.TryParse(gameini.Get<string>(SettingsConfig.KeyBindingUp), out Key KeyUp);
-            Enum.TryParse(gameini.Get<string>(SettingsConfig.KeyBindingLeft), out Key KeyLeft);
-            Enum.TryParse(gameini.Get<string>(SettingsConfig.KeyBindingDown), out Key KeyDown);
-            Enum.TryParse(gameini.Get<string>(SettingsConfig.KeyBindingRight), out Key KeyRight);
-
-            return (e == KeyUp || e == KeyLeft || e == KeyDown || e == KeyRight);
         }
 
         public override void OnEntering(IScreen last)
         {
             this.FadeInFromZero(300, Easing.In);
             base.OnEntering(last);
+        }
+
+        protected override bool OnScroll(ScrollEvent e)
+        {
+            volume.ChangeVolume(e);
+            volume.Fade(100, 100, 600);
+
+            return base.OnScroll(e);
         }
 
         private SpriteText GetSprite(float XPos, float YPos, string text) =>
@@ -191,7 +196,7 @@ namespace RhythmBox.Window.Screens
                 Font = new FontUsage("Roboto", 40f)
             };
 
-        private ClickBox GetClickBox(float XPos, float YPos, int currentKey) =>
+        private ClickBox GetClickBox(float XPos, float YPos, SettingsConfig lookupKey) =>
             new()
             {
                 Anchor = Anchor.CentreLeft,
@@ -206,8 +211,8 @@ namespace RhythmBox.Window.Screens
                 ClickAction = () =>
                 {
                     focusedOverlayContainer.State.Value = osu.Framework.Graphics.Containers.Visibility.Visible;
-                    OverlayActive = true;
-                    CurrentKey = currentKey;
+                    overlayActive = true;
+                    this.lookupKey = lookupKey;
                 },
             };
     }

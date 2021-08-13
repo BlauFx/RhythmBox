@@ -77,30 +77,27 @@ namespace RhythmBox.Window.Animation
                     }
                 }
             };
-
-            ChangeVolume(false);
         }
 
-        public void ChangeVolume(bool calledFromOnScroll, ScrollEvent e = null)
+        public void ChangeVolume(ScrollEvent e = null)
         {
             var volValue = track?.Value?.Volume?.Value ?? gameini.Get<double>(SettingsConfig.Volume);
-            if (calledFromOnScroll)
-            {
-                var precision = ((BindableDouble)gameini.GetBindable<double>(SettingsConfig.Volume)).Precision;
+            var precision = ((BindableDouble)gameini.GetBindable<double>(SettingsConfig.Volume)).Precision;
 
-                if (e is { ScrollDelta: { Y: > 0f } })
-                    volValue = volValue <= 1d - precision ? volValue + precision : volValue;
-                else
-                    volValue = volValue >= 0d + precision ? volValue - precision : volValue;
+            if (e is { ScrollDelta: { Y: > 0f } })
+                volValue = volValue <= 1d - precision ? volValue + precision : volValue;
+            else
+                volValue = volValue >= 0d + precision ? volValue - precision : volValue;
 
-                gameini.SetValue(SettingsConfig.Volume, volValue);
-                gameini.Save();
+            gameini.SetValue(SettingsConfig.Volume, volValue);
+            gameini.Save();
 
-                track?.Value?.Volume?.Set(volValue);
-            }
+            track?.Value?.Volume?.Set(volValue);
             currentValue.Height = (float)volValue;
             volumeInPercent.Text = "";
             volumeInPercent.AddText($"{volValue * 100:0}%", x => x.Font = new FontUsage("Roboto", 50));
         }
+
+        public void Fade(double fadeInDuration, double fadeOutDuration, int waitUntilFadeOut) => this.FadeIn(fadeInDuration).OnComplete(x => x.Delay(waitUntilFadeOut).FadeOut(fadeOutDuration));
     }
 }

@@ -387,8 +387,8 @@ namespace RhythmBox.Window.Screens
         
         protected override bool OnScroll(ScrollEvent e)
         {
-            volume.ChangeVolume(true, e);
-            volume.FadeIn(100).OnComplete(x => x.Delay(1000).FadeOut(100));
+            volume.ChangeVolume(e);
+            volume.Fade(100, 100, 1000);
 
             return base.OnScroll(e);
         }

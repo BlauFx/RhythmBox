@@ -36,7 +36,7 @@ namespace RhythmBox.Tests.VisualTests.Animations
 
         protected override bool OnScroll(ScrollEvent e)
         {
-            (Child as Volume)?.ChangeVolume(true, e);
+            (Child as Volume)?.ChangeVolume(e);
             return base.OnScroll(e);
         }
 
