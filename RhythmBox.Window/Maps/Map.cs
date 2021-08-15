@@ -4,11 +4,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using RhythmBox.Window.Interfaces;
 
 namespace RhythmBox.Window.Maps
 {
-    public class Map : IMap, IEnumerable
+    public class Map : IEnumerable
     {
         public string AFileName { get; set; } = string.Empty;
 
@@ -221,6 +220,30 @@ namespace RhythmBox.Window.Maps
 
             foreach (var @object in list)
                 strm.WriteLine(@object);
+        }
+    }
+
+    public record HitObject
+    {
+        public DirectionEnum Direction { get; } = DirectionEnum.Down;
+
+        public double Time { get; } = 1d;
+
+        public float Speed { get; } = 1f;
+
+        public HitObject(DirectionEnum direction, double time, float speed)
+        {
+            Direction = direction;
+            Time = time;
+            Speed = speed;
+        }
+
+        public enum DirectionEnum
+        {
+            Up,
+            Down,
+            Left,
+            Right
         }
     }
 }
