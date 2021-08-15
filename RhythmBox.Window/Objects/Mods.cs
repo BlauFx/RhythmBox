@@ -119,7 +119,6 @@ namespace RhythmBox.Window.Objects
                     Alpha = 1f,
                     Colour = Colour,
                     EdgeSmoothness = new Vector2(2f),
-                    EditorMode2 = true,
                     ClickAction = () => action(false),
                 },
                 new Sprite
@@ -135,7 +134,7 @@ namespace RhythmBox.Window.Objects
                 },
             };
 
-            CckBx.OnMouseClick += () => Children.ForEach(drawable => drawable.RotateTo(drawable.Rotation == 0f ? 20f : 0f));
+            CckBx.ClickAction += () => Children.ForEach(drawable => drawable.RotateTo(drawable.Rotation == 0f ? 20f : 0f));
             action.Invoke(true);
         }
     }

@@ -85,8 +85,7 @@ namespace RhythmBox.Window.Screens
                 },
                 GetMainMenuBox("Play", -0.2f, -0.25f, 0),
                 GetMainMenuBox("Settings", -0.21f, -0.05f, 1),
-                GetMainMenuBox("Editor", -0.25f, 0.15f, 2),
-                GetMainMenuBox("Exit", -0.3f, 0.35f, 3),
+                GetMainMenuBox("Exit", -0.25f, 0.15f, 2),
                 
                 CurrentPlaying = new SpriteText
                 {
@@ -234,7 +233,7 @@ namespace RhythmBox.Window.Screens
         
         protected virtual Action GetAction(int pos)
         {
-            Action[] clickAction = new Action[4];
+            Action[] clickAction = new Action[3];
 
             clickAction[0] = () =>
             {
@@ -249,25 +248,13 @@ namespace RhythmBox.Window.Screens
                 cachedMap.Stop();
                 this.Push(new Settings());
             };
-
-            clickAction[2] = () =>
-            {
-                string path = $"{Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location)}{Path.DirectorySeparatorChar}Songs{Path.DirectorySeparatorChar}TestMap{Path.DirectorySeparatorChar}Difficulty1.ini";
-
-                if (!File.Exists(path))
-                    _ = new DefaultFolder();
-
-                cachedMap.Stop();
-                this.Push(new EditorDefault(path));
-            };
-
-            clickAction[3] = () => Environment.Exit(0);
+            clickAction[2] = () => Environment.Exit(0);
 
             return clickAction[pos];
         }
 
         private MainMenuBox GetMainMenuBox(string text, float XPos, float YPos, int GetActionPos) =>
-            new MainMenuBox
+            new()
             {
                 Depth = 1,
                 Anchor = Anchor.Centre,

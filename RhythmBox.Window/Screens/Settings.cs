@@ -207,7 +207,6 @@ namespace RhythmBox.Window.Screens
                 X = XPos,
                 Y = YPos,
                 Colour = Color4.Gray.Opacity(0.9f),
-                EditorMode2 = true,
                 ClickAction = () =>
                 {
                     focusedOverlayContainer.State.Value = osu.Framework.Graphics.Containers.Visibility.Visible;

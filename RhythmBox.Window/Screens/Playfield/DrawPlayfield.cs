@@ -5,7 +5,6 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osuTK;
 using osuTK.Graphics;
-using RhythmBox.Window.Interfaces;
 using RhythmBox.Window.Maps;
 using RhythmBox.Window.Objects;
 
@@ -13,19 +12,9 @@ namespace RhythmBox.Window.Screens.Playfield
 {
     public class DrawPlayfield : Container<ClickBox>
     {
-        public Color4 color = Color4.White;
+        public Color4 BorderColor = Color4.White;
 
         public Action action;
-
-        public bool EditorMode { get; set; } = false;
-
-        public Bindable<HitObject.DirectionEnum> dir { get; set; }
-
-        public Action BoxAction { get; set; }
-
-        public Action BoxAction2 { get; set; }
-
-        public ClickBox[] NewBox { get; set; }
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -41,66 +30,24 @@ namespace RhythmBox.Window.Screens.Playfield
 
             Add(drawable(new Vector2(2f, 1f), 0.5f, 1f)); //Right Outside
             Add(drawable(new Vector2(2f, 0.9f), 0.5f, 0.943f)); //Right
-
-            if (EditorMode)
-            {
-                Add(drawableMiddle(new Vector2(36f, 1f), 0.5f, 0f, Anchor.TopLeft, Anchor.CentreLeft, Axes.Y, true, false, 0f, HitObject.DirectionEnum.Left)); //Left-Inside
-                Add(drawableMiddle(new Vector2(1f, 36f), 0.949f, 0f, Anchor.TopCentre, Anchor.TopCentre, Axes.X, true, false, 0f, HitObject.DirectionEnum.Down)); //Down-Inside
-                Add(drawableMiddle(new Vector2(1f, 36f), 0.051f, 0f, Anchor.TopCentre, Anchor.BottomCentre, Axes.X, true, false, 0f, HitObject.DirectionEnum.Up)); //Up-Inside
-                Add(drawableMiddle(new Vector2(36f, 1f), 0.5f, 0f, Anchor.TopRight, Anchor.CentreRight, Axes.Y, true, false, 0f, HitObject.DirectionEnum.Right)); //Right-Inside
-
-                NewBox[0] = drawableMiddle(new Vector2(36f, 1f), 0.5f, 0.2f, Anchor.TopLeft, Anchor.CentreLeft, Axes.Y, false, true, 1f, HitObject.DirectionEnum.Left);
-                NewBox[1] = drawableMiddle(new Vector2(0.6f, 36f), 0.949f, 0f, Anchor.TopCentre, Anchor.TopCentre, Axes.X, false, true, 1f, HitObject.DirectionEnum.Down);
-                NewBox[2] = drawableMiddle(new Vector2(0.6f, 36f), 0.051f, 0f, Anchor.TopCentre, Anchor.BottomCentre, Axes.X, false, true, 1f, HitObject.DirectionEnum.Up);
-                NewBox[3] = drawableMiddle(new Vector2(36f, 1f), 0.5f, -0.2f, Anchor.TopRight, Anchor.CentreRight, Axes.Y, false, true, 1f, HitObject.DirectionEnum.Right);
-            }
         }
 
-        private ClickBox drawable(Vector2 size, float Y, float X, Anchor anchor = Anchor.TopLeft, Anchor origin = Anchor.Centre, Axes RelativeSizeAxes = Axes.Y,
-            bool Editor = false, float Alpha = 1f, HitObject.DirectionEnum directionEnum = HitObject.DirectionEnum.Up) =>
-            new ClickBox
+        private ClickBox drawable(Vector2 size, float Y, float X, Anchor anchor = Anchor.TopLeft, Anchor origin = Anchor.Centre, Axes relativeSizeAxes = Axes.Y,
+            float alpha = 1f) =>
+            new()
             {
                 Anchor = anchor,
                 Origin = origin,
-                RelativeSizeAxes = RelativeSizeAxes,
+                RelativeSizeAxes = relativeSizeAxes,
                 Size = size,
                 Y = Y,
                 X = X,
                 RelativePositionAxes = Axes.Both,
-                Colour = color,
+                Colour = BorderColor,
                 Depth = int.MinValue,
                 EdgeSmoothness = new Vector2(2f),
                 ClickAction = action,
-                EditorMode = Editor,
-                Alpha = Alpha,
-                dir = directionEnum,
-                ChangeDir = dir,
-                BoxAction = BoxAction,
-                BoxAction2 = BoxAction2,
-            };
-
-        private ClickBox drawableMiddle(Vector2 size, float Y, float X, Anchor anchor, Anchor origin, Axes relativsize,
-            bool Editor = false, bool Editor2 = false, float alpha = 0.5f, HitObject.DirectionEnum directionEnum = HitObject.DirectionEnum.Up) =>
-            new ClickBox
-            {
-                Anchor = anchor,
-                Origin = origin,
-                RelativeSizeAxes = relativsize,
-                Size = size,
-                Y = Y,
-                X = X,
-                RelativePositionAxes = Axes.Both,
-                Colour = color,
-                Depth = int.MinValue,
-                EdgeSmoothness = new Vector2(2f),
-                ClickAction = action,
-                EditorMode = Editor,
-                EditorMode2 = Editor2,
                 Alpha = alpha,
-                dir = directionEnum,
-                ChangeDir = dir,
-                BoxAction = BoxAction,
-                BoxAction2 = BoxAction2,
             };
     }
 }

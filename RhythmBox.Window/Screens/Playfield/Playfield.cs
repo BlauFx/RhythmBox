@@ -8,7 +8,6 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Events;
 using osuTK;
 using osuTK.Input;
-using RhythmBox.Window.Animation;
 using RhythmBox.Window.Interfaces;
 using RhythmBox.Window.Maps;
 using RhythmBox.Window.Mods;
@@ -20,33 +19,22 @@ namespace RhythmBox.Window.Screens.Playfield
     {
         public Map Map;
 
-        public Hit currentHit { get; set; }
+        public readonly BindableBool Resuming = new();
 
-        //TODO:
-        public bool HasStarted { get; set; } = false;
+        /// <summary>
+        /// Is set to true if Map has been fully loaded.
+        /// </summary>
+        public BindableBool CanStart { get; } = new();
 
-        public readonly BindableBool Resuming = new BindableBool();
+        public readonly BindableBool HasFinished = new();
 
-        public BindableBool CanStart { get; set; } = new BindableBool();
-
-        public readonly BindableBool HasFinished = new BindableBool();
-
-        private List<Mod> mods { get; set; }
+        private List<Mod> mods { get; }
 
         public Action action { get; set; }
 
-        public Action BoxAction { get; set; }
-
-        public Action BoxAction2 { get; set; }
-
-        public Bindable<HitObject.DirectionEnum> dir { get; } = new Bindable<HitObject.DirectionEnum>(HitObject.DirectionEnum.Up);
-
-        public List<Tuple<HitBox, double>> objectList { get; } = new List<Tuple<HitBox, double>>();
+        public List<Tuple<HitBox, double>> objectList { get; } = new();
 
         public bool Failed { get; set; }
-
-        [Resolved]
-        private Gameini gameini { get; set; }
 
         private readonly Key[] keys = new Key[4];
 
@@ -58,7 +46,7 @@ namespace RhythmBox.Window.Screens.Playfield
         }
 
         [BackgroundDependencyLoader]
-        private void Load()
+        private void Load(Gameini gameini)
         {
             Child = new DrawPlayfield
             {
@@ -67,20 +55,17 @@ namespace RhythmBox.Window.Screens.Playfield
                 RelativeSizeAxes = Axes.Both,
                 Size = new Vector2(1f),
                 action = action,
-                dir = dir,
-                BoxAction = BoxAction,
-                BoxAction2 = BoxAction2,
             };
-        }
 
-        protected override void LoadComplete()
-        {
             for (int i = 0; i < 4; i++)
             {
                 Enum.TryParse(gameini.Get<string>((SettingsConfig)i ), out Key key);
                 keys[i] = key;
             }
-            
+        }
+
+        protected override void LoadComplete()
+        {
             LoadMap();
             CanStart.Value = true;
 
