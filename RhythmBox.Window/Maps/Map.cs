@@ -94,14 +94,16 @@ namespace RhythmBox.Window.Maps
 
             for (int i = 0; i < list.Count; i++)
             {
-                var index = list[i].IndexOf(",", StringComparison.Ordinal);
-                var lastindex = list[i].LastIndexOf(",", StringComparison.Ordinal);
+                var obj = list[i];
 
-                var time = double.Parse(list[i][(index + 2)..lastindex]);
-                var speed = float.Parse(list[i][(lastindex + 2)..^1]);
+                var index = obj.IndexOf(",", StringComparison.Ordinal);
+                var lastIndex = obj.LastIndexOf(",", StringComparison.Ordinal);
 
-                var dirIndex = list[i].IndexOf(".", StringComparison.Ordinal) + 1;
-                var dirStr = list[i][dirIndex..index];
+                var time = double.Parse(obj[(index + 2)..lastIndex]);
+                var speed = float.Parse(obj[(lastIndex + 2)..^1]);
+
+                var dirIndex = obj.IndexOf(".", StringComparison.Ordinal) + 1;
+                var dirStr = obj[dirIndex..index];
 
                 var dir = EnumParser<HitObject.DirectionEnum>(dirStr);
                 objs.Add(new HitObject(dir, time, speed));
