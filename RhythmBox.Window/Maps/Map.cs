@@ -142,7 +142,7 @@ namespace RhythmBox.Window.Maps
             if (!Directory.Exists(folderPath))
                 Directory.CreateDirectory(folderPath);
 
-            var list = new List<string>
+            var header = new string[]
             {
                 "v1\n",
                 $"AFileName: {AFileName}",
@@ -158,7 +158,7 @@ namespace RhythmBox.Window.Maps
                 "HitObjects:",
             };
 
-            WriteToFile(path, list);
+            WriteToFile(path, header);
             WriteToFile(path, HitObjects);
         }
 
@@ -216,12 +216,12 @@ namespace RhythmBox.Window.Maps
                 streamWriter.WriteLine($"{obj.Direction}, {obj.Time}, {obj.Speed}f");
         }
 
-        private void WriteToFile(string path, IEnumerable<string> list)
+        private void WriteToFile(string path, string[] header)
         {
             using var strm = new StreamWriter(path, true);
 
-            foreach (var @object in list)
-                strm.WriteLine(@object);
+            foreach (var line in header)
+                strm.WriteLine(line);
         }
     }
 
