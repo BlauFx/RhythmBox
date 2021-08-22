@@ -90,7 +90,7 @@ namespace RhythmBox.Window.Maps
 
         private HitObject[] HitObjectsParser(IReadOnlyList<string> list)
         {
-            var objs = new List<HitObject>();
+            var objs = new HitObject[list.Count];
 
             for (int i = 0; i < list.Count; i++)
             {
@@ -106,10 +106,10 @@ namespace RhythmBox.Window.Maps
                 var dirStr = obj[dirIndex..index];
 
                 var dir = EnumParser<HitObject.DirectionEnum>(dirStr);
-                objs.Add(new HitObject(dir, time, speed));
+                objs[i] = new HitObject(dir, time, speed);
             }
 
-            return objs.ToArray();
+            return objs;
         }
 
         private T SearchAndCut<T>(List<string> list, string term)
