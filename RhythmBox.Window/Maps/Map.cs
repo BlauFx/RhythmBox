@@ -90,7 +90,7 @@ namespace RhythmBox.Window.Maps
 
         private HitObject[] HitObjectsParser(IReadOnlyList<string> list)
         {
-            var objs = new List<HitObject>();
+            var objs = new HitObject[list.Count];
 
             for (int i = 0; i < list.Count; i++)
             {
@@ -106,10 +106,10 @@ namespace RhythmBox.Window.Maps
                 var dirStr = obj[dirIndex..index];
 
                 var dir = EnumParser<HitObject.DirectionEnum>(dirStr);
-                objs.Add(new HitObject(dir, time, speed));
+                objs[i] = new HitObject(dir, time, speed);
             }
 
-            return objs.ToArray();
+            return objs;
         }
 
         private T SearchAndCut<T>(List<string> list, string term)
@@ -142,7 +142,7 @@ namespace RhythmBox.Window.Maps
             if (!Directory.Exists(folderPath))
                 Directory.CreateDirectory(folderPath);
 
-            var list = new List<string>
+            var header = new string[]
             {
                 "v1\n",
                 $"AFileName: {AFileName}",
@@ -158,7 +158,7 @@ namespace RhythmBox.Window.Maps
                 "HitObjects:",
             };
 
-            WriteToFile(path, list);
+            WriteToFile(path, header);
             WriteToFile(path, HitObjects);
         }
 
@@ -216,12 +216,12 @@ namespace RhythmBox.Window.Maps
                 streamWriter.WriteLine($"{obj.Direction}, {obj.Time}, {obj.Speed}f");
         }
 
-        private void WriteToFile(string path, IEnumerable<string> list)
+        private void WriteToFile(string path, string[] header)
         {
             using var strm = new StreamWriter(path, true);
 
-            foreach (var @object in list)
-                strm.WriteLine(@object);
+            foreach (var line in header)
+                strm.WriteLine(line);
         }
     }
 
