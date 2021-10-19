@@ -11,7 +11,7 @@ namespace RhythmBox.Window
 
         private static bool didRun;
 
-        private static readonly List<MapPack> MapPack = new List<MapPack>();
+        private static readonly List<MapPack> MapPack = new();
         
         public static List<MapPack> GetMapPacks()
         {
@@ -22,17 +22,17 @@ namespace RhythmBox.Window
             
             for (int i = 0; i < directories.Length; i++)
             {
-                var Files  = Directory.GetFiles(directories[i], "*.ini", SearchOption.TopDirectoryOnly);
+                var Files = Directory.GetFiles(directories[i], "*.ini", SearchOption.TopDirectoryOnly);
                
                 if (Files.Length == 0)
                     continue;
 
-                Map[] Maps = new Map[Files.Length];
+                Map[] maps = new Map[Files.Length];
 
                 for (int j = 0; j < Files.Length; j++)
-                    Maps[j] = new Map(Files[j]);
+                    maps[j] = new Map(Files[j]);
 
-                MapPack.Add(new MapPack(Maps));
+                MapPack.Add(new MapPack(maps));
             }
 
             if (MapPack.Count > 0)

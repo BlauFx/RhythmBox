@@ -15,6 +15,7 @@ namespace RhythmBox.Window.Screens.SongSelection
     public class Leaderboard : Container
     {
         private FillFlowContainer _fillFlowContainer;
+        private const int YSIZE = 100;
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -43,25 +44,26 @@ namespace RhythmBox.Window.Screens.SongSelection
                     }
                 },
             };
+        }
 
-            const int YSize = 100;
-
-            var boxes = new UserWrapper[1000];
+        protected override void LoadAsyncComplete()
+        {
+            var boxes = new UserWrapper[200];
 
             for (int i = 0; i < boxes.Length; i++)
             {
                 boxes[i] = new UserWrapper(new User($"Username{i}", osu.Framework.Utils.RNG.Next(0, int.MaxValue), DateTime.Now))
                 {
                     RelativeSizeAxes = Axes.X,
-                    Size = new Vector2(1f, YSize),
+                    Size = new Vector2(1f, YSIZE),
                     Colour = Color4.Beige.Opacity(0.7f),
                     Margin = new MarginPadding { Bottom = 10 }
                 };
             }
 
-            List<UserWrapper> list = boxes.ToList();
-            var orderByDescending = list.OrderByDescending(c => c.User.Score).ThenBy(c => c.User.Time).ThenBy(c => c.User.Username);
+            var orderByDescending = boxes.OrderByDescending(c => c.User.Score).ThenBy(c => c.User.Time).ThenBy(c => c.User.Username);
             _fillFlowContainer.AddRange(orderByDescending);
+            base.LoadAsyncComplete();
         }
     }
 

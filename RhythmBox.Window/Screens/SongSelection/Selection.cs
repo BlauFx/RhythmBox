@@ -74,10 +74,7 @@ namespace RhythmBox.Window.Screens.SongSelection
                     RelativeSizeAxes = Axes.Both,
                     Size = new Vector2(0.1f),
                     Texture = store.Get("Skin/Back"),
-                    ClickAction = () =>
-                    {
-                        this.Exit();
-                    },
+                    ClickAction = () => this.Exit(),
                 },
                 new SpriteButton
                 {
@@ -118,17 +115,16 @@ namespace RhythmBox.Window.Screens.SongSelection
                     Size = new Vector2(0.5f,1f),
                     ClickOnMap = () =>
                     {
-                        if (!allowToPlay) return;
+                        if (!allowToPlay || WaitUntilLoaded)
+                            return;
 
-                        if (!WaitUntilLoaded)
-                        {
-                            CachedMap.Map = new Map(bindablePath.Value);
-                            CachedMap.Stop();
+                        CachedMap.Map = new Map(bindablePath.Value);
+                        CachedMap.Stop();
 
-                            GameplayScreen gameplayScreen;
-                            LoadComponent(gameplayScreen = new GameplayScreen(bindablePath.Value, ModOverlay.modBox.ToApplyMods));
-                            this.Push(gameplayScreen);
-                        }
+                        GameplayScreen gameplayScreen;
+                        LoadComponent(gameplayScreen = new GameplayScreen(bindablePath.Value, ModOverlay.modBox.ToApplyMods));
+                        this.Push(gameplayScreen);
+
                     },
                 }
             };
@@ -159,7 +155,6 @@ namespace RhythmBox.Window.Screens.SongSelection
             }
 
             CachedMap.Play();
-
             base.OnEntering(last);
         }
 
@@ -221,50 +216,42 @@ namespace RhythmBox.Window.Screens.SongSelection
                     ScrollDistance = 120f,
                     ClampExtension = 30f,
 
-                    Children = new Drawable[]
+                    Child = fillFlowContainer = new FillFlowContainer
                     {
-                        fillFlowContainer = new FillFlowContainer
+                        RelativeSizeAxes = Axes.X,
+                        Size = new Vector2(1f),
+                        Direction = FillDirection.Vertical,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        AutoSizeAxes = Axes.Y,
+
+                        Child = SearchContainer = new SearchContainer
                         {
+                            Anchor = Anchor.TopRight,
+                            Origin = Anchor.TopRight,
+
                             RelativeSizeAxes = Axes.X,
                             Size = new Vector2(1f),
-                            Direction = FillDirection.Vertical,
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
+
                             AutoSizeAxes = Axes.Y,
-
-                            Children = new Drawable[]
+                            Child = headContainer = new HeaderContainer
                             {
-                                SearchContainer = new SearchContainer
-                                {
-                                    Anchor = Anchor.TopRight,
-                                    Origin = Anchor.TopRight,
-
-                                    RelativeSizeAxes = Axes.X,
-                                    Size = new Vector2(1f),
-
-                                    AutoSizeAxes = Axes.Y,
-
-                                    Children = new Drawable[]
-                                    {
-                                        headContainer = new HeaderContainer
-                                        {
-                                            RelativeSizeAxes = Axes.X,
-                                            Size = new Vector2(1f),
-
-                                            AutoSizeAxes = Axes.Y,
-                                        },
-                                    }
-                                }
+                                RelativeSizeAxes = Axes.X,
+                                Size = new Vector2(1f),
+                                AutoSizeAxes = Axes.Y,
                             }
-                        },
+                        }
                     }
                 }
             };
+        }
 
-            List<MapPackDrawer> mapPacks = new List<MapPackDrawer>();
+        protected override void LoadAsyncComplete()
+        {
+            var mapPacks = new List<MapPackDrawer>();
             List<MapPack> mapPacksGot = Songs.GetMapPacks();
 
-            mapPacksGot.ForEach((x) =>
+            foreach (var x in mapPacksGot)
             {
                 mapPacks.Add(new MapPackDrawer(x.Maps, x.Maps[0].Title)
                 {
@@ -275,9 +262,10 @@ namespace RhythmBox.Window.Screens.SongSelection
                     InvokeBox = ClickOnMap,
                     bindablePath = BindablePath,
                 });
-            });
-
-           headContainer.AddRange(mapPacks);
+            }
+            headContainer.AddRange(mapPacks);
+            
+            base.LoadAsyncComplete();
         }
 
         protected override bool OnMouseMove(MouseMoveEvent e)

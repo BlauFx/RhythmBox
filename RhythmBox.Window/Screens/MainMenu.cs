@@ -16,8 +16,6 @@ using RhythmBox.Window.Overlays;
 using RhythmBox.Window.Screens.SongSelection;
 using RhythmBox.Window.Updater;
 using System;
-using System.IO;
-using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace RhythmBox.Window.Screens
@@ -27,8 +25,6 @@ namespace RhythmBox.Window.Screens
         private Sprite Background { get; set; }
 
         private NotificationOverlay _overlay;
-
-        private Selection songSelection;
 
         private Box box;
 
@@ -233,16 +229,9 @@ namespace RhythmBox.Window.Screens
         
         protected virtual Action GetAction(int pos)
         {
-            Action[] clickAction = new Action[3];
+            var clickAction = new Action[3];
 
-            clickAction[0] = () =>
-            {
-                if (songSelection != null && songSelection.ValidForPush)
-                    this.Push(songSelection);
-                else
-                    LoadComponentAsync(songSelection = new Selection(), this.Push);
-            };
-
+            clickAction[0] = () => LoadComponentAsync(new Selection(), this.Push);
             clickAction[1] = () =>
             {
                 cachedMap.Stop();

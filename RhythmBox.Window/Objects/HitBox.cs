@@ -135,7 +135,7 @@ namespace RhythmBox.Window.Objects
             
             Scheduler.CancelDelayedTasks();
 
-            bx.Colour = Color4.Red; //TODO: Green
+            bx.Colour = Color4.Green;
             Scheduler.AddDelayed(() => bx.Colour = Color4.White, this.Clear / 2);
 
             bx.FadeOut(this.Clear);
@@ -153,85 +153,108 @@ namespace RhythmBox.Window.Objects
 
         public void ClickKeyDown(Key key)
         {
-            if (!Resuming.Value) return;
+            if (!Resuming.Value)
+                return;
+
             clicked = true;
 
             if (key == keys[0] && Direction == HitObject.DirectionEnum.Up)
-            {
-                Hit? condition = bx.Y switch
-                {
-                    <= -0.45f and >= -0.50001f => Hit.Hit300,
-                    <= -0.35f and >= -0.45f => Hit.Hit100,
-                    <= -0.25f and >= -0.35f => Hit.Hitx,
-                    _ => null
-                };
-
-                var now = condition;
-                if (now != null)
-                {
-                    Click(now.GetValueOrDefault());
-                    Add(hitAnimation = HitAnimation(now.GetValueOrDefault(), now == Hit.Hit300 ? bx.Y + 0.025f : float.NaN));
-                }
-
-                Remove();
-            }
+                Execute(bx.Y, Direction);
             else if (key == keys[1] && Direction == HitObject.DirectionEnum.Left)
-            {
-                Hit? condition = bx.X switch
-                {
-                    <= -0.45f and >= -0.50001f => Hit.Hit300,
-                    <= -0.35f when bx.Y >= -0.45f => Hit.Hit100,
-                    <= -0.25f when bx.Y >= -0.35f => Hit.Hitx,
-                    _ => null
-                };
-
-                var now = condition;
-                if (now != null)
-                {
-                    Click(now.GetValueOrDefault());
-                    Add(hitAnimation = HitAnimation(now.GetValueOrDefault(), now == Hit.Hitx ? float.NaN : bx.Y, now == Hit.Hitx ? float.NaN : bx.X + 0.025f));
-                }
-
-                Remove();
-            }
+                Execute(bx.X, Direction);
             else if (key == keys[2] && Direction == HitObject.DirectionEnum.Down)
-            {
-                Hit? condition = bx.Y switch
-                {
-                    >= 0.45f and <= 0.50001f => Hit.Hit300,
-                    >= 0.35f and <= 0.45f => Hit.Hit100,
-                    >= 0.25f and <= 0.35f => Hit.Hitx,
-                    _ => null
-                };
-            
-                var now = condition;
-                if (now != null)
-                {
-                    Click(now.GetValueOrDefault());
-                    Add(hitAnimation = HitAnimation(now.GetValueOrDefault(), now == Hit.Hit300 ? bx.Y - 0.025f : float.NaN));
-                }
-            
-                Remove();
-            }
+                Execute(bx.Y, Direction);
             else if (key == keys[3] && Direction == HitObject.DirectionEnum.Right)
+                Execute(bx.X, Direction);
+        }
+
+        private void Execute(float value, HitObject.DirectionEnum directionEnum)
+        {
+            var hitResult = GetHitResult(value);
+            if (hitResult == null)
+                return;
+
+            var hit = hitResult.GetValueOrDefault();
+
+            float XCalc()
             {
-                Hit? condition = bx.X switch
+                return directionEnum switch
                 {
-                    >= 0.45f and <= 0.50001f => Hit.Hit300,
-                    >= 0.35f when bx.Y <= 0.45f => Hit.Hit100,
-                    >= 0.25f when bx.Y <= 0.35f => Hit.Hitx,
-                    _ => null
+                    HitObject.DirectionEnum.Left => hit == Hit.Hitx ? float.NaN : bx.X + 0.025f,
+                    HitObject.DirectionEnum.Right => hit == Hit.Hit300 ? bx.X - 0.025f : float.NaN,
+                    _ => float.NaN,
                 };
-                
-                var now = condition;
-                if (now != null)
-                {
-                    Click(now.GetValueOrDefault());
-                    Add(hitAnimation = HitAnimation(now.GetValueOrDefault(), now == Hit.Hit300 ? bx.Y : float.NaN, now == Hit.Hit300 ? bx.X - 0.025f : float.NaN));
-                }
-            
-                Remove();
             }
+
+            float YCalc()
+            {
+                float calc(float value) => hit == Hit.Hit300 ? bx.Y + value: float.NaN;
+
+                return directionEnum switch
+                {
+                    HitObject.DirectionEnum.Up => calc(0.025f),
+                    HitObject.DirectionEnum.Down => calc(-0.025f),
+                    HitObject.DirectionEnum.Left or HitObject.DirectionEnum.Right => bx.Y,
+                    _ => float.NaN,
+                };
+            }
+
+            Click(hit);
+            switch (directionEnum)
+            {
+                case HitObject.DirectionEnum.Up or HitObject.DirectionEnum.Down:
+                    Add(hitAnimation = HitAnimation(hit, YCalc()));
+                    break;
+                case HitObject.DirectionEnum.Left or HitObject.DirectionEnum.Right:
+                    Add(hitAnimation = HitAnimation(hit, YCalc(), XCalc()));
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(directionEnum), directionEnum, null);
+            }
+            Remove();
+        }
+
+        private Hit? GetHitResult(float value)
+        {
+            const float hit300Range = 0.45f;
+            const float hit100Range = 0.35f;
+            const float hit50Range = 0.25f;
+            const float maxRange = hit50Range * 2 + 0.00001f;
+
+            Hit? result = Direction switch
+            {
+                HitObject.DirectionEnum.Up => value switch
+                {
+                    <= -hit300Range and >= -maxRange => Hit.Hit300,
+                    <= -hit100Range and >= -hit300Range => Hit.Hit100,
+                    <= -hit50Range and >= -hit100Range => Hit.Hitx,
+                    _ => null
+                },
+                HitObject.DirectionEnum.Left => value switch
+                {
+                    <= -hit300Range and >= -maxRange => Hit.Hit300,
+                    <= -hit100Range when bx.Y >= -hit300Range => Hit.Hit100,
+                    <= -hit50Range when bx.Y >= -hit100Range => Hit.Hitx,
+                    _ => null
+                },
+                HitObject.DirectionEnum.Down => value switch
+                {
+                    >= hit300Range and <= maxRange => Hit.Hit300,
+                    >= hit100Range and <= hit300Range => Hit.Hit100,
+                    >= hit50Range and <= hit100Range => Hit.Hitx,
+                    _ => null
+                },
+                HitObject.DirectionEnum.Right => value switch
+                {
+                    >= hit300Range and <= maxRange => Hit.Hit300,
+                    >= hit100Range when bx.Y <= hit300Range => Hit.Hit100,
+                    >= hit50Range when bx.Y <= hit100Range => Hit.Hitx,
+                    _ => null
+                },
+                _ => null
+            };
+
+            return result;
         }
         
         private void Click(Hit hit) => Combo.UpdateCombo(hit);
