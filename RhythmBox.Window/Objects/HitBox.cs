@@ -21,8 +21,8 @@ namespace RhythmBox.Window.Objects
     {
         public HitObject.DirectionEnum Direction { get; }
 
-        public Box bx;
-        
+        public Box Bx;
+
         public BindableBool Resuming { get; set; } = new();
 
         public List<Mod> Mods { get; init; }
@@ -55,7 +55,7 @@ namespace RhythmBox.Window.Objects
         [BackgroundDependencyLoader]
         private void Load()
         {
-            Child = bx = new Box
+            Child = Bx = new Box
             {
                 Anchor = Anchor.Centre,
                 Origin = Anchor.TopCentre,
@@ -66,46 +66,43 @@ namespace RhythmBox.Window.Objects
                 Depth = int.MinValue
             };
 
-            bx.MoveToY(0f, 0, Easing.InCirc);
-            bx.FadeInFromZero(Duration * 0.2, Easing.None);
+            Bx.FadeInFromZero(Duration * 0.2, Easing.None);
+            var easing = Easing.InCirc;
 
-            Vector2 resizeAmount = Direction switch
-            {
-                HitObject.DirectionEnum.Up => new Vector2(1f, 0.05f),
-                HitObject.DirectionEnum.Down => new Vector2(1f, 0.05f),
-                HitObject.DirectionEnum.Left => new Vector2(0.056f, 1f),
-                HitObject.DirectionEnum.Right => new Vector2(0.056f, 1f),
-                _ => throw new Exception()
-            };
-
-            Easing easing = Easing.InCirc; //TODO: Easing.InExpo;
+            const float moveOffset = 0.5f;
+            var size = new Vector2(0.01f, 0.1f);
 
             switch (Direction)
             {
                 case HitObject.DirectionEnum.Up:
-                    bx.MoveToY(-0.5f, Duration, easing);
+                    Bx.MoveToY(-moveOffset, Duration, easing);
                     break;
                 case HitObject.DirectionEnum.Down:
-                    bx.Rotation = 180f;
-                    bx.MoveToY(0.5f, Duration, easing);
-                    
+                    Bx.Rotation = 180f;
+                    Bx.MoveToY(moveOffset, Duration, easing);
                     break;
                 case HitObject.DirectionEnum.Left:
-                    bx.Origin = Anchor.CentreLeft;
-                    bx.Size = new Vector2(0.01f, 0.1f);
-
-                    bx.MoveToX(-0.5f, Duration, easing);
+                    Bx.Origin = Anchor.CentreLeft;
+                    Bx.Size = size;
+                    Bx.MoveToX(-moveOffset, Duration, easing);
                     break;
                 case HitObject.DirectionEnum.Right:
-                    bx.Origin = Anchor.CentreRight;
-                    bx.Size = new Vector2(0.01f, 0.1f);
-                    bx.MoveToX(0.5f, Duration, easing);
+                    Bx.Origin = Anchor.CentreRight;
+                    Bx.Size = size;
+                    Bx.MoveToX(moveOffset, Duration, easing);
                     break;
                 default:
                     throw new Exception();
             }
 
-            bx.ResizeTo(resizeAmount, Duration, easing);
+            var resizeAmount = Direction switch
+            {
+                HitObject.DirectionEnum.Up or HitObject.DirectionEnum.Down => new Vector2(1f, 0.05f),
+                HitObject.DirectionEnum.Left or HitObject.DirectionEnum.Right => new Vector2(0.056f, 1f),
+                _ => throw new Exception()
+            };
+
+            Bx.ResizeTo(resizeAmount, Duration, easing);
             Scheduler.AddDelayed(Remove, Duration + Expire);
         }
 
@@ -117,14 +114,15 @@ namespace RhythmBox.Window.Objects
 
         private void ApplyMods(List<Mod> mods)
         {
-            if (mods is null) return;
+            if (mods is null)
+                return;
 
-            for (int i = 0; i < mods.Count; i++)
+            foreach (var mod in mods)
             {
-                if (!(mods[i] is IApplyToHitobject))
+                if (mod is not IApplyToHitobject obj)
                     continue;
 
-                (mods[i] as IApplyToHitobject)?.ApplyToHitObj(this);
+                obj.ApplyToHitObj(this);
             }
         }
         
@@ -135,13 +133,13 @@ namespace RhythmBox.Window.Objects
             
             Scheduler.CancelDelayedTasks();
 
-            bx.Colour = Color4.Green;
-            Scheduler.AddDelayed(() => bx.Colour = Color4.White, this.Clear / 2);
+            Bx.Colour = Color4.Green;
+            Scheduler.AddDelayed(() => Bx.Colour = Color4.White, this.Clear / 2);
 
-            bx.FadeOut(this.Clear);
-            bx.ScaleTo(1.1f, this.Clear, Easing.OutCirc); //TODO: InSine
+            Bx.FadeOut(this.Clear);
+            Bx.ScaleTo(1.1f, this.Clear, Easing.None);
 
-            if (hitAnimation == null || !clicked)
+            if (!clicked || hitAnimation == null)
             {
                 Click(Hit.Hitx);
                 Add(hitAnimation = HitAnimation(Hit.Hitx));
@@ -158,17 +156,13 @@ namespace RhythmBox.Window.Objects
 
             clicked = true;
 
-            if (key == keys[0] && Direction == HitObject.DirectionEnum.Up)
-                Execute(bx.Y, Direction);
-            else if (key == keys[1] && Direction == HitObject.DirectionEnum.Left)
-                Execute(bx.X, Direction);
-            else if (key == keys[2] && Direction == HitObject.DirectionEnum.Down)
-                Execute(bx.Y, Direction);
-            else if (key == keys[3] && Direction == HitObject.DirectionEnum.Right)
-                Execute(bx.X, Direction);
+            if ((key == keys[0] && Direction == HitObject.DirectionEnum.Up) || (key == keys[2] && Direction == HitObject.DirectionEnum.Down))
+                ProcessClick(Bx.Y, Direction);
+            else if ((key == keys[1] && Direction == HitObject.DirectionEnum.Left) || (key == keys[3] && Direction == HitObject.DirectionEnum.Right))
+                ProcessClick(Bx.X, Direction);
         }
 
-        private void Execute(float value, HitObject.DirectionEnum directionEnum)
+        private void ProcessClick(float value, HitObject.DirectionEnum directionEnum)
         {
             var hitResult = GetHitResult(value);
             if (hitResult == null)
@@ -176,25 +170,18 @@ namespace RhythmBox.Window.Objects
 
             var hit = hitResult.GetValueOrDefault();
 
-            float XCalc()
+            float CalcPos()
             {
+                if (hit != Hit.Hit300)
+                    return float.NaN;
+
+                const float offset = 0.025f;
                 return directionEnum switch
                 {
-                    HitObject.DirectionEnum.Left => hit == Hit.Hitx ? float.NaN : bx.X + 0.025f,
-                    HitObject.DirectionEnum.Right => hit == Hit.Hit300 ? bx.X - 0.025f : float.NaN,
-                    _ => float.NaN,
-                };
-            }
-
-            float YCalc()
-            {
-                float calc(float value) => hit == Hit.Hit300 ? bx.Y + value: float.NaN;
-
-                return directionEnum switch
-                {
-                    HitObject.DirectionEnum.Up => calc(0.025f),
-                    HitObject.DirectionEnum.Down => calc(-0.025f),
-                    HitObject.DirectionEnum.Left or HitObject.DirectionEnum.Right => bx.Y,
+                    HitObject.DirectionEnum.Left => Bx.X + offset,
+                    HitObject.DirectionEnum.Right => Bx.X - offset,
+                    HitObject.DirectionEnum.Up => Bx.Y + offset,
+                    HitObject.DirectionEnum.Down => Bx.Y - offset,
                     _ => float.NaN,
                 };
             }
@@ -203,10 +190,10 @@ namespace RhythmBox.Window.Objects
             switch (directionEnum)
             {
                 case HitObject.DirectionEnum.Up or HitObject.DirectionEnum.Down:
-                    Add(hitAnimation = HitAnimation(hit, YCalc()));
+                    Add(hitAnimation = HitAnimation(hit, CalcPos()));
                     break;
                 case HitObject.DirectionEnum.Left or HitObject.DirectionEnum.Right:
-                    Add(hitAnimation = HitAnimation(hit, YCalc(), XCalc()));
+                    Add(hitAnimation = HitAnimation(hit, Bx.Y, CalcPos()));
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(directionEnum), directionEnum, null);
@@ -223,32 +210,18 @@ namespace RhythmBox.Window.Objects
 
             Hit? result = Direction switch
             {
-                HitObject.DirectionEnum.Up => value switch
+                HitObject.DirectionEnum.Up or HitObject.DirectionEnum.Left => value switch
                 {
                     <= -hit300Range and >= -maxRange => Hit.Hit300,
                     <= -hit100Range and >= -hit300Range => Hit.Hit100,
                     <= -hit50Range and >= -hit100Range => Hit.Hitx,
                     _ => null
                 },
-                HitObject.DirectionEnum.Left => value switch
-                {
-                    <= -hit300Range and >= -maxRange => Hit.Hit300,
-                    <= -hit100Range when bx.Y >= -hit300Range => Hit.Hit100,
-                    <= -hit50Range when bx.Y >= -hit100Range => Hit.Hitx,
-                    _ => null
-                },
-                HitObject.DirectionEnum.Down => value switch
+                HitObject.DirectionEnum.Down or HitObject.DirectionEnum.Right => value switch
                 {
                     >= hit300Range and <= maxRange => Hit.Hit300,
                     >= hit100Range and <= hit300Range => Hit.Hit100,
                     >= hit50Range and <= hit100Range => Hit.Hitx,
-                    _ => null
-                },
-                HitObject.DirectionEnum.Right => value switch
-                {
-                    >= hit300Range and <= maxRange => Hit.Hit300,
-                    >= hit100Range when bx.Y <= hit300Range => Hit.Hit100,
-                    >= hit50Range when bx.Y <= hit100Range => Hit.Hitx,
                     _ => null
                 },
                 _ => null
@@ -259,15 +232,15 @@ namespace RhythmBox.Window.Objects
         
         private void Click(Hit hit) => Combo.UpdateCombo(hit);
 
-        private HitAnimation HitAnimation(Hit hit, float Y = float.NaN, float X = float.NaN) 
+        private HitAnimation HitAnimation(Hit hit, float y = float.NaN, float x = float.NaN) 
             => new(hit)
             {
                 Depth = float.MinValue,
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
                 RelativePositionAxes = Axes.Both,
-                X = float.IsNaN(X) ? bx.X : X,
-                Y = float.IsNaN(Y) ? bx.Y : Y
+                X = float.IsNaN(x) ? Bx.X : x,
+                Y = float.IsNaN(y) ? Bx.Y : y
             };
     }
 }

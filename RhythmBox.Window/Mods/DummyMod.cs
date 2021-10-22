@@ -12,7 +12,7 @@ namespace RhythmBox.Window.Mods
 
         public void ApplyToHitObj(HitBox obj)
         {
-            obj.bx.Colour = Color4.Red;
+            obj.Bx.Colour = Color4.Red;
         }
     }
 }
