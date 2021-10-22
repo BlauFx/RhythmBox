@@ -10,38 +10,32 @@ namespace RhythmBox.Window
 {
     public class DefaultFolder
     {
-        public DefaultFolder(bool createSongs = true, bool createSkins = false)
+        public DefaultFolder()
         {
-            string currentFolder = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
-            string skinsFolder = $"{currentFolder}{Path.DirectorySeparatorChar}Skins";
-            
-            if (createSongs && !Directory.Exists(Songs.SongPath))
+            if (!Directory.Exists(Songs.SongPath))
                 Directory.CreateDirectory(Songs.SongPath);
-            else if (createSkins && !Directory.Exists(skinsFolder))
-                Directory.CreateDirectory(skinsFolder);
 
-            var file = $"{Songs.SongPath}{Path.DirectorySeparatorChar}TestMap{Path.DirectorySeparatorChar}Difficulty1.ini";
+            var testMapFolder = $"{Songs.SongPath}{Path.DirectorySeparatorChar}TestMap";
+            var testMapFile = $"{testMapFolder}{Path.DirectorySeparatorChar}Difficulty1.ini";
             
             //TODO: This is only temporary
-            //Side note: maybe add our own fileformat? 
-            if (!File.Exists(file))
-            {
-                Directory.CreateDirectory($"{Songs.SongPath}{Path.DirectorySeparatorChar}TestMap");
-                ImprovedTemp(file);
-            }
+            if (File.Exists(testMapFile))
+                return;
+            
+            GenerateMapFromResources(testMapFile);
         }
 
-        private void ImprovedTemp(string file)
+        private void GenerateMapFromResources(string file)
         {
             Assembly assembly = Assembly.LoadFrom("RhythmBox.Window.Resources.dll");
             
             if (assembly == null)
                 throw new Exception($"{nameof(assembly)} can not be null!");
 
-            var lines = ReadLines(() => assembly.GetManifestResourceStream("RhythmBox.Window.Resources.Difficulty1.ini")!, Encoding.UTF8).ToList();
-
-            var map = new Map(lines);
-            map.WriteToNewMap(file);
+            var lines = ReadLines(() => assembly.GetManifestResourceStream("RhythmBox.Window.Resources.Difficulty1.ini"), Encoding.UTF8).ToList();
+            
+            Directory.CreateDirectory(file);
+            new Map(lines).WriteToNewMap(file);
         }
 
         //https://stackoverflow.com/a/13312954

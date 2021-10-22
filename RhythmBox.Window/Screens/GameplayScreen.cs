@@ -53,9 +53,9 @@ namespace RhythmBox.Window.Screens
         private BreakOverlay breakOverlay;
 
         public Track Track;
-        private BindableBool ReturntoSongSelectionAfterFail { get; } = new BindableBool();
+        private BindableBool ReturntoSongSelectionAfterFail { get; } = new();
 
-        public readonly BindableBool GameStarted = new BindableBool();
+        public readonly BindableBool GameStarted = new();
 
         private GameplayScreenLoader gameplayScreenLoader;
 
@@ -78,9 +78,9 @@ namespace RhythmBox.Window.Screens
 
         private const float SCREEN_ENTERING_DURATION = 500;
 
-        public GameplayScreen(string path, List<Mod> ToApplyMods)
+        public GameplayScreen(string path, List<Mod> toApplyMods)
         {
-            this.toApplyMods = ToApplyMods;
+            this.toApplyMods = toApplyMods;
             map = new Map(path);
         }
 
@@ -136,14 +136,14 @@ namespace RhythmBox.Window.Screens
                 },
             };
             
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < keys.Length; i++)
             {
                 Enum.TryParse(Gameini.Get<string>((SettingsConfig)i), out Key key);
                 keys[i] = key;
             }
             
             breakOverlay.State.Value = Visibility.Hidden;
-            breakOverlay.State.ValueChanged += async (e) =>
+            breakOverlay.State.ValueChanged += async e =>
             {
                 if (e.NewValue == Visibility.Hidden)
                 {
@@ -292,33 +292,43 @@ namespace RhythmBox.Window.Screens
             HasFailed = true;
             RbPlayfield.Failed = true;
 
-            Box box;
-
-            AddInternal(box = new Box
+            var box = new Box
             {
                 RelativeSizeAxes = Axes.Both,
                 Size = new Vector2(1f),
                 Colour = Color4.Red,
                 Alpha = 0f,
-            });
+            };
 
+            AddInternal(box);
             box.FadeTo(0.7f, 500, Easing.In);
 
             foreach (var x in this.RbPlayfield)
             {
+                const float maxValueShear = 0.15f;
+                const float minValueShear= -maxValueShear;
+
+                var shearRndom = new Vector2(osu.Framework.Utils.RNG.NextSingle(minValueShear, maxValueShear));
+                var easing = Easing.OutBack;
+
+                const float maxValueScale = 2f;
+                const float minValueScale = 0.6f;
+
                 if (x is DrawPlayfield playfield)
                 {
+                    const float DURATION = 5000;
                     foreach (var y in playfield)
                     {
-                        y.TransformTo(nameof(Shear), new Vector2(osu.Framework.Utils.RNG.NextSingle(-0.15f, 0.15f)), 5000, Easing.OutBack);
-                        y.TransformTo(nameof(Scale), new Vector2(osu.Framework.Utils.RNG.NextSingle(1.1f, 2f)), 5000, Easing.OutBack);
+                        y.TransformTo(nameof(Shear), shearRndom, DURATION, easing);
+                        y.TransformTo(nameof(Scale), new Vector2(osu.Framework.Utils.RNG.NextSingle(minValueScale * 2, maxValueScale)), DURATION, easing);
                     }
                 }
                 else
                 {
-                    x.TransformTo(nameof(Shear), new Vector2(osu.Framework.Utils.RNG.NextSingle(-0.15f, 0.15f)), 1000, Easing.OutBack);
-                    x.TransformTo(nameof(Scale), new Vector2(osu.Framework.Utils.RNG.NextSingle(0.6f, 2f)), 1000, Easing.OutBack);
-                    x.MoveToOffset(new Vector2(osu.Framework.Utils.RNG.NextSingle(0.1f, 0.4f)), 1000, Easing.OutBack);
+                    const float DURATION = 1000;
+                    x.TransformTo(nameof(Shear), shearRndom, DURATION, easing);
+                    x.TransformTo(nameof(Scale), new Vector2(osu.Framework.Utils.RNG.NextSingle(minValueScale, maxValueScale)), DURATION, easing);
+                    x.MoveToOffset(new Vector2(osu.Framework.Utils.RNG.NextSingle(0.1f, 0.4f)), DURATION, easing);
                 }
             }
 
@@ -329,16 +339,9 @@ namespace RhythmBox.Window.Screens
 
             for (double i = Track.Frequency.Value; i > 0; i -= 0.1d)
             {
-                try
-                {
-                    Track.Frequency.Value = i;
-                }
-                catch { }
+                Track.Frequency.Value = i;
                 await Task.Delay(500);
             }
-
-            //TODO:
-            //ReturntoSongSelectionAfterFail.Value = true;
         }
         
         protected override bool OnKeyDown(KeyDownEvent e)
@@ -367,7 +370,7 @@ namespace RhythmBox.Window.Screens
 
         protected override void OnKeyUp(KeyUpEvent e) => CheckKey(e.Key, false);
 
-        private void CheckKey(Key e, bool Down = true)
+        private void CheckKey(Key e, bool down = true)
         {
             int i;
 
@@ -382,7 +385,7 @@ namespace RhythmBox.Window.Screens
             else
                 return;
 
-            keyPress[i].FadeTo(Down ? 0.5f : 1f, 50);
+            keyPress[i].FadeTo(down ? 0.5f : 1f, 50);
         }
         
         protected override bool OnScroll(ScrollEvent e)

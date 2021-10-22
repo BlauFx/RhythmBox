@@ -27,15 +27,7 @@ namespace RhythmBox.Window
             return Dependencies;
         }
 
-        protected override IDictionary<FrameworkSetting, object> GetFrameworkConfigDefaults()
-        {
-            return new Dictionary<FrameworkSetting, object>()
-            {
-                {
-                    FrameworkSetting.WindowedSize, new Size(1600,800)
-                }
-            };
-        }
+        protected override IDictionary<FrameworkSetting, object> GetFrameworkConfigDefaults() => new Dictionary<FrameworkSetting, object>() { {  FrameworkSetting.WindowedSize, new Size(1600,800) } };
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -51,9 +43,6 @@ namespace RhythmBox.Window
             Fonts.AddStore(new GlyphStore(Resources, @"Fonts/Roboto"));
             Fonts.AddStore(new GlyphStore(Resources, @"Fonts/Roboto-Thin"));
             Fonts.AddStore(new GlyphStore(Resources, @"Fonts/Roboto-Bold"));
-
-            if (!Directory.Exists("Songs"))
-                Directory.CreateDirectory("Songs");
 
             Add(cachedMap);
         }

@@ -7,7 +7,7 @@ namespace RhythmBox.Window
 {
     public static class Songs
     {
-        public static string SongPath => Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) + $"{Path.DirectorySeparatorChar}Songs{Path.DirectorySeparatorChar}";
+        public static string SongPath => $"{Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location)}{Path.DirectorySeparatorChar}Songs{Path.DirectorySeparatorChar}";
 
         private static bool didRun;
 

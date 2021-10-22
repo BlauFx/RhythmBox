@@ -9,10 +9,10 @@ namespace RhythmBox.Window
 {
     public class RhythmBoxWindow : RhythmBoxResources
     {
-        private ScreenStack _stack;
+        private ScreenStack stack;
 
         [BackgroundDependencyLoader]
-        private void Load() => Child = _stack = new ScreenStack { RelativeSizeAxes = Axes.Both, Depth = 0 };
+        private void Load() => Child = stack = new ScreenStack { RelativeSizeAxes = Axes.Both, Depth = 0 };
 
         protected override void LoadComplete()
         {
@@ -23,7 +23,7 @@ namespace RhythmBox.Window
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
                 Scale = new Vector2(0f)
-            }, _stack.Push);
+            }, stack.Push);
 
             License.Licenses("https://raw.githubusercontent.com/BlauFx/RhythmBox/master/Licenses",
                 new[]

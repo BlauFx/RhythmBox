@@ -31,26 +31,26 @@ namespace RhythmBox.Window.Screens
         private Volume volume;
 
         [Resolved] 
-        private Gameini gameini { get; set; }
+        private Gameini Gameini { get; set; }
 
         [Resolved]
-        private CachedMap cachedMap { get; set; }
+        private CachedMap CachedMap { get; set; }
 
         [BackgroundDependencyLoader]
         private void Load()
         {
-            cachedMap.Play();
+            CachedMap.Play();
 
-            var sliderBarValue = (BindableDouble)gameini.GetBindable<double>(SettingsConfig.Volume);
+            var sliderBarValue = (BindableDouble)Gameini.GetBindable<double>(SettingsConfig.Volume);
             sliderBarValue.ValueChanged += e =>
             {
-                if (cachedMap.BindableTrack.Value != null)
-                    cachedMap.BindableTrack.Value.Volume.Value = e.NewValue;
+                if (CachedMap.BindableTrack.Value != null)
+                    CachedMap.BindableTrack.Value.Volume.Value = e.NewValue;
             };
 
             InternalChildren = new Drawable[]
             {
-                volume = new Volume(cachedMap.BindableTrack)
+                volume = new Volume(CachedMap.BindableTrack)
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
@@ -112,10 +112,10 @@ namespace RhythmBox.Window.Screens
                     Y = -0.3f,
                     Font = new FontUsage("Roboto", 40f)
                 },
-                key[0] = GetSprite(0.05f, 0.03f, $"{gameini.GetBindable<string>(SettingsConfig.KeyBindingUp).Value}"),
-                key[1] = GetSprite(0.14f, 0.03f, $"{gameini.GetBindable<string>(SettingsConfig.KeyBindingLeft).Value}"),
-                key[2] = GetSprite(0.23f, 0.03f, $"{gameini.GetBindable<string>(SettingsConfig.KeyBindingDown).Value}"),
-                key[3] = GetSprite(0.32f, 0.03f, $"{gameini.GetBindable<string>(SettingsConfig.KeyBindingRight).Value}"),
+                key[0] = GetSprite(0.05f, 0.03f, $"{Gameini.GetBindable<string>(SettingsConfig.KeyBindingUp).Value}"),
+                key[1] = GetSprite(0.14f, 0.03f, $"{Gameini.GetBindable<string>(SettingsConfig.KeyBindingLeft).Value}"),
+                key[2] = GetSprite(0.23f, 0.03f, $"{Gameini.GetBindable<string>(SettingsConfig.KeyBindingDown).Value}"),
+                key[3] = GetSprite(0.32f, 0.03f, $"{Gameini.GetBindable<string>(SettingsConfig.KeyBindingRight).Value}"),
                 GetClickBox(0.01f, 0.03f, SettingsConfig.KeyBindingUp),
                 GetClickBox(0.1f, 0.03f, SettingsConfig.KeyBindingLeft),
                 GetClickBox(0.19f, 0.03f, SettingsConfig.KeyBindingDown),
@@ -148,22 +148,23 @@ namespace RhythmBox.Window.Screens
             }
             else if (overlayActive)
             {
+                var keyStr = e.Key.ToString();
                 overlayActive = false;
 
-                for (var i = 0; i < 3; i++)
+                for (var i = 0; i < key.Length; i++)
                 {
-                    var x = gameini.Get<string>((SettingsConfig)i);
-                    if (!string.Equals(x, e.Key.ToString(), StringComparison.OrdinalIgnoreCase))
+                    var x = Gameini.Get<string>((SettingsConfig)i);
+                    if (!string.Equals(x, keyStr, StringComparison.OrdinalIgnoreCase))
                         continue;
                     focusedOverlayContainer.State.Value = osu.Framework.Graphics.Containers.Visibility.Hidden;
                     return base.OnKeyDown(e);
                 }
 
-                gameini.SetValue<string>(lookupKey, e.Key.ToString());
-                gameini.Save();
+                Gameini.SetValue<string>(lookupKey, keyStr);
+                Gameini.Save();
 
                 focusedOverlayContainer.State.Value = osu.Framework.Graphics.Containers.Visibility.Hidden;
-                key[(int)lookupKey].Text = e.Key.ToString();
+                key[(int)lookupKey].Text = keyStr;
             }
 
             return base.OnKeyDown(e);
@@ -196,7 +197,7 @@ namespace RhythmBox.Window.Screens
                 Font = new FontUsage("Roboto", 40f)
             };
 
-        private ClickBox GetClickBox(float XPos, float YPos, SettingsConfig lookupKey) =>
+        private ClickBox GetClickBox(float xPos, float yPos, SettingsConfig lookupKey) =>
             new()
             {
                 Anchor = Anchor.CentreLeft,
@@ -204,8 +205,8 @@ namespace RhythmBox.Window.Screens
                 RelativeSizeAxes = Axes.Both,
                 RelativePositionAxes = Axes.Both,
                 Size = new Vector2(0.08f),
-                X = XPos,
-                Y = YPos,
+                X = xPos,
+                Y = yPos,
                 Colour = Color4.Gray.Opacity(0.9f),
                 ClickAction = () =>
                 {

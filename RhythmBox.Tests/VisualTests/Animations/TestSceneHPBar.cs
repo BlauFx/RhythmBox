@@ -20,8 +20,6 @@ namespace RhythmBox.Tests.VisualTests.Animations
         [BackgroundDependencyLoader]
         private void Load()
         {
-            SetupGameHost();
-
             Child = hpbar = new HPBar
             {
                 Anchor = Anchor.Centre,

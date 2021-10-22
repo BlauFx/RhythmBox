@@ -24,11 +24,11 @@ namespace RhythmBox.Window.Screens
     {
         private Sprite Background { get; set; }
 
-        private NotificationOverlay _overlay;
+        private NotificationOverlay overlay;
 
         private Box box;
 
-        private SpriteText CurrentPlaying;
+        private SpriteText currentPlaying;
 
         [Resolved]
         private CachedMap cachedMap { get; set; }
@@ -82,8 +82,7 @@ namespace RhythmBox.Window.Screens
                 GetMainMenuBox("Play", -0.2f, -0.25f, 0),
                 GetMainMenuBox("Settings", -0.21f, -0.05f, 1),
                 GetMainMenuBox("Exit", -0.25f, 0.15f, 2),
-                
-                CurrentPlaying = new SpriteText
+                currentPlaying = new SpriteText
                 {
                     Anchor = Anchor.TopCentre,
                     Origin = Anchor.Centre,
@@ -118,7 +117,7 @@ namespace RhythmBox.Window.Screens
 
             var updater = new Update();
 
-            AddInternal(_overlay = new NotificationOverlay
+            AddInternal(overlay = new NotificationOverlay
             {
                 Depth = float.MinValue,
                 RelativePositionAxes = Axes.Both,
@@ -146,13 +145,13 @@ namespace RhythmBox.Window.Screens
             if (newUpdate)
             {
                 //TODO:
-                _overlay.Text.Text = "A new update is available!                                      " +
+                overlay.Text.Text = "A new update is available!                                      " +
                     "Do you want to install it now?";
 
                 box.Size = new Vector2(3f);
                 box.FadeIn(0d, Easing.OutCirc);
-                _overlay.State.Value = Visibility.Visible;
-                _overlay.State.ValueChanged += (e) => box.FadeOut(250d);
+                overlay.State.Value = Visibility.Visible;
+                overlay.State.ValueChanged += (e) => box.FadeOut(250d);
             }
 
         }
@@ -166,10 +165,10 @@ namespace RhythmBox.Window.Screens
         protected override bool OnMouseMove(MouseMoveEvent e)
         {
             Background.MoveTo(new Vector2(0f));
-            float Intensity = .1f;
+            const float intensity = .1f;
 
-            Vector2 offset = ToLocalSpace(e.ScreenSpaceMousePosition) - Background.DrawSize / (Background.Size.X * 2);
-            Background.MoveToOffset(offset * Intensity);
+            var offset = ToLocalSpace(e.ScreenSpaceMousePosition) - Background.DrawSize / (Background.Size.X * 2);
+            Background.MoveToOffset(offset * intensity);
 
             return base.OnMouseMove(e);
         }
@@ -184,17 +183,17 @@ namespace RhythmBox.Window.Screens
 
         protected override void OnHoverLost(HoverLostEvent e) => Background.MoveTo(new Vector2(0f), 500);
 
-        protected override void UpdateAfterChildren() => CurrentPlaying.Text = $"Currently playing: {cachedMap?.Map?.Title}";
+        protected override void UpdateAfterChildren() => currentPlaying.Text = $"Currently playing: {cachedMap?.Map?.Title}";
 
-        private void LimitFPS(bool Limit)
+        private void LimitFPS(bool limit)
         {
-            Host.MaximumDrawHz = Limit ? 200 : short.MaxValue;
-            Host.MaximumUpdateHz = Limit ? 200 : short.MaxValue;;
+            Host.MaximumDrawHz = limit ? 200 : short.MaxValue;
+            Host.MaximumUpdateHz = limit ? 200 : short.MaxValue;;
         }
 
         public override void OnEntering(IScreen last)
         {
-            LimitFPS(Limit: true);
+            LimitFPS(limit: true);
 
             this.TransformTo(nameof(Scale), new Vector2(1f), 1000, Easing.OutExpo);
             this.FadeInFromZero(250, Easing.In);
@@ -202,7 +201,7 @@ namespace RhythmBox.Window.Screens
 
         public override void OnResuming(IScreen last)
         {
-            LimitFPS(Limit: true);
+            LimitFPS(limit: true);
 
             this.FadeInFromZero(175, Easing.In);
             cachedMap.Play();
@@ -213,7 +212,7 @@ namespace RhythmBox.Window.Screens
         public override void OnSuspending(IScreen next)
         {
             cachedMap.Stop();
-            LimitFPS(Limit: false);
+            LimitFPS(limit: false);
 
             this.FadeOutFromOne<MainMenu>(0, Easing.In);
             base.OnSuspending(next);
@@ -270,7 +269,7 @@ namespace RhythmBox.Window.Screens
 
         private Box box;
 
-        private Color4 Color { get; set; } = Color4.White;
+        private Color4 Color { get; } = Color4.White;
 
         [BackgroundDependencyLoader]
         private void Load()
