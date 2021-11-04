@@ -16,7 +16,7 @@ namespace RhythmBox.Window
 
         protected override ScrollbarContainer CreateScrollbar(Direction direction) => new MyScrollbar(direction);
 
-        protected class MyScrollbar : ScrollbarContainer
+        private class MyScrollbar : ScrollbarContainer
         {
             private const float dim_size = 10;
 
