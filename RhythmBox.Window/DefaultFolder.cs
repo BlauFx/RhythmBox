@@ -10,19 +10,19 @@ namespace RhythmBox.Window
 {
     public class DefaultFolder
     {
+        private static readonly string TestMapFolder = $"{Songs.SongPath}{Path.DirectorySeparatorChar}TestMap";
+        public static readonly string TestMapFile = $"{TestMapFolder}{Path.DirectorySeparatorChar}Difficulty1.ini";
+        
         public DefaultFolder()
         {
             if (!Directory.Exists(Songs.SongPath))
                 Directory.CreateDirectory(Songs.SongPath);
 
-            var testMapFolder = $"{Songs.SongPath}{Path.DirectorySeparatorChar}TestMap";
-            var testMapFile = $"{testMapFolder}{Path.DirectorySeparatorChar}Difficulty1.ini";
-            
             //TODO: This is only temporary
-            if (File.Exists(testMapFile))
+            if (File.Exists(TestMapFile))
                 return;
             
-            GenerateMapFromResources(testMapFile);
+            GenerateMapFromResources(TestMapFile);
         }
 
         private void GenerateMapFromResources(string file)
