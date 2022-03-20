@@ -4,9 +4,8 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Cursor;
 using osu.Framework.Platform;
 using osu.Framework.Testing;
-using RhythmBox.Window;
 
-namespace RhythmBox.Tests
+namespace RhythmBox.Window
 {
     public class Tests : RhythmBoxResources
     {

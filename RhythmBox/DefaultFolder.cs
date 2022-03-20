@@ -10,7 +10,7 @@ namespace RhythmBox.Window
 {
     public class DefaultFolder
     {
-        private static readonly string TestMapFolder = $"{Songs.SongPath}{Path.DirectorySeparatorChar}TestMap";
+        private static readonly string TestMapFolder = $"{Songs.SongPath}TestMap";
         public static readonly string TestMapFile = $"{TestMapFolder}{Path.DirectorySeparatorChar}Difficulty1.ini";
         
         public DefaultFolder()
@@ -27,22 +27,21 @@ namespace RhythmBox.Window
 
         private void GenerateMapFromResources(string file)
         {
-            Assembly assembly = Assembly.LoadFrom("RhythmBox.Window.Resources.dll");
+            Assembly assembly = Assembly.LoadFrom("RhythmBox.Resources.dll");
             
             if (assembly == null)
                 throw new Exception($"{nameof(assembly)} can not be null!");
 
-            var lines = ReadLines(() => assembly.GetManifestResourceStream("RhythmBox.Window.Resources.Difficulty1.ini"), Encoding.UTF8).ToList();
+            var lines = ReadLines(() => assembly.GetManifestResourceStream("RhythmBox.Resources.Difficulty1.ini"), Encoding.UTF8).ToList();
             
             Directory.CreateDirectory(file);
             new Map(lines).WriteToNewMap(file);
         }
 
         //https://stackoverflow.com/a/13312954
-        private IEnumerable<string> ReadLines(Func<Stream> streamProvider, Encoding encoding)
+        private IEnumerable<string> ReadLines(Func<Stream?> stream, Encoding encoding)
         {
-            using var stream = streamProvider();
-            using var reader = new StreamReader(stream, encoding);
+            using var reader = new StreamReader(stream(), encoding);
             
             string line;
             while ((line = reader.ReadLine()) != null)

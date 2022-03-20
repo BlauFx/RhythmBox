@@ -2,11 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>RhythmBox.Window</RootNamespace>
+    <OutputType>WinExe</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Humanizer" Version="2.13.14" />
     <PackageReference Include="ppy.osu.Framework" Version="2022.107.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RhythmBox.Resources\RhythmBox.Resources.csproj" />
   </ItemGroup>
 
 </Project>

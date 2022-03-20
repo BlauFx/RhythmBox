@@ -3,13 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29025.244
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RhythmBox.Desktop", "RhythmBox.Desktop\RhythmBox.Desktop.csproj", "{20808FBB-24B5-4B77-BAFA-5BD40C0876EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RhythmBox", "RhythmBox\RhythmBox.csproj", "{015C5931-D6D8-4723-8BC4-09B2FC5EB141}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RhythmBox.Window", "RhythmBox.Window\RhythmBox.Window.csproj", "{015C5931-D6D8-4723-8BC4-09B2FC5EB141}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RhythmBox.Window.Resources", "RhythmBox.Window.Resources\RhythmBox.Window.Resources.csproj", "{A53C569D-6C76-41A2-9E3E-4567CAC20A04}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RhythmBox.Tests", "RhythmBox.Tests\RhythmBox.Tests.csproj", "{7F2AC130-C33C-4678-BB47-4FAEA13EFBC2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RhythmBox.Resources", "RhythmBox.Resources\RhythmBox.Resources.csproj", "{A53C569D-6C76-41A2-9E3E-4567CAC20A04}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6BCF6951-5B62-4F4F-8233-39939FE44CAB}"
 	ProjectSection(SolutionItems) = preProject
@@ -22,10 +18,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{20808FBB-24B5-4B77-BAFA-5BD40C0876EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{20808FBB-24B5-4B77-BAFA-5BD40C0876EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{20808FBB-24B5-4B77-BAFA-5BD40C0876EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{20808FBB-24B5-4B77-BAFA-5BD40C0876EB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{015C5931-D6D8-4723-8BC4-09B2FC5EB141}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{015C5931-D6D8-4723-8BC4-09B2FC5EB141}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{015C5931-D6D8-4723-8BC4-09B2FC5EB141}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -34,10 +26,6 @@ Global
 		{A53C569D-6C76-41A2-9E3E-4567CAC20A04}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A53C569D-6C76-41A2-9E3E-4567CAC20A04}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A53C569D-6C76-41A2-9E3E-4567CAC20A04}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7F2AC130-C33C-4678-BB47-4FAEA13EFBC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7F2AC130-C33C-4678-BB47-4FAEA13EFBC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7F2AC130-C33C-4678-BB47-4FAEA13EFBC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7F2AC130-C33C-4678-BB47-4FAEA13EFBC2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -32,7 +32,7 @@ namespace RhythmBox.Window
         [BackgroundDependencyLoader]
         private void Load()
         {
-            Resources.AddStore(new DllResourceStore("RhythmBox.Window.Resources.dll"));
+            Resources.AddStore(new DllResourceStore("RhythmBox.Resources.dll"));
 
             Dependencies.Cache(new LargeTextureStore(Host.CreateTextureLoaderStore(new NamespacedResourceStore<byte[]>(Resources, @"Textures"))));
             Dependencies.Cache(new Gameini(Host.Storage));
