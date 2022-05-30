@@ -10,8 +10,8 @@ namespace RhythmBox.Window
 {
     public class DefaultFolder
     {
-        private static readonly string TestMapFolder = $"{Songs.SongPath}TestMap";
-        public static readonly string TestMapFile = $"{TestMapFolder}{Path.DirectorySeparatorChar}Difficulty1.ini";
+        private static readonly string TestMapFolder = $"{Songs.SongPath}TestMap{Path.DirectorySeparatorChar}";
+        public static readonly string TestMapFile = $"Difficulty1.ini";
         
         public DefaultFolder()
         {
@@ -22,10 +22,10 @@ namespace RhythmBox.Window
             if (File.Exists(TestMapFile))
                 return;
             
-            GenerateMapFromResources(TestMapFile);
+            GenerateMapFromResources(TestMapFolder, TestMapFile);
         }
 
-        private void GenerateMapFromResources(string file)
+        private void GenerateMapFromResources(string directory, string file)
         {
             Assembly assembly = Assembly.LoadFrom("RhythmBox.Resources.dll");
             
@@ -34,8 +34,8 @@ namespace RhythmBox.Window
 
             var lines = ReadLines(() => assembly.GetManifestResourceStream("RhythmBox.Resources.Difficulty1.ini"), Encoding.UTF8).ToList();
             
-            Directory.CreateDirectory(file);
-            new Map(lines).WriteToNewMap(file);
+            Directory.CreateDirectory(directory);
+            new Map(lines).WriteToNewMap($"{directory}{file}");
         }
 
         //https://stackoverflow.com/a/13312954
