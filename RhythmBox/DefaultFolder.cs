@@ -11,8 +11,10 @@ namespace RhythmBox.Window
     public class DefaultFolder
     {
         private static readonly string TestMapFolder = $"{Songs.SongPath}TestMap{Path.DirectorySeparatorChar}";
-        private static readonly string TestMapFile = $"Difficulty1.ini";
-        
+        private const string TestMapFile = $"Difficulty1.ini";
+
+        public static readonly string GetTestMap = TestMapFolder + TestMapFile;
+
         public DefaultFolder()
         {
             if (!Directory.Exists(Songs.SongPath))

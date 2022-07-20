@@ -26,7 +26,7 @@ namespace RhythmBox.Window.VisualTests.Gameplay
         [Resolved]
         private Gameini gameini { get; set; }
 
-        string path = $"{Songs.SongPath}{Path.DirectorySeparatorChar}TestMap{Path.DirectorySeparatorChar}Difficulty1.ini";
+        private string path = DefaultFolder.GetTestMap;
 
         Key[] keys = new Key[4];
 
