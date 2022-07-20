@@ -11,7 +11,7 @@ namespace RhythmBox.Window
     public class DefaultFolder
     {
         private static readonly string TestMapFolder = $"{Songs.SongPath}TestMap{Path.DirectorySeparatorChar}";
-        public static readonly string TestMapFile = $"Difficulty1.ini";
+        private static readonly string TestMapFile = $"Difficulty1.ini";
         
         public DefaultFolder()
         {
@@ -19,7 +19,7 @@ namespace RhythmBox.Window
                 Directory.CreateDirectory(Songs.SongPath);
 
             //TODO: This is only temporary
-            if (File.Exists(TestMapFile))
+            if (File.Exists(TestMapFolder + TestMapFile))
                 return;
             
             GenerateMapFromResources(TestMapFolder, TestMapFile);
@@ -39,7 +39,7 @@ namespace RhythmBox.Window
         }
 
         //https://stackoverflow.com/a/13312954
-        private IEnumerable<string> ReadLines(Func<Stream?> stream, Encoding encoding)
+        public static IEnumerable<string> ReadLines(Func<Stream?> stream, Encoding encoding)
         {
             using var reader = new StreamReader(stream(), encoding);
             

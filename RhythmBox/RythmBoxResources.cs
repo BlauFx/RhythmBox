@@ -1,3 +1,4 @@
+using System;
 using osu.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Configuration;
@@ -7,6 +8,7 @@ using RhythmBox.Window.Maps;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using osu.Framework.Platform;
 
 namespace RhythmBox.Window
 {
@@ -21,6 +23,20 @@ namespace RhythmBox.Window
             Name = "RhythmBox";
         }
 
+        private void OnDragDrop(string filePath)
+        {
+            if (!File.Exists(filePath)) 
+                return;
+            
+            var file = File.Open(filePath, FileMode.Open);
+            var name = Path.GetFileName(file.Name);
+            Directory.CreateDirectory($"{Songs.SongPath}/{Path.GetFileNameWithoutExtension(file.Name)}");
+            file.Close();
+            File.Copy(filePath, $"{Songs.SongPath}/{Path.GetFileNameWithoutExtension(file.Name)}/{name}");
+
+            Songs.GenerateSong($"{Songs.SongPath}/{Path.GetFileNameWithoutExtension(file.Name)}/{name}", Host, Audio);
+        }
+
         protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
         {
             Dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
@@ -32,6 +48,7 @@ namespace RhythmBox.Window
         [BackgroundDependencyLoader]
         private void Load()
         {
+            ((SDL2DesktopWindow) this.Window).DragDrop += OnDragDrop;
             Resources.AddStore(new DllResourceStore("RhythmBox.Resources.dll"));
 
             Dependencies.Cache(new LargeTextureStore(Host.CreateTextureLoaderStore(new NamespacedResourceStore<byte[]>(Resources, @"Textures"))));

@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Difficulty1.ini" />
+    <EmbeddedResource Include="Template.ini" />
     <EmbeddedResource Include="Textures\**\*" />
     <EmbeddedResource Include="Fonts\**\*" />
   </ItemGroup>
