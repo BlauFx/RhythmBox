@@ -1,18 +1,18 @@
-﻿using NUnit.Framework;
+﻿using System.Threading.Tasks;
+using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Testing;
-using System.Threading.Tasks;
 using RhythmBox.Window.Animation;
 
-namespace RhythmBox.Tests.VisualTests.Animations
+namespace RhythmBox.Window.VisualTests.Animations
 {
     [TestFixture]
     public class TestSceneHitAnimation : TestScene
     {
         private HitAnimation hitAnimation { get; set; }
 
-        private bool CanContinue = false;
+        private bool CanContinue;
 
         [BackgroundDependencyLoader]
         private void Load()
@@ -25,13 +25,11 @@ namespace RhythmBox.Tests.VisualTests.Animations
                 RelativePositionAxes = Axes.Both,
             };
             
-            AddStep("Start hit300", () => Wait(Hit.Hit300));
-
-            AddUntilStep("Wait until hit300 finished", () => CanContinue);
-            AddStep("Start hit100", () => Wait(Hit.Hit100));
-
-            AddUntilStep("Wait until hit100 finished", () => CanContinue);
-            AddStep("Start hitx", () => Wait(Hit.Hitx));
+            AddStep("Start hit 300", () => Wait(Hit.Hit300));
+            AddUntilStep("Wait until hit 300 finished", () => CanContinue);
+            AddStep("Start hit 100", () => Wait(Hit.Hit100));
+            AddUntilStep("Wait until hit 100 finished", () => CanContinue);
+            AddStep("Start hit x", () => Wait(Hit.Hitx));
         }
 
         private async void Wait(Hit hit)
@@ -39,7 +37,7 @@ namespace RhythmBox.Tests.VisualTests.Animations
             CanContinue = false;
 
             hitAnimation.Hit = hit;
-            hitAnimation.LoadAndPrepareHitSpirte();
+            hitAnimation.LoadAndPrepareHitSprite();
 
             await Task.Delay(hitAnimation.WaitTime);
             CanContinue = true;

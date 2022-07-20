@@ -4,11 +4,10 @@ using osu.Framework.Graphics;
 using osu.Framework.Input.Events;
 using osu.Framework.Testing;
 using osuTK;
-using RhythmBox.Window;
 using RhythmBox.Window.Animation;
 using RhythmBox.Window.Maps;
 
-namespace RhythmBox.Tests.VisualTests.Animations
+namespace RhythmBox.Window.VisualTests.Animations
 {
     [TestFixture]
     public class TestSceneVolume : TestScene

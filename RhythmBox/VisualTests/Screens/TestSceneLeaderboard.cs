@@ -5,7 +5,7 @@ using osu.Framework.Testing;
 using osuTK;
 using RhythmBox.Window.Screens.SongSelection;
 
-namespace RhythmBox.Tests.VisualTests.Screens
+namespace RhythmBox.Window.VisualTests.Screens
 {
     [TestFixture]
     public class TestSceneLeaderboard : TestScene

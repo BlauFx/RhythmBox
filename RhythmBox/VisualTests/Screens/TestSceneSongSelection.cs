@@ -1,14 +1,11 @@
-using System;
-using System.Collections.Generic;
 using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Screens;
 using osu.Framework.Testing;
-using RhythmBox.Window.Screens;
 using RhythmBox.Window.Screens.SongSelection;
 
-namespace RhythmBox.Tests.VisualTests.Screens
+namespace RhythmBox.Window.VisualTests.Screens
 {
     [TestFixture]
     public class TestSceneSongSelection : TestScene

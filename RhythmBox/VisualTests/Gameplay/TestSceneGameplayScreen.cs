@@ -1,22 +1,20 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Screens;
 using osu.Framework.Testing;
-using RhythmBox.Window;
-using System.IO;
-using RhythmBox.Window.Screens;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading.Tasks;
 using osuTK;
 using osuTK.Input;
-using RhythmBox.Window.Interfaces;
 using RhythmBox.Window.Maps;
 using RhythmBox.Window.Mods;
+using RhythmBox.Window.Screens;
 
-namespace RhythmBox.Tests.VisualTests.Gameplay
+namespace RhythmBox.Window.VisualTests.Gameplay
 {
     [TestFixture]
     public class TestSceneGameplayScreen : ManualInputManagerTestScene

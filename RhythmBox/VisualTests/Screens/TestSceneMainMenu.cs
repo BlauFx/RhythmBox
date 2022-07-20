@@ -7,7 +7,7 @@ using osu.Framework.Testing;
 using osuTK;
 using RhythmBox.Window.Screens;
 
-namespace RhythmBox.Tests.VisualTests.Screens
+namespace RhythmBox.Window.VisualTests.Screens
 {
     [TestFixture]
     public class TestSceneMainMenu : TestScene

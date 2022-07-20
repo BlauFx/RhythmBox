@@ -1,11 +1,10 @@
 ﻿using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Testing;
-using RhythmBox.Window;
 using RhythmBox.Window.Animation;
 using RhythmBox.Window.Maps;
 
-namespace RhythmBox.Tests.VisualTests.Animations
+namespace RhythmBox.Window.VisualTests.Animations
 {
     [TestFixture]
     public class TestSceneMusicCircular : TestScene

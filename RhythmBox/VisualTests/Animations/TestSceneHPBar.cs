@@ -7,7 +7,7 @@ using osuTK;
 using osuTK.Graphics;
 using RhythmBox.Window.Animation;
 
-namespace RhythmBox.Tests.VisualTests.Animations
+namespace RhythmBox.Window.VisualTests.Animations
 {
     [TestFixture]
     public class TestSceneHpBar : TestScene

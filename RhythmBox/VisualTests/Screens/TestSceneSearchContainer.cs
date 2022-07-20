@@ -8,7 +8,7 @@ using osuTK;
 using osuTK.Graphics;
 using RhythmBox.Window.Screens.SongSelection;
 
-namespace RhythmBox.Tests.VisualTests.Screens
+namespace RhythmBox.Window.VisualTests.Screens
 {
     [TestFixture]
     public class TestSceneSearchContainer : TestScene

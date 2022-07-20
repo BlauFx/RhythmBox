@@ -8,7 +8,7 @@ using osu.Framework.Testing;
 using osuTK;
 using RhythmBox.Window.Overlays;
 
-namespace RhythmBox.Tests.VisualTests.Overlays
+namespace RhythmBox.Window.VisualTests.Overlays
 {
     [TestFixture]
     public class TestSceneBreakOverlay : TestScene

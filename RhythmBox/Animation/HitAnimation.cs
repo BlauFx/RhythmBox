@@ -39,10 +39,10 @@ namespace RhythmBox.Window.Animation
             this.store = store;
 
             if (!Testing)
-                LoadAndPrepareHitSpirte();
+                LoadAndPrepareHitSprite();
         }
 
-        public void LoadAndPrepareHitSpirte()
+        public void LoadAndPrepareHitSprite()
         {
             Child = hitSprite = new Sprite
             {

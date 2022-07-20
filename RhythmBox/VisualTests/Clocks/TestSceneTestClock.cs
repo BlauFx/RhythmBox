@@ -8,11 +8,10 @@ using osu.Framework.Input.Events;
 using osu.Framework.Testing;
 using osuTK;
 using RhythmBox.Window.Clocks;
-using RhythmBox.Window.Interfaces;
 using RhythmBox.Window.Maps;
 using RhythmBox.Window.Screens.Playfield;
 
-namespace RhythmBox.Tests.VisualTests.Clocks
+namespace RhythmBox.Window.VisualTests.Clocks
 {
     [TestFixture]
     public class TestSceneTestClock : TestScene
